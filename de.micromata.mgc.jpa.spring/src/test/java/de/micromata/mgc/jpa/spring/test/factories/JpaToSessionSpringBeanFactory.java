@@ -1,4 +1,4 @@
-package de.micromata.mgc.jpa.spring.test;
+package de.micromata.mgc.jpa.spring.test.factories;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;

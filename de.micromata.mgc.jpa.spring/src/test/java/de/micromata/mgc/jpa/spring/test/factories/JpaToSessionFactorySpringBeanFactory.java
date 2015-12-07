@@ -1,7 +1,9 @@
-package de.micromata.mgc.jpa.spring.test;
+package de.micromata.mgc.jpa.spring.test.factories;
 
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.FactoryBean;
+
+import de.micromata.mgc.jpa.spring.test.SpringJpaEmgrFactory;
 
 public class JpaToSessionFactorySpringBeanFactory implements FactoryBean<SessionFactory>
 {

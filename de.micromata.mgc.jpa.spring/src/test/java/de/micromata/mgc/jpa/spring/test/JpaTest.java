@@ -5,7 +5,7 @@ import org.junit.Test;
 import de.micromata.mgc.common.test.MgcTestCase;
 import de.micromata.mgc.jpa.spring.test.entities.MyUserDO;
 
-public class MyJpaSpringTest extends MgcTestCase
+public class JpaTest extends MgcTestCase
 {
 
   @Test

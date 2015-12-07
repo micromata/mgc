@@ -11,7 +11,7 @@ import de.micromata.mgc.jpa.spring.test.entities.MyUserDO;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("/test-applicationContext-main.xml")
-public class SpringHIbernateTest extends MgcTestCase
+public class SpringHibernateTest extends MgcTestCase
 {
   @Autowired
   TestSpringService testSpringService;

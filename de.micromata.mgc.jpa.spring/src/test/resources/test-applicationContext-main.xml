@@ -13,7 +13,7 @@
     <context:annotation-config />  
     <tx:annotation-driven /> 
     
-  <bean id="sessionFactory" class="de.micromata.mgc.jpa.spring.test.JpaToSessionFactorySpringBeanFactory"/>
+  <bean id="sessionFactory" class="de.micromata.mgc.jpa.spring.test.factories.JpaToSessionFactorySpringBeanFactory"/>
     
   <bean id="emfBean"  class="de.micromata.mgc.jpa.spring.test.SpringJpaEmgrFactory" factory-method="getMyEntityManagerFactory"/>
   <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
@@ -23,5 +23,5 @@
   </bean>    
   
   <bean id="testSpringService" class="de.micromata.mgc.jpa.spring.test.TestSpringService"/>
-  <bean id="hibernateSession" class="de.micromata.mgc.jpa.spring.test.JpaToSessionSpringBeanFactory"/>
+  <bean id="hibernateSession" class="de.micromata.mgc.jpa.spring.test.factories.JpaToSessionSpringBeanFactory"/>
 </beans>
