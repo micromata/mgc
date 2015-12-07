@@ -12,7 +12,7 @@ package de.micromata.genome.jpa.test;
 
 import javax.persistence.EntityManager;
 
-import de.micromata.mgc.db.jpa.Emgr;
+import de.micromata.genome.jpa.Emgr;
 
 /**
  * Entity Manager for AttrBaseDAOImpl

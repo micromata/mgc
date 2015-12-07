@@ -11,8 +11,8 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import de.micromata.genome.jpa.StdRecordDO;
 import de.micromata.genome.util.runtime.LocalSettings;
-import de.micromata.mgc.db.jpa.stddo.StdRecordDO;
 
 /**
  * Just a playzone for raw jpa tests.
@@ -32,7 +32,7 @@ public class RawJPATest
       return;
     }
     LocalSettings ls = LocalSettings.get();
-    entityManagerFactory = Persistence.createEntityManagerFactory("de.micromata.genome.db.jpa.test", ls.getMap());
+    entityManagerFactory = Persistence.createEntityManagerFactory("de.micromata.genome.jpa.test", ls.getMap());
 
   }
 

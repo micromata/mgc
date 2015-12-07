@@ -2,8 +2,8 @@ package de.micromata.mgc.db.jpa.multipc;
 
 import javax.persistence.EntityManager;
 
-import de.micromata.mgc.db.jpa.DefaultEmgr;
-import de.micromata.mgc.db.jpa.EmgrFactory;
+import de.micromata.genome.jpa.DefaultEmgr;
+import de.micromata.genome.jpa.EmgrFactory;
 
 public class MultiPcSecondEmgrFactory extends EmgrFactory<DefaultEmgr>
 {
@@ -20,8 +20,8 @@ public class MultiPcSecondEmgrFactory extends EmgrFactory<DefaultEmgr>
 
   protected MultiPcSecondEmgrFactory()
   {
-    //    super("de.micromata.mgc.db.jpa.multipc.second");
-    super("de.micromata.mgc.db.jpa.multipc.auto");
+    //    super("de.micromata.genome.jpa.multipc.second");
+    super("de.micromata.genome.jpa.multipc.auto");
   }
 
   @Override

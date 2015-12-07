@@ -2,8 +2,8 @@ package de.micromata.genome.jpa.test;
 
 import org.junit.Test;
 
+import de.micromata.genome.jpa.EmgrCallable;
 import de.micromata.mgc.common.test.MgcTestCase;
-import de.micromata.mgc.db.jpa.EmgrCallable;
 
 /**
  * Basic master detail tests.

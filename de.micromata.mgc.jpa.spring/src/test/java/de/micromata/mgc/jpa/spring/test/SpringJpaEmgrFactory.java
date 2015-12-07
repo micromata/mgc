@@ -3,8 +3,8 @@ package de.micromata.mgc.jpa.spring.test;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
-import de.micromata.mgc.db.jpa.DefaultEmgr;
-import de.micromata.mgc.db.jpa.EmgrFactory;
+import de.micromata.genome.jpa.DefaultEmgr;
+import de.micromata.genome.jpa.EmgrFactory;
 
 public class SpringJpaEmgrFactory extends EmgrFactory<DefaultEmgr>
 {

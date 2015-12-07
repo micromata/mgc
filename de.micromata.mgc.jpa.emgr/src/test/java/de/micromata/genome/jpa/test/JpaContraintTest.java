@@ -4,13 +4,13 @@ import javax.persistence.NoResultException;
 
 import org.junit.Test;
 
+import de.micromata.genome.jpa.ConstraintPersistenceException;
+import de.micromata.genome.jpa.DataPersistenceException;
+import de.micromata.genome.jpa.EmgrCallable;
 import de.micromata.genome.logging.GLog;
 import de.micromata.genome.logging.GenomeLogCategory;
 import de.micromata.genome.logging.LogExceptionAttribute;
 import de.micromata.mgc.common.test.MgcTestCase;
-import de.micromata.mgc.db.jpa.ConstraintPersistenceException;
-import de.micromata.mgc.db.jpa.DataPersistenceException;
-import de.micromata.mgc.db.jpa.EmgrCallable;
 
 /**
  * Tests constraints

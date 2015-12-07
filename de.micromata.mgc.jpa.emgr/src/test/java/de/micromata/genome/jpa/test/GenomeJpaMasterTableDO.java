@@ -14,9 +14,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import de.micromata.mgc.db.jpa.ComplexEntity;
-import de.micromata.mgc.db.jpa.ComplexEntityVisitor;
-import de.micromata.mgc.db.jpa.stddo.StdRecordDO;
+import de.micromata.genome.jpa.ComplexEntity;
+import de.micromata.genome.jpa.ComplexEntityVisitor;
+import de.micromata.genome.jpa.StdRecordDO;
 
 @Entity
 @Table(name = "TB_TEST_MASTER")

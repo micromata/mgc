@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+  <bean id="propertyConfigurer" class="de.micromata.genome.util.spring.GenomeEnvPropertyPlaceholderConfigurer"
+    lazy-init="false"/>
+  <bean id="databaseProvider" class="java.lang.String">
+    <constructor-arg type="java.lang.String">
+      <value>${database.databaseProvider}</value>
+    </constructor-arg>
+  </bean>
+
+  <bean id="projectRoot" class="java.lang.String">
+    <constructor-arg type="java.lang.String">
+      <value>${cfg.projectroot.path}</value>
+    </constructor-arg>
+  </bean>
+  <bean id="publicApplicationUrl" class="java.lang.String">
+    <constructor-arg type="java.lang.String">
+      <value>${cfg.public.url}</value>
+    </constructor-arg>
+  </bean>
+
+  <bean id="testModus" class="java.lang.String">
+    <constructor-arg type="java.lang.String">
+      <value>DEV</value>
+    </constructor-arg>
+  </bean>
+
+  <bean id="testEmailAddress" class="java.lang.String">
+    <constructor-arg type="java.lang.String">
+      <value>${test.email}</value>
+    </constructor-arg>
+  </bean>
+
+  <bean id="logging" class="de.micromata.genome.logging.spi.log4j.Log4JLogging" />
+  <bean id="resourceRepository" class="de.micromata.genome.repository.spi.RamResourceRepository"/>
+  <bean id="timependingDAO" class="de.micromata.genome.version.timepending.RamTimePendingDAOImpl"/>
+  <bean id="genomeDaoManager" class="de.micromata.genome.dao.GenomeDaoManager" lazy-init="false" autowire="byName"/>
+
+  <bean id="daoDomainManager" class="de.micromata.genome.dao.DaoDomainManager" lazy-init="false">
+    <property name="daoDomains">
+      <map>
+        <entry key="GENOME">
+          <ref bean="genomeDaoManager" />
+        </entry>
+      </map>
+    </property>
+  </bean>
+  <bean id="staticDaoManager" class="de.micromata.genome.dao.StaticDaoManager" lazy-init="false" autowire="byName">
+    <property name="shortApplicationName" value="GNM" />
+  </bean>
+
+
+  <bean id="repositoryResourceFactoryDAO" class="de.micromata.genome.repository.factory.RepositoryResourceFactoryDAOImpl">
+    <constructor-arg>
+      <map>
+        <entry key="FileResource" value="de.micromata.genome.repository.factory.FileResourceFactory" />
+        <entry key="DynBeanConfig" value="de.micromata.genome.repository.factory.DynBeanConfigFactory" />
+        <entry key="AdminUsersConfig" value="de.micromata.genome.repository.factory.AdminUsersConfigFactory" />
+        <entry key="ZipMailResource" value="de.micromata.genome.repository.factory.ZipMailResourceFactory" />
+      </map>
+    </constructor-arg>
+  </bean>
+</beans>

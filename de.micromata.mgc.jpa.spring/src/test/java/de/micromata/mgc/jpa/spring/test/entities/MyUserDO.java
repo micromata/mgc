@@ -4,7 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-import de.micromata.mgc.db.jpa.stddo.DbRecordDO;
+import de.micromata.genome.jpa.DbRecordDO;
 
 @Entity
 public class MyUserDO extends DbRecordDO<Long>

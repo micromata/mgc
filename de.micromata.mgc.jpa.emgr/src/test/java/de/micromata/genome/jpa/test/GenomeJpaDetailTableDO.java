@@ -12,7 +12,7 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Index;
 
-import de.micromata.mgc.db.jpa.stddo.StdRecordDO;
+import de.micromata.genome.jpa.StdRecordDO;
 
 @Entity
 @Table(name = "TB_TEST_DETAIL")

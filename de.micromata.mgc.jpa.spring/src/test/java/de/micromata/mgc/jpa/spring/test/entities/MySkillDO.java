@@ -6,7 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-import de.micromata.mgc.db.jpa.stddo.DbRecordDO;
+import de.micromata.genome.jpa.DbRecordDO;
 
 @Entity
 public class MySkillDO extends DbRecordDO<Long>

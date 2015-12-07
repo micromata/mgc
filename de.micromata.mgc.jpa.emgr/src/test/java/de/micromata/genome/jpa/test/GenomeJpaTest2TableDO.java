@@ -9,7 +9,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-import de.micromata.mgc.db.jpa.stddo.StdRecordDO;
+import de.micromata.genome.jpa.StdRecordDO;
 
 @Entity
 @Table(name = "TB_TEST_JPAT2", //

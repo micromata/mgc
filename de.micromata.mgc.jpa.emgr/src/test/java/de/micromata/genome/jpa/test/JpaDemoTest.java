@@ -7,9 +7,9 @@ import javax.persistence.TypedQuery;
 import org.junit.Assert;
 import org.junit.Test;
 
+import de.micromata.genome.jpa.Clauses;
+import de.micromata.genome.jpa.CriteriaUpdate;
 import de.micromata.mgc.common.test.MgcTestCase;
-import de.micromata.mgc.db.jpa.Clauses;
-import de.micromata.mgc.db.jpa.CriteriaUpdate;
 
 /**
  * Demonstration Tests for JPA

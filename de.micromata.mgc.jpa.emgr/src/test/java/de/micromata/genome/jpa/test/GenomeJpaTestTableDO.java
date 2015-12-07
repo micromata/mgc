@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import de.micromata.mgc.db.jpa.stddo.StdRecordDO;
+import de.micromata.genome.jpa.StdRecordDO;
 
 @Entity
 @Table(name = "TB_TEST_JPAT")

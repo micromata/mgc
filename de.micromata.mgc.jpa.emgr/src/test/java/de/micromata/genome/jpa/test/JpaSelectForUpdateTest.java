@@ -6,11 +6,11 @@ import javax.persistence.TypedQuery;
 import org.junit.Assert;
 import org.junit.Test;
 
+import de.micromata.genome.jpa.EmgrCallable;
 import de.micromata.genome.util.runtime.LocalSettings;
 import de.micromata.genome.util.runtime.RuntimeCallable;
 import de.micromata.mgc.common.test.MgcTestCase;
 import de.micromata.mgc.common.test.ThreadedRunner;
-import de.micromata.mgc.db.jpa.EmgrCallable;
 
 /**
  * Tests the select for update mechanism.
