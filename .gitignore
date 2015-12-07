@@ -1,0 +1,48 @@
+# Java stuff
+
+*.class
+**/target
+**/classes
+
+# Mac and IDEA
+*.iml
+.DS_Store
+.idea
+
+# vim swap files
+*.swp
+
+
+# Logfiles
+*.log
+
+# Developer files
+local-settings-dev.properties
+
+# Temporary files
+*~
+
+# Jacoco recordings.
+*.exec
+
+# Background tasks.
+nohup.out
+
+# Generated files
+*tpsbrepo*
+
+# No eclipse configuration, please.
+.settings
+.classpath
+.project
+
+# Ignore local coverage reports.
+coverage/
+
+# Ignore local-settings
+local-settings-dev.properties
+#.gitignore
+rebel.xml
+rebel-remote.xml
+.ant-targets-build.xml
+

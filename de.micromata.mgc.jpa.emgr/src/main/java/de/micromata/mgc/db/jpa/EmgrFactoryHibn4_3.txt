@@ -1,0 +1,307 @@
+package de.micromata.genome.jpa;
+
+import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Persistence;
+import javax.persistence.PersistenceException;
+import javax.persistence.QueryTimeoutException;
+import javax.persistence.RollbackException;
+
+import org.apache.log4j.Logger;
+import org.hibernate.cfg.AvailableSettings;
+import org.hibernate.exception.ConstraintViolationException;
+import org.hibernate.exception.DataException;
+
+import de.micromata.genome.logging.GLog;
+import de.micromata.genome.logging.GenomeLogCategory;
+import de.micromata.genome.util.runtime.LocalSettings;
+import de.micromata.genome.util.runtime.ThreadContextClassLoaderScope;
+
+/**
+ * Factory class to create an Emgr instance. This class should be held by a singleton.
+ * 
+ * With the method runWoTrans/runInTrans an Emgr Instance will be provided.
+ * 
+ * @param <E> the element type
+ * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
+ */
+public abstract class EmgrFactoryHibn4_3<E extends IEmgr< ? >>
+{
+
+  /**
+   * The Constant log.
+   */
+  private static final Logger log = Logger.getLogger(EmgrFactoryHibn4_3.class);
+
+  /**
+   * The unit name.
+   */
+  private String unitName;
+
+  /**
+   * The entity manager factory.
+   */
+  public EntityManagerFactory entityManagerFactory;
+
+  /**
+   * If a trigger is defined to manage time stamps.
+   */
+  private boolean hasInsertTriggerForVersion = false;
+
+  /**
+   * If a trigger is defined to manage time stamps.
+   */
+  private boolean hasUpdateTriggerForVersion = false;
+
+  /**
+   * Instantiates a new emgr factory.
+   * 
+   * @param unitName the unit name
+   */
+  protected EmgrFactoryHibn4_3(String unitName)
+  {
+    this.unitName = unitName;
+
+    entityManagerFactory = createEntityManagerFactory(unitName);
+
+  }
+
+  /**
+   * Creates a new specific Emgr .
+   * 
+   * @param entityManager the entity manager
+   * @return the e
+   */
+  protected abstract E createEmgr(EntityManager entityManager);
+
+  /**
+   * Creates the entity manager factory.
+   * 
+   * @param unitName the unit name
+   * @return the entity manager factory
+   */
+  public EntityManagerFactory createEntityManagerFactory(String unitName)
+  {
+    LocalSettings ls = LocalSettings.get();
+    Map<String, Object> lsMap = new HashMap<String, Object>();
+    for (Map.Entry<String, String> me : ls.getMap().entrySet()) {
+      lsMap.put(me.getKey(), me.getValue());
+    }
+
+    ClassLoader threadClassLoader = Thread.currentThread().getContextClassLoader();
+    lsMap.put(AvailableSettings.CLASSLOADERS, Arrays.asList(threadClassLoader));
+    lsMap.put(AvailableSettings.APP_CLASSLOADER, threadClassLoader);
+    lsMap.put(AvailableSettings.RESOURCES_CLASSLOADER, threadClassLoader);
+    lsMap.put(AvailableSettings.HIBERNATE_CLASSLOADER, threadClassLoader);
+    lsMap.put(AvailableSettings.ENVIRONMENT_CLASSLOADER, threadClassLoader);
+
+    ThreadContextClassLoaderScope scope = new ThreadContextClassLoaderScope(getClass().getClassLoader());
+    try {
+      // following code is similar to  EntityManagerFactory emfac = Persistence.createEntityManagerFactory(unitName, lsMap);
+      // but overwrites the classloader
+
+      //      Ejb3Configuration cfg = new Ejb3Configuration();
+      //      Ejb3Configuration configured = cfg.configure(unitName, lsMap);
+
+      // hib 4.3:
+      //      BootstrapServiceRegistryBuilder serviceRegistryBuilder = new BootstrapServiceRegistryBuilder();
+      //      serviceRegistryBuilder.with(threadClassLoader);
+      //      Properties properties = new Properties();
+      //      properties.putAll(lsMap);
+      //      ConfigurationHelper.resolvePlaceHolders(properties);
+      //      BootstrapServiceRegistry reb = serviceRegistryBuilder.build();
+
+      EntityManagerFactory emfac = Persistence.createEntityManagerFactory(unitName, lsMap);
+      //      EntityManagerFactory emfac = reb.getService(EntityManagerFactory.class);
+      //          emfac.applySettings(properties);
+
+      //      StandardServiceRegistryImpl serviceRegistry = (StandardServiceRegistryImpl) registryBuilder.build();
+
+      //      serviceRegistryBuilder.withApplicationClassLoader(threadClassLoader);
+      //      serviceRegistryBuilder.withHibernateClassLoader(threadClassLoader);
+      //      serviceRegistryBuilder.withResourceClassLoader(threadClassLoader);
+      //      EntityManagerFactory emfac = serviceRegistry.buildEntityManagerFactory(serviceRegistry);
+      /**
+       * @logging
+       * @reason persistence context was initialized.
+       * @action nothing.
+       */
+      GLog.note(GenomeLogCategory.Jpa, "Initialized persistence context: " + unitName);
+      return emfac;
+    } finally {
+      scope.restore();
+    }
+  }
+
+  /**
+   * The thread emgr.
+   */
+  private final ThreadLocal<E> threadEmgr = new ThreadLocal<E>();
+
+  /**
+   * Convert exception.
+   * 
+   * @param ex the ex
+   * @return the runtime exception
+   */
+  public static RuntimeException convertException(RuntimeException ex)
+  {
+    if (ex instanceof QueryTimeoutException) {
+      // this is a oracle/hibernate bug workouround.
+      // hibernate think this is is a query timeout, but should a DataException
+      if (ex.getCause() instanceof org.hibernate.QueryTimeoutException) {
+        org.hibernate.QueryTimeoutException qto = (org.hibernate.QueryTimeoutException) ex.getCause();
+        if (qto.getCause() instanceof SQLException) {
+          SQLException sqlex = (SQLException) qto.getCause();
+          // ORA-12899
+          if (sqlex.getErrorCode() == 12899) {
+            return new DataPersistenceException(ex.getMessage(), qto.getSQL(), sqlex.getSQLState(), qto);
+          }
+        }
+      }
+    }
+    if (ex instanceof PersistenceException) {
+      Throwable cause = ex.getCause();
+      if (cause instanceof ConstraintViolationException) {
+        ConstraintViolationException cve = (ConstraintViolationException) cause;
+        cve.getMessage();
+        String sql = cve.getSQL();
+        return new ConstraintPersistenceException(cve.getMessage(), sql, cve.getSQLState(), cve.getConstraintName(), cve);
+      } else if (cause instanceof DataException) {
+        DataException dex = (DataException) cause;
+        return new DataPersistenceException(ex.getMessage(), dex.getSQL(), dex.getSQLState(), dex);
+      }
+    }
+    return ex;
+  }
+
+  /**
+   * Run wo trans.
+   * 
+   * @param <R> the generic type
+   * @param call the call
+   * @return the r
+   */
+  public <R> R runWoTrans(EmgrCallable<R, E> call)
+  {
+    E emgr = threadEmgr.get();
+    if (emgr != null) {
+      if (log.isDebugEnabled() == true) {
+        log.debug("em shortcut " + Thread.currentThread().getId());
+      }
+      return call.call(emgr);
+    }
+    EntityManager entityManager = entityManagerFactory.createEntityManager();
+    if (log.isDebugEnabled() == true) {
+      log.debug("em created " + Thread.currentThread().getId());
+    }
+    try {
+      emgr = createEmgr(entityManager);
+      emgr.setHasInsertTriggerForVersion(hasInsertTriggerForVersion);
+      emgr.setHasUpdateTriggerForVersion(hasUpdateTriggerForVersion);
+
+      threadEmgr.set(emgr);
+      return call.call(emgr);
+    } finally {
+      threadEmgr.set(null);
+      entityManager.close();
+      if (log.isDebugEnabled() == true) {
+        log.debug("em closed " + Thread.currentThread().getId());
+      }
+    }
+  }
+
+  /**
+   * Run in trans.
+   * 
+   * @param <R> the generic type
+   * @param call the call
+   * @return the r
+   */
+  public <R> R runInTrans(final EmgrCallable<R, E> call)
+  {
+    return runWoTrans(new EmgrCallable<R, E>() {
+
+      @Override
+      public R call(E emgr)
+      {
+        EntityTransaction tx = emgr.getEntityManager().getTransaction();
+        if (tx.isActive() == true) {
+          //          if (log.isDebugEnabled() == true) {
+          log.warn("nested tx shortcut " + Thread.currentThread().getId());
+          //          }
+          try {
+            return call.call(emgr);
+          } catch (RollbackException ex) {
+            // nothing
+            if (log.isDebugEnabled() == true) {
+              log.debug("rollback tx:  in thread " + Thread.currentThread().getId() + "; " + ex.getMessage());
+            }
+            throw ex;
+          } catch (RuntimeException ex) {
+            if (log.isDebugEnabled() == true) {
+              log.debug("rollback tx because ex:  in thread " + Thread.currentThread().getId() + "; " + ex.getMessage());
+            }
+
+            throw convertException(ex);
+          }
+        }
+        try {
+          if (log.isDebugEnabled() == true) {
+            log.debug("begin tx:  in thread " + Thread.currentThread().getId());
+          }
+          tx.begin();
+          R ret = call.call(emgr);
+
+          if (log.isDebugEnabled() == true) {
+            log.debug("commit tx:  in thread " + Thread.currentThread().getId());
+          }
+          emgr.getEntityManager().flush();
+          tx.commit();
+          return ret;
+        } catch (RollbackException ex) {
+          // nothing
+          if (log.isDebugEnabled() == true) {
+            log.debug("rollback tx:  in thread " + Thread.currentThread().getId() + "; " + ex.getMessage());
+          }
+          throw ex;
+        } catch (RuntimeException ex) {
+          if (log.isDebugEnabled() == true) {
+            log.debug("rollback tx because ex:  in thread " + Thread.currentThread().getId() + "; " + ex.getMessage());
+          }
+          if (tx != null && tx.isActive() == true) {
+            tx.rollback();
+          }
+          throw convertException(ex);
+        }
+      }
+    });
+
+  }
+
+  public boolean isHasInsertTriggerForVersion()
+  {
+    return hasInsertTriggerForVersion;
+  }
+
+  public void setHasInsertTriggerForVersion(boolean hasInsertTriggerForVersion)
+  {
+    this.hasInsertTriggerForVersion = hasInsertTriggerForVersion;
+  }
+
+  public boolean isHasUpdateTriggerForVersion()
+  {
+    return hasUpdateTriggerForVersion;
+  }
+
+  public void setHasUpdateTriggerForVersion(boolean hasUpdateTriggerForVersion)
+  {
+    this.hasUpdateTriggerForVersion = hasUpdateTriggerForVersion;
+  }
+}

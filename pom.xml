@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>de.micromata.mgc</groupId>
+  <artifactId>de.micromata.mgc.rootpom</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <organization>
+    <name>Micromata GmbH</name>
+    <url>http://www.micromata.de/</url>
+  </organization>
+  <inceptionYear>2015</inceptionYear>
+  <developers>
+    <developer>
+      <id>r.kommer</id>
+      <name>Roger Kommer</name>
+      <email>kommer@extern.micromata.de</email>
+      <organization>Micromata GmbH</organization>
+      <organizationUrl>http://www.micromata.com</organizationUrl>
+      <roles>
+        <role>architect</role>
+        <role>developer</role>
+      </roles>
+      <timezone>-1</timezone>
+    </developer>
+  </developers>
+  <contributors>
+  </contributors>
+
+  <licenses>
+    <license>
+      <name>Apache 2.0</name>
+      <url>/LICENSE.txt</url>
+      <comments>All rights reserved.</comments>
+      <distribution>manual</distribution>
+    </license>
+  </licenses>
+  <distributionManagement>
+    <repository>
+      <id>ProjectForge</id>
+      <name>ProjectForge M2</name>
+      <url>http://www.projectforge.org/nexus/content/repositories/ProjectForge-Snapshots</url>
+    </repository>
+  </distributionManagement>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+    <mgc.version>1.0.0-SNAPSHOT</mgc.version><!-- MGCVERSION -->
+
+
+    
+    <log4j.version>1.2.17</log4j.version>
+    
+
+    <junit.version>4.11</junit.version>
+
+    <!-- COMMONS VERSIONS -->
+    <commons-digester.version>2.1</commons-digester.version>
+    <commons-lang.version>2.6</commons-lang.version>
+    <commons-io.version>2.4</commons-io.version>
+    <commons-beanutils.version>1.9.1</commons-beanutils.version>
+    <commons-collections.version>3.2.1</commons-collections.version>
+    <commons-codec.version>1.9</commons-codec.version>
+    <commons.exec.version>1.1</commons.exec.version>
+    <commons-dbcp.version>1.4</commons-dbcp.version>
+    <commons-net.version>3.1</commons-net.version>
+    <commons-vfs2.version>2.0</commons-vfs2.version>
+    <commons-httpclient.version>3.1</commons-httpclient.version>
+    <commons-dbcp.version>1.4</commons-dbcp.version>
+    <commons-fileupload.version>1.2.2</commons-fileupload.version>
+
+    <net.sourceforge.collections_generic.version>4.01</net.sourceforge.collections_generic.version>
+    
+    <org.codehaus.groovy.groovy-all.version>2.1.0</org.codehaus.groovy.groovy-all.version>
+
+    <!-- JAVAX VERSIONS -->
+    <javax.servlet.api.version>3.0.1</javax.servlet.api.version>
+    <javax.servlet.jsp.api.version>2.2.1</javax.servlet.jsp.api.version>
+    <javax.mail.version>1.4.2</javax.mail.version>
+    <javax.servlet.jstl.version>1.1.2</javax.servlet.jstl.version>
+    <javax.activation.version>1.1</javax.activation.version>
+
+
+    <org.hibernate.javax.persistence.hibernate-jpa-2.0-api.version>1.0.1.Final</org.hibernate.javax.persistence.hibernate-jpa-2.0-api.version>
+    <org.hibernate-search-orm.version>5.5.1.Final</org.hibernate-search-orm.version>
+    <!-- old 4.1.9.Final -->
+    <org.hibernate.hibernate-entitymanager.version>5.0.5.Final</org.hibernate.hibernate-entitymanager.version>
+    
+		<org.apache.derby.version>10.12.1.1</org.apache.derby.version>
+ 		<!-- old <hsqldb.version>1.8.0.10</hsqldb.version> -->
+    <hsqldb.version>2.3.3</hsqldb.version>
+    
+    <!-- ARGLINE -->
+    <argLine>-XX:MaxPermSize=268m</argLine>
+
+
+  </properties>
+
+  <profiles>
+    <profile>
+      <id>default</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <modules>
+        <module>de.micromata.mgc.common</module>
+        <module>de.micromata.mgc.common.test</module>
+        <module>de.micromata.mgc.logging</module>
+        <module>de.micromata.mgc.jpa.emgr</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>empty</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <modules>
+      </modules>
+    </profile>
+
+    <!--Code quality. -->
+    <profile>
+      <id>sonar</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <properties>
+        <sonar.jdbc.url>jdbc:oracle:thin:@192.168.76.31/vlsits</sonar.jdbc.url>
+        <sonar.jdbc.username>VLS_SONAR</sonar.jdbc.username>
+        <sonar.jdbc.password>vls_sonar</sonar.jdbc.password>
+        <sonar.host.url>http://vls-its:9000/</sonar.host.url>
+        <!-- use next part when locally installed sonar is running -->
+        <!--<sonar.jdbc.url>jdbc:h2:tcp://localhost:9092/sonar</sonar.jdbc.url> <sonar.jdbc.username>sonar</sonar.jdbc.username> 
+          <sonar.jdbc.password>sonar</sonar.jdbc.password> <sonar.host.url>http://localhost:9000/</sonar.host.url> -->
+        <sonar.exclusions>**/src-gen/**/*.java,**/genome-tools/**/*.java,**/plugins/umgmt/**/*,**/plugins/popstats/**/*,**/GenomeDaoManager.java,**/UmgmtDaoManager.java,**/Emgr.java,**/EmgrFactory.java</sonar.exclusions>
+      </properties>
+      <modules>
+
+      </modules>
+    </profile>
+  </profiles>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.3</version>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+          <encoding>utf-8</encoding>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>2.4</version>
+
+        <executions>
+          <execution>
+            <inherited>true</inherited>
+            <id>attach-sources</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <attach>true</attach>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.17</version>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.maven.surefire</groupId>
+            <artifactId>surefire-junit47</artifactId>
+            <version>2.17</version>
+          </dependency>
+        </dependencies>
+        <configuration>
+          <testFailureIgnore>true</testFailureIgnore>
+          <!-- <forkCount>0</forkCount> <reuseForks>false</reuseForks> -->
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+
+  <repositories>
+    <repository>
+      <id>Apache Nexus</id>
+      <url>https://repository.apache.org/content/repositories/snapshots/</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+    <repository>
+      <id>genome-deploy</id>
+      <name>genome-deploy</name>
+      <url>http://repo.micromata.priv:8081/nexus/content/repositories/genome/</url>
+    </repository>
+    <repository>
+      <id>snapshots</id>
+      <url>http://repo.micromata.priv:8081/nexus/content/groups/public-snapshots/</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+    <repository>
+      <id>repo.micromata.priv</id>
+      <url>http://repo.micromata.priv:8081/nexus/content/groups/public/</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+    <repository>
+      <id>mavenorg</id>
+      <url>http://repo1.maven.org/maven2</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+
+    <repository>
+      <id>ulib-release</id>
+      <name>Ulib releases repository</name>
+      <url>http://repo.micromata.priv:8081/nexus/content/repositories/ulib-release</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+    <repository>
+      <id>ulib-snapshot</id>
+      <name>Ulib snapshot repository</name>
+      <url>http://repo.micromata.priv:8081/nexus/content/repositories/ulib-snapshot</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <updatePolicy>always</updatePolicy>
+      </snapshots>
+    </repository>
+  </repositories>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>repo.micromata.priv</id>
+      <url>http://repo.micromata.priv:8081/nexus/content/groups/public/</url>
+    </pluginRepository>
+    <pluginRepository>
+      <id>snapshots</id>
+      <url>http://repo.micromata.priv:8081/nexus/content/groups/public-snapshots/</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+    </pluginRepository>
+    <pluginRepository>
+      <id>mavenorg</id>
+      <url>http://repo1.maven.org/maven2</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </pluginRepository>
+  </pluginRepositories>
+
+
+</project>

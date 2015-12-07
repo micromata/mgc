@@ -1,0 +1,858 @@
+/////////////////////////////////////////////////////////////////////////////
+//
+// Project   Micromata Genome Core
+//
+// Author    roger@micromata.de
+// Created   20.01.2008
+// Copyright Micromata 20.01.2008
+//
+/////////////////////////////////////////////////////////////////////////////
+package de.micromata.genome.logging;
+
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
+
+import de.micromata.genome.stats.Stats;
+import de.micromata.genome.util.types.Pair;
+
+/**
+ * Common base implementation.
+ * 
+ * @author roger
+ * 
+ */
+public abstract class BaseLogging implements Logging
+{
+
+  /**
+   * The is inited.
+   */
+  protected static boolean isInited = false;
+
+  /**
+   * will be set while initialization. avoid to call recursive
+   */
+  protected boolean inInitialization = false;
+
+  /**
+   * The pre start logs.
+   */
+  protected static List<LogWriteEntry> preStartLogs = new ArrayList<LogWriteEntry>();
+
+  /**
+   * do not call any modifable access to these. But constructes new copy and asign.
+   */
+  protected static Map<String, LogCategory> registerdLogCategories = new HashMap<String, LogCategory>();
+
+  /**
+   * do not call any modifable access to these. But constructes new copy and asign.
+   */
+  protected static Map<String, LogAttributeType> registerdLogAttributes = new HashMap<String, LogAttributeType>();
+
+  /**
+   * do not call any modifable access to these. But constructes new copy and asign.
+   */
+  protected static Map<String, LogAttributeType> defaultLogAttributes = new HashMap<String, LogAttributeType>();
+
+  /**
+   * do not call any modifable access to these. But constructes new copy and asign.
+   */
+  protected static Map<String, LogAttributeType> searchLogAttributes = new HashMap<String, LogAttributeType>();
+
+  /**
+   * Default Einstellung fuer Maximalen Logattribute 1MB.
+   */
+  public static final int DEFAULT_MAX_LOG_ATTR_LENGTH = 1024 * 1024;
+
+  /**
+   * Maximale Laenge eines Logattributes.
+   */
+  private int maxLogAttrLength = DEFAULT_MAX_LOG_ATTR_LENGTH;
+
+  /**
+   * Name des LogAttributeType zu maximaler Groesse des Logeintrags.
+   * 
+   * Ueberschreibt maxLogAttrLength.
+   */
+  private Map<String, Integer> logAttributeLimitMap = new HashMap<String, Integer>();
+
+  /**
+   * filter. Modifiy only on construction time, because not synchronized.
+   */
+  private List<LogWriteFilter> writeFilters = new ArrayList<>();
+  /**
+   * Modifiy only on construction time, because not synchronized.
+   */
+  private List<LogFilter> readFilters = new ArrayList<>();
+
+  /**
+   * Um die zu Anwendung neu gekommene(z.B. durch ein Plugin) {@link LogCategory} s zu registreren.
+   * 
+   * @param cats beliebige Menge an {@link LogCategory}
+   */
+  public static void registerLogCategories(LogCategory... cats)
+  {
+    for (LogCategory c : cats) {
+      if (c.getFqName().length() > 30) {
+        /**
+         * @logging
+         * @reason Eine LogCategory wurde registriert, wobei der Laenge des Bezeichers fuer die DB zu lang ist
+         * @action Entwickler kontaktieren
+         */
+        throw new LoggedRuntimeException(LogLevel.Error, GenomeLogCategory.Configuration,
+            "LogCategory to long (30 chars max): "
+                + c.getFqName());
+      }
+      Map<String, LogCategory> nregisterdLogCategories = new HashMap<String, LogCategory>(registerdLogCategories);
+      nregisterdLogCategories.put(c.getFqName(), new LogCategoryWrapper(c));
+      registerdLogCategories = nregisterdLogCategories;
+    }
+  }
+
+  /**
+   * Findet in den registrierten LogCategories eine {@link LogCategory} by name.
+   *
+   * @param catName the cat name
+   * @return the category by string
+   */
+  public static LogCategory getCategoryByString(String catName)
+  {
+    return registerdLogCategories.get(catName);
+  }
+
+  /**
+   * Registrierung neuer {@link LogAttribute}s.
+   *
+   * @param attTypes Beliebige Menge ans {@link LogAttribute}
+   */
+  public static void registerLogAttributeType(LogAttributeType... attTypes)
+  {
+    for (LogAttributeType c : attTypes) {
+      if (c.name().length() > 30) {
+        /**
+         * @logging
+         * @reason Eine LogAttributeType wurde registriert, wobei der Laenge des Bezeichers fuer die DB zu lang ist
+         * @action Entwickler kontaktieren
+         */
+        throw new LoggedRuntimeException(LogLevel.Error, GenomeLogCategory.Configuration,
+            "LogAttributeType name to long (30 chars max): "
+                + c.name());
+      }
+      if (c.isSearchKey() == true) {
+        Map<String, LogAttributeType> nsearchLogAttributes = new HashMap<String, LogAttributeType>(searchLogAttributes);
+        nsearchLogAttributes.put(c.name(), c);
+        searchLogAttributes = nsearchLogAttributes;
+      }
+      if (c.getAttributeDefaultFiller() != null) {
+        Map<String, LogAttributeType> ndefaultLogAttributes = new HashMap<String, LogAttributeType>(
+            defaultLogAttributes);
+        ndefaultLogAttributes.put(c.name(), c);
+        defaultLogAttributes = ndefaultLogAttributes;
+
+      }
+      Map<String, LogAttributeType> nregisterdLogAttributes = new HashMap<String, LogAttributeType>(
+          registerdLogAttributes);
+      LogAttributeTypeWrapper wat = new LogAttributeTypeWrapper(c);
+      nregisterdLogAttributes.put(c.name(), wat);
+      registerdLogAttributes = nregisterdLogAttributes;
+
+    }
+  }
+
+  /**
+   * Gets the attribute type by string.
+   *
+   * @param attrName the attr name
+   * @return the attribute type by string
+   */
+  public static LogAttributeType getAttributeTypeByString(String attrName)
+  {
+    return registerdLogAttributes.get(attrName);
+  }
+
+  /**
+   * Adds the pre start log.
+   *
+   * @param le the le
+   */
+  public void addPreStartLog(LogWriteEntry le)
+  {
+    List<LogWriteEntry> tpreStartLogs = preStartLogs;
+    if (preStartLogs == null) {
+      tpreStartLogs = new ArrayList<LogWriteEntry>();
+    }
+    tpreStartLogs.add(le);
+    preStartLogs = tpreStartLogs;
+
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see de.micromata.genome.logging.Logging#logPreStart(de.micromata.genome.logging.LogLevel,
+   * de.micromata.genome.logging.LogCategory, java.lang.String, de.micromata.genome.logging.LogAttribute[])
+   */
+  @Override
+  public void logPreStart(LogLevel ll, LogCategory cat, String msg, LogAttribute... attributes)
+  {
+    LogWriteEntry lwe = new LogWriteEntry(ll, cat.getFqName(), msg, attributes);
+    addPreStartLog(lwe);
+
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see de.micromata.genome.logging.Logging#debug(de.micromata.genome.logging.LogCategory, java.lang.String,
+   * de.micromata.genome.logging.LogAttribute[])
+   */
+  @Override
+  public void debug(LogCategory cat, String msg, LogAttribute... attributes)
+  {
+    doLog(LogLevel.Debug, cat, msg, attributes);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see de.micromata.genome.logging.Logging#trace(de.micromata.genome.logging.LogCategory, java.lang.String,
+   * de.micromata.genome.logging.LogAttribute[])
+   */
+  @Override
+  public void trace(LogCategory cat, String msg, LogAttribute... attributes)
+  {
+    doLog(LogLevel.Trace, cat, msg, attributes);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see de.micromata.genome.logging.Logging#info(de.micromata.genome.logging.LogCategory, java.lang.String,
+   * de.micromata.genome.logging.LogAttribute[])
+   */
+  @Override
+  public void info(LogCategory cat, String msg, LogAttribute... attributes)
+  {
+    doLog(LogLevel.Info, cat, msg, attributes);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see de.micromata.genome.logging.Logging#note(de.micromata.genome.logging.LogCategory, java.lang.String,
+   * de.micromata.genome.logging.LogAttribute[])
+   */
+  @Override
+  public void note(LogCategory cat, String msg, LogAttribute... attributes)
+  {
+    doLog(LogLevel.Note, cat, msg, attributes);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see de.micromata.genome.logging.Logging#warn(de.micromata.genome.logging.LogCategory, java.lang.String,
+   * de.micromata.genome.logging.LogAttribute[])
+   */
+  @Override
+  public void warn(LogCategory cat, String msg, LogAttribute... attributes)
+  {
+    doLog(LogLevel.Warn, cat, msg, attributes);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see de.micromata.genome.logging.Logging#error(de.micromata.genome.logging.LogCategory, java.lang.String,
+   * de.micromata.genome.logging.LogAttribute[])
+   */
+  @Override
+  public void error(LogCategory cat, String msg, LogAttribute... attributes)
+  {
+    doLog(LogLevel.Error, cat, msg, attributes);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see de.micromata.genome.logging.Logging#fatal(de.micromata.genome.logging.LogCategory, java.lang.String,
+   * de.micromata.genome.logging.LogAttribute[])
+   */
+  @Override
+  public void fatal(LogCategory cat, String msg, LogAttribute... attributes)
+  {
+    doLog(LogLevel.Fatal, cat, msg, attributes);
+  }
+
+  // private LogAttribute[] pushAttribute(List<LogAttribute> attributes, LogAttribute newAttribute)
+  // {
+  //
+  // if (ArrayUtils.indexOf(attributes, newAttribute) != -1)
+  // return attributes;
+  // return (LogAttribute[]) ArrayUtils.add(attributes, newAttribute);
+  // }
+
+  /**
+   * Do log.
+   *
+   * @param ll the ll
+   * @param cat the cat
+   * @param msg the msg
+   * @param attributes the attributes
+   */
+  public void doLog(LogLevel ll, LogCategory cat, String msg, List<LogAttribute> attributes)
+  {
+    LogAttribute[] a = new LogAttribute[] {};
+    a = attributes.toArray(a);
+    doLog(ll, cat, msg, a);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see de.micromata.genome.logging.Logging#doLog(de.micromata.genome.logging.LogLevel,
+   * de.micromata.genome.logging.LogCategory, java.lang.String, de.micromata.genome.logging.LogAttribute[])
+   */
+  @Override
+  public void doLog(LogLevel ll, LogCategory cat, String msg, LogAttribute... attributes)
+  {
+    doLog(ll, cat.getFqName(), msg, attributes);
+  }
+
+  /**
+   * Unwrapp log exceptions.
+   *
+   * @param lwe the lwe
+   */
+  protected void unwrappLogExceptions(LogWriteEntry lwe)
+  {
+    List<LogAttribute> addLogs = null;
+    for (LogAttribute la : lwe.getAttributes()) {
+      if (la instanceof LogExceptionAttribute) {
+        LogExceptionAttribute lea = (LogExceptionAttribute) la;
+        if (lea.getException() != null && lea.getException() instanceof WithLogAttributes) {
+          WithLogAttributes wa = (WithLogAttributes) lea.getException();
+          if (addLogs == null) {
+            addLogs = new ArrayList<LogAttribute>();
+          }
+          Collection<LogAttribute> wattrs = wa.getLogAttributes();
+          if (wattrs != null) {
+            addLogs.addAll(wattrs);
+          }
+        }
+      }
+    }
+    if (addLogs == null) {
+      return;
+    }
+    for (LogAttribute la : addLogs) {
+      pushAttribute(lwe.getAttributes(), la);
+    }
+  }
+
+  /**
+   * Push attribute.
+   *
+   * @param attributes the attributes
+   * @param le the le
+   */
+  public static void pushAttribute(List<LogAttribute> attributes, LogAttribute le)
+  {
+    if (le == null) {
+      return;
+    }
+    for (LogAttribute a : attributes) {
+      if (a.getType() == le.getType()) {
+        return;
+      }
+    }
+    attributes.add(le);
+  }
+
+  /**
+   * Ensure an attribute list contains no duplicates with the same LogAttributeType Duplicates are removed for the list
+   * starting at the head. Therefore were there is a duplicate the entry nearest the end of the list will survive.
+   * 
+   * The algoritem has N^2 complexity and should only be used on short lists
+   *
+   * @param attributes the attributes
+   */
+  public static void ensureUniqueAttributes(List<LogAttribute> attributes)
+  {
+    for (int i = 0; i < attributes.size();) {
+      LogAttribute la = attributes.get(i);
+      boolean duplicate = false;
+      for (int j = 0; j < i; ++j) {
+        LogAttribute la2 = attributes.get(j);
+        if (la2.getType() == la.getType()) {
+          duplicate = true;
+          break;
+        }
+      }
+      if (duplicate == true) {
+        attributes.remove(i);
+      } else {
+        ++i;
+      }
+    }
+  }
+
+  /**
+   * Rework log.
+   *
+   * @param lwe the lwe
+   */
+  protected void reworkLog(LogWriteEntry lwe)
+  {
+    unwrappLogExceptions(lwe);
+
+    pushContainedAttributes(lwe.getAttributes(), lwe.getAttributes());
+
+    // zuerst explizit definierte Logattribute
+    LoggingContext ctx = LoggingContext.getContext();
+    if (ctx != null) {
+      Map<LogAttributeType, LogAttribute> attrs = ctx.getAttributes();
+      if (attrs != null) {
+        for (LogAttributeType at : attrs.keySet()) {
+          pushAttribute(lwe.getAttributes(), attrs.get(at));
+        }
+        pushContainedAttributes(lwe.getAttributes(), attrs.values());
+      }
+    }
+
+    for (LogAttributeType da : defaultLogAttributes.values()) {
+      String v = da.getAttributeDefaultFiller().getValue(lwe, ctx);
+      if (StringUtils.isNotEmpty(v) == true) {
+        pushAttribute(lwe.getAttributes(), new LogAttribute(da, v));
+      }
+    }
+  }
+
+  /**
+   * Durchsucht <code>src</code> nach <code>WithLogAttributes</code> und fügt diese <code>dest</code> hinzu.
+   *
+   * @param dest the dest
+   * @param src Kann <code>null</code> sein.
+   */
+  protected void pushContainedAttributes(List<LogAttribute> dest, Collection<LogAttribute> src)
+  {
+    if (src == null) {
+      return;
+    }
+    List<LogAttribute> addMe = new ArrayList<LogAttribute>();
+    for (LogAttribute sa : src) {
+      if (sa instanceof WithLogAttributes) {
+        Collection<LogAttribute> wattrs = ((WithLogAttributes) sa).getLogAttributes();
+        if (wattrs != null) {
+          for (LogAttribute ctxa : wattrs) {
+            addMe.add(ctxa);
+          }
+        }
+      }
+    }
+    for (LogAttribute la : addMe) {
+      pushAttribute(dest, la);
+    }
+  }
+
+  /**
+   * @return
+   */
+  public List<LogWriteFilter> getWriteFilters()
+  {
+
+    return writeFilters;
+  }
+
+  public List<LogFilter> getReadFilters()
+  {
+
+    return readFilters;
+  }
+
+  public void setWriteFilters(List<LogWriteFilter> writeFilters)
+  {
+    this.writeFilters = writeFilters;
+  }
+
+  public void setReadFilters(List<LogFilter> readFilters)
+  {
+    this.readFilters = readFilters;
+  }
+
+  /**
+   * Write pre start logs.
+   *
+   * @param clwe the clwe
+   */
+  private void writePreStartLogs(List<LogWriteEntry> clwe)
+  {
+    nextLogEntry: for (LogWriteEntry lwe : clwe) {
+      reworkLog(lwe);
+      List<LogWriteFilter> filters = getWriteFilters();
+      if (filters != null) {
+        for (LogWriteFilter filter : filters) {
+          if (filter.match(lwe) == false) {
+            continue nextLogEntry;
+          }
+        }
+      }
+      if (GLog.isLogEnabled(lwe.getLevel()) == false) {
+        return;
+      }
+      ensureUniqueAttributes(lwe.getAttributes());
+      doLogImpl(lwe);
+    }
+  }
+
+  /**
+   * Shorten log attribute.
+   *
+   * @param lwe the lwe
+   * @param la the la
+   */
+  protected void shortenLogAttribute(LogWriteEntry lwe, LogAttribute la)
+  {
+    String value = la.getValueToWrite(lwe);
+    if (value == null) {
+      return;
+    }
+    int size = la.getType().maxValueSize();
+    if (size == 0) {
+      size = getMaxLogAttrLength();
+      Integer maxi = getLogAttributeLimitMap().get(la.getType().name());
+      if (maxi != null) {
+        size = maxi;
+      }
+    }
+    if (value.length() <= size) {
+      return;
+    }
+    if (size > 0) {
+      value = value.substring(0, size);
+    }
+    la.setValue(value);
+  }
+
+  /**
+   * Shorten log attributes.
+   *
+   * @param lwe the lwe
+   */
+  protected void shortenLogAttributes(LogWriteEntry lwe)
+  {
+    for (LogAttribute la : lwe.getAttributes()) {
+      shortenLogAttribute(lwe, la);
+    }
+  }
+
+  /**
+   * Do log.
+   *
+   * @param ll the ll
+   * @param cat the cat
+   * @param msg the msg
+   * @param attributes the attributes
+   */
+  public void doLog(LogLevel ll, String cat, String msg, LogAttribute... attributes)
+  {
+    LogWriteEntry lwe = new LogWriteEntry(ll, cat, msg, attributes);
+
+    logLwe(lwe);
+  }
+
+  /**
+   * Initialize logger.
+   */
+  private void init()
+  {
+    if (inInitialization == true) {
+      return;
+    }
+    inInitialization = true;
+    try {
+      doCustomInitialization();
+      isInited = true;
+    } finally {
+      inInitialization = false;
+    }
+  }
+
+  /**
+   * Do custom initialization.
+   */
+  protected void doCustomInitialization()
+  {
+
+  }
+
+  /**
+   * Writes a prepared LogWriteEntry
+   */
+  @Override
+  public void logLwe(LogWriteEntry lwe)
+  {
+    if (isInited == false) {
+      init();
+    }
+    if (inInitialization == true) {
+      addPreStartLog(lwe);
+      return;
+    }
+    if (preStartLogs != null) {
+      List<LogWriteEntry> clwe = new ArrayList<LogWriteEntry>();
+      clwe.addAll(preStartLogs);
+      preStartLogs = null;
+      writePreStartLogs(clwe);
+    }
+    reworkLog(lwe);
+
+    List<LogWriteFilter> filters = getWriteFilters();
+    if (filters != null) {
+      for (LogWriteFilter filter : filters) {
+        if (filter.match(lwe) == false) {
+          return;
+        }
+      }
+    }
+    final LogLevel ll = lwe.getLevel();
+    Stats.addLogging(lwe);
+    boolean enabled = ll.getLevel() >= LogLevel.Note.getLevel();
+    enabled = LoggingServiceManager.get().getLogConfigurationDAO().isLogEnabled(lwe.getLevel(), lwe.getCategory(),
+        lwe.getMessage());
+    if (enabled == false) {
+      return;
+    }
+    ensureUniqueAttributes(lwe.getAttributes());
+    shortenLogAttributes(lwe);
+    doLogImpl(lwe);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see de.micromata.genome.logging.Logging#doLogImpl(de.micromata.genome.logging.LogWriteEntry)
+   */
+  @Override
+  public abstract void doLogImpl(final LogWriteEntry lwe);
+
+  // /**
+  // * @param startRow Zeile zum Start
+  // * @param maxRow Anzahl zeilen maximal
+  // *
+  // */
+  // public List<LogEntry> selectLogs(Timestamp start, Timestamp end, Integer loglevel, String category, String msg,
+  // List<Pair<String, String>> logAttributes, int startRow, int maxRow, List<SqlOrderBy> orderBy, boolean masterOnly)
+  // {
+  // CollectLogEntryCallback callback = new CollectLogEntryCallback();
+  // selectLogs(start, end, loglevel, category, msg, logAttributes, startRow, maxRow, orderBy, masterOnly, callback, );
+  // return callback.entries;
+  // }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see de.micromata.genome.logging.Logging#selectLogs(java.sql.Timestamp, java.sql.Timestamp, java.lang.Integer,
+   * java.lang.String, java.lang.String, java.util.List, int, int, java.util.List,
+   * de.micromata.genome.logging.LogEntryCallback)
+   */
+  @Override
+  public void selectLogs(Timestamp start, Timestamp end, Integer loglevel, String category, String msg,
+      List<Pair<String, String>> logAttributes, int startRow, int maxRow, List<OrderBy> orderBy, boolean masterOnly,
+      LogEntryCallback callback)
+  {
+
+    LogEntryFilterCallback filter = new LogEntryFilterCallback(callback,
+        LoggingServiceManager.get().getLogConfigurationDAO(), maxRow);
+    try {
+      selectLogsImpl(start, end, loglevel, category, msg, logAttributes, startRow, maxRow, orderBy, masterOnly, filter);
+    } catch (EndOfSearch ex) {
+      // just terminate the search
+    }
+  }
+
+  /**
+   * Select logs impl.
+   *
+   * @param start the start
+   * @param end the end
+   * @param loglevel the loglevel
+   * @param category the category
+   * @param msg the msg
+   * @param logAttributes the log attributes
+   * @param startRow the start row
+   * @param maxRow the max row
+   * @param orderBy the order by
+   * @param masterOnly the master only
+   * @param callback the callback
+   * @throws EndOfSearch the end of search
+   */
+  protected abstract void selectLogsImpl(Timestamp start, Timestamp end, Integer loglevel, String category, String msg,
+      List<Pair<String, String>> logAttributes, int startRow, int maxRow, List<OrderBy> orderBy, boolean masterOnly,
+      LogEntryCallback callback) throws EndOfSearch;
+
+  @Override
+  public void selectLogs(List<Object> logId, boolean masterOnly, LogEntryCallback callback)
+  {
+    LogEntryFilterCallback filter = new LogEntryFilterCallback(callback,
+        LoggingServiceManager.get().getLogConfigurationDAO(),
+        Integer.MAX_VALUE);
+    try {
+      selectLogsImpl(logId, masterOnly, filter);
+    } catch (EndOfSearch ex) {
+      // just terminate the search
+    }
+  }
+
+  /**
+   * Select logs impl.
+   *
+   * @param logId the log id
+   * @param masterOnly the master only
+   * @param callback the callback
+   * @throws EndOfSearch the end of search
+   */
+  protected abstract void selectLogsImpl(List<Object> logId, boolean masterOnly, LogEntryCallback callback)
+      throws EndOfSearch;
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see de.micromata.genome.logging.Logging#getConfigMinLogLevel()
+   */
+  @Override
+  public LogLevel getConfigMinLogLevel()
+  {
+    return LoggingServiceManager.get().getLogConfigurationDAO().getThreshold();
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see de.micromata.genome.logging.Logging#getRegisteredAttributes()
+   */
+  @Override
+  public Collection<LogAttributeType> getRegisteredAttributes()
+  {
+    return BaseLogging.registerdLogAttributes.values();
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see de.micromata.genome.logging.Logging#getRegisteredCategories()
+   */
+  @Override
+  public Collection<LogCategory> getRegisteredCategories()
+  {
+    return BaseLogging.registerdLogCategories.values();
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see de.micromata.genome.logging.Logging#getSearchAttributes()
+   */
+  @Override
+  public Collection<LogAttributeType> getSearchAttributes()
+  {
+    return BaseLogging.searchLogAttributes.values();
+  }
+
+  public static boolean isInited()
+  {
+    return isInited;
+  }
+
+  public static void setInited(boolean isInited)
+  {
+    BaseLogging.isInited = isInited;
+  }
+
+  public static List<LogWriteEntry> getPreStartLogs()
+  {
+    return preStartLogs;
+  }
+
+  /**
+   * Sets the pre start logs.
+   *
+   * @param preStartLogs the new pre start logs
+   */
+  public static void setPreStartLogs(List<LogWriteEntry> preStartLogs)
+  {
+    BaseLogging.preStartLogs = preStartLogs;
+  }
+
+  /**
+   * Gets the registerd log categories.
+   *
+   * @return the registerd log categories
+   */
+  public static Map<String, LogCategory> getRegisterdLogCategories()
+  {
+    return registerdLogCategories;
+  }
+
+  public static void setRegisterdLogCategories(Map<String, LogCategory> registerdLogCategories)
+  {
+    BaseLogging.registerdLogCategories = registerdLogCategories;
+  }
+
+  public static Map<String, LogAttributeType> getRegisterdLogAttributes()
+  {
+    return registerdLogAttributes;
+  }
+
+  public static void setRegisterdLogAttributes(Map<String, LogAttributeType> registerdLogAttributes)
+  {
+    BaseLogging.registerdLogAttributes = registerdLogAttributes;
+  }
+
+  public int getMaxLogAttrLength()
+  {
+    return maxLogAttrLength;
+  }
+
+  public void setMaxLogAttrLength(int maxLogAttrLength)
+  {
+    this.maxLogAttrLength = maxLogAttrLength;
+  }
+
+  public Map<String, Integer> getLogAttributeLimitMap()
+  {
+    return logAttributeLimitMap;
+  }
+
+  public void setLogAttributeLimitMap(Map<String, Integer> logAttributeLimitMap)
+  {
+    this.logAttributeLimitMap = logAttributeLimitMap;
+  }
+
+  public static Map<String, LogAttributeType> getDefaultLogAttributes()
+  {
+    return defaultLogAttributes;
+  }
+
+  public static void setDefaultLogAttributes(Map<String, LogAttributeType> defaultLogAttributes)
+  {
+    BaseLogging.defaultLogAttributes = defaultLogAttributes;
+  }
+
+  public static Map<String, LogAttributeType> getSearchLogAttributes()
+  {
+    return searchLogAttributes;
+  }
+
+  public static void setSearchLogAttributes(Map<String, LogAttributeType> searchLogAttributes)
+  {
+    BaseLogging.searchLogAttributes = searchLogAttributes;
+  }
+
+}
