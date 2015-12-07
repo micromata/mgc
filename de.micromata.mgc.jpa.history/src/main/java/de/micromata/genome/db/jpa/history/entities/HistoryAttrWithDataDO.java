@@ -9,8 +9,6 @@ import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 
-import org.junit.Ignore;
-
 import de.micromata.genome.db.jpa.tabattr.entities.JpaTabAttrDataBaseDO;
 
 /**
@@ -19,7 +17,6 @@ import de.micromata.genome.db.jpa.tabattr.entities.JpaTabAttrDataBaseDO;
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  * 
  */
-@Ignore
 @Entity
 @DiscriminatorValue("1")
 public class HistoryAttrWithDataDO extends HistoryAttrDO

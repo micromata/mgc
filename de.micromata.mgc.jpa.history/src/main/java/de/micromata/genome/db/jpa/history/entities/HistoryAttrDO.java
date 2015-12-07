@@ -27,18 +27,16 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.Index;
-import org.junit.Ignore;
 
 import de.micromata.genome.db.jpa.tabattr.entities.JpaTabAttrBaseDO;
 import de.micromata.genome.db.jpa.tabattr.entities.JpaTabAttrDataBaseDO;
 
 /**
- * JPA entity for TB_TA_GATTR.
+ * JPA entity for History.
  *
  * @author roger
  *
  */
-@Ignore
 @Entity
 @Table(name = "TB_BASE_GHISTORY_ATTR")
 @SequenceGenerator(name = "SQ_BASE_GHISTORY_ATTR_PK", sequenceName = "SQ_BASE_GHISTORY_ATTR_PK")

@@ -23,7 +23,6 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Index;
-import org.junit.Ignore;
 
 import de.micromata.genome.db.jpa.tabattr.entities.JpaTabAttrDataBaseDO;
 
@@ -32,7 +31,7 @@ import de.micromata.genome.db.jpa.tabattr.entities.JpaTabAttrDataBaseDO;
  *
  * @author roger
  */
-@Ignore
+
 @Entity
 @Table(name = "TB_BASE_GHISTORY_ATTR_DATA")
 @SequenceGenerator(name = "SQ_BASE_GHISTORY_ATTR_DATA_PK", sequenceName = "SQ_BASE_GHISTORY_ATTR_DATA_PK")
