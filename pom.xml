@@ -88,6 +88,8 @@
     <!-- old 4.1.9.Final -->
     <org.hibernate.hibernate-entitymanager.version>5.0.5.Final</org.hibernate.hibernate-entitymanager.version>
     
+    <spring.version>4.2.3.RELEASE</spring.version>
+    
 		<org.apache.derby.version>10.12.1.1</org.apache.derby.version>
  		<!-- old <hsqldb.version>1.8.0.10</hsqldb.version> -->
     <hsqldb.version>2.3.3</hsqldb.version>
@@ -109,6 +111,7 @@
         <module>de.micromata.mgc.common.test</module>
         <module>de.micromata.mgc.logging</module>
         <module>de.micromata.mgc.jpa.emgr</module>
+        <module>de.micromata.mgc.jpa.emgr.spring</module>
       </modules>
     </profile>
 
