@@ -111,7 +111,7 @@
         <module>de.micromata.mgc.common.test</module>
         <module>de.micromata.mgc.logging</module>
         <module>de.micromata.mgc.jpa.emgr</module>
-        <module>de.micromata.mgc.jpa.emgr.spring</module>
+        <module>de.micromata.mgc.jpa.spring</module>
       </modules>
     </profile>
 
