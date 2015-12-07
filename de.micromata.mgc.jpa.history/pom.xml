@@ -21,11 +21,16 @@
   <dependencies>
     <dependency>
       <groupId>de.micromata.mgc</groupId>
-      <artifactId>de.micromata.mgc.jpa.emgr</artifactId>
+      <artifactId>de.micromata.mgc.jpa.tabattr</artifactId>
       <version>${mgc.version}</version>
     </dependency>
 
-
+  <dependency>
+      <groupId>de.micromata.mgc</groupId>
+      <artifactId>de.micromata.mgc.common.test</artifactId>
+      <version>${mgc.version}</version>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derby</artifactId>

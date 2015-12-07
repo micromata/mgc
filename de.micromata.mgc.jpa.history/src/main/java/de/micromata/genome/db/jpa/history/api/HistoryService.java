@@ -1,5 +1,6 @@
 package de.micromata.genome.db.jpa.history.api;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -42,7 +43,7 @@ public interface HistoryService
    * @param oldProps the old props
    * @param newProps the new props
    */
-  void internalOnUpdate(IEmgr<?> emgr, String entityName, Long entityPk, Map<String, String> oldProps,
+  void internalOnUpdate(IEmgr<?> emgr, String entityName, Serializable entityPk, Map<String, String> oldProps,
       Map<String, String> newProps);
 
   /**
@@ -54,7 +55,7 @@ public interface HistoryService
    * @param entityPk the entity pk
    * @param ent the ent
    */
-  void internalOnInsert(IEmgr<?> emgr, List<WithHistory> whanot, String entityName, Long entityPk, Object ent);
+  void internalOnInsert(IEmgr<?> emgr, List<WithHistory> whanot, String entityName, Serializable entityPk, Object ent);
 
   /**
    * Internal API to find entity with history. If return is empty, no history should be done for this entity.
@@ -87,7 +88,7 @@ public interface HistoryService
    * @param entityId the entity id
    * @return the history entries
    */
-  List<? extends HistoryEntry> getHistoryEntries(String entityName, Long entityId);
+  List<? extends HistoryEntry> getHistoryEntries(String entityName, Serializable entityId);
 
   /**
    * Find all history entries for given table.

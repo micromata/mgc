@@ -1,5 +1,6 @@
 package de.micromata.genome.db.jpa.history.impl;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -84,12 +85,12 @@ public class HistoryServiceImpl implements HistoryService
   }
 
   @Override
-  public void internalOnUpdate(IEmgr<?> emgr, String entityName, Long entityPk, Map<String, String> oldProps,
+  public void internalOnUpdate(IEmgr<?> emgr, String entityName, Serializable entityPk, Map<String, String> oldProps,
       Map<String, String> newProps)
   {
     HistoryMasterDO hm = new HistoryMasterDO();
     hm.setEntityOpType(EntityOpType.Update);
-    hm.setEntityId(entityPk);
+    hm.setEntityId(castToLong(entityPk));
     hm.setEntityName(entityName);
 
     List<DiffEntry> difflist = calculateDiff(oldProps, newProps);
@@ -144,8 +145,20 @@ public class HistoryServiceImpl implements HistoryService
     return ninf;
   }
 
+  private Long castToLong(Serializable entityPk)
+  {
+    if (entityPk instanceof Long) {
+      return (Long) entityPk;
+    }
+    if (entityPk instanceof Number) {
+      return ((Number) entityPk).longValue();
+    }
+    throw new IllegalArgumentException("Pk is not a number: " + entityPk.getClass().getName());
+  }
+
   @Override
-  public void internalOnInsert(IEmgr<?> emgr, List<WithHistory> whanot, String entityName, Long entityPk, Object ent)
+  public void internalOnInsert(IEmgr<?> emgr, List<WithHistory> whanot, String entityName, Serializable entityPk,
+      Object ent)
   {
     Map<String, String> prevMap = new TreeMap<>();
     Map<String, String> nextMap = new TreeMap<>();
@@ -159,7 +172,7 @@ public class HistoryServiceImpl implements HistoryService
     }
     HistoryMasterDO hm = new HistoryMasterDO();
     hm.setEntityOpType(EntityOpType.Insert);
-    hm.setEntityId(entityPk);
+    hm.setEntityId(castToLong(entityPk));
     hm.setEntityName(entityName);
 
     List<DiffEntry> difflist = calculateDiff(prevMap, nextMap);
@@ -301,12 +314,13 @@ public class HistoryServiceImpl implements HistoryService
   }
 
   @Override
-  public List<? extends HistoryEntry> getHistoryEntries(String entityName, Long entityId)
+  public List<? extends HistoryEntry> getHistoryEntries(String entityName, Serializable entityId)
   {
+    Long extPk = castToLong(entityId);
     return JpaHistoryEntityManagerFactory.get().runInTrans((emgr) -> {
       return emgr.selectDetached(HistoryMasterDO.class, "select h from " + HistoryMasterDO.class.getName()
           + " h where h.entityName = :entityName and h.entityId = :entityId", "entityName", entityName, "entityId",
-          entityId);
+          extPk);
     });
   }
 

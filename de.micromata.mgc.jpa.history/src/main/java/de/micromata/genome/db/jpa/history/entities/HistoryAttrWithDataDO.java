@@ -65,7 +65,7 @@ public class HistoryAttrWithDataDO extends HistoryAttrDO
       orphanRemoval = true, fetch = FetchType.EAGER)
   @OrderColumn(name = "datarow")
   @Override
-  public List<JpaTabAttrDataBaseDO<?>> getData()
+  public List<JpaTabAttrDataBaseDO<?, Long>> getData()
   {
     return super.getData();
   }

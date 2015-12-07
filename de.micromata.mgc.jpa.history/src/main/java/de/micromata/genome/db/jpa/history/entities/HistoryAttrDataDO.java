@@ -42,7 +42,7 @@ import de.micromata.genome.db.jpa.tabattr.entities.JpaTabAttrDataBaseDO;
         @Index(name = "IX_BASE_GHISTORY_A_D_MODAT", columnNames = { "MODIFIEDAT" }), //
         @Index(name = "IX_BASE_GHISTORY_A_D_PARENT", columnNames = { "PARENT_PK" }),//
     }, appliesTo = "TB_BASE_GHISTORY_ATTR_DATA")
-public class HistoryAttrDataDO extends JpaTabAttrDataBaseDO<HistoryAttrDO>
+public class HistoryAttrDataDO extends JpaTabAttrDataBaseDO<HistoryAttrDO, Long>
 {
 
   /**

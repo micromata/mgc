@@ -1,5 +1,6 @@
 package de.micromata.genome.db.jpa.history.impl;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +30,7 @@ public class HistoryUpdateCopyFilterEventListener implements EmgrEventHandler<Em
       event.nextFilter();
       return;
     }
-    Long entPk = event.getTarget().getPk();
+    Serializable entPk = event.getTarget().getPk();
 
     Class<?> entClass = event.getTarget().getClass();
 

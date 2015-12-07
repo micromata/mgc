@@ -9,13 +9,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.micromata.genome.GenomeTestCase;
-import de.micromata.genome.dao.GenomeDaoManager;
 import de.micromata.genome.db.jpa.history.api.HistoryEntry;
 import de.micromata.genome.db.jpa.history.api.HistoryService;
 import de.micromata.genome.db.jpa.history.api.HistoryServiceManager;
 import de.micromata.genome.db.jpa.history.test.DummyHistEntityDO;
 import de.micromata.genome.db.jpa.history.test.HistoryTestEmgrFactory;
-import de.micromata.genome.user.InternalSysAdminUser;
 
 /**
  * Tests the the history feature.
@@ -38,7 +36,7 @@ public class ReadWriteWithHistTest extends GenomeTestCase
   @Test
   public void testReadWrite()
   {
-    GenomeDaoManager.get().getUserDAO().setCurrentUser(new InternalSysAdminUser("tst_hist_create"));
+    //    GenomeDaoManager.get().getUserDAO().setCurrentUser(new InternalSysAdminUser("tst_hist_create"));
     DummyHistEntityDO ne = new DummyHistEntityDO();
     ne.setStringValue("The Created");
 
@@ -68,7 +66,7 @@ public class ReadWriteWithHistTest extends GenomeTestCase
   @Test
   public void testReadTransactionalInsert()
   {
-    GenomeDaoManager.get().getUserDAO().setCurrentUser(new InternalSysAdminUser("tst_hist_create"));
+    //    GenomeDaoManager.get().getUserDAO().setCurrentUser(new InternalSysAdminUser("tst_hist_create"));
     DummyHistEntityDO ne = new DummyHistEntityDO();
     ne.setStringValue("The Created");
     ne.setLongValue(111);
@@ -97,7 +95,7 @@ public class ReadWriteWithHistTest extends GenomeTestCase
   @Test
   public void testReadTransactionalUpdate()
   {
-    GenomeDaoManager.get().getUserDAO().setCurrentUser(new InternalSysAdminUser("tst_hist_create"));
+    //    GenomeDaoManager.get().getUserDAO().setCurrentUser(new InternalSysAdminUser("tst_hist_create"));
     DummyHistEntityDO ne = new DummyHistEntityDO();
     ne.setStringValue("The Created");
     ne.setLongValue(111);

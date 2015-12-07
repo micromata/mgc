@@ -1,5 +1,6 @@
 package de.micromata.genome.db.jpa.history.entities;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +35,7 @@ import de.micromata.genome.db.jpa.tabattr.entities.JpaTabMasterBaseDO;
 @Entity
 @Table(name = "TB_BASE_GHISTORY")
 @SequenceGenerator(name = "SQ_BASE_GHISTORY_PK", sequenceName = "SQ_BASE_GHISTORY_PK")
-public class HistoryMasterDO extends JpaTabMasterBaseDO<HistoryMasterDO>implements HistoryEntry
+public class HistoryMasterDO extends JpaTabMasterBaseDO<HistoryMasterDO, Long> implements HistoryEntry
 {
 
   /**
@@ -80,40 +81,40 @@ public class HistoryMasterDO extends JpaTabMasterBaseDO<HistoryMasterDO>implemen
       fetch = FetchType.EAGER)
   @MapKey(name = "propertyName")
   @Override
-  public Map<String, JpaTabAttrBaseDO<HistoryMasterDO>> getAttributes()
+  public Map<String, JpaTabAttrBaseDO<HistoryMasterDO, Long>> getAttributes()
   {
     return super.getAttributes();
   }
 
   @Override
   @Transient
-  public Class<? extends JpaTabAttrBaseDO<HistoryMasterDO>> getAttrEntityClass()
+  public Class<? extends JpaTabAttrBaseDO<HistoryMasterDO, ? extends Serializable>> getAttrEntityClass()
   {
     return HistoryAttrDO.class;
   }
 
   @Override
   @Transient
-  public Class<? extends JpaTabAttrBaseDO<HistoryMasterDO>> getAttrEntityWithDataClass()
+  public Class<? extends JpaTabAttrBaseDO<HistoryMasterDO, ? extends Serializable>> getAttrEntityWithDataClass()
   {
     return HistoryAttrWithDataDO.class;
   }
 
   @Override
   @Transient
-  public Class<? extends JpaTabAttrDataBaseDO<? extends JpaTabAttrBaseDO<HistoryMasterDO>>> getAttrDataEntityClass()
+  public Class<? extends JpaTabAttrDataBaseDO<? extends JpaTabAttrBaseDO<HistoryMasterDO, Long>, Long>> getAttrDataEntityClass()
   {
     return HistoryAttrDataDO.class;
   }
 
   @Override
-  public JpaTabAttrBaseDO<HistoryMasterDO> createAttrEntity(String key, char type, String value)
+  public JpaTabAttrBaseDO<HistoryMasterDO, Long> createAttrEntity(String key, char type, String value)
   {
     return new HistoryAttrDO(this, key, type, value);
   }
 
   @Override
-  public JpaTabAttrBaseDO<HistoryMasterDO> createAttrEntityWithData(String key, char type, String value)
+  public JpaTabAttrBaseDO<HistoryMasterDO, Long> createAttrEntityWithData(String key, char type, String value)
   {
     return new HistoryAttrWithDataDO(this, key, type, value);
   }

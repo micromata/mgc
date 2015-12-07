@@ -1,5 +1,6 @@
 package de.micromata.genome.db.jpa.history.impl;
 
+import java.io.Serializable;
 import java.util.List;
 
 import de.micromata.genome.db.jpa.history.api.HistoryService;
@@ -27,7 +28,7 @@ public class HistoryEmgrAfterInsertedEventHandler implements EmgrEventHandler<Em
     if (whanots.isEmpty() == true) {
       return;
     }
-    Long entPk = ((DbRecord) ent).getPk();
+    Serializable entPk = ((DbRecord<?>) ent).getPk();
     Class<?> entClass = ent.getClass();
     historyService.internalOnInsert(event.getEmgr(), whanots, entClass.getName(), entPk, ent);
   }

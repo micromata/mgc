@@ -1,7 +1,5 @@
 package de.micromata.genome.db.jpa.history.api;
 
-import de.micromata.genome.dao.AbstractModuleDaoManager;
-import de.micromata.genome.dao.StaticDaoManager;
 import de.micromata.genome.db.jpa.history.impl.HistoryServiceImpl;
 import de.micromata.genome.logging.GenomeLogCategory;
 import de.micromata.genome.logging.LogCategory;
@@ -11,14 +9,13 @@ import de.micromata.genome.logging.LogCategory;
  *
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  */
-public class HistoryServiceManager implements AbstractModuleDaoManager
+public class HistoryServiceManager
 {
 
   /**
    * The instance.
    */
-  protected static HistoryServiceManager INSTANCE = StaticDaoManager.get().getModuleDaoDomainManager() // NOSONAR "Malicious code vulnerability" Framework  
-      .initNewModuleDaoManager(new HistoryServiceManager());
+  protected static HistoryServiceManager INSTANCE = new HistoryServiceManager();
   /**
    * The Constant DAODOMAINNAME.
    */
@@ -36,8 +33,7 @@ public class HistoryServiceManager implements AbstractModuleDaoManager
    */
   public static HistoryServiceManager get()
   {
-    return StaticDaoManager.get().getModuleDaoDomainManager()
-        .getDaoManager(DAODOMAINNAME, HistoryServiceManager.class, INSTANCE);
+    return INSTANCE;
   }
 
   /**
@@ -65,7 +61,6 @@ public class HistoryServiceManager implements AbstractModuleDaoManager
    *
    */
 
-  @Override
   public LogCategory getDaoManagerLogCategory()
   {
     return GenomeLogCategory.Database;
@@ -76,7 +71,6 @@ public class HistoryServiceManager implements AbstractModuleDaoManager
    *
    */
 
-  @Override
   public String getDomain()
   {
     return DAODOMAINNAME;

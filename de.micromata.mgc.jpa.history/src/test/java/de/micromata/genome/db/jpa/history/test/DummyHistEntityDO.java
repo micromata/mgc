@@ -25,7 +25,7 @@ import de.micromata.genome.jpa.StdRecordDO;
     uniqueConstraints = {
         @UniqueConstraint(columnNames = { "longValue" },
             name = "IX_TST_DUMMY_HIST_ENTITY_LV") })
-public class DummyHistEntityDO extends StdRecordDO
+public class DummyHistEntityDO extends StdRecordDO<Long>
 {
 
   private String stringValue;

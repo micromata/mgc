@@ -50,7 +50,7 @@ import de.micromata.genome.db.jpa.tabattr.entities.JpaTabAttrDataBaseDO;
     }, appliesTo = "TB_BASE_GHISTORY_ATTR")
 @DiscriminatorColumn(name = "WITHDATA", discriminatorType = DiscriminatorType.CHAR)
 @DiscriminatorValue("0")
-public class HistoryAttrDO extends JpaTabAttrBaseDO<HistoryMasterDO>
+public class HistoryAttrDO extends JpaTabAttrBaseDO<HistoryMasterDO, Long>
 {
 
   /**
@@ -90,7 +90,7 @@ public class HistoryAttrDO extends JpaTabAttrBaseDO<HistoryMasterDO>
   }
 
   @Override
-  public JpaTabAttrDataBaseDO<?> createData(String data)
+  public JpaTabAttrDataBaseDO<?, Long> createData(String data)
   {
     return new HistoryAttrDataDO(this, data);
   }
