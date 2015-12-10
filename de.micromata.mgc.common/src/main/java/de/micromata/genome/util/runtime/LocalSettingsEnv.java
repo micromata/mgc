@@ -2,6 +2,7 @@ package de.micromata.genome.util.runtime;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -10,10 +11,13 @@ import javax.mail.Session;
 import javax.naming.Context;
 import javax.naming.NameNotFoundException;
 import javax.naming.NamingException;
+import javax.naming.spi.InitialContextFactory;
 
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+
+import de.micromata.genome.util.runtime.jndi.JndiMockupNamingContextBuilder;
 
 /**
  * The Class LocalSettingsEnv.
@@ -22,7 +26,7 @@ import org.apache.log4j.Logger;
  */
 public class LocalSettingsEnv
 {
-
+  private static LocalSettingsEnv INSTANCE;
   /**
    * The Constant log.
    */
@@ -58,6 +62,30 @@ public class LocalSettingsEnv
     localSettings = LocalSettings.get();
     this.initialContext = initialContext;
     parse();
+  }
+
+  public static LocalSettingsEnv get()
+  {
+    if (INSTANCE != null) {
+      return INSTANCE;
+    }
+    INSTANCE = createJndiLocalSettingsEnv();
+    return INSTANCE;
+  }
+
+  private static LocalSettingsEnv createJndiLocalSettingsEnv()
+  {
+    JndiMockupNamingContextBuilder contextBuilder = new JndiMockupNamingContextBuilder();
+    Hashtable<String, Object> env = new Hashtable<String, Object>();
+    InitialContextFactory initialContextFactory = contextBuilder.createInitialContextFactory(env);
+    try {
+      Context initialContext = initialContextFactory.getInitialContext(env);
+      LocalSettingsEnv localSettingsEnv = new LocalSettingsEnv(initialContext);
+      contextBuilder.activate();
+      return localSettingsEnv;
+    } catch (NamingException ex) {
+      throw new RuntimeException(ex);
+    }
   }
 
   /**
@@ -144,13 +172,7 @@ public class LocalSettingsEnv
   protected void parseJndi() throws NamingException
   {
     // jndi.bind.1.target=genome/jdbc/dsWebDomainAdmin
-    // jndi.bind.1.type=DataSource
-    // jndi.bind.1.source=MyName
-    //
 
-    // if (initialContext == null) {
-    // initialContext = new JndiMockupNamingContextBuilder().createInitialContextFactory(environment);
-    // }
     bindStandards();
     // bindMailSession();
     bindHibernateSettings();
