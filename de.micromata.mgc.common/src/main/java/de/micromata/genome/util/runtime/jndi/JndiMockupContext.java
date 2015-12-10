@@ -1,4 +1,4 @@
-package de.micromata.mgc.common.test.jndi;
+package de.micromata.genome.util.runtime.jndi;
 
 import java.util.Hashtable;
 
@@ -11,7 +11,6 @@ import javax.naming.NamingException;
 import org.apache.commons.lang.StringUtils;
 
 import de.micromata.genome.util.bean.PrivateBeanUtils;
-import de.micromata.mgc.common.test.JndiMockupParser;
 
 /**
  * Mockup implementation for JNDI context.

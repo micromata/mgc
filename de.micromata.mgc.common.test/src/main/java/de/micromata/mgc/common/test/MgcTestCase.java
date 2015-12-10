@@ -10,7 +10,7 @@ import org.junit.BeforeClass;
 
 import de.micromata.genome.util.runtime.LocalSettings;
 import de.micromata.genome.util.runtime.LocalSettingsEnv;
-import de.micromata.mgc.common.test.jndi.JndiMockupNamingContextBuilder;
+import de.micromata.genome.util.runtime.jndi.JndiMockupNamingContextBuilder;
 
 public class MgcTestCase
 {

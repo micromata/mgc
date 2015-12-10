@@ -1,4 +1,4 @@
-package de.micromata.mgc.common.test;
+package de.micromata.genome.util.runtime.jndi;
 
 import javax.naming.CompositeName;
 import javax.naming.Name;

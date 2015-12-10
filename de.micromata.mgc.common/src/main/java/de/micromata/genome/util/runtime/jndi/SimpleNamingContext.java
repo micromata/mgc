@@ -1,4 +1,4 @@
-package de.micromata.mgc.common.test.jndi;
+package de.micromata.genome.util.runtime.jndi;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -166,7 +166,7 @@ public class SimpleNamingContext implements Context
    * Bind the given object to the given name. Note: Not intended for direct use by applications if setting up a
    * JVM-level JNDI environment. Use SimpleNamingContextBuilder to set up JNDI bindings then.
    * 
-   * @see de.micromata.mgc.common.test.jndi.springframework.mock.jndi.SimpleNamingContextBuilder#bind
+   * @see de.micromata.genome.util.runtime.jndi.springframework.mock.jndi.SimpleNamingContextBuilder#bind
    */
   @Override
   public void bind(String name, Object obj)

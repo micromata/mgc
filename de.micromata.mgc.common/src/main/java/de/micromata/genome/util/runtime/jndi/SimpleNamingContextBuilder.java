@@ -1,4 +1,4 @@
-package de.micromata.mgc.common.test.jndi;
+package de.micromata.genome.util.runtime.jndi;
 
 import java.util.Hashtable;
 
