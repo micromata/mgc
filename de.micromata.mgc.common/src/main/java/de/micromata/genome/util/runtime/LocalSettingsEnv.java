@@ -15,6 +15,7 @@ import javax.naming.spi.InitialContextFactory;
 
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.pool.impl.GenericObjectPool;
 import org.apache.log4j.Logger;
 
 import de.micromata.genome.util.runtime.jndi.JndiMockupNamingContextBuilder;
@@ -160,6 +161,15 @@ public class LocalSettingsEnv
       bd.setUrl(url);
       bd.setUsername(userName);
       bd.setPassword(password);
+      bd.setMaxActive(localSettings.getIntValue(dsn + ".maxActive", GenericObjectPool.DEFAULT_MAX_ACTIVE));
+      bd.setMaxIdle(localSettings.getIntValue(dsn + ".maxIdle", GenericObjectPool.DEFAULT_MAX_IDLE));
+      bd.setMinIdle(localSettings.getIntValue(dsn + ".minIdle", GenericObjectPool.DEFAULT_MIN_IDLE));
+      bd.setMaxWait(localSettings.getLongValue(dsn + ".maxWait", GenericObjectPool.DEFAULT_MAX_WAIT));
+      bd.setInitialSize(localSettings.getIntValue(dsn + ".intialSize", 0));
+      bd.setDefaultCatalog(localSettings.get(dsn + ".defaultCatalog", null));
+      bd.setDefaultAutoCommit(localSettings.getBooleanValue(dsn + ".defaultAutoCommit", false));
+      bd.setValidationQuery(localSettings.get(dsn + ".validationQuery", null));
+      bd.setValidationQueryTimeout(localSettings.getIntValue(dsn + ".validationQueryTimeout", -1));
       dataSources.put(name, bd);
     }
   }

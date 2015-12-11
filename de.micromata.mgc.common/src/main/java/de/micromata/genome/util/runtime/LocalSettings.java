@@ -161,6 +161,22 @@ public class LocalSettings
   }
 
   /**
+   * Gets the Long value.
+   * 
+   * @param key the key
+   * @param defaultValue the default value
+   * @return the long value
+   */
+  public long getLongValue(String key, long defaultValue)
+  {
+    if (map.containsKey(key) == false) {
+      return defaultValue;
+    }
+    String v = get(key);
+    return Long.parseLong(v);
+  }
+
+  /**
    * Gets the boolean value.
    * 
    * @param key the key
