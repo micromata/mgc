@@ -6,6 +6,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.function.Supplier;
 
 import javax.mail.Session;
 import javax.naming.Context;
@@ -33,6 +34,7 @@ public class LocalSettingsEnv
    */
   private static final Logger log = Logger.getLogger(LocalSettingsEnv.class);
 
+  public static Supplier<BasicDataSource> dataSourceSuplier = () -> new BasicDataSource();
   /**
    * The local settings.
    */
@@ -156,7 +158,8 @@ public class LocalSettingsEnv
       String userName = localSettings.get(key);
       key = dsn + ".password";
       String password = localSettings.get(key);
-      BasicDataSource bd = new BasicDataSource();
+      BasicDataSource bd = dataSourceSuplier.get();
+
       bd.setDriverClassName(driverName);
       bd.setUrl(url);
       bd.setUsername(userName);
