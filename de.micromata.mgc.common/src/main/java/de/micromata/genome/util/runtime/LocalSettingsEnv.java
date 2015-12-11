@@ -10,8 +10,10 @@ import java.util.function.Supplier;
 
 import javax.mail.Session;
 import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.naming.NameNotFoundException;
 import javax.naming.NamingException;
+import javax.naming.NoInitialContextException;
 import javax.naming.spi.InitialContextFactory;
 
 import org.apache.commons.dbcp.BasicDataSource;
@@ -55,6 +57,16 @@ public class LocalSettingsEnv
    */
   Context initialContext;
 
+  public Context getInitialContext()
+  {
+    return initialContext;
+  }
+
+  public void setInitialContext(Context initialContext)
+  {
+    this.initialContext = initialContext;
+  }
+
   /**
    * Instantiates a new local settings env.
    *
@@ -78,17 +90,25 @@ public class LocalSettingsEnv
 
   private static LocalSettingsEnv createJndiLocalSettingsEnv()
   {
-    JndiMockupNamingContextBuilder contextBuilder = new JndiMockupNamingContextBuilder();
     Hashtable<String, Object> env = new Hashtable<String, Object>();
-    InitialContextFactory initialContextFactory = contextBuilder.createInitialContextFactory(env);
+    Context initialContext;
     try {
-      Context initialContext = initialContextFactory.getInitialContext(env);
+      try {
+        initialContext = new InitialContext();
+        initialContext.lookup("java:");
+      } catch (NoInitialContextException ex) {
+        log.info("No initialContext. Create own context");
+        JndiMockupNamingContextBuilder contextBuilder = new JndiMockupNamingContextBuilder();
+        InitialContextFactory initialContextFactory = contextBuilder.createInitialContextFactory(env);
+        initialContext = initialContextFactory.getInitialContext(env);
+        contextBuilder.activate();
+      }
       LocalSettingsEnv localSettingsEnv = new LocalSettingsEnv(initialContext);
-      contextBuilder.activate();
       return localSettingsEnv;
     } catch (NamingException ex) {
       throw new RuntimeException(ex);
     }
+
   }
 
   /**

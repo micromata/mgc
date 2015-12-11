@@ -29,6 +29,16 @@ public interface HistoryEntry
   String getModifiedBy();
 
   /**
+   * alias to getModifiedBy.
+   * 
+   * @return
+   */
+  default String getUserName()
+  {
+    return getModifiedBy();
+  }
+
+  /**
    * Gets the diff entries.
    *
    * @return the diff entries
