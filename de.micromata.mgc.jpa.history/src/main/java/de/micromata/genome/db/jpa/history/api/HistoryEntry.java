@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import de.micromata.genome.db.jpa.history.entities.EntityOpType;
+import de.micromata.genome.jpa.DbRecord;
 
 /**
  * An change for an Entity.
@@ -11,7 +12,7 @@ import de.micromata.genome.db.jpa.history.entities.EntityOpType;
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
  */
-public interface HistoryEntry
+public interface HistoryEntry extends DbRecord<Long>
 {
 
   /**
