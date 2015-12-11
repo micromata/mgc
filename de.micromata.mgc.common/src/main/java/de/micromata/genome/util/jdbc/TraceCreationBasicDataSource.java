@@ -6,6 +6,7 @@ import java.util.IdentityHashMap;
 import java.util.Map;
 
 import org.apache.commons.dbcp.BasicDataSource;
+import org.apache.log4j.Logger;
 
 /**
  * Traces the allocation stack traces, of the jdbc connections.
@@ -17,11 +18,15 @@ import org.apache.commons.dbcp.BasicDataSource;
  */
 public class TraceCreationBasicDataSource extends BasicDataSource
 {
+  private static final Logger LOG = Logger.getLogger(TraceCreationBasicDataSource.class);
   private Map<Connection, StackTraceElement[]> allocatedStacks = new IdentityHashMap<>();
 
   @Override
   public Connection getConnection() throws SQLException
   {
+    if (LOG.isDebugEnabled() == true) {
+      LOG.debug("getConnection. max: " + getMaxActive() + "; act: " + getNumActive());
+    }
     Connection con = super.getConnection();
     allocatedStacks.put(con, new Throwable().getStackTrace());
     ConnectionWrapper wrapped = new ConnectionWrapper(con)
@@ -32,6 +37,9 @@ public class TraceCreationBasicDataSource extends BasicDataSource
       {
         super.close();
         allocatedStacks.remove(getNestedConnection());
+        if (LOG.isDebugEnabled() == true) {
+          LOG.debug("close. max: " + getMaxActive() + "; act: " + getNumActive());
+        }
       }
 
     };
