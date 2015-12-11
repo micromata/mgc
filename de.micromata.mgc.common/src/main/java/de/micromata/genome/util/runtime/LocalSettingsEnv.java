@@ -167,7 +167,7 @@ public class LocalSettingsEnv
       bd.setMaxWait(localSettings.getLongValue(dsn + ".maxWait", GenericObjectPool.DEFAULT_MAX_WAIT));
       bd.setInitialSize(localSettings.getIntValue(dsn + ".intialSize", 0));
       bd.setDefaultCatalog(localSettings.get(dsn + ".defaultCatalog", null));
-      bd.setDefaultAutoCommit(localSettings.getBooleanValue(dsn + ".defaultAutoCommit", false));
+      bd.setDefaultAutoCommit(localSettings.getBooleanValue(dsn + ".defaultAutoCommit", true));
       bd.setValidationQuery(localSettings.get(dsn + ".validationQuery", null));
       bd.setValidationQueryTimeout(localSettings.getIntValue(dsn + ".validationQueryTimeout", -1));
       dataSources.put(name, bd);
