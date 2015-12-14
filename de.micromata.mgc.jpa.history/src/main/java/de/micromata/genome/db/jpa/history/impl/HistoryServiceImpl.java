@@ -19,6 +19,7 @@ import de.micromata.genome.db.jpa.history.api.HistoryPropertyProvider;
 import de.micromata.genome.db.jpa.history.api.HistoryService;
 import de.micromata.genome.db.jpa.history.api.WithHistory;
 import de.micromata.genome.db.jpa.history.entities.EntityOpType;
+import de.micromata.genome.db.jpa.history.entities.HistoryAttrDO;
 import de.micromata.genome.db.jpa.history.entities.HistoryMasterDO;
 import de.micromata.genome.db.jpa.history.entities.PropertyOpType;
 import de.micromata.genome.jpa.DbRecord;
@@ -29,8 +30,6 @@ import de.micromata.genome.logging.LogExceptionAttribute;
 import de.micromata.genome.logging.LogLevel;
 import de.micromata.genome.logging.LoggedRuntimeException;
 import de.micromata.genome.util.runtime.ClassUtils;
-import de.micromata.genome.util.strings.converter.StandardStringConverter;
-import de.micromata.genome.util.strings.converter.StringConverter;
 
 /**
  * Standard Implementation for History.
@@ -39,11 +38,6 @@ import de.micromata.genome.util.strings.converter.StringConverter;
  */
 public class HistoryServiceImpl implements HistoryService
 {
-
-  /**
-   * The string converter.
-   */
-  private StringConverter stringConverter = StandardStringConverter.get();
 
   /**
    * The Constant OP_SUFFIX.
@@ -94,13 +88,7 @@ public class HistoryServiceImpl implements HistoryService
 
     List<DiffEntry> difflist = calculateDiff(oldProps, newProps);
     for (DiffEntry de : difflist) {
-      hm.putAttribute(de.getPropertyName() + OP_SUFFIX, de.getPropertyOpType().name());
-      if (de.getNewValue() != null) {
-        hm.putAttribute(de.getPropertyName() + NEWVAL_SUFFIX, de.getNewValue());
-      }
-      if (de.getOldValue() != null) {
-        hm.putAttribute(de.getPropertyName() + OLDVAL_SUFFIX, de.getOldValue());
-      }
+      putHistProp(hm, de);
 
     }
     if (hm.getAttributeKeys().isEmpty() == true) {
@@ -176,19 +164,36 @@ public class HistoryServiceImpl implements HistoryService
 
     List<DiffEntry> difflist = calculateDiff(prevMap, nextMap);
     for (DiffEntry de : difflist) {
-      hm.putAttribute(de.getPropertyName() + OP_SUFFIX, de.getPropertyOpType().name());
-      if (de.getNewValue() != null) {
-        hm.putAttribute(de.getPropertyName() + NEWVAL_SUFFIX, de.getNewValue());
-      }
-      if (de.getOldValue() != null) {
-        hm.putAttribute(de.getPropertyName() + OLDVAL_SUFFIX, de.getOldValue());
-      }
+      putHistProp(hm, de);
 
     }
     if (hm.getAttributeKeys().isEmpty() == true) {
       return;
     }
     insert(emgr, hm);
+  }
+
+  private void putHistProp(HistoryMasterDO hm, DiffEntry de)
+  {
+    hm.putAttribute(de.getPropertyName() + OP_SUFFIX, de.getPropertyOpType().name());
+    HistoryAttrDO row = (HistoryAttrDO) hm.getAttributeRow(de.getPropertyName() + OP_SUFFIX);
+    row.setPropertyTypeClass(de.getPropertyOpType().getClass().getName());
+    if (de.getNewProp() != null) {
+      putHistProp(hm, de.getPropertyName(), NEWVAL_SUFFIX, de.getPropertyOpType(), de.getNewProp());
+    }
+    if (de.getOldProp() != null) {
+      putHistProp(hm, de.getPropertyName(), OLDVAL_SUFFIX, de.getPropertyOpType(), de.getOldProp());
+    }
+  }
+
+  private void putHistProp(HistoryMasterDO hm, String property, String suffix, PropertyOpType propertyOpType,
+      HistProp histprop)
+  {
+    String key = property + suffix;
+    hm.putAttribute(key, histprop.getValue());
+    HistoryAttrDO row = (HistoryAttrDO) hm.getAttributeRow(key);
+    row.setPropertyTypeClass(histprop.getType());
+
   }
 
   /**
@@ -239,6 +244,8 @@ public class HistoryServiceImpl implements HistoryService
     DiffEntry ret = new DiffEntry();
     String oldVal = oldProp == null ? null : oldProp.getValue();
     String newVal = newProp == null ? null : newProp.getValue();
+    ret.setNewProp(newProp);
+    ret.setOldProp(oldProp);
     if (oldVal == newVal) {
       return null;
     }
@@ -251,12 +258,10 @@ public class HistoryServiceImpl implements HistoryService
     }
     if (oldVal == null) {
       ret.setPropertyOpType(PropertyOpType.Insert);
-      ret.setNewValue(stringConverter.asString(newVal));
       return ret;
     }
     if (newVal == null) {
       ret.setPropertyOpType(PropertyOpType.Delete);
-      ret.setOldValue(stringConverter.asString(oldVal));
       return ret;
     }
     String oldsval = oldVal;
@@ -265,8 +270,6 @@ public class HistoryServiceImpl implements HistoryService
       return null;
     }
     ret.setPropertyOpType(PropertyOpType.Update);
-    ret.setOldValue(oldsval);
-    ret.setNewValue(newsval);
     return ret;
   }
 
@@ -299,11 +302,26 @@ public class HistoryServiceImpl implements HistoryService
       String propName = key.substring(0, key.length() - OP_SUFFIX.length());
       ne.setPropertyName(propName);
       ne.setPropertyOpType(PropertyOpType.fromString(historyMasterDO.getStringAttribute(key)));
-      ne.setOldValue(historyMasterDO.getStringAttribute(propName + OLDVAL_SUFFIX));
-      ne.setNewValue(historyMasterDO.getStringAttribute(propName + NEWVAL_SUFFIX));
+      HistProp oldProp = readHistProp(historyMasterDO, propName, OLDVAL_SUFFIX);
+      ne.setOldProp(oldProp);
+      HistProp newProp = readHistProp(historyMasterDO, propName, NEWVAL_SUFFIX);
+      ne.setNewProp(newProp);
       entries.add(ne);
     }
     return entries;
+  }
+
+  private HistProp readHistProp(HistoryMasterDO historyMasterDO, String key, String suffix)
+  {
+    HistoryAttrDO row = (HistoryAttrDO) historyMasterDO.getAttributeRow(key + suffix);
+    if (row == null) {
+      return null;
+    }
+    HistProp histprop = new HistProp();
+    histprop.setName(key);
+    histprop.setValue(row.getValue());
+    histprop.setType(row.getPropertyTypeClass());
+    return histprop;
   }
 
   @Override

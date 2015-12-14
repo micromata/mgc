@@ -55,6 +55,11 @@ public class HistoryAttrDO extends JpaTabAttrBaseDO<HistoryMasterDO, Long>
    * The Constant serialVersionUID.
    */
   private static final long serialVersionUID = -5490342158738541970L;
+  /**
+   * Name of the type class.
+   */
+
+  private String propertyTypeClass;
 
   /**
    * Instantiates a new history attr do.
@@ -115,6 +120,17 @@ public class HistoryAttrDO extends JpaTabAttrBaseDO<HistoryMasterDO, Long>
   public HistoryMasterDO getParent()
   {
     return super.getParent();
+  }
+
+  @Column(name = "PROPERTY_TYPE_CLASS", length = 128)
+  public String getPropertyTypeClass()
+  {
+    return propertyTypeClass;
+  }
+
+  public void setPropertyTypeClass(String propertyTypeClass)
+  {
+    this.propertyTypeClass = propertyTypeClass;
   }
 
 }

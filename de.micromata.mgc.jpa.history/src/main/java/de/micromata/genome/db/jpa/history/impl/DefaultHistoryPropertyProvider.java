@@ -7,18 +7,21 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 import javax.persistence.Transient;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 import de.micromata.genome.db.jpa.history.api.HistProp;
 import de.micromata.genome.db.jpa.history.api.HistoryProperty;
 import de.micromata.genome.db.jpa.history.api.HistoryPropertyConverter;
 import de.micromata.genome.db.jpa.history.api.HistoryPropertyProvider;
 import de.micromata.genome.db.jpa.history.api.NoHistory;
+import de.micromata.genome.jpa.DbRecord;
 import de.micromata.genome.logging.GLog;
 import de.micromata.genome.logging.GenomeLogCategory;
 import de.micromata.genome.logging.LogExceptionAttribute;
@@ -33,6 +36,8 @@ import de.micromata.genome.util.bean.PrivateBeanUtils;
  */
 public class DefaultHistoryPropertyProvider implements HistoryPropertyProvider
 {
+  private static final Logger LOG = Logger.getLogger(DefaultHistoryPropertyProvider.class);
+
   /**
    * {@inheritDoc}
    *
@@ -83,15 +88,24 @@ public class DefaultHistoryPropertyProvider implements HistoryPropertyProvider
         annot = f.getAnnotation(HistoryProperty.class);
       }
     }
-    if (annot == null) {
-      return new SimplePropertyConverter();
+    if (annot != null) {
+      try {
+        return annot.converter().newInstance();
+      } catch (InstantiationException | IllegalAccessException ex) {
+        throw new LoggedRuntimeException(LogLevel.Fatal, GenomeLogCategory.Jpa,
+            "Hist; Cannot create: " + annot.converter() + "; " + ex.getMessage(), new LogExceptionAttribute(ex));
+      }
     }
-    try {
-      return annot.converter().newInstance();
-    } catch (InstantiationException | IllegalAccessException ex) {
-      throw new LoggedRuntimeException(LogLevel.Fatal, GenomeLogCategory.Jpa,
-          "Hist; Cannot create: " + annot.converter() + "; " + ex.getMessage(), new LogExceptionAttribute(ex));
+    Class<?> pclazz = pd.getPropertyType();
+    if (DbRecord.class.isAssignableFrom(pclazz) == true) {
+      return new DbRecordPropertyConverter();
+    } else if (Map.class.isAssignableFrom(pclazz) == true) {
+      LOG.fatal("Currenty not supported Map for History: " + entity.getClass() + "." + pd.getName());
+    } else if (Collection.class.isAssignableFrom(pclazz) == true) {
+      return new CollectionPropertyConverter();
     }
+    return new SimplePropertyConverter();
+
   }
 
   /**

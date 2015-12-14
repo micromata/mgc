@@ -14,21 +14,13 @@ public class DiffEntry
    * The property op type.
    */
   private PropertyOpType propertyOpType;
-
   /**
    * The property name.
    */
   private String propertyName;
+  private HistProp oldProp;
 
-  /**
-   * The old value.
-   */
-  private String oldValue;
-
-  /**
-   * The new value.
-   */
-  private String newValue;
+  private HistProp newProp;
 
   public PropertyOpType getPropertyOpType()
   {
@@ -52,21 +44,32 @@ public class DiffEntry
 
   public String getOldValue()
   {
-    return oldValue;
-  }
-
-  public void setOldValue(String oldValue)
-  {
-    this.oldValue = oldValue;
+    return oldProp == null ? null : oldProp.getValue();
   }
 
   public String getNewValue()
   {
-    return newValue;
+    return newProp == null ? null : newProp.getValue();
   }
 
-  public void setNewValue(String newValue)
+  public HistProp getOldProp()
   {
-    this.newValue = newValue;
+    return oldProp;
   }
+
+  public void setOldProp(HistProp oldProp)
+  {
+    this.oldProp = oldProp;
+  }
+
+  public HistProp getNewProp()
+  {
+    return newProp;
+  }
+
+  public void setNewProp(HistProp newProp)
+  {
+    this.newProp = newProp;
+  }
+
 }

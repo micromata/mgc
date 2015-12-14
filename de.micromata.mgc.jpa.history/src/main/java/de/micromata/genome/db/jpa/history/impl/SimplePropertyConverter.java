@@ -27,18 +27,30 @@ public class SimplePropertyConverter implements HistoryPropertyConverter
    */
   private static StringConverter stringConverter = StandardStringConverter.get();
 
+  /**
+   * Read property value.
+   *
+   * @param entity the entity
+   * @param pd the pd
+   * @return null on failure.
+   */
+  public static Object readPropertyValue(Object entity, PropertyDescriptor pd)
+  {
+    try {
+      Method method = pd.getReadMethod();
+      Object value = method.invoke(entity);
+      return value;
+    } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+      GLog.warn(GenomeLogCategory.Jpa, "Hist; Cannot read property: " + ex.getMessage(), new LogExceptionAttribute(ex));
+      return null;
+    }
+  }
+
   @Override
   public List<HistProp> convert(Object entity, PropertyDescriptor pd)
   {
-    Method method = pd.getReadMethod();
-
-    try {
-      Object value = method.invoke(entity);
-      return Collections.singletonList(convertInternal(value, pd));
-    } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-      GLog.warn(GenomeLogCategory.Jpa, "Hist; Cannot read property: " + ex.getMessage(), new LogExceptionAttribute(ex));
-      return Collections.emptyList();
-    }
+    Object value = readPropertyValue(entity, pd);
+    return Collections.singletonList(convertInternal(value, pd));
   }
 
   /**
@@ -52,7 +64,13 @@ public class SimplePropertyConverter implements HistoryPropertyConverter
     HistProp ret = new HistProp();
     ret.setName("");
     ret.setType(pd.getPropertyType().getName());
-    ret.setValue(stringConverter.asString(value));
+    String sval;
+    if (value instanceof Enum<?>) {
+      sval = ((Enum<?>) value).name();
+    } else {
+      sval = stringConverter.asString(value);
+    }
+    ret.setValue(sval);
     return ret;
   }
 }
