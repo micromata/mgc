@@ -37,7 +37,7 @@ public class SimplePropertyConverter implements HistoryPropertyConverter
       return Collections.singletonList(convertInternal(value, pd));
     } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
       GLog.warn(GenomeLogCategory.Jpa, "Hist; Cannot read property: " + ex.getMessage(), new LogExceptionAttribute(ex));
-      return null;
+      return Collections.emptyList();
     }
   }
 

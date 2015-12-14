@@ -20,7 +20,6 @@ public class ToStringPropertyConverter extends SimplePropertyConverter
   {
     Object bo = super.convert(entity, pd);
     if (bo == null) {
-
       return Collections.singletonList(new HistProp(null, String.class.getName(), null));
     }
     return Collections.singletonList(new HistProp(null, String.class.getName(), bo.toString()));
