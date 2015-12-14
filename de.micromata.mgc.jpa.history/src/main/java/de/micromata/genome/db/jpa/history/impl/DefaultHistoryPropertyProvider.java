@@ -7,10 +7,14 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Map;
 
 import javax.persistence.Transient;
 
+import org.apache.commons.lang.StringUtils;
+
+import de.micromata.genome.db.jpa.history.api.HistProp;
 import de.micromata.genome.db.jpa.history.api.HistoryProperty;
 import de.micromata.genome.db.jpa.history.api.HistoryPropertyConverter;
 import de.micromata.genome.db.jpa.history.api.HistoryPropertyProvider;
@@ -34,7 +38,7 @@ public class DefaultHistoryPropertyProvider implements HistoryPropertyProvider
    *
    */
   @Override
-  public void getProperties(HistoryMetaInfo historyMetaInfo, Object entity, Map<String, String> ret)
+  public void getProperties(HistoryMetaInfo historyMetaInfo, Object entity, Map<String, HistProp> ret)
   {
     try {
       BeanInfo beanInfo = Introspector.getBeanInfo(entity.getClass(), Object.class);
@@ -45,8 +49,16 @@ public class DefaultHistoryPropertyProvider implements HistoryPropertyProvider
           continue;
         }
         HistoryPropertyConverter conv = getPropertyConverter(entity, pd);
-        String value = conv.convert(entity, pd);
-        ret.put(pd.getName(), value);
+        List<HistProp> values = conv.convert(entity, pd);
+        for (HistProp hp : values) {
+          String key;
+          if (StringUtils.isNotBlank(hp.getName()) == true) {
+            key = pd.getName() + '.' + hp.getName();
+          } else {
+            key = pd.getName();
+          }
+          ret.put(key, hp);
+        }
       }
     } catch (IntrospectionException ex) {
       GLog.error(GenomeLogCategory.Jpa, "Hist; Failure to introspect bean: " + ex.getMessage(),

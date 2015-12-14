@@ -4,22 +4,24 @@ import de.micromata.genome.jpa.DbRecord;
 import de.micromata.genome.jpa.IEmgr;
 
 /**
- * An Entity will be prepared for insertion.
+ * Invoked before update.
  * 
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
  */
-public class EmgrInitForInsertEvent extends EmgrInitForModEvent
+public class EmgrAfterBeforeRemovedEvent extends EmgrInitForModEvent
 {
 
   /**
-   * Instantiates a new emgr init for insert event.
+   * Instantiates a new emgr after before removed event.
    *
    * @param emgr the emgr
    * @param record the record
    */
-  public EmgrInitForInsertEvent(IEmgr<?> emgr, DbRecord<?> record)
+  public EmgrAfterBeforeRemovedEvent(IEmgr<?> emgr, DbRecord<?> record)
   {
     super(emgr, record);
+
   }
+
 }

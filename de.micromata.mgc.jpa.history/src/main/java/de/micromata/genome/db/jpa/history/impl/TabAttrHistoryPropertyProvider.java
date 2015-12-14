@@ -2,6 +2,7 @@ package de.micromata.genome.db.jpa.history.impl;
 
 import java.util.Map;
 
+import de.micromata.genome.db.jpa.history.api.HistProp;
 import de.micromata.genome.db.jpa.history.api.HistoryPropertyProvider;
 import de.micromata.genome.db.jpa.tabattr.api.EntityWithAttributes;
 
@@ -14,7 +15,7 @@ import de.micromata.genome.db.jpa.tabattr.api.EntityWithAttributes;
 public class TabAttrHistoryPropertyProvider implements HistoryPropertyProvider
 {
   @Override
-  public void getProperties(HistoryMetaInfo historyMetaInfo, Object entity, Map<String, String> map)
+  public void getProperties(HistoryMetaInfo historyMetaInfo, Object entity, Map<String, HistProp> map)
   {
     if ((entity instanceof EntityWithAttributes) == false) {
       return;
@@ -24,7 +25,7 @@ public class TabAttrHistoryPropertyProvider implements HistoryPropertyProvider
       if (historyMetaInfo.ignoreProperty(attrkey) == true) {
         continue;
       }
-      map.put(attrkey, ea.getStringAttribute(attrkey));
+      map.put(attrkey, new HistProp(attrkey, String.class.getName(), ea.getStringAttribute(attrkey)));
     }
   }
 

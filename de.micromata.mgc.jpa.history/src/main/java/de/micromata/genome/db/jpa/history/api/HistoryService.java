@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Map;
 
 import de.micromata.genome.db.jpa.history.entities.HistoryMasterDO;
+import de.micromata.genome.jpa.DbRecord;
 import de.micromata.genome.jpa.EmgrFactory;
 import de.micromata.genome.jpa.IEmgr;
-import de.micromata.genome.jpa.StdRecord;
 
 /**
  * The Interface HistoryService.
@@ -32,7 +32,7 @@ public interface HistoryService
    * @param bean the bean
    * @return the map
    */
-  Map<String, String> internalGetPropertiesForHistory(IEmgr<?> emgr, List<WithHistory> whanot, Object bean);
+  Map<String, HistProp> internalGetPropertiesForHistory(IEmgr<?> emgr, List<WithHistory> whanot, Object bean);
 
   /**
    * Internal on update.
@@ -43,8 +43,8 @@ public interface HistoryService
    * @param oldProps the old props
    * @param newProps the new props
    */
-  void internalOnUpdate(IEmgr<?> emgr, String entityName, Serializable entityPk, Map<String, String> oldProps,
-      Map<String, String> newProps);
+  void internalOnUpdate(IEmgr<?> emgr, String entityName, Serializable entityPk, Map<String, HistProp> oldProps,
+      Map<String, HistProp> newProps);
 
   /**
    * On insert.
@@ -73,13 +73,7 @@ public interface HistoryService
    */
   List<DiffEntry> getDiffEntriesForHistoryMaster(HistoryMasterDO historyMasterDO);
 
-  /**
-   * Gets the history entries.
-   *
-   * @param stdRecord the std record
-   * @return the history entries
-   */
-  List<? extends HistoryEntry> getHistoryEntries(StdRecord stdRecord);
+  List<? extends HistoryEntry> getHistoryEntries(IEmgr<?> emgr, DbRecord<?> stdRecord);
 
   /**
    * Gets the history entries.
@@ -88,7 +82,7 @@ public interface HistoryService
    * @param entityId the entity id
    * @return the history entries
    */
-  List<? extends HistoryEntry> getHistoryEntries(String entityName, Serializable entityId);
+  List<? extends HistoryEntry> getHistoryEntries(IEmgr<?> emgr, String entityName, Serializable entityId);
 
   /**
    * Find all history entries for given table.
@@ -96,7 +90,7 @@ public interface HistoryService
    * @param cls the cls
    * @return the history entries for entity class
    */
-  List<? extends HistoryEntry> getHistoryEntriesForEntityClass(Class<? extends StdRecord> cls);
+  List<? extends HistoryEntry> getHistoryEntriesForEntityClass(IEmgr<?> emgr, Class<? extends DbRecord<?>> cls);
 
   /**
    * Removes all history entry for given table.
@@ -104,6 +98,6 @@ public interface HistoryService
    * @param cls the cls
    * @return the count deleted
    */
-  int clearHistoryForEntityClass(Class<? extends StdRecord> cls);
+  int clearHistoryForEntityClass(IEmgr<?> emgr, Class<? extends DbRecord<?>> cls);
 
 }

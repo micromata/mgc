@@ -15,14 +15,14 @@ public class EmgrDbRecordEvent extends EmgrEvent
   /**
    * The record.
    */
-  protected DbRecord record;
+  protected DbRecord<?> record;
 
-  public DbRecord getRecord()
+  public DbRecord<?> getRecord()
   {
     return record;
   }
 
-  public void setRecord(DbRecord record)
+  public void setRecord(DbRecord<?> record)
   {
     this.record = record;
   }
@@ -33,7 +33,7 @@ public class EmgrDbRecordEvent extends EmgrEvent
    * @param emgr the emgr
    * @param record the record
    */
-  public EmgrDbRecordEvent(IEmgr<?> emgr, DbRecord record)
+  public EmgrDbRecordEvent(IEmgr<?> emgr, DbRecord<?> record)
   {
     super(emgr);
     this.record = record;

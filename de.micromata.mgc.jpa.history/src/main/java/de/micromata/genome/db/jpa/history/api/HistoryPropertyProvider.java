@@ -19,5 +19,5 @@ public interface HistoryPropertyProvider
    * @param entity the entity
    * @return the properties
    */
-  void getProperties(HistoryMetaInfo historyMetaInfo, Object entity, Map<String, String> map);
+  void getProperties(HistoryMetaInfo historyMetaInfo, Object entity, Map<String, HistProp> map);
 }

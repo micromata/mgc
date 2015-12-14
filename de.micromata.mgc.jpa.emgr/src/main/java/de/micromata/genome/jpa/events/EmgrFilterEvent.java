@@ -1,5 +1,6 @@
 package de.micromata.genome.jpa.events;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -23,7 +24,7 @@ public abstract class EmgrFilterEvent<R>extends EmgrEvent
    * the filter chain.
    */
   @SuppressWarnings("rawtypes")
-  private List<EmgrEventHandler> eventHandlerList;
+  private List<EmgrEventHandler> eventHandlerList = new ArrayList<>();
   /**
    * position of the filter chain.
    */

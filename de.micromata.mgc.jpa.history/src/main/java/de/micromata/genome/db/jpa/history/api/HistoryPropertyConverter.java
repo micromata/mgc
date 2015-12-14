@@ -1,6 +1,7 @@
 package de.micromata.genome.db.jpa.history.api;
 
 import java.beans.PropertyDescriptor;
+import java.util.List;
 
 /**
  * The Interface HistoryPropertyConverter.
@@ -17,5 +18,5 @@ public interface HistoryPropertyConverter
    * @param pd the pd
    * @return the string
    */
-  String convert(Object entity, PropertyDescriptor pd);
+  List<HistProp> convert(Object entity, PropertyDescriptor pd);
 }

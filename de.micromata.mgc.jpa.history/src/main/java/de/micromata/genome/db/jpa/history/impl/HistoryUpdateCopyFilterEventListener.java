@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+import de.micromata.genome.db.jpa.history.api.HistProp;
 import de.micromata.genome.db.jpa.history.api.HistoryService;
 import de.micromata.genome.db.jpa.history.api.HistoryServiceManager;
 import de.micromata.genome.db.jpa.history.api.WithHistory;
@@ -35,11 +36,11 @@ public class HistoryUpdateCopyFilterEventListener implements EmgrEventHandler<Em
     Class<?> entClass = event.getTarget().getClass();
 
     Object prev = event.getTarget();
-    Map<String, String> oprops = historyService.internalGetPropertiesForHistory(event.getEmgr(), whanots, prev);
+    Map<String, HistProp> oprops = historyService.internalGetPropertiesForHistory(event.getEmgr(), whanots, prev);
 
     event.nextFilter();
 
-    Map<String, String> nprops = historyService.internalGetPropertiesForHistory(event.getEmgr(), whanots,
+    Map<String, HistProp> nprops = historyService.internalGetPropertiesForHistory(event.getEmgr(), whanots,
         event.getSource());
     historyService.internalOnUpdate(event.getEmgr(), entClass.getName(), entPk, oprops, nprops);
   }

@@ -1,12 +1,9 @@
 package de.micromata.genome.jpa.events.impl;
 
-import java.util.Date;
-
 import de.micromata.genome.jpa.CriteriaUpdate;
 import de.micromata.genome.jpa.StdRecord;
 import de.micromata.genome.jpa.events.EmgrCriteriaUpdateEvent;
 import de.micromata.genome.jpa.events.EmgrEventHandler;
-import de.micromata.genome.logging.LoggingServiceManager;
 
 /**
  * Check CriteriaUpdates for StdRecord and set modifiedAt/By.
@@ -26,8 +23,8 @@ public class UpdateStdRecordCriteriaUpdateEventHandler implements EmgrEventHandl
       return;
     }
     update.setExpression("updateCounter", update.getMasterAlias() + ".updateCounter + 1");
-    update.set("modifiedAt", new Date());
-    update.set("modifiedBy", LoggingServiceManager.get().getLoggingContextService().getCurrentUserName());
+    update.set("modifiedAt", event.getEmgr().getEmgrFactory().getNow());
+    update.set("modifiedBy", event.getEmgr().getEmgrFactory().getCurrentUserId());
   }
 
 }

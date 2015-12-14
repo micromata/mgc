@@ -11,7 +11,6 @@ import de.micromata.genome.jpa.IEmgr;
 import de.micromata.genome.jpa.StdRecord;
 import de.micromata.genome.jpa.events.EmgrEventHandler;
 import de.micromata.genome.jpa.events.EmgrInitForUpdateEvent;
-import de.micromata.genome.logging.LoggingServiceManager;
 
 /**
  * Checkes Complex Entites and update StdRecord fields before update.
@@ -38,7 +37,7 @@ public class InitUpdateStdRecordFieldsEventHandler implements EmgrEventHandler<E
    */
   public static void updateRecordRecursive(final IEmgr<?> emgr, DbRecord rec, final boolean isNew)
   {
-    final Date now = new Date();
+    final Date now = emgr.getEmgrFactory().getNow();
     if (rec instanceof ComplexEntity) {
       ComplexEntity ce = (ComplexEntity) rec;
       ce.visit(new ComplexEntityVisitor()
@@ -76,7 +75,7 @@ public class InitUpdateStdRecordFieldsEventHandler implements EmgrEventHandler<E
     if (emgr.getEmgrFactory().isHasUpdateTriggerForVersion() == false || isNew == true) {
       stdRec.setModifiedAt(now);
     }
-    String user = LoggingServiceManager.get().getLoggingContextService().getCurrentUserName();
+    String user = emgr.getEmgrFactory().getCurrentUserId();
     stdRec.setModifiedBy(user);
     if (stdRec.getCreatedAt() == null && emgr.getEmgrFactory().isHasInsertTriggerForVersion() == false) {
       stdRec.setCreatedAt(now);

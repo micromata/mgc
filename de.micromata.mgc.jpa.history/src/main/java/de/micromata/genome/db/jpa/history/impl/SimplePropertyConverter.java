@@ -3,7 +3,10 @@ package de.micromata.genome.db.jpa.history.impl;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Collections;
+import java.util.List;
 
+import de.micromata.genome.db.jpa.history.api.HistProp;
 import de.micromata.genome.db.jpa.history.api.HistoryPropertyConverter;
 import de.micromata.genome.logging.GLog;
 import de.micromata.genome.logging.GenomeLogCategory;
@@ -25,13 +28,13 @@ public class SimplePropertyConverter implements HistoryPropertyConverter
   private static StringConverter stringConverter = StandardStringConverter.get();
 
   @Override
-  public String convert(Object entity, PropertyDescriptor pd)
+  public List<HistProp> convert(Object entity, PropertyDescriptor pd)
   {
     Method method = pd.getReadMethod();
 
     try {
       Object value = method.invoke(entity);
-      return convert(value);
+      return Collections.singletonList(convertInternal(value, pd));
     } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
       GLog.warn(GenomeLogCategory.Jpa, "Hist; Cannot read property: " + ex.getMessage(), new LogExceptionAttribute(ex));
       return null;
@@ -44,8 +47,12 @@ public class SimplePropertyConverter implements HistoryPropertyConverter
    * @param value the value
    * @return the string
    */
-  protected String convert(Object value)
+  protected HistProp convertInternal(Object value, PropertyDescriptor pd)
   {
-    return stringConverter.asString(value);
+    HistProp ret = new HistProp();
+    ret.setName("");
+    ret.setType(pd.getPropertyType().getName());
+    ret.setValue(stringConverter.asString(value));
+    return ret;
   }
 }

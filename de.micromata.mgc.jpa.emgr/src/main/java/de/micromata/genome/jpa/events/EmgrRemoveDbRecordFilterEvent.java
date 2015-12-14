@@ -15,9 +15,9 @@ public class EmgrRemoveDbRecordFilterEvent extends EmgrFilterEvent<Void>
   /**
    * The entity.
    */
-  private DbRecord entity;
+  private Object entity;
 
-  public DbRecord getEntity()
+  public Object getEntity()
   {
     return entity;
   }
@@ -28,7 +28,7 @@ public class EmgrRemoveDbRecordFilterEvent extends EmgrFilterEvent<Void>
    * @param emgr the emgr
    * @param entity the entity
    */
-  public EmgrRemoveDbRecordFilterEvent(IEmgr<?> emgr, DbRecord entity)
+  public EmgrRemoveDbRecordFilterEvent(IEmgr<?> emgr, Object entity)
   {
     super(emgr);
     this.entity = entity;

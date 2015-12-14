@@ -2,7 +2,6 @@ package de.micromata.genome.jpa;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +19,7 @@ import org.apache.commons.lang.Validate;
 import org.apache.log4j.Logger;
 import org.hibernate.ejb.AvailableSettings;
 
+import de.micromata.genome.jpa.events.EmgrAfterBeforeRemovedEvent;
 import de.micromata.genome.jpa.events.EmgrAfterCopyForUpdateEvent;
 import de.micromata.genome.jpa.events.EmgrAfterDetachEvent;
 import de.micromata.genome.jpa.events.EmgrAfterInsertedEvent;
@@ -53,9 +53,10 @@ import de.micromata.genome.jpa.events.impl.EmgrEventTypedQuery;
  * 
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  * 
- * @param <T> thistype
+ * @param <EMGR> thistype
  */
-public class Emgr<T extends Emgr<?>> implements IEmgr<T>
+public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
+
 {
   /**
    * The Constant log.
@@ -69,7 +70,7 @@ public class Emgr<T extends Emgr<?>> implements IEmgr<T>
   /**
    * The factory created this Emgr.
    */
-  private final EmgrFactory<T> emgrFactory;
+  private final EmgrFactory<EMGR> emgrFactory;
 
   /**
    * Instantiates a new emgr.
@@ -77,7 +78,7 @@ public class Emgr<T extends Emgr<?>> implements IEmgr<T>
    * @param entityManager the entity manager
    * @param emgrFactory the emgr factory
    */
-  public Emgr(EntityManager entityManager, EmgrFactory<T> emgrFactory)
+  public Emgr(EntityManager entityManager, EmgrFactory<EMGR> emgrFactory)
   {
     this.entityManager = entityManager;
     this.emgrFactory = emgrFactory;
@@ -100,7 +101,8 @@ public class Emgr<T extends Emgr<?>> implements IEmgr<T>
    * @param entity the entity
    * @return the t
    */
-  public T detach(final Object entity)
+  @Override
+  public EMGR detach(final Object entity)
   {
     emgrFactory.getEventFactory().invokeEvents(new EmgrBeforeDetachEvent(this, entity));
     entityManager.detach(entity);
@@ -115,12 +117,13 @@ public class Emgr<T extends Emgr<?>> implements IEmgr<T>
    * @param result the result
    * @return the t
    */
-  public <E> T detach(List<E> result)
+  @Override
+  public <R> EMGR detach(List<R> result)
   {
     if (result == null) {
       return getThis();
     }
-    for (E entity : result) {
+    for (R entity : result) {
       detach(entity);
     }
     return getThis();
@@ -181,6 +184,12 @@ public class Emgr<T extends Emgr<?>> implements IEmgr<T>
    */
   public <R> TypedQuery<R> createQuery(final Class<R> cls, final String sql, final Map<String, Object> values)
   {
+    return createQueryAttached(cls, sql, values);
+  }
+
+  @Override
+  public <R> TypedQuery<R> createQueryAttached(final Class<R> cls, final String sql, final Map<String, Object> values)
+  {
     return filterEvent(new EmgrCreateTypedQueryFilterEvent<R>(this, cls, sql, values), (event) -> {
       TypedQuery<R> q = new EmgrEventTypedQuery<>(this, entityManager.createQuery(sql, cls));
       for (Map.Entry<String, Object> me : values.entrySet()) {
@@ -199,6 +208,7 @@ public class Emgr<T extends Emgr<?>> implements IEmgr<T>
    * @param values the values
    * @return the typed query
    */
+  @Override
   public <R> TypedQuery<R> createQueryDetached(final Class<R> cls, final String sql, final Map<String, Object> values)
   {
     return filterEvent(new EmgrCreateTypedQueryFilterEvent<R>(this, cls, sql, values), (event) -> {
@@ -238,6 +248,12 @@ public class Emgr<T extends Emgr<?>> implements IEmgr<T>
    */
   public <R> TypedQuery<R> createQuery(final Class<R> cls, final String sql, final Object... keyValues)
   {
+    return createQueryAttached(cls, sql, keyValues);
+  }
+
+  @Override
+  public <R> TypedQuery<R> createQueryAttached(final Class<R> cls, final String sql, final Object... keyValues)
+  {
     return filterEvent(new EmgrCreateTypedQueryFilterEvent<R>(this, cls, sql, keyValues), (event) -> {
       TypedQuery<R> q = new EmgrEventTypedQuery<>(this, entityManager.createQuery(sql, cls));
       setParams(q, keyValues);
@@ -254,6 +270,7 @@ public class Emgr<T extends Emgr<?>> implements IEmgr<T>
    * @param keyValues the key values
    * @return the typed query
    */
+  @Override
   public <R> TypedQuery<R> createQueryDetached(final Class<R> cls, final String sql, final Object... keyValues)
   {
     return filterEvent(new EmgrCreateTypedQueryFilterEvent<R>(this, cls, sql, keyValues), (event) -> {
@@ -304,7 +321,8 @@ public class Emgr<T extends Emgr<?>> implements IEmgr<T>
    * @param keyValues the key values
    * @return the r
    */
-  public <R> R selectSingle(final Class<R> cls, final String sql, final Object... keyValues)
+  @Override
+  public <R> R selectSingleAttached(final Class<R> cls, final String sql, final Object... keyValues)
   {
     TypedQuery<R> q = createQuery(cls, sql, keyValues);
     return q.getSingleResult();
@@ -335,6 +353,7 @@ public class Emgr<T extends Emgr<?>> implements IEmgr<T>
    * @param values the values
    * @return the r
    */
+  @Override
   public <R> R selectSingleAttached(final Class<R> cls, final String sql, final Map<String, Object> values)
   {
     return createQuery(cls, sql, values).getSingleResult();
@@ -350,6 +369,7 @@ public class Emgr<T extends Emgr<?>> implements IEmgr<T>
    * @param values the values
    * @return the r
    */
+  @Override
   public <R> R selectSingleDetached(final Class<R> cls, final String sql, final Map<String, Object> values)
   {
     R r = createQuery(cls, sql, values).getSingleResult();
@@ -366,6 +386,7 @@ public class Emgr<T extends Emgr<?>> implements IEmgr<T>
    * @param keyValues the key values
    * @return the r
    */
+  @Override
   public <R> R selectSingleDetached(final Class<R> cls, final String sql, final Object... keyValues)
   {
 
@@ -385,6 +406,7 @@ public class Emgr<T extends Emgr<?>> implements IEmgr<T>
    * @param keyValues the key values
    * @return the r
    */
+  @Override
   public <R> R findSingleDetached(Class<R> cls, String sql, Object... keyValues)
   {
     try {
@@ -433,6 +455,7 @@ public class Emgr<T extends Emgr<?>> implements IEmgr<T>
    * @return the r
    * @throws NoResultException if not found
    */
+  @Override
   public <R, PK extends Serializable> R selectByPkAttached(final Class<R> cls, final PK pk)
   {
 
@@ -466,6 +489,7 @@ public class Emgr<T extends Emgr<?>> implements IEmgr<T>
    * @param pk the pk
    * @return the r
    */
+  @Override
   public <R, PK extends Serializable> R findByPkDetached(final Class<R> cls, final PK pk)
   {
     R r = findByPkAttached(cls, pk);
@@ -483,6 +507,7 @@ public class Emgr<T extends Emgr<?>> implements IEmgr<T>
    * @param pk the pk
    * @return the r
    */
+  @Override
   public <R, PK extends Serializable> R findByPkAttached(final Class<R> cls, final PK pk)
   {
     return filterEvent(new EmgrFindByPkFilterEvent<R, PK>(this, cls, pk),
@@ -502,9 +527,10 @@ public class Emgr<T extends Emgr<?>> implements IEmgr<T>
    * @return the r
    * @throws NoResultException if not found
    */
+  @Override
   public <R, PK extends Serializable> R selectByPkDetached(final Class<R> cls, final PK pk)
   {
-    R r = findByPkAttached(cls, pk);
+    R r = selectByPkAttached(cls, pk);
     detach(r);
     return r;
 
@@ -609,6 +635,7 @@ public class Emgr<T extends Emgr<?>> implements IEmgr<T>
    * @param keyValues argument to select statement
    * @return the int
    */
+  @Override
   public <R extends DbRecord<?>> int deleteFromQuery(Class<R> cls, String sql, Object... keyValues)
   {
     List<R> list = createQuery(cls, sql, keyValues).getResultList();
@@ -628,6 +655,7 @@ public class Emgr<T extends Emgr<?>> implements IEmgr<T>
    * @param values the values
    * @return the list
    */
+  @Override
   public <R> List<R> selectDetached(Class<R> cls, String sql, Map<String, Object> values)
   {
     List<R> ret = selectAttached(cls, sql, values);
@@ -644,7 +672,8 @@ public class Emgr<T extends Emgr<?>> implements IEmgr<T>
    * @param keyValues the key values
    * @return the list
    */
-  public <R extends DbRecord<?>> List<R> selectDetached(final Class<R> cls, final String sql, final Object... keyValues)
+  @Override
+  public <R> List<R> selectDetached(final Class<R> cls, final String sql, final Object... keyValues)
   {
     TypedQuery<R> q = createQuery(cls, sql, keyValues);
     List<R> ret = q.getResultList();
@@ -659,7 +688,8 @@ public class Emgr<T extends Emgr<?>> implements IEmgr<T>
    * @param lockTimetimeInMs the lock timetime in ms
    * @return the t
    */
-  public T setSelectForUpdate(Query query, int lockTimetimeInMs)
+  @Override
+  public EMGR setSelectForUpdate(Query query, int lockTimetimeInMs)
   {
     // "javax.persistence.query.timeout"
     // javax.persistence.lock.timeout
@@ -675,9 +705,9 @@ public class Emgr<T extends Emgr<?>> implements IEmgr<T>
    * @return the this
    */
   @SuppressWarnings("unchecked")
-  protected final T getThis()
+  protected final EMGR getThis()
   {
-    return (T) this;
+    return (EMGR) this;
   }
 
   /**
@@ -685,7 +715,7 @@ public class Emgr<T extends Emgr<?>> implements IEmgr<T>
    * 
    * @return this
    */
-  public T flush()
+  public EMGR flush()
   {
     entityManager.flush();
     return getThis();
@@ -697,7 +727,7 @@ public class Emgr<T extends Emgr<?>> implements IEmgr<T>
    * @param rec the rec
    * @return the t
    */
-  public T persist(DbRecord<?> rec)
+  public EMGR persist(DbRecord<?> rec)
   {
     entityManager.persist(rec);
     return getThis();
@@ -709,7 +739,7 @@ public class Emgr<T extends Emgr<?>> implements IEmgr<T>
    * @param rec the rec
    * @return the t
    */
-  public T initForUpdate(DbRecord<?> rec)
+  public EMGR initForUpdate(DbRecord<?> rec)
   {
     invokeEvent(new EmgrInitForUpdateEvent(this, rec));
     return getThis();
@@ -745,7 +775,8 @@ public class Emgr<T extends Emgr<?>> implements IEmgr<T>
    * @param rec the rec
    * @return the t
    */
-  public T delete(DbRecord<?> rec)
+  @Override
+  public EMGR delete(Object rec)
   {
     return remove(rec);
   }
@@ -756,11 +787,13 @@ public class Emgr<T extends Emgr<?>> implements IEmgr<T>
    * @param rec the rec
    * @return the t
    */
-  public T remove(final DbRecord<?> rec)
+  public EMGR remove(final Object rec)
   {
-
+    if (rec instanceof DbRecord) {
+      invokeEvent(new EmgrAfterBeforeRemovedEvent(this, (DbRecord) rec));
+    }
     if (log.isDebugEnabled() == true) {
-      log.debug("remove: " + rec.getPk() + " in thread " + Thread.currentThread().getId() + "; em: "
+      log.debug("remove: " + rec + " in thread " + Thread.currentThread().getId() + "; em: "
           + identityHex(getEntityManager()));
     }
     filterEvent(new EmgrRemoveDbRecordFilterEvent(this, rec),
@@ -785,15 +818,17 @@ public class Emgr<T extends Emgr<?>> implements IEmgr<T>
     }
   }
 
-  /**
-   * Insert.
-   * 
-   * @param rec the rec
-   * @return the t
-   */
-  public T insert(final DbRecord<?> rec)
+  @Override
+  public <PK extends Serializable> PK insertDetached(final DbRecord<PK> rec)
   {
+    PK ret = insertAttached(rec);
+    detach(rec);
+    return ret;
+  }
 
+  @Override
+  public <PK extends Serializable> PK insertAttached(final DbRecord<PK> rec)
+  {
     initForCreate(rec);
     filterEvent(new EmgrInsertDbRecordFilterEvent(this, rec),
         (event) -> {
@@ -807,7 +842,24 @@ public class Emgr<T extends Emgr<?>> implements IEmgr<T>
           + identityHex(getEntityManager()));
     }
     invokeEvent(new EmgrAfterInsertedEvent(this, rec));
-    return getThis();
+    return rec.getPk();
+  }
+
+  /**
+   * Insert.
+   * 
+   * @param rec the rec
+   * @return the t
+   */
+
+  public <PK extends Serializable> PK insert(final DbRecord<PK> rec)
+  {
+    return insertDetached(rec);
+  }
+
+  public EMGR update(final DbRecord<?> rec)
+  {
+    return updateAttached(rec);
   }
 
   /**
@@ -817,7 +869,8 @@ public class Emgr<T extends Emgr<?>> implements IEmgr<T>
    * @param rec the rec
    * @return the t
    */
-  public T update(final DbRecord<?> rec)
+  @Override
+  public EMGR updateAttached(final DbRecord<?> rec)
   {
     invokeEvent(new EmgrBeforeUpdatedEvent(this, rec));
     filterEvent(new EmgrUpdateDbRecordFilterEvent(this, rec),
@@ -843,7 +896,8 @@ public class Emgr<T extends Emgr<?>> implements IEmgr<T>
    * @param rec the rec
    * @return the t
    */
-  public T updateCopy(final DbRecord<?> rec)
+  @Override
+  public <R extends DbRecord<?>> EMGR updateCopy(final R rec)
   {
     return updateCopy(rec, false);
   }
@@ -855,7 +909,8 @@ public class Emgr<T extends Emgr<?>> implements IEmgr<T>
    * @param overwrite if false, may check for OptimisticLock
    * @return the t
    */
-  public T updateCopy(final DbRecord<?> rec, boolean overwrite)
+  @Override
+  public <R extends DbRecord<?>> EMGR updateCopy(final R rec, boolean overwrite)
   {
     return update(rec.getClass(), rec.getClass(), rec, overwrite);
   }
@@ -872,7 +927,8 @@ public class Emgr<T extends Emgr<?>> implements IEmgr<T>
    * @throws EntityNotFoundException the entity not found except)ion
    * @throws OptimisticLockException if newE updateCounter != null and differs from persisted.
    */
-  public <R extends DbRecord<?>> T update(Class<? extends R> iface, Class<? extends R> entityClass, R newE,
+  @Override
+  public <R extends DbRecord<?>> EMGR update(Class<? extends R> iface, Class<? extends R> entityClass, R newE,
       boolean overwrite)
   {
     R oldE = entityManager.find(entityClass, newE.getPk());
@@ -896,15 +952,16 @@ public class Emgr<T extends Emgr<?>> implements IEmgr<T>
    * @param rec the rec
    * @return the t
    */
-  public <E extends DbRecord<?>> E merge(final E rec)
+  @Override
+  public <R extends DbRecord<?>> R merge(final R rec)
   {
     initForUpdate(rec);
     if (log.isDebugEnabled() == true) {
       log.debug("merge: " + rec.getPk() + " in thread " + Thread.currentThread().getId());
     }
-    return filterEvent(new EmgrMergeDbRecordFilterEvent<E>(this, rec),
+    return filterEvent(new EmgrMergeDbRecordFilterEvent<R>(this, rec),
         (event) -> {
-          final E merged = entityManager.merge(rec);
+          final R merged = entityManager.merge(rec);
           event.setResult(merged);
         });
   }
@@ -916,10 +973,11 @@ public class Emgr<T extends Emgr<?>> implements IEmgr<T>
    * @param update the update
    * @return number or rows updated.
    */
-  public <E extends DbRecord<?>> int update(CriteriaUpdate<E> update)
+  @Override
+  public <R extends DbRecord<?>> int update(CriteriaUpdate<R> update)
   {
     beforeUpdate(update);
-    return filterEvent(new EmgrUpdateCriteriaUpdateFilterEvent<E>(this, update), (event) -> {
+    return filterEvent(new EmgrUpdateCriteriaUpdateFilterEvent<R>(this, update), (event) -> {
       Map<String, Object> args = new HashMap<String, Object>();
       String hql = update.renderHql(args);
       Query query = createUntypedQuery(hql);
@@ -952,6 +1010,7 @@ public class Emgr<T extends Emgr<?>> implements IEmgr<T>
    * @param keyValues the key values
    * @return an untyped query
    */
+  @Override
   public Query createUntypedQuery(String sql, Object... keyValues)
   {
     return createQuery(sql, keyValues);
@@ -963,7 +1022,7 @@ public class Emgr<T extends Emgr<?>> implements IEmgr<T>
    * @param rec the rec
    * @return the t
    */
-  public T initForCreate(DbRecord rec)
+  public EMGR initForCreate(DbRecord<?> rec)
   {
     invokeEvent(new EmgrInitForInsertEvent(this, rec));
     return getThis();
@@ -1000,20 +1059,9 @@ public class Emgr<T extends Emgr<?>> implements IEmgr<T>
    */
 
   @Override
-  public EmgrFactory<T> getEmgrFactory()
+  public EmgrFactory<EMGR> getEmgrFactory()
   {
     return emgrFactory;
-  }
-
-  /**
-   * The 'now' by default new Date().
-   *
-   * @return the date
-   */
-  @Override
-  public Date now()
-  {
-    return new Date();
   }
 
   /**

@@ -13,10 +13,10 @@ import java.util.TreeSet;
 import org.apache.commons.lang.StringUtils;
 
 import de.micromata.genome.db.jpa.history.api.DiffEntry;
+import de.micromata.genome.db.jpa.history.api.HistProp;
 import de.micromata.genome.db.jpa.history.api.HistoryEntry;
 import de.micromata.genome.db.jpa.history.api.HistoryPropertyProvider;
 import de.micromata.genome.db.jpa.history.api.HistoryService;
-import de.micromata.genome.db.jpa.history.api.JpaHistoryEntityManagerFactory;
 import de.micromata.genome.db.jpa.history.api.WithHistory;
 import de.micromata.genome.db.jpa.history.entities.EntityOpType;
 import de.micromata.genome.db.jpa.history.entities.HistoryMasterDO;
@@ -24,7 +24,6 @@ import de.micromata.genome.db.jpa.history.entities.PropertyOpType;
 import de.micromata.genome.jpa.DbRecord;
 import de.micromata.genome.jpa.EmgrFactory;
 import de.micromata.genome.jpa.IEmgr;
-import de.micromata.genome.jpa.StdRecord;
 import de.micromata.genome.logging.GenomeLogCategory;
 import de.micromata.genome.logging.LogExceptionAttribute;
 import de.micromata.genome.logging.LogLevel;
@@ -71,9 +70,9 @@ public class HistoryServiceImpl implements HistoryService
   }
 
   @Override
-  public Map<String, String> internalGetPropertiesForHistory(IEmgr<?> emgr, List<WithHistory> whanot, Object bean)
+  public Map<String, HistProp> internalGetPropertiesForHistory(IEmgr<?> emgr, List<WithHistory> whanot, Object bean)
   {
-    Map<String, String> ret = new TreeMap<>();
+    Map<String, HistProp> ret = new TreeMap<>();
     HistoryMetaInfo historyMetaInfo = createHistMetaInfo(whanot);
     for (WithHistory wh : whanot) {
       for (Class<? extends HistoryPropertyProvider> provider : wh.propertyProvider()) {
@@ -85,8 +84,8 @@ public class HistoryServiceImpl implements HistoryService
   }
 
   @Override
-  public void internalOnUpdate(IEmgr<?> emgr, String entityName, Serializable entityPk, Map<String, String> oldProps,
-      Map<String, String> newProps)
+  public void internalOnUpdate(IEmgr<?> emgr, String entityName, Serializable entityPk, Map<String, HistProp> oldProps,
+      Map<String, HistProp> newProps)
   {
     HistoryMasterDO hm = new HistoryMasterDO();
     hm.setEntityOpType(EntityOpType.Update);
@@ -107,7 +106,7 @@ public class HistoryServiceImpl implements HistoryService
     if (hm.getAttributeKeys().isEmpty() == true) {
       return;
     }
-    insert(hm);
+    insert(emgr, hm);
   }
 
   /**
@@ -160,8 +159,8 @@ public class HistoryServiceImpl implements HistoryService
   public void internalOnInsert(IEmgr<?> emgr, List<WithHistory> whanot, String entityName, Serializable entityPk,
       Object ent)
   {
-    Map<String, String> prevMap = new TreeMap<>();
-    Map<String, String> nextMap = new TreeMap<>();
+    Map<String, HistProp> prevMap = new TreeMap<>();
+    Map<String, HistProp> nextMap = new TreeMap<>();
     HistoryMetaInfo historyMetaInfo = createHistMetaInfo(whanot);
     for (WithHistory wh : whanot) {
       for (Class<? extends HistoryPropertyProvider> provider : wh.propertyProvider()) {
@@ -189,7 +188,7 @@ public class HistoryServiceImpl implements HistoryService
     if (hm.getAttributeKeys().isEmpty() == true) {
       return;
     }
-    insert(hm);
+    insert(emgr, hm);
   }
 
   /**
@@ -197,11 +196,9 @@ public class HistoryServiceImpl implements HistoryService
    *
    * @param hm the hm
    */
-  protected void insert(HistoryMasterDO hm)
+  protected void insert(IEmgr<?> emgr, HistoryMasterDO hm)
   {
-    JpaHistoryEntityManagerFactory.get().runInTrans((emgr) -> {
-      return emgr.insert(hm);
-    });
+    emgr.insertDetached(hm);
   }
 
   /**
@@ -211,15 +208,15 @@ public class HistoryServiceImpl implements HistoryService
    * @param nextMap the next map
    * @return the list
    */
-  protected List<DiffEntry> calculateDiff(Map<String, String> prevMap, Map<String, String> nextMap)
+  protected List<DiffEntry> calculateDiff(Map<String, HistProp> prevMap, Map<String, HistProp> nextMap)
   {
     Set<String> allKeys = new TreeSet<>();
     allKeys.addAll(prevMap.keySet());
     allKeys.addAll(nextMap.keySet());
     List<DiffEntry> ret = new ArrayList<>();
     for (String key : allKeys) {
-      String oldVal = prevMap.get(key);
-      String newVal = nextMap.get(key);
+      HistProp oldVal = prevMap.get(key);
+      HistProp newVal = nextMap.get(key);
       DiffEntry de = calculateDiff(oldVal, newVal);
       if (de != null) {
         de.setPropertyName(key);
@@ -237,9 +234,11 @@ public class HistoryServiceImpl implements HistoryService
    * @param newVal the new val
    * @return the diff entry
    */
-  protected DiffEntry calculateDiff(String oldVal, String newVal)
+  protected DiffEntry calculateDiff(HistProp oldProp, HistProp newProp)
   {
     DiffEntry ret = new DiffEntry();
+    String oldVal = oldProp == null ? null : oldProp.getValue();
+    String newVal = newProp == null ? null : newProp.getValue();
     if (oldVal == newVal) {
       return null;
     }
@@ -308,30 +307,29 @@ public class HistoryServiceImpl implements HistoryService
   }
 
   @Override
-  public List<? extends HistoryEntry> getHistoryEntries(StdRecord stdRecord)
+  public List<? extends HistoryEntry> getHistoryEntries(IEmgr<?> emgr, DbRecord<?> stdRecord)
   {
-    return getHistoryEntries(stdRecord.getClass().getName(), stdRecord.getPk());
+    return getHistoryEntries(emgr, stdRecord.getClass().getName(), stdRecord.getPk());
   }
 
   @Override
-  public List<? extends HistoryEntry> getHistoryEntries(String entityName, Serializable entityId)
+  public List<? extends HistoryEntry> getHistoryEntries(IEmgr<?> emgr, String entityName, Serializable entityId)
   {
     Long extPk = castToLong(entityId);
-    return JpaHistoryEntityManagerFactory.get().runInTrans((emgr) -> {
-      return emgr.selectDetached(HistoryMasterDO.class, "select h from " + HistoryMasterDO.class.getName()
-          + " h where h.entityName = :entityName and h.entityId = :entityId", "entityName", entityName, "entityId",
-          extPk);
-    });
+
+    return emgr.selectDetached(HistoryMasterDO.class, "select h from " + HistoryMasterDO.class.getName()
+        + " h where h.entityName = :entityName and h.entityId = :entityId", "entityName", entityName, "entityId",
+        extPk);
+
   }
 
   @Override
-  public List<? extends HistoryEntry> getHistoryEntriesForEntityClass(Class<? extends StdRecord> cls)
+  public List<? extends HistoryEntry> getHistoryEntriesForEntityClass(IEmgr<?> emgr, Class<? extends DbRecord<?>> cls)
   {
-    return JpaHistoryEntityManagerFactory.get().runInTrans((emgr) -> {
-      return emgr.selectDetached(HistoryMasterDO.class,
-          "select h from " + HistoryMasterDO.class.getName() + " h where h.entityName = :entityName", "entityName",
-          cls.getName());
-    });
+    return emgr.selectDetached(HistoryMasterDO.class,
+        "select h from " + HistoryMasterDO.class.getName() + " h where h.entityName = :entityName", "entityName",
+        cls.getName());
+
   }
 
   /**
@@ -356,13 +354,11 @@ public class HistoryServiceImpl implements HistoryService
   }
 
   @Override
-  public int clearHistoryForEntityClass(Class<? extends StdRecord> cls)
+  public int clearHistoryForEntityClass(IEmgr<?> emgr, Class<? extends DbRecord<?>> cls)
   {
-    return JpaHistoryEntityManagerFactory.get().runInTrans((emgr) -> {
-      return emgr.deleteFromQuery(HistoryMasterDO.class,
-          "select h from " + HistoryMasterDO.class.getName() + " h where h.entityName = :entityName", "entityName",
-          cls.getName());
+    return emgr.deleteFromQuery(HistoryMasterDO.class,
+        "select h from " + HistoryMasterDO.class.getName() + " h where h.entityName = :entityName", "entityName",
+        cls.getName());
 
-    });
   }
 }

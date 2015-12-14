@@ -7,6 +7,10 @@
 
     <non-jta-data-source>java:/comp/env/genome/jdbc/dsWeb</non-jta-data-source>
     <class>de.micromata.genome.db.jpa.history.test.DummyHistEntityDO</class>
-    <exclude-unlisted-classes>true</exclude-unlisted-classes>
+     <class>de.micromata.genome.db.jpa.history.entities.HistoryAttrDataDO</class>
+    <class>de.micromata.genome.db.jpa.history.entities.HistoryAttrDO</class> 
+    <class>de.micromata.genome.db.jpa.history.entities.HistoryAttrWithDataDO</class>
+    <class>de.micromata.genome.db.jpa.history.entities.HistoryMasterDO</class>
+    <exclude-unlisted-classes>false</exclude-unlisted-classes>
   </persistence-unit>
 </persistence>

@@ -1,6 +1,7 @@
 package de.micromata.genome.jpa;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,6 +31,7 @@ import de.micromata.genome.jpa.trace.eventhandler.TracerEmgrMergeDbRecordFilterE
 import de.micromata.genome.jpa.trace.eventhandler.TracerEmgrRemoveDbRecordFilterEventHandler;
 import de.micromata.genome.jpa.trace.eventhandler.TracerEmgrUpdateDbRecordFilterEventHandler;
 import de.micromata.genome.jpa.trace.eventhandler.TracerFindByPkFilterEventHandler;
+import de.micromata.genome.logging.LoggingServiceManager;
 import de.micromata.genome.util.runtime.LocalSettings;
 
 /**
@@ -109,7 +111,7 @@ public abstract class EmgrFactory<E extends IEmgr<?>>
   /**
    * The event factory.
    */
-  private final EmgrEventRegistry eventFactory = new EmgrEventRegistry();
+  protected EmgrEventRegistry eventFactory = new EmgrEventRegistry();
   /**
    * The thread emgr.
    */
@@ -371,6 +373,27 @@ public abstract class EmgrFactory<E extends IEmgr<?>>
   public EmgrEventRegistry getEventFactory()
   {
     return eventFactory;
+  }
+
+  /**
+   * Get the user id for createdBy/modifiedBy. Should not be longer than 32 charachter.
+   *
+   * @return the current user id
+   */
+  public String getCurrentUserId()
+  {
+    String user = LoggingServiceManager.get().getLoggingContextService().getCurrentUserName();
+    return user;
+  }
+
+  /**
+   * Get the current time stamp.
+   *
+   * @return the now
+   */
+  public Date getNow()
+  {
+    return new Date();
   }
 
   public boolean isHasInsertTriggerForVersion()

@@ -12,6 +12,7 @@ import de.micromata.genome.GenomeTestCase;
 import de.micromata.genome.db.jpa.history.api.HistoryEntry;
 import de.micromata.genome.db.jpa.history.api.HistoryService;
 import de.micromata.genome.db.jpa.history.api.HistoryServiceManager;
+import de.micromata.genome.db.jpa.history.api.JpaHistoryEntityManagerFactory;
 import de.micromata.genome.db.jpa.history.test.DummyHistEntityDO;
 import de.micromata.genome.db.jpa.history.test.HistoryTestEmgrFactory;
 
@@ -30,7 +31,10 @@ public class ReadWriteWithHistTest extends GenomeTestCase
       emgr.deleteFromQuery(DummyHistEntityDO.class, "select e from " + DummyHistEntityDO.class.getName() + " e");
       return null;
     });
-    HistoryServiceManager.get().getHistoryService().clearHistoryForEntityClass(DummyHistEntityDO.class);
+    JpaHistoryEntityManagerFactory.get().runInTrans((emgr) -> {
+      HistoryServiceManager.get().getHistoryService().clearHistoryForEntityClass(emgr, DummyHistEntityDO.class);
+      return null;
+    });
   }
 
   @Test
@@ -55,7 +59,9 @@ public class ReadWriteWithHistTest extends GenomeTestCase
     });
 
     HistoryService histservice = HistoryServiceManager.get().getHistoryService();
-    List<? extends HistoryEntry> entries = histservice.getHistoryEntries(se);
+    List<? extends HistoryEntry> entries = JpaHistoryEntityManagerFactory.get().runInTrans((emgr) -> {
+      return histservice.getHistoryEntries(emgr, se);
+    });
     // created no hist for second update.
     Assert.assertEquals(2, entries.size());
   }
@@ -87,8 +93,11 @@ public class ReadWriteWithHistTest extends GenomeTestCase
     } catch (PersistenceException ex) {
       // expected ex.printStackTrace();
     }
-    List<? extends HistoryEntry> histent = HistoryServiceManager.get().getHistoryService()
-        .getHistoryEntriesForEntityClass(DummyHistEntityDO.class);
+    List<? extends HistoryEntry> histent = JpaHistoryEntityManagerFactory.get().runInTrans((emgr) -> {
+      return HistoryServiceManager.get().getHistoryService()
+          .getHistoryEntriesForEntityClass(emgr, DummyHistEntityDO.class);
+    });
+
     Assert.assertEquals(1, histent.size());
   }
 
@@ -122,8 +131,11 @@ public class ReadWriteWithHistTest extends GenomeTestCase
     } catch (PersistenceException ex) {
       ex.printStackTrace();
     }
-    List<? extends HistoryEntry> histent = HistoryServiceManager.get().getHistoryService()
-        .getHistoryEntriesForEntityClass(DummyHistEntityDO.class);
+    List<? extends HistoryEntry> histent = JpaHistoryEntityManagerFactory.get().runInTrans((emgr) -> {
+      return HistoryServiceManager.get().getHistoryService()
+          .getHistoryEntriesForEntityClass(emgr, DummyHistEntityDO.class);
+    });
+
     Assert.assertEquals(2, histent.size());
   }
 }

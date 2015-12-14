@@ -9,7 +9,7 @@ import de.micromata.genome.jpa.IEmgr;
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
  */
-public class EmgrInitForUpdateEvent extends EmgrDbRecordEvent
+public class EmgrInitForUpdateEvent extends EmgrInitForModEvent
 {
 
   /**
@@ -18,7 +18,7 @@ public class EmgrInitForUpdateEvent extends EmgrDbRecordEvent
    * @param emgr the emgr
    * @param record the record
    */
-  public EmgrInitForUpdateEvent(IEmgr<?> emgr, DbRecord record)
+  public EmgrInitForUpdateEvent(IEmgr<?> emgr, DbRecord<?> record)
   {
     super(emgr, record);
   }
