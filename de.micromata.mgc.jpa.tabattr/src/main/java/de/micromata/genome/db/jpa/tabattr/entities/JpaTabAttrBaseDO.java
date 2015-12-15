@@ -20,6 +20,7 @@ import javax.persistence.Transient;
 
 import org.apache.commons.lang.StringUtils;
 
+import de.micromata.genome.db.jpa.tabattr.api.EntityWithAttributes;
 import de.micromata.genome.db.jpa.tabattr.api.TabAttributeEntry;
 import de.micromata.genome.jpa.ComplexEntity;
 import de.micromata.genome.jpa.ComplexEntityVisitor;
@@ -35,7 +36,7 @@ import de.micromata.genome.util.types.Pair;
  * @param <M> the generic type
  */
 @MappedSuperclass
-public abstract class JpaTabAttrBaseDO<M extends JpaTabMasterBaseDO<?, ? extends Serializable>, PK extends Serializable>
+public abstract class JpaTabAttrBaseDO<M extends EntityWithAttributes, PK extends Serializable>
     extends StdRecordDO<PK>
     implements ComplexEntity, TabAttributeEntry<PK>
 {
@@ -120,7 +121,10 @@ public abstract class JpaTabAttrBaseDO<M extends JpaTabMasterBaseDO<?, ? extends
    * @return the max data length
    */
   @Transient
-  public abstract int getMaxDataLength();
+  public int getMaxDataLength()
+  {
+    return JpaTabAttrDataBaseDO.DATA_MAXLENGTH;
+  }
 
   /**
    * Gets the value max length.

@@ -59,7 +59,7 @@ public class TimeableServiceImpl implements TimeableService
     T lastRow = null;
 
     for (final T td : entity.getTimeableAttributes()) {
-      if (td.getStartTime().getTime() > date.getTime()) {
+      if (td.getStartTime() == null || td.getStartTime().getTime() > date.getTime()) {
         continue;
       }
       if (td.getEndTime() != null && td.getEndTime().getTime() < date.getTime()) {

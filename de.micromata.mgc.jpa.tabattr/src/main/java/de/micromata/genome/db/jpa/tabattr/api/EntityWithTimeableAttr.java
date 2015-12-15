@@ -17,8 +17,10 @@ import java.util.List;
  * @author Roger Kommer (r.kommer.extern@micromata.de)
  *
  */
-public interface EntityWithTimeableAttr<T extends TimeableAttrRow>
+public interface EntityWithTimeableAttr<T extends TimeableAttrRow<?>>
 {
+
+  void addTimeableAttribute(T row);
 
   /**
    * Gets the timeable attributes.
