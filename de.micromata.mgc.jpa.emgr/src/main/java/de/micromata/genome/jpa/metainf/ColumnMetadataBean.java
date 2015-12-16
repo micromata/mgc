@@ -6,6 +6,9 @@ import java.util.List;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 
+import de.micromata.genome.util.bean.AttrGetter;
+import de.micromata.genome.util.bean.AttrSetter;
+
 /**
  * The Class ColumnMetadataBean.
  *
@@ -69,6 +72,9 @@ public class ColumnMetadataBean extends EmgrDbElementBean implements ColumnMetad
    */
   private int scale;
 
+  private AttrGetter<Object, Object> getter;
+
+  private AttrSetter<Object, Object> setter;
   /**
    * The annotations.
    */
@@ -335,6 +341,28 @@ public class ColumnMetadataBean extends EmgrDbElementBean implements ColumnMetad
   public void setAnnotations(List<Annotation> annotations)
   {
     this.annotations = annotations;
+  }
+
+  @Override
+  public AttrGetter<Object, Object> getGetter()
+  {
+    return getter;
+  }
+
+  public void setGetter(AttrGetter<Object, Object> getter)
+  {
+    this.getter = getter;
+  }
+
+  @Override
+  public AttrSetter<Object, Object> getSetter()
+  {
+    return setter;
+  }
+
+  public void setSetter(AttrSetter<Object, Object> setter)
+  {
+    this.setter = setter;
   }
 
 }

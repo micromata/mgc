@@ -1,12 +1,15 @@
 package de.micromata.genome.jpa.metainf;
 
+import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -18,6 +21,7 @@ import javax.persistence.metamodel.PluralAttribute;
 import javax.persistence.metamodel.PluralAttribute.CollectionType;
 import javax.persistence.metamodel.Type;
 
+import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -70,10 +74,14 @@ public class MetaInfoUtils
       EntityType ift = (EntityType) mt;
       ret.setDatabaseName(ift.getName());
     }
+    List<PropertyDescriptor> propDescs = Arrays.asList(PropertyUtils.getPropertyDescriptors(ret.getJavaType()));
     Set<?> attr = mt.getAttributes();
     for (Object oa : attr) {
+
       Attribute<?, ?> at = (Attribute<?, ?>) oa;
-      ColumnMetadata colm = getColumnMetaData(mt.getJavaType(), at);
+      Optional<PropertyDescriptor> pdo = propDescs.stream().filter((el) -> el.getName().equals(at.getName()))
+          .findFirst();
+      ColumnMetadata colm = getColumnMetaData(mt.getJavaType(), at, pdo);
       ret.getColumns().put(colm.getName(), colm);
     }
 
@@ -103,7 +111,8 @@ public class MetaInfoUtils
    * @param at the at
    * @return the column meta data
    */
-  public static ColumnMetadata getColumnMetaData(Class<?> entityClass, Attribute<?, ?> at)
+  public static ColumnMetadata getColumnMetaData(Class<?> entityClass, Attribute<?, ?> at,
+      Optional<PropertyDescriptor> pdo)
   {
     ColumnMetadataBean ret = new ColumnMetadataBean();
     ret.setName(at.getName());
@@ -118,12 +127,14 @@ public class MetaInfoUtils
     }
 
     Member jm = at.getJavaMember();
-
+    // TODO maybe handle this.
+    at.getPersistentAttributeType();
     if ((jm instanceof AccessibleObject) == false) {
       LOG.warn("Column " + at.getName() + " ha no valid Java Member");
       return ret;
     }
     AccessibleObject ao = (AccessibleObject) jm;
+    getGetterSetter(entityClass, ao, pdo, ret);
     ret.setAnnotations(getFieldAndMemberAnnots(entityClass, ao));
 
     Column colc = ao.getAnnotation(Column.class);
@@ -145,6 +156,40 @@ public class MetaInfoUtils
     ret.setPrecision(colc.precision());
     ret.setScale(colc.scale());
     return ret;
+  }
+
+  private static void getGetterSetter(Class<?> entityClass, AccessibleObject accessableObject,
+      Optional<PropertyDescriptor> pdo, ColumnMetadataBean ret)
+  {
+    if (accessableObject instanceof Method) {
+      ret.setGetter(PrivateBeanUtils.getMethodAttrGetter((Class) entityClass, (Method) accessableObject, Object.class));
+    }
+    if (pdo.isPresent() == true) {
+      PropertyDescriptor pd = pdo.get();
+      if (ret.getGetter() != null) {
+        if (pd.getReadMethod() != null) {
+          ret.setGetter(PrivateBeanUtils.getMethodAttrGetter((Class) entityClass, pd.getReadMethod(), Object.class));
+        }
+      }
+      if (pd.getWriteMethod() != null) {
+        ret.setSetter(PrivateBeanUtils.getMethodAttrSetter((Class) entityClass, pd.getWriteMethod(), Object.class));
+      }
+    }
+    if (ret.getSetter() != null && ret.getGetter() != null) {
+      return;
+    }
+    Field field = PrivateBeanUtils.findField(entityClass, ret.getName());
+    if (field == null) {
+      LOG.warn(
+          "Cannot determine all setter and getter method or field for " + entityClass.getName() + "." + ret.getName());
+      return;
+    }
+    if (ret.getGetter() == null) {
+      ret.setGetter(PrivateBeanUtils.getFieldAttrGetter((Class) entityClass, field, Object.class));
+    }
+    if (ret.getSetter() == null) {
+      ret.setSetter(PrivateBeanUtils.getFieldAttrSetter((Class) entityClass, field, Object.class));
+    }
   }
 
   /**

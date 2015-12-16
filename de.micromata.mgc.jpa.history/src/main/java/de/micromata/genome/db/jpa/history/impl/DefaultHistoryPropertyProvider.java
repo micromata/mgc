@@ -80,23 +80,29 @@ public class DefaultHistoryPropertyProvider implements HistoryPropertyProvider
    */
   protected HistoryPropertyConverter getPropertyConverter(Object entity, PropertyDescriptor pd)
   {
-    Method rm = pd.getReadMethod();
-    HistoryProperty annot = rm.getAnnotation(HistoryProperty.class);
-    if (annot == null) {
-      Field f = PrivateBeanUtils.findField(entity.getClass(), pd.getName());
-      if (f != null) {
-        annot = f.getAnnotation(HistoryProperty.class);
-      }
-    }
-    if (annot != null) {
-      try {
-        return annot.converter().newInstance();
-      } catch (InstantiationException | IllegalAccessException ex) {
-        throw new LoggedRuntimeException(LogLevel.Fatal, GenomeLogCategory.Jpa,
-            "Hist; Cannot create: " + annot.converter() + "; " + ex.getMessage(), new LogExceptionAttribute(ex));
-      }
-    }
     Class<?> pclazz = pd.getPropertyType();
+    if (pclazz == null) {
+      return new NothingPropertyConverter();
+    }
+    Method rm = pd.getReadMethod();
+    if (rm != null) {
+      HistoryProperty annot = rm.getAnnotation(HistoryProperty.class);
+      if (annot == null) {
+        Field f = PrivateBeanUtils.findField(entity.getClass(), pd.getName());
+        if (f != null) {
+          annot = f.getAnnotation(HistoryProperty.class);
+        }
+      }
+      if (annot != null) {
+        try {
+          return annot.converter().newInstance();
+        } catch (InstantiationException | IllegalAccessException ex) {
+          throw new LoggedRuntimeException(LogLevel.Fatal, GenomeLogCategory.Jpa,
+              "Hist; Cannot create: " + annot.converter() + "; " + ex.getMessage(), new LogExceptionAttribute(ex));
+        }
+      }
+    }
+
     if (DbRecord.class.isAssignableFrom(pclazz) == true) {
       return new DbRecordPropertyConverter();
     } else if (Map.class.isAssignableFrom(pclazz) == true) {
@@ -104,6 +110,7 @@ public class DefaultHistoryPropertyProvider implements HistoryPropertyProvider
     } else if (Collection.class.isAssignableFrom(pclazz) == true) {
       return new CollectionPropertyConverter();
     }
+
     return new SimplePropertyConverter();
 
   }
@@ -147,11 +154,15 @@ public class DefaultHistoryPropertyProvider implements HistoryPropertyProvider
     }
 
     Method method = pd.getReadMethod();
-    if (method.getAnnotation(Transient.class) != null) {
-      return true;
-    }
-    if (method.getAnnotation(NoHistory.class) != null) {
-      return true;
+    if (method != null) {
+      if (method.getAnnotation(Transient.class) != null) {
+        return true;
+      }
+      if (method.getAnnotation(NoHistory.class) != null) {
+        return true;
+      }
+    } else {
+      LOG.info("Property has no read method: " + entity.getClass().getName() + "." + pd.getName());
     }
     Field f = PrivateBeanUtils.findField(entity, pd.getName());
     if (f == null) {

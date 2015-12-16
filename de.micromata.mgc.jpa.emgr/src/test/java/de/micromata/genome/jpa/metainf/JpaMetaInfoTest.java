@@ -19,13 +19,26 @@ public class JpaMetaInfoTest extends MgcTestCase
   public void testMember()
   {
     JpaTestEntMgrFactory fac = JpaTestEntMgrFactory.get();
-    Set<Class<?>> keyset = fac.getMetadataRepository().getEntities().keySet();
+    JpaMetadataRepostory repo = fac.getMetadataRepository();
+    Set<Class<?>> keyset = repo.getEntities().keySet();
 
-    int len = fac.getMetadataRepository().getMaxLength(MyAnotTestDO.class, "testName");
+    int len = repo.getMaxLength(MyAnotTestDO.class, "testName");
 
     Assert.assertEquals(30, len);
-    MyAnnotation foundanot = fac.getMetadataRepository().findColumnAnnotation(MyAnotTestDO.class, "testName",
+    MyAnnotation foundanot = repo.findColumnAnnotation(MyAnotTestDO.class, "testName",
         MyAnnotation.class);
     Assert.assertNotNull(foundanot);
+
+    ColumnMetadata colmeta = repo.findColumnMetadata(MyAnotTestDO.class, "testName");
+    Assert.assertNotNull(colmeta);
+    Assert.assertNotNull(colmeta.getGetter());
+    Assert.assertNotNull(colmeta.getSetter());
+
+    MyAnotTestDO myBean = new MyAnotTestDO();
+    myBean.setTestName("Roger");
+    String tn = (String) colmeta.getGetter().get(myBean);
+    Assert.assertEquals("Roger", tn);
+    colmeta.getSetter().set(myBean, "Kommer");
+    Assert.assertEquals("Kommer", myBean.getTestName());
   }
 }

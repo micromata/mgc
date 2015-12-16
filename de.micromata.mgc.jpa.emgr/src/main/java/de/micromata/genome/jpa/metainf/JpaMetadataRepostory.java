@@ -70,6 +70,16 @@ public class JpaMetadataRepostory
     return entities.get(clazz);
   }
 
+  public ColumnMetadata findColumnMetadata(Class<?> entity, String property)
+  {
+    EntityMetadata em = entities.get(entity);
+    if (em == null) {
+      return null;
+    }
+    ColumnMetadata pe = em.getColumns().get(property);
+    return pe;
+  }
+
   /**
    * Find entity metadata.
    *

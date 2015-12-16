@@ -15,6 +15,7 @@ package de.micromata.genome.util.bean;
  * @author roger@micromata.de
  * 
  */
+@FunctionalInterface
 public interface AttrSetter<BEAN, VAL>
 {
 

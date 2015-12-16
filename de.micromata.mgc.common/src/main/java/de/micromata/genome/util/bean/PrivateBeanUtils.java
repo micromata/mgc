@@ -113,11 +113,24 @@ public class PrivateBeanUtils
     return null;
   }
 
+  /**
+   * Gets the getter from field name.
+   *
+   * @param fieldName the field name
+   * @return the getter from field name
+   */
   public static String getGetterFromFieldName(String fieldName)
   {
     return getGetterFromFieldName(fieldName, "get");
   }
 
+  /**
+   * Gets the getter from field name.
+   *
+   * @param fieldName the field name
+   * @param prefix the prefix
+   * @return the getter from field name
+   */
   public static String getGetterFromFieldName(String fieldName, String prefix)
   {
     char fl = Character.toUpperCase(fieldName.charAt(0));
@@ -129,6 +142,13 @@ public class PrivateBeanUtils
     return getter + fieldName.substring(1);
   }
 
+  /**
+   * Find getter from field.
+   *
+   * @param clazz the clazz
+   * @param field the field
+   * @return the method
+   */
   public static Method findGetterFromField(Class<?> clazz, Field field)
   {
     String prefix = "get";
@@ -144,6 +164,13 @@ public class PrivateBeanUtils
     }
   }
 
+  /**
+   * Find field from getter.
+   *
+   * @param clazz the clazz
+   * @param method the method
+   * @return the field
+   */
   public static Field findFieldFromGetter(Class<?> clazz, Method method)
   {
     String fieldName = getFieldNameFromGetter(method.getName());
@@ -725,18 +752,31 @@ public class PrivateBeanUtils
       throw new RuntimeException(
           "Canot find method to call: " + bean.getClass().getName() + "." + method + getArgsDescriptor(args));
     }
-    AccessibleScope ascope = new AccessibleScope(m);
+    return invokeMethod(bean, m, args);
+  }
+
+  /**
+   * Invoke method.
+   *
+   * @param bean the bean
+   * @param method the method
+   * @param args the args
+   * @return the object
+   */
+  public static Object invokeMethod(Object bean, Method method, Object... args)
+  {
+    AccessibleScope ascope = new AccessibleScope(method);
     try {
-      return m.invoke(bean, args);
+      return method.invoke(bean, args);
     } catch (InvocationTargetException ex) {
       if (ex.getTargetException() instanceof RuntimeException) {
         throw (RuntimeException) ex.getTargetException();
       }
       throw new RuntimeException(
-          "Failure calling method: " + bean.getClass().getName() + "." + method + ": " + ex.getMessage(), ex);
+          "Failure calling method: " + bean.getClass().getName() + "." + method.getName() + ": " + ex.getMessage(), ex);
     } catch (Exception ex) {
       throw new RuntimeException(
-          "Failure calling method: " + bean.getClass().getName() + "." + method + ": " + ex.getMessage(), ex);
+          "Failure calling method: " + bean.getClass().getName() + "." + method.getName() + ": " + ex.getMessage(), ex);
     } finally {
       ascope.restore();
     }
@@ -1122,6 +1162,70 @@ public class PrivateBeanUtils
     } catch (ClassNotFoundException ex) {
       return false;
     }
-
   }
+
+  /**
+   * Gets the field attr getter.
+   *
+   * @param <BEAN> the generic type
+   * @param <T> the generic type
+   * @param beanClass the bean class
+   * @param field the field
+   * @param fieldType the field type
+   * @return the field attr getter
+   */
+  public static <BEAN, T> AttrGetter<BEAN, T> getFieldAttrGetter(Class<BEAN> beanClass, Field field, Class<T> fieldType)
+  {
+    return (bean) -> (T) readField(bean, field);
+  }
+
+  /**
+   * Gets the field attr setter.
+   *
+   * @param <BEAN> the generic type
+   * @param <T> the generic type
+   * @param beanClass the bean class
+   * @param field the field
+   * @param fieldType the field type
+   * @return the field attr setter
+   */
+
+  public static <BEAN, T> AttrSetter<BEAN, T> getFieldAttrSetter(Class<BEAN> beanClass, Field field,
+      Class<T> fieldType)
+  {
+    return (bean, value) -> writeField(bean, field, value);
+  }
+
+  /**
+   * Gets the method attr getter.
+   *
+   * @param <BEAN> the generic type
+   * @param <T> the generic type
+   * @param beanClass the bean class
+   * @param method the method
+   * @param fieldType the field type
+   * @return the method attr getter
+   */
+  public static <BEAN, T> AttrGetter<BEAN, T> getMethodAttrGetter(Class<BEAN> beanClass, Method method,
+      Class<T> fieldType)
+  {
+    return (bean) -> (T) invokeMethod(bean, method);
+  }
+
+  /**
+   * Gets the method attr setter.
+   *
+   * @param <BEAN> the generic type
+   * @param <T> the generic type
+   * @param beanClass the bean class
+   * @param method the method
+   * @param fieldType the field type
+   * @return the method attr setter
+   */
+  public static <BEAN, T> AttrSetter<BEAN, T> getMethodAttrSetter(Class<BEAN> beanClass, Method method,
+      Class<T> fieldType)
+  {
+    return (bean, value) -> invokeMethod(bean, method, value);
+  }
+
 }

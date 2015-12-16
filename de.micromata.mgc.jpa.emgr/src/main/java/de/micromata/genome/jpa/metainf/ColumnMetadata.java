@@ -3,6 +3,9 @@ package de.micromata.genome.jpa.metainf;
 import java.lang.annotation.Annotation;
 import java.util.List;
 
+import de.micromata.genome.util.bean.AttrGetter;
+import de.micromata.genome.util.bean.AttrSetter;
+
 /**
  * The Interface ColumnMetadata.
  *
@@ -93,4 +96,19 @@ public interface ColumnMetadata extends EmgrDbElement
    * @return the annotations
    */
   List<Annotation> getAnnotations();
+
+  /**
+   * The getter to column.
+   *
+   * @return the getter
+   */
+  AttrGetter<Object, Object> getGetter();
+
+  /**
+   * The setter to column.
+   * 
+   * @return
+   */
+  AttrSetter<Object, Object> getSetter();
+
 }
