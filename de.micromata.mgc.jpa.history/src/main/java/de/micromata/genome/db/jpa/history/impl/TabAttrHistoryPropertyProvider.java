@@ -9,9 +9,11 @@ import de.micromata.genome.db.jpa.tabattr.api.EntityWithAttributes;
 /**
  * Default entry with Attrs.
  * 
+ * @deprecated use TabAttrHistoryPropertyConverter instead
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
  */
+@Deprecated
 public class TabAttrHistoryPropertyProvider implements HistoryPropertyProvider
 {
   @Override

@@ -47,7 +47,7 @@ public class SimplePropertyConverter implements HistoryPropertyConverter
   }
 
   @Override
-  public List<HistProp> convert(Object entity, PropertyDescriptor pd)
+  public List<HistProp> convert(HistoryMetaInfo historyMetaInfo, Object entity, PropertyDescriptor pd)
   {
     Object value = readPropertyValue(entity, pd);
     return Collections.singletonList(convertInternal(value, pd));

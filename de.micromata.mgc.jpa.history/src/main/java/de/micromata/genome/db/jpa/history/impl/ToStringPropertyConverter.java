@@ -16,9 +16,9 @@ public class ToStringPropertyConverter extends SimplePropertyConverter
 {
 
   @Override
-  public List<HistProp> convert(Object entity, PropertyDescriptor pd)
+  public List<HistProp> convert(HistoryMetaInfo historyMetaInfo, Object entity, PropertyDescriptor pd)
   {
-    Object bo = super.convert(entity, pd);
+    Object bo = super.convert(historyMetaInfo, entity, pd);
     if (bo == null) {
       return Collections.singletonList(new HistProp(null, String.class.getName(), null));
     }

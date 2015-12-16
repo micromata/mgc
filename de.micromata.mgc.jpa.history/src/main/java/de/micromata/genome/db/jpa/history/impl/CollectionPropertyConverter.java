@@ -25,7 +25,7 @@ public class CollectionPropertyConverter implements HistoryPropertyConverter
   private static final Logger LOG = Logger.getLogger(CollectionPropertyConverter.class);
 
   @Override
-  public List<HistProp> convert(Object entity, PropertyDescriptor pd)
+  public List<HistProp> convert(HistoryMetaInfo historyMetaInfo, Object entity, PropertyDescriptor pd)
   {
     Collection<?> col = (Collection<?>) SimplePropertyConverter.readPropertyValue(entity, pd);
     if (col == null) {

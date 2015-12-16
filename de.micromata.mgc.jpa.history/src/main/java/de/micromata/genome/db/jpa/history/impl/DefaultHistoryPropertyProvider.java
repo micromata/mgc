@@ -54,7 +54,7 @@ public class DefaultHistoryPropertyProvider implements HistoryPropertyProvider
           continue;
         }
         HistoryPropertyConverter conv = getPropertyConverter(entity, pd);
-        List<HistProp> values = conv.convert(entity, pd);
+        List<HistProp> values = conv.convert(historyMetaInfo, entity, pd);
         for (HistProp hp : values) {
           String key;
           if (StringUtils.isNotBlank(hp.getName()) == true) {

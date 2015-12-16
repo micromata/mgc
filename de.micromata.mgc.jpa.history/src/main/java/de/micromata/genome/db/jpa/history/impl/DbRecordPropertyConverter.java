@@ -19,7 +19,7 @@ public class DbRecordPropertyConverter implements HistoryPropertyConverter
 {
 
   @Override
-  public List<HistProp> convert(Object entity, PropertyDescriptor pd)
+  public List<HistProp> convert(HistoryMetaInfo historyMetaInfo, Object entity, PropertyDescriptor pd)
   {
     Object val = SimplePropertyConverter.readPropertyValue(entity, pd);
     DbRecord dbrec = (DbRecord) val;
