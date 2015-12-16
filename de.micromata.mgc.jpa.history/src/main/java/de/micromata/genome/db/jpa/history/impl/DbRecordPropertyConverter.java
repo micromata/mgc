@@ -5,6 +5,8 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
+import org.hibernate.proxy.HibernateProxy;
+
 import de.micromata.genome.db.jpa.history.api.HistProp;
 import de.micromata.genome.db.jpa.history.api.HistoryPropertyConverter;
 import de.micromata.genome.jpa.DbRecord;
@@ -22,15 +24,21 @@ public class DbRecordPropertyConverter implements HistoryPropertyConverter
   public List<HistProp> convert(HistoryMetaInfo historyMetaInfo, Object entity, PropertyDescriptor pd)
   {
     Object val = SimplePropertyConverter.readPropertyValue(entity, pd);
-    DbRecord dbrec = (DbRecord) val;
+    DbRecord<?> dbrec = (DbRecord<?>) val;
+    Serializable pk = null;
     HistProp hp = new HistProp();
     hp.setName("");
-
     if (dbrec != null) {
-      Serializable pk = dbrec.getPk();
-      if (pk != null) {
-        hp.setValue(pk.toString());
+      // to avoid lazy initialization problems, only evaluate the proxy.
+      if (dbrec instanceof HibernateProxy) {
+        HibernateProxy hibernateProxy = (HibernateProxy) dbrec;
+        pk = hibernateProxy.getHibernateLazyInitializer().getIdentifier();
+      } else {
+        pk = dbrec.getPk();
       }
+    }
+    if (pk != null) {
+      hp.setValue(pk.toString());
     }
     Class<?> clazz = pd.getPropertyType();
     if (val != null) {
