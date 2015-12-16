@@ -27,6 +27,8 @@ import de.micromata.genome.jpa.events.impl.EmgrAfterCopyForUpdateEventEventHandl
 import de.micromata.genome.jpa.events.impl.InitCreatedStdRecordFieldsEventHandler;
 import de.micromata.genome.jpa.events.impl.InitUpdateStdRecordFieldsEventHandler;
 import de.micromata.genome.jpa.events.impl.UpdateStdRecordCriteriaUpdateEventHandler;
+import de.micromata.genome.jpa.metainf.JpaMetadataRepostory;
+import de.micromata.genome.jpa.metainf.MetaInfoUtils;
 import de.micromata.genome.jpa.trace.eventhandler.TracerEmgrCreateQueryFilterEventHandler;
 import de.micromata.genome.jpa.trace.eventhandler.TracerEmgrInsertDbRecordFilterEventHandler;
 import de.micromata.genome.jpa.trace.eventhandler.TracerEmgrMergeDbRecordFilterEventHandler;
@@ -113,6 +115,7 @@ public abstract class EmgrFactory<E extends IEmgr<?>>
    * The unit name.
    */
   private String unitName;
+  private JpaMetadataRepostory metadataRepository;
 
   /**
    * Gets the unit name.
@@ -162,7 +165,13 @@ public abstract class EmgrFactory<E extends IEmgr<?>>
   {
     this.unitName = unitName;
     entityManagerFactory = createEntityManagerFactory(unitName);
+    initMetadata();
     registerEvents();
+  }
+
+  protected void initMetadata()
+  {
+    this.metadataRepository = MetaInfoUtils.fillEntityMetadata(this);
   }
 
   /**
@@ -575,5 +584,10 @@ public abstract class EmgrFactory<E extends IEmgr<?>>
       }
     }
     return ret;
+  }
+
+  public JpaMetadataRepostory getMetadataRepository()
+  {
+    return metadataRepository;
   }
 }

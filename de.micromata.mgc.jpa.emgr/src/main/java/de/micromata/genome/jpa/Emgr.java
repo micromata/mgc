@@ -17,7 +17,7 @@ import javax.persistence.criteria.CriteriaQuery;
 
 import org.apache.commons.lang.Validate;
 import org.apache.log4j.Logger;
-import org.hibernate.ejb.AvailableSettings;
+import org.hibernate.jpa.AvailableSettings;
 
 import de.micromata.genome.jpa.events.EmgrAfterBeforeRemovedEvent;
 import de.micromata.genome.jpa.events.EmgrAfterCopyForUpdateEvent;

@@ -113,6 +113,44 @@ public class PrivateBeanUtils
     return null;
   }
 
+  public static String getGetterFromFieldName(String fieldName)
+  {
+    return getGetterFromFieldName(fieldName, "get");
+  }
+
+  public static String getGetterFromFieldName(String fieldName, String prefix)
+  {
+    char fl = Character.toUpperCase(fieldName.charAt(0));
+    String getter = prefix + fl;
+
+    if (fieldName.length() < 2) {
+      return getter;
+    }
+    return getter + fieldName.substring(1);
+  }
+
+  public static Method findGetterFromField(Class<?> clazz, Field field)
+  {
+    String prefix = "get";
+    if (field.getType() == Boolean.TYPE) {
+      prefix = "is";
+    }
+    String methodName = getGetterFromFieldName(field.getName(), prefix);
+    try {
+      Method m = clazz.getMethod(methodName);
+      return m;
+    } catch (NoSuchMethodException ex) {
+      return null;
+    }
+  }
+
+  public static Field findFieldFromGetter(Class<?> clazz, Method method)
+  {
+    String fieldName = getFieldNameFromGetter(method.getName());
+    Field found = findField(clazz, fieldName);
+    return found;
+  }
+
   /**
    * Try find a field with given name. Goes throw class hierarchie.
    *
