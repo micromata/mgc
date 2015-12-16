@@ -1,6 +1,7 @@
 package de.micromata.genome.jpa.events;
 
 import de.micromata.genome.jpa.DbRecord;
+import de.micromata.genome.jpa.EntityCopyStatus;
 import de.micromata.genome.jpa.IEmgr;
 
 /**
@@ -9,7 +10,7 @@ import de.micromata.genome.jpa.IEmgr;
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
  */
-public class EmgrUpdateCopyFilterEvent extends EmgrFilterEvent<Void>
+public class EmgrUpdateCopyFilterEvent extends EmgrFilterEvent<EntityCopyStatus>
 {
 
   /**

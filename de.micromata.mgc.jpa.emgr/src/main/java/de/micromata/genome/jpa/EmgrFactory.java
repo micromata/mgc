@@ -1,8 +1,10 @@
 package de.micromata.genome.jpa;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
@@ -38,12 +40,16 @@ import de.micromata.genome.util.runtime.LocalSettings;
  * Factory class to create an Emgr instance. This class should be held by a singleton.
  * 
  * With the method runWoTrans/runInTrans an Emgr Instance will be provided.
- * 
- * @param <E> the element type
+ *
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
+ * @param <E> the element type
  */
 public abstract class EmgrFactory<E extends IEmgr<?>>
 {
+
+  /**
+   * The Enum TaFlags.
+   */
   public static enum TaFlags
   {
     /**
@@ -57,21 +63,41 @@ public abstract class EmgrFactory<E extends IEmgr<?>>
     ReadOnly(0x1),
 
     /**
-     * Creates new EntiManager
+     * Creates new EntiManager.
      */
     RequireNew(0x2);
+
+    /**
+     * The flag mask.
+     */
     private final int flagMask;
 
+    /**
+     * Instantiates a new ta flags.
+     *
+     * @param flags the flags
+     */
     private TaFlags(int flags)
     {
       this.flagMask = flags;
     }
 
+    /**
+     * Gets the flag mask.
+     *
+     * @return the flag mask
+     */
     public int getFlagMask()
     {
       return flagMask;
     }
 
+    /**
+     * Matches.
+     *
+     * @param flags the flags
+     * @return true, if successful
+     */
     public boolean matches(int flags)
     {
       return (flags & flagMask) == flagMask;
@@ -88,6 +114,11 @@ public abstract class EmgrFactory<E extends IEmgr<?>>
    */
   private String unitName;
 
+  /**
+   * Gets the unit name.
+   *
+   * @return the unit name
+   */
   public String getUnitName()
   {
     return unitName;
@@ -118,6 +149,11 @@ public abstract class EmgrFactory<E extends IEmgr<?>>
   private final ThreadLocal<E> threadEmgr = new ThreadLocal<E>();
 
   /**
+   * Registered copied to type.
+   */
+  private Map<Class<?>, List<Class<? extends EntityCopier>>> registeredCopier = new HashMap<>();
+
+  /**
    * Instantiates a new emgr factory.
    * 
    * @param unitName the unit name
@@ -129,6 +165,9 @@ public abstract class EmgrFactory<E extends IEmgr<?>>
     registerEvents();
   }
 
+  /**
+   * Register events.
+   */
   protected void registerEvents()
   {
     eventFactory.registerEvent(new InitCreatedStdRecordFieldsEventHandler());
@@ -155,6 +194,12 @@ public abstract class EmgrFactory<E extends IEmgr<?>>
    */
   protected abstract E createEmgr(EntityManager entityManager);
 
+  /**
+   * Creates a new Emgr object.
+   *
+   * @param unitName the unit name
+   * @return the entity manager factory
+   */
   public EntityManagerFactory createEntityManagerFactory(String unitName)
   {
     LocalSettings ls = LocalSettings.get();
@@ -168,8 +213,8 @@ public abstract class EmgrFactory<E extends IEmgr<?>>
 
   /**
    * Creates the entity manager factory.
-   * 
-   * @param unitName the unit name
+   *
+   * @param ex the ex
    * @return the entity manager factory
    */
   //  public EntityManagerFactory createEntityManagerFactory42(String unitName)
@@ -285,16 +330,37 @@ public abstract class EmgrFactory<E extends IEmgr<?>>
     }
   }
 
+  /**
+   * Run in trans.
+   *
+   * @param <R> the generic type
+   * @param call the call
+   * @return the r
+   */
   public <R> R runInTrans(final EmgrCallable<R, E> call)
   {
     return runInTrans(TaFlags.None.getFlagMask(), call);
   }
 
+  /**
+   * Run ro trans.
+   *
+   * @param <R> the generic type
+   * @param call the call
+   * @return the r
+   */
   public <R> R runRoTrans(final EmgrCallable<R, E> call)
   {
     return runInTrans(TaFlags.ReadOnly.getFlagMask(), call);
   }
 
+  /**
+   * Run new trans.
+   *
+   * @param <R> the generic type
+   * @param call the call
+   * @return the r
+   */
   public <R> R runNewTrans(final EmgrCallable<R, E> call)
   {
     return runInTrans(TaFlags.RequireNew.getFlagMask(), call);
@@ -302,8 +368,9 @@ public abstract class EmgrFactory<E extends IEmgr<?>>
 
   /**
    * Run in trans.
-   * 
+   *
    * @param <R> the generic type
+   * @param flags the flags
    * @param call the call
    * @return the r
    */
@@ -370,6 +437,11 @@ public abstract class EmgrFactory<E extends IEmgr<?>>
 
   }
 
+  /**
+   * Gets the event factory.
+   *
+   * @return the event factory
+   */
   public EmgrEventRegistry getEventFactory()
   {
     return eventFactory;
@@ -396,44 +468,112 @@ public abstract class EmgrFactory<E extends IEmgr<?>>
     return new Date();
   }
 
+  /**
+   * Checks if is checks for insert trigger for version.
+   *
+   * @return true, if is checks for insert trigger for version
+   */
   public boolean isHasInsertTriggerForVersion()
   {
     return hasInsertTriggerForVersion;
   }
 
+  /**
+   * Sets the checks for insert trigger for version.
+   *
+   * @param hasInsertTriggerForVersion the new checks for insert trigger for version
+   */
   public void setHasInsertTriggerForVersion(boolean hasInsertTriggerForVersion)
   {
     this.hasInsertTriggerForVersion = hasInsertTriggerForVersion;
   }
 
+  /**
+   * Checks if is checks for update trigger for version.
+   *
+   * @return true, if is checks for update trigger for version
+   */
   public boolean isHasUpdateTriggerForVersion()
   {
     return hasUpdateTriggerForVersion;
   }
 
+  /**
+   * Sets the checks for update trigger for version.
+   *
+   * @param hasUpdateTriggerForVersion the new checks for update trigger for version
+   */
   public void setHasUpdateTriggerForVersion(boolean hasUpdateTriggerForVersion)
   {
     this.hasUpdateTriggerForVersion = hasUpdateTriggerForVersion;
   }
 
+  /**
+   * Gets the entity manager factory.
+   *
+   * @return the entity manager factory
+   */
   public EntityManagerFactory getEntityManagerFactory()
   {
     return entityManagerFactory;
   }
 
+  /**
+   * Sets the entity manager factory.
+   *
+   * @param entityManagerFactory the new entity manager factory
+   */
   public void setEntityManagerFactory(EntityManagerFactory entityManagerFactory)
   {
     this.entityManagerFactory = entityManagerFactory;
   }
 
+  /**
+   * Gets the thread emgr.
+   *
+   * @return the thread emgr
+   */
   public ThreadLocal<E> getThreadEmgr()
   {
     return threadEmgr;
   }
 
+  /**
+   * Sets the unit name.
+   *
+   * @param unitName the new unit name
+   */
   public void setUnitName(String unitName)
   {
     this.unitName = unitName;
   }
 
+  /**
+   * Registered copier.
+   *
+   * @param beanClass the bean class
+   * @param copierClass the copier class
+   */
+  public void registeredCopier(Class<?> beanClass, Class<? extends EntityCopier> copierClass)
+  {
+    registeredCopier.putIfAbsent(beanClass, new ArrayList<>());
+    registeredCopier.get(beanClass).add(copierClass);
+  }
+
+  /**
+   * Find copier for bean.
+   *
+   * @param beanClass the bean class
+   * @return the class<? extends entity copier>
+   */
+  public List<Class<? extends EntityCopier>> getRegisteredCopierForBean(Class<?> beanClass)
+  {
+    ArrayList<Class<? extends EntityCopier>> ret = new ArrayList<>();
+    for (Class<?> bc : registeredCopier.keySet()) {
+      if (bc.isAssignableFrom(beanClass) == true) {
+        ret.addAll(registeredCopier.get(bc));
+      }
+    }
+    return ret;
+  }
 }

@@ -1,5 +1,6 @@
 package de.micromata.genome.jpa;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.micromata.genome.logging.GenomeLogCategory;
@@ -14,7 +15,7 @@ import de.micromata.genome.util.runtime.ClassUtils;
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
  */
-@EntityCopy(copier = { PropertyEntityCopier.class })
+
 public class EmgrCopyUtils
 {
 
@@ -26,14 +27,30 @@ public class EmgrCopyUtils
    * @param dest the dest
    * @param orig the orig
    */
-  public static <T> void copyTo(Class<? extends T> iface, T dest, T orig)
+  public static <T> EntityCopyStatus copyTo(IEmgr<?> emgr, Class<? extends T> iface, T dest, T orig,
+      String... ignoreCopyFields)
   {
-    List<EntityCopy> copiers = ClassUtils.findClassAnnotations(iface, EntityCopy.class);
-    if (copiers.isEmpty()) {
-      // thats a trick to retrieve standard annotation
-      copiers = ClassUtils.findClassAnnotations(EmgrCopyUtils.class, EntityCopy.class);
+    if (dest instanceof CustomEntityCopier) {
+      return ((CustomEntityCopier) dest).copyFrom(emgr, iface, orig, ignoreCopyFields);
     }
-    copyTo(iface, dest, orig, copiers);
+    List<EntityCopy> copiers = ClassUtils.findClassAnnotations(iface, EntityCopy.class);
+    if (copiers.isEmpty() == false) {
+      return copyTo(emgr, iface, dest, orig, copiers);
+    }
+    List<Class<? extends EntityCopier>> copiercl = emgr.getEmgrFactory().getRegisteredCopierForBean(iface);
+    List<EntityCopier> cpl = new ArrayList<>();
+    if (copiercl.isEmpty() == false) {
+      for (Class<? extends EntityCopier> cpc : copiercl) {
+        cpl.add(createCopier(cpc));
+      }
+    } else {
+      cpl.add(new PropertyEntityCopier());
+    }
+    EntityCopyStatus ret = EntityCopyStatus.NONE;
+    for (EntityCopier cpi : cpl) {
+      ret = ret.combine(cpi.copyTo(emgr, iface, dest, orig));
+    }
+    return ret;
   }
 
   /**
@@ -45,14 +62,17 @@ public class EmgrCopyUtils
    * @param orig the orig
    * @param entcopiers the entcopiers
    */
-  public static <T> void copyTo(Class<? extends T> iface, T dest, T orig, List<EntityCopy> entcopiers)
+  public static <T> EntityCopyStatus copyTo(IEmgr<?> emgr, Class<? extends T> iface, T dest, T orig,
+      List<EntityCopy> entcopiers)
   {
+    EntityCopyStatus ret = EntityCopyStatus.NONE;
     for (EntityCopy entc : entcopiers) {
       for (Class<? extends EntityCopier> cc : entc.copier()) {
         EntityCopier copier = createCopier(cc);
-        copier.copyTo(iface, dest, orig);
+        ret = ret.combine(copier.copyTo(emgr, iface, dest, orig));
       }
     }
+    return ret;
   }
 
   /**

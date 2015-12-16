@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.persistence.Column;
 import javax.persistence.Transient;
 
-import org.apache.commons.beanutils.BeanUtilsBean;
+import de.micromata.genome.util.bean.PropertyDescriptorUtils;
 
 /**
  * Used to copy properties from/to Entities.
@@ -86,7 +86,7 @@ public class EmgrPropertyUtils
     Set<String> names = new HashSet<String>();
     for (Class<?> ifac : ifaces) {
 
-      PropertyDescriptor[] descriptors = BeanUtilsBean.getInstance().getPropertyUtils().getPropertyDescriptors(ifac);
+      PropertyDescriptor[] descriptors = PropertyDescriptorUtils.getPropertyDescriptors(ifac);
       for (PropertyDescriptor pd : descriptors) {
         String name = pd.getName();
         if (names.contains(name) == true) {
@@ -99,10 +99,10 @@ public class EmgrPropertyUtils
         if (pd.getReadMethod() == null || pd.getWriteMethod() == null) {
           continue;
         }
-
-        if (isBaseTypeOrEnum(pd.getPropertyType()) == false) {
-          continue;
-        }
+        // TODO RK test only
+        //        if (isBaseTypeOrEnum(pd.getPropertyType()) == false) {
+        //          continue;
+        //        }
         if (pd.getReadMethod().getAnnotation(Transient.class) != null) {
           continue;
         }

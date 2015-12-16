@@ -9,6 +9,7 @@
 
 package de.micromata.genome.db.jpa.tabattr.api;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -17,7 +18,7 @@ import java.util.List;
  * @author Roger Kommer (r.kommer.extern@micromata.de)
  *
  */
-public interface EntityWithTimeableAttr<T extends TimeableAttrRow<?>>
+public interface EntityWithTimeableAttr<PK extends Serializable, T extends TimeableAttrRow<PK>>
 {
 
   void addTimeableAttribute(T row);

@@ -9,6 +9,7 @@
 
 package de.micromata.genome.db.jpa.tabattr.impl;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import de.micromata.genome.db.jpa.tabattr.api.AttrSchemaService;
@@ -54,7 +55,8 @@ public class TimeableServiceImpl implements TimeableService
    *      org.projectforge.framework.persistence.attr.api.EntityWithTimeableAttr)
    */
   @Override
-  public <T extends TimeableAttrRow> T getRowForTime(final Date date, final EntityWithTimeableAttr<T> entity)
+  public <PK extends Serializable, T extends TimeableAttrRow<PK>> T getRowForTime(final Date date,
+      final EntityWithTimeableAttr<PK, T> entity)
   {
     T lastRow = null;
 
@@ -71,7 +73,8 @@ public class TimeableServiceImpl implements TimeableService
     return lastRow;
   }
 
-  public <R, T extends TimeableAttrRow> R getDefaultAttrValue(final EntityWithTimeableAttr<T> entity,
+  public <PK extends Serializable, R, T extends TimeableAttrRow<PK>> R getDefaultAttrValue(
+      final EntityWithTimeableAttr<PK, T> entity,
       final String propertyName, final Class<R> expectedClass)
   {
     return attrSchemaService.getDefaultValue(entity.getAttrSchemaName(), propertyName, expectedClass);
@@ -82,7 +85,8 @@ public class TimeableServiceImpl implements TimeableService
    *      org.projectforge.framework.persistence.attr.api.EntityWithTimeableAttr, java.lang.String, java.lang.Class)
    */
   @Override
-  public <R, T extends TimeableAttrRow> R getAttrValue(final Date date, final EntityWithTimeableAttr<T> entity,
+  public <PK extends Serializable, R, T extends TimeableAttrRow<PK>> R getAttrValue(final Date date,
+      final EntityWithTimeableAttr<PK, T> entity,
       final String propertyName, final Class<R> expectedClass)
   {
     final T row = getRowForTime(date, entity);
@@ -97,7 +101,8 @@ public class TimeableServiceImpl implements TimeableService
   }
 
   @Override
-  public <R, T extends TimeableAttrRow> R getAttrValue(final EntityWithTimeableAttr<T> entity,
+  public <PK extends Serializable, R, T extends TimeableAttrRow<PK>> R getAttrValue(
+      final EntityWithTimeableAttr<PK, T> entity,
       final String propertyName, final Class<R> expectedClass)
   {
     return getAttrValue(new Date(), entity, propertyName, expectedClass);

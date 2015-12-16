@@ -897,7 +897,7 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    * @return the t
    */
   @Override
-  public <R extends DbRecord<?>> EMGR updateCopy(final R rec)
+  public <R extends DbRecord<?>> EntityCopyStatus updateCopy(final R rec)
   {
     return updateCopy(rec, false);
   }
@@ -910,7 +910,7 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    * @return the t
    */
   @Override
-  public <R extends DbRecord<?>> EMGR updateCopy(final R rec, boolean overwrite)
+  public <R extends DbRecord<?>> EntityCopyStatus updateCopy(final R rec, boolean overwrite)
   {
     return update(rec.getClass(), rec.getClass(), rec, overwrite);
   }
@@ -928,21 +928,24 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    * @throws OptimisticLockException if newE updateCounter != null and differs from persisted.
    */
   @Override
-  public <R extends DbRecord<?>> EMGR update(Class<? extends R> iface, Class<? extends R> entityClass, R newE,
-      boolean overwrite)
+  public <R extends DbRecord<?>> EntityCopyStatus update(Class<? extends R> iface, Class<? extends R> entityClass,
+      R newE,
+      boolean overwrite, String... ignoreCopyFields)
   {
     R oldE = entityManager.find(entityClass, newE.getPk());
     invokeEvent(new EmgrBeforeCopyForUpdateEvent(this, iface, oldE, newE, overwrite));
     EmgrUpdateCopyFilterEvent tevent = new EmgrUpdateCopyFilterEvent(this, iface, entityClass, oldE, newE, overwrite);
     filterEvent(tevent,
         (EmgrUpdateCopyFilterEvent event) -> {
-          EmgrCopyUtils.copyTo(event.getIface(), event.getTarget(), event.getSource());
+          EntityCopyStatus status = EmgrCopyUtils.copyTo(this, event.getIface(), event.getTarget(), event.getSource(),
+              ignoreCopyFields);
           update(event.getTarget());
+          event.setResult(status);
         });
-
+    // TODO RRK pass result.
     invokeEvent(
         new EmgrAfterCopyForUpdateEvent(this, tevent.getIface(), tevent.getTarget(), tevent.getSource(), overwrite));
-    return getThis();
+    return tevent.getResult();
   }
 
   /**

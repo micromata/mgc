@@ -17,5 +17,19 @@ public @interface EntityCopy {
    *
    * @return the class<? extends entity copier>[]
    */
-  Class<? extends EntityCopier>[]copier() default { PropertyEntityCopier.class };
+  Class<? extends EntityCopier>[] copier() default { PropertyEntityCopier.class };
+
+  /**
+   * If set to false, the property will not be copied.
+   * 
+   * @return
+   */
+  boolean noCopy() default false;
+
+  /**
+   * Mark n property if should be deep copied.
+   * 
+   * @return
+   */
+  boolean deepCopy() default false;
 }

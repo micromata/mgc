@@ -23,6 +23,7 @@
 
 package de.micromata.genome.db.jpa.tabattr.api;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -42,7 +43,8 @@ public interface TimeableService
    * @param entity the entity
    * @return null if not found
    */
-  <T extends TimeableAttrRow> T getRowForTime(final Date date, final EntityWithTimeableAttr<T> entity);
+  <PK extends Serializable, T extends TimeableAttrRow<PK>> T getRowForTime(Date date,
+      EntityWithTimeableAttr<PK, T> entity);
 
   /**
    * Gets the attr value.
@@ -55,7 +57,8 @@ public interface TimeableService
    * @param expectedClass the expected class
    * @return the attr value
    */
-  <R, T extends TimeableAttrRow> R getAttrValue(final Date date, final EntityWithTimeableAttr<T> entity,
+  <PK extends Serializable, R, T extends TimeableAttrRow<PK>> R getAttrValue(final Date date,
+      final EntityWithTimeableAttr<PK, T> entity,
       final String propertyName, final Class<R> expectedClass);
 
   /**
@@ -68,7 +71,7 @@ public interface TimeableService
    * @param expectedClass the expected class
    * @return the attr value
    */
-  <R, T extends TimeableAttrRow> R getAttrValue(final EntityWithTimeableAttr<T> entity,
+  <PK extends Serializable, R, T extends TimeableAttrRow<PK>> R getAttrValue(final EntityWithTimeableAttr<PK, T> entity,
       final String propertyName, final Class<R> expectedClass);
 
 }

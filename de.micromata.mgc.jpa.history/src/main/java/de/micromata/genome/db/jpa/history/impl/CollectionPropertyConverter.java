@@ -51,6 +51,7 @@ public class CollectionPropertyConverter implements HistoryPropertyConverter
       if (lp == null) {
         LOG.warn("History; Unsafed PK in history: " + entity.getClass().getName() + "." + pd.getName()
             + "[" + idx + "]" + ob.getClass().getName());
+        continue;
       }
       pkSet.put(lp, ob.getClass());
       ++idx;

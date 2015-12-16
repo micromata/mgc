@@ -17,5 +17,5 @@ public interface EntityCopier
    * @param dest the dest
    * @param orig the orig
    */
-  <T> void copyTo(Class<? extends T> iface, T dest, T orig);
+  <T> EntityCopyStatus copyTo(IEmgr<?> emgr, Class<? extends T> iface, T dest, T orig, String... ignoreCopyFields);
 }

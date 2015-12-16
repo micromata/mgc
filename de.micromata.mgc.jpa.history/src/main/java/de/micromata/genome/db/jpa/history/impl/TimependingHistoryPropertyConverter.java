@@ -34,7 +34,6 @@ public class TimependingHistoryPropertyConverter implements HistoryPropertyConve
       hp.setType(Date.class.getName());
       hp.setValue(key);
       ret.add(hp);
-
       hp = new HistProp();
       hp.setName(key + ".endTime");
       hp.setType(Date.class.getName());

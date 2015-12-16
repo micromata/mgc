@@ -258,7 +258,7 @@ public interface IEmgr<EMGR extends IEmgr<?>>
    * @param rec the rec
    * @return the emgr
    */
-  <R extends DbRecord<?>> EMGR updateCopy(final R rec);
+  <R extends DbRecord<?>> EntityCopyStatus updateCopy(final R rec);
 
   /**
    * Update copy.
@@ -268,7 +268,7 @@ public interface IEmgr<EMGR extends IEmgr<?>>
    * @param overwrite the overwrite
    * @return the emgr
    */
-  <R extends DbRecord<?>> EMGR updateCopy(final R rec, boolean overwrite);
+  <R extends DbRecord<?>> EntityCopyStatus updateCopy(final R rec, boolean overwrite);
 
   /**
    * Update.
@@ -280,8 +280,8 @@ public interface IEmgr<EMGR extends IEmgr<?>>
    * @param overwrite the overwrite
    * @return the emgr
    */
-  <R extends DbRecord<?>> EMGR update(Class<? extends R> iface, Class<? extends R> entityClass, R newE,
-      boolean overwrite);
+  <R extends DbRecord<?>> EntityCopyStatus update(Class<? extends R> iface, Class<? extends R> entityClass, R newE,
+      boolean overwrite, String... ignoreCopyFields);
 
   /**
    * Merge.
