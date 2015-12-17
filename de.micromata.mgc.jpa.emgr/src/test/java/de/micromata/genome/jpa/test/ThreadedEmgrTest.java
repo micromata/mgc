@@ -20,20 +20,22 @@ public class ThreadedEmgrTest extends MgcTestCase
   {
     int loopCount = 100;
     int threadCount = 4;
-    new ThreadedRunner(loopCount, threadCount).run(new RuntimeCallable() {
+    new ThreadedRunner(loopCount, threadCount).run(new RuntimeCallable()
+    {
 
       @Override
       public void call()
       {
         final JpaTestEntMgrFactory mgr = JpaTestEntMgrFactory.get();
-        mgr.runInTrans(new EmgrCallable<Void, JpaTestEntMgr>() {
+        mgr.runInTrans(new EmgrCallable<Void, JpaTestEntMgr>()
+        {
 
           @Override
           public Void call(JpaTestEntMgr mgr)
           {
             final GenomeJpaTestTableDO m = new GenomeJpaTestTableDO();
             m.setFirstName("Roger");
-            mgr.insert(m);
+            mgr.insertAttached(m);
             mgr.update(m);
             mgr.remove(m);
             return null;

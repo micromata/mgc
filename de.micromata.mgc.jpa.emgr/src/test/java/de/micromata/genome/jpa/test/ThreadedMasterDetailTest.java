@@ -20,7 +20,8 @@ public class ThreadedMasterDetailTest extends MgcTestCase
   {
     int loopCount = 100;
     int threadCount = 4;
-    new ThreadedRunner(loopCount, threadCount).run(new RuntimeCallable() {
+    new ThreadedRunner(loopCount, threadCount).run(new RuntimeCallable()
+    {
 
       @Override
       public void call()
@@ -29,12 +30,13 @@ public class ThreadedMasterDetailTest extends MgcTestCase
         final GenomeJpaMasterTableDO m = new GenomeJpaMasterTableDO();
         m.createAddNewDetail().setLocation("Kassel");
         m.setFirstName("Roger");
-        mgrfac.runInTrans(new EmgrCallable<Void, JpaTestEntMgr>() {
+        mgrfac.runInTrans(new EmgrCallable<Void, JpaTestEntMgr>()
+        {
 
           @Override
           public Void call(JpaTestEntMgr mgr)
           {
-            mgr.insert(m);
+            mgr.insertAttached(m);
             m.createAddNewDetail().setLocation("Zurich");
             mgr.update(m);
             mgr.remove(m);

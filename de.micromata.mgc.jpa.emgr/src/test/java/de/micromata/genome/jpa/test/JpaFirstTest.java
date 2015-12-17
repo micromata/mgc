@@ -57,7 +57,7 @@ public class JpaFirstTest extends MgcTestCase
       {
         GenomeJpaTestTableDO d = new GenomeJpaTestTableDO();
         d.setFirstName("Roger");
-        mgr.insert(d);
+        mgr.insertAttached(d);
         d.setFirstName("Roger Rene");
         mgr.update(d);
         mgr.remove(d);
@@ -79,7 +79,7 @@ public class JpaFirstTest extends MgcTestCase
       {
         GenomeJpaTestTableDO d = new GenomeJpaTestTableDO();
         d.setFirstName("Roger");
-        mgr.insert(d);
+        mgr.insertAttached(d);
         d.setFirstName("Roger Rene");
         mgr.update(d);
         mgr.remove(d);
