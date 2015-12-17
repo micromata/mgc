@@ -1,6 +1,5 @@
 package de.micromata.genome.db.jpa.history.impl;
 
-import java.beans.PropertyDescriptor;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
@@ -10,6 +9,8 @@ import org.hibernate.proxy.HibernateProxy;
 import de.micromata.genome.db.jpa.history.api.HistProp;
 import de.micromata.genome.db.jpa.history.api.HistoryPropertyConverter;
 import de.micromata.genome.jpa.DbRecord;
+import de.micromata.genome.jpa.IEmgr;
+import de.micromata.genome.jpa.metainf.ColumnMetadata;
 
 /**
  * Wrapps an entity reference.
@@ -21,9 +22,9 @@ public class DbRecordPropertyConverter implements HistoryPropertyConverter
 {
 
   @Override
-  public List<HistProp> convert(HistoryMetaInfo historyMetaInfo, Object entity, PropertyDescriptor pd)
+  public List<HistProp> convert(IEmgr<?> emgr, HistoryMetaInfo historyMetaInfo, Object entity, ColumnMetadata pd)
   {
-    Object val = SimplePropertyConverter.readPropertyValue(entity, pd);
+    Object val = pd.getGetter().get(entity);
     DbRecord<?> dbrec = (DbRecord<?>) val;
     Serializable pk = null;
     HistProp hp = new HistProp();
@@ -40,7 +41,7 @@ public class DbRecordPropertyConverter implements HistoryPropertyConverter
     if (pk != null) {
       hp.setValue(pk.toString());
     }
-    Class<?> clazz = pd.getPropertyType();
+    Class<?> clazz = pd.getJavaType();
     if (val != null) {
       clazz = val.getClass();
     }

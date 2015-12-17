@@ -5,6 +5,7 @@ import java.util.Map;
 import de.micromata.genome.db.jpa.history.api.HistProp;
 import de.micromata.genome.db.jpa.history.api.HistoryPropertyProvider;
 import de.micromata.genome.db.jpa.tabattr.api.EntityWithAttributes;
+import de.micromata.genome.jpa.IEmgr;
 
 /**
  * Default entry with Attrs.
@@ -17,7 +18,7 @@ import de.micromata.genome.db.jpa.tabattr.api.EntityWithAttributes;
 public class TabAttrHistoryPropertyProvider implements HistoryPropertyProvider
 {
   @Override
-  public void getProperties(HistoryMetaInfo historyMetaInfo, Object entity, Map<String, HistProp> map)
+  public void getProperties(IEmgr<?> emgr, HistoryMetaInfo historyMetaInfo, Object entity, Map<String, HistProp> map)
   {
     if ((entity instanceof EntityWithAttributes) == false) {
       return;

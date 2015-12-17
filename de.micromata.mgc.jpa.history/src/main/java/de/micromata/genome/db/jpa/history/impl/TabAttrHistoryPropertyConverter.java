@@ -1,6 +1,5 @@
 package de.micromata.genome.db.jpa.history.impl;
 
-import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +7,8 @@ import java.util.Map;
 import de.micromata.genome.db.jpa.history.api.HistProp;
 import de.micromata.genome.db.jpa.history.api.HistoryPropertyConverter;
 import de.micromata.genome.db.jpa.tabattr.entities.JpaTabAttrBaseDO;
+import de.micromata.genome.jpa.IEmgr;
+import de.micromata.genome.jpa.metainf.ColumnMetadata;
 import de.micromata.genome.util.strings.converter.ConvertedStringTypes;
 
 /**
@@ -20,9 +21,9 @@ public class TabAttrHistoryPropertyConverter implements HistoryPropertyConverter
 {
 
   @Override
-  public List<HistProp> convert(HistoryMetaInfo historyMetaInfo, Object entity, PropertyDescriptor pd)
+  public List<HistProp> convert(IEmgr<?> emgr, HistoryMetaInfo historyMetaInfo, Object entity, ColumnMetadata pd)
   {
-    Map<String, JpaTabAttrBaseDO<?, ?>> tmap = (Map) SimplePropertyConverter.readPropertyValue(entity, pd);
+    Map<String, JpaTabAttrBaseDO<?, ?>> tmap = (Map) pd.getGetter().get(entity);
     List<HistProp> ret = new ArrayList<>(tmap.size());
     for (Map.Entry<String, JpaTabAttrBaseDO<?, ?>> me : tmap.entrySet()) {
       if (historyMetaInfo.ignoreProperty(me.getKey()) == true) {

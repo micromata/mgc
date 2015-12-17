@@ -22,6 +22,20 @@ public class EntityMetadataBean extends EmgrDbElementBean implements EntityMetad
    *
    */
 
+  public ColumnMetadata findColumn(String name)
+  {
+    return columns.get(name);
+  }
+
+  public ColumnMetadata getColumn(String name) throws JpaMetadataColumnNotFoundException
+  {
+    ColumnMetadata ret = findColumn(name);
+    if (ret != null) {
+      return ret;
+    }
+    throw new JpaMetadataColumnNotFoundException("Metadata column not found" + getJavaType().getName() + "." + name);
+  }
+
   @Override
   public Map<String, ColumnMetadata> getColumns()
   {

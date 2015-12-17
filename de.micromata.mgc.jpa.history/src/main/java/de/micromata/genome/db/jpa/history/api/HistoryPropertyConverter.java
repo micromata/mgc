@@ -1,9 +1,10 @@
 package de.micromata.genome.db.jpa.history.api;
 
-import java.beans.PropertyDescriptor;
 import java.util.List;
 
 import de.micromata.genome.db.jpa.history.impl.HistoryMetaInfo;
+import de.micromata.genome.jpa.IEmgr;
+import de.micromata.genome.jpa.metainf.ColumnMetadata;
 
 /**
  * The Interface HistoryPropertyConverter.
@@ -20,5 +21,5 @@ public interface HistoryPropertyConverter
    * @param pd the pd
    * @return the string
    */
-  List<HistProp> convert(HistoryMetaInfo historyMetaInfo, Object entity, PropertyDescriptor pd);
+  List<HistProp> convert(IEmgr<?> emgr, HistoryMetaInfo historyMetaInfo, Object entity, ColumnMetadata pd);
 }

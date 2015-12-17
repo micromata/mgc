@@ -70,6 +70,29 @@ public class JpaMetadataRepostory
     return entities.get(clazz);
   }
 
+  /**
+   * Gets the entity meta data.
+   *
+   * @param clazz the clazz
+   * @return the entity meta data
+   * @throws JpaMetadataEntityNotFoundException the jpa metadata entity not found exception
+   */
+  public EntityMetadata getEntityMetadata(Class<?> clazz) throws JpaMetadataEntityNotFoundException
+  {
+    EntityMetadata fm = findEntityMetadata(clazz);
+    if (fm != null) {
+      return fm;
+    }
+    throw new JpaMetadataEntityNotFoundException("No Metadata found for class: " + clazz.getName());
+  }
+
+  /**
+   * Find column metadata.
+   *
+   * @param entity the entity
+   * @param property the property
+   * @return the column metadata
+   */
   public ColumnMetadata findColumnMetadata(Class<?> entity, String property)
   {
     EntityMetadata em = entities.get(entity);

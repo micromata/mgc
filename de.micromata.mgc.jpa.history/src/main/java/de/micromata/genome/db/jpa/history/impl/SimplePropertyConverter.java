@@ -1,16 +1,12 @@
 package de.micromata.genome.db.jpa.history.impl;
 
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
 
 import de.micromata.genome.db.jpa.history.api.HistProp;
 import de.micromata.genome.db.jpa.history.api.HistoryPropertyConverter;
-import de.micromata.genome.logging.GLog;
-import de.micromata.genome.logging.GenomeLogCategory;
-import de.micromata.genome.logging.LogExceptionAttribute;
+import de.micromata.genome.jpa.IEmgr;
+import de.micromata.genome.jpa.metainf.ColumnMetadata;
 import de.micromata.genome.util.strings.converter.StandardStringConverter;
 import de.micromata.genome.util.strings.converter.StringConverter;
 
@@ -27,29 +23,10 @@ public class SimplePropertyConverter implements HistoryPropertyConverter
    */
   private static StringConverter stringConverter = StandardStringConverter.get();
 
-  /**
-   * Read property value.
-   *
-   * @param entity the entity
-   * @param pd the pd
-   * @return null on failure.
-   */
-  public static Object readPropertyValue(Object entity, PropertyDescriptor pd)
-  {
-    try {
-      Method method = pd.getReadMethod();
-      Object value = method.invoke(entity);
-      return value;
-    } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-      GLog.warn(GenomeLogCategory.Jpa, "Hist; Cannot read property: " + ex.getMessage(), new LogExceptionAttribute(ex));
-      return null;
-    }
-  }
-
   @Override
-  public List<HistProp> convert(HistoryMetaInfo historyMetaInfo, Object entity, PropertyDescriptor pd)
+  public List<HistProp> convert(IEmgr<?> emgr, HistoryMetaInfo historyMetaInfo, Object entity, ColumnMetadata pd)
   {
-    Object value = readPropertyValue(entity, pd);
+    Object value = pd.getGetter().get(entity);
     return Collections.singletonList(convertInternal(value, pd));
   }
 
@@ -59,11 +36,11 @@ public class SimplePropertyConverter implements HistoryPropertyConverter
    * @param value the value
    * @return the string
    */
-  protected HistProp convertInternal(Object value, PropertyDescriptor pd)
+  protected HistProp convertInternal(Object value, ColumnMetadata pd)
   {
     HistProp ret = new HistProp();
     ret.setName("");
-    ret.setType(pd.getPropertyType().getName());
+    ret.setType(pd.getJavaType().getName());
     String sval;
     if (value instanceof Enum<?>) {
       sval = ((Enum<?>) value).name();

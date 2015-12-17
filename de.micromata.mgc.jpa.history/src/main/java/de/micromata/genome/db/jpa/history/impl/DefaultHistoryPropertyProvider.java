@@ -1,10 +1,6 @@
 package de.micromata.genome.db.jpa.history.impl;
 
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -22,11 +18,13 @@ import de.micromata.genome.db.jpa.history.api.HistoryPropertyConverter;
 import de.micromata.genome.db.jpa.history.api.HistoryPropertyProvider;
 import de.micromata.genome.db.jpa.history.api.NoHistory;
 import de.micromata.genome.jpa.DbRecord;
+import de.micromata.genome.jpa.IEmgr;
+import de.micromata.genome.jpa.metainf.ColumnMetadata;
+import de.micromata.genome.jpa.metainf.EntityMetadata;
+import de.micromata.genome.jpa.metainf.JpaMetadataRepostory;
 import de.micromata.genome.logging.GLog;
 import de.micromata.genome.logging.GenomeLogCategory;
 import de.micromata.genome.logging.LogExceptionAttribute;
-import de.micromata.genome.logging.LogLevel;
-import de.micromata.genome.logging.LoggedRuntimeException;
 import de.micromata.genome.util.bean.PrivateBeanUtils;
 
 /**
@@ -43,32 +41,36 @@ public class DefaultHistoryPropertyProvider implements HistoryPropertyProvider
    *
    */
   @Override
-  public void getProperties(HistoryMetaInfo historyMetaInfo, Object entity, Map<String, HistProp> ret)
+  public void getProperties(IEmgr<?> emgr, HistoryMetaInfo historyMetaInfo, Object entity, Map<String, HistProp> ret)
   {
-    try {
-      BeanInfo beanInfo = Introspector.getBeanInfo(entity.getClass(), Object.class);
-      PropertyDescriptor[] pds = beanInfo.getPropertyDescriptors();
-      for (PropertyDescriptor pd : pds) {
 
-        if (ignoreForHistory(historyMetaInfo, entity, pd) == true) {
-          continue;
-        }
-        HistoryPropertyConverter conv = getPropertyConverter(entity, pd);
-        List<HistProp> values = conv.convert(historyMetaInfo, entity, pd);
-        for (HistProp hp : values) {
-          String key;
-          if (StringUtils.isNotBlank(hp.getName()) == true) {
-            key = pd.getName() + '.' + hp.getName();
-          } else {
-            key = pd.getName();
-          }
-          ret.put(key, hp);
-        }
-      }
-    } catch (IntrospectionException ex) {
-      GLog.error(GenomeLogCategory.Jpa, "Hist; Failure to introspect bean: " + ex.getMessage(),
-          new LogExceptionAttribute(ex));
+    //      BeanInfo beanInfo = Introspector.getBeanInfo(entity.getClass(), Object.class);
+    //      PropertyDescriptor[] pds = beanInfo.getPropertyDescriptors();
+    JpaMetadataRepostory mrepo = emgr.getEmgrFactory().getMetadataRepository();
+    EntityMetadata entityMetadata = mrepo.findEntityMetadata(entity.getClass());
+    if (entityMetadata == null) {
+      LOG.error("Cannot find Entity Metadata for class: " + entity.getClass().getName());
+      return;
     }
+
+    for (Map.Entry<String, ColumnMetadata> me : entityMetadata.getColumns().entrySet()) {
+      ColumnMetadata pd = me.getValue();
+      if (ignoreForHistory(historyMetaInfo, entity, pd) == true) {
+        continue;
+      }
+      HistoryPropertyConverter conv = getPropertyConverter(entity, pd);
+      List<HistProp> values = conv.convert(emgr, historyMetaInfo, entity, pd);
+      for (HistProp hp : values) {
+        String key;
+        if (StringUtils.isNotBlank(hp.getName()) == true) {
+          key = pd.getName() + '.' + hp.getName();
+        } else {
+          key = pd.getName();
+        }
+        ret.put(key, hp);
+      }
+    }
+
   }
 
   /**
@@ -78,30 +80,13 @@ public class DefaultHistoryPropertyProvider implements HistoryPropertyProvider
    * @param pd the pd
    * @return the property converter
    */
-  protected HistoryPropertyConverter getPropertyConverter(Object entity, PropertyDescriptor pd)
+  protected HistoryPropertyConverter getPropertyConverter(Object entity, ColumnMetadata pd)
   {
-    Class<?> pclazz = pd.getPropertyType();
-    if (pclazz == null) {
-      return new NothingPropertyConverter();
+    HistoryProperty annot = pd.findAnnoation(HistoryProperty.class);
+    if (annot != null) {
+      return PrivateBeanUtils.createInstance(annot.converter());
     }
-    Method rm = pd.getReadMethod();
-    if (rm != null) {
-      HistoryProperty annot = rm.getAnnotation(HistoryProperty.class);
-      if (annot == null) {
-        Field f = PrivateBeanUtils.findField(entity.getClass(), pd.getName());
-        if (f != null) {
-          annot = f.getAnnotation(HistoryProperty.class);
-        }
-      }
-      if (annot != null) {
-        try {
-          return annot.converter().newInstance();
-        } catch (InstantiationException | IllegalAccessException ex) {
-          throw new LoggedRuntimeException(LogLevel.Fatal, GenomeLogCategory.Jpa,
-              "Hist; Cannot create: " + annot.converter() + "; " + ex.getMessage(), new LogExceptionAttribute(ex));
-        }
-      }
-    }
+    Class<?> pclazz = pd.getJavaType();
 
     if (DbRecord.class.isAssignableFrom(pclazz) == true) {
       return new DbRecordPropertyConverter();
@@ -144,7 +129,7 @@ public class DefaultHistoryPropertyProvider implements HistoryPropertyProvider
    * @param pd the pd
    * @return true, if successful
    */
-  protected boolean ignoreForHistory(HistoryMetaInfo historyMetaInfo, Object entity, PropertyDescriptor pd)
+  protected boolean ignoreForHistory(HistoryMetaInfo historyMetaInfo, Object entity, ColumnMetadata pd)
   {
     if (historyMetaInfo.ignoreProperty(pd.getName()) == true) {
       return true;
@@ -152,23 +137,10 @@ public class DefaultHistoryPropertyProvider implements HistoryPropertyProvider
     if (isStandardIgnoreField(pd) == true) {
       return true;
     }
-
-    Method method = pd.getReadMethod();
-    if (method != null) {
-      if (method.getAnnotation(Transient.class) != null) {
-        return true;
-      }
-      if (method.getAnnotation(NoHistory.class) != null) {
-        return true;
-      }
-    } else {
-      LOG.info("Property has no read method: " + entity.getClass().getName() + "." + pd.getName());
+    if (pd.findAnnoation(Transient.class) != null) {
+      return true;
     }
-    Field f = PrivateBeanUtils.findField(entity, pd.getName());
-    if (f == null) {
-      return false;
-    }
-    if (f.getAnnotation(NoHistory.class) != null) {
+    if (pd.findAnnoation(NoHistory.class) != null) {
       return true;
     }
     return false;
@@ -180,7 +152,7 @@ public class DefaultHistoryPropertyProvider implements HistoryPropertyProvider
    * @param pd the pd
    * @return true, if is standard ignore field
    */
-  protected boolean isStandardIgnoreField(PropertyDescriptor pd)
+  protected boolean isStandardIgnoreField(ColumnMetadata pd)
   {
     String name = pd.getName();
     if (name.equals("updateCounter") == true ||

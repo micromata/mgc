@@ -80,6 +80,18 @@ public class ColumnMetadataBean extends EmgrDbElementBean implements ColumnMetad
    */
   private List<Annotation> annotations = new ArrayList<>();
 
+  @SuppressWarnings("unchecked")
+  @Override
+  public <T extends Annotation> T findAnnoation(Class<T> anotType)
+  {
+    for (Annotation anot : annotations) {
+      if (anotType.isAssignableFrom(anot.getClass()) == true) {
+        return (T) anot;
+      }
+    }
+    return null;
+  }
+
   /**
    * {@inheritDoc}
    *

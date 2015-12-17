@@ -71,7 +71,7 @@ public class HistoryServiceImpl implements HistoryService
     for (WithHistory wh : whanot) {
       for (Class<? extends HistoryPropertyProvider> provider : wh.propertyProvider()) {
         HistoryPropertyProvider prov = createProvider(provider);
-        prov.getProperties(historyMetaInfo, bean, ret);
+        prov.getProperties(emgr, historyMetaInfo, bean, ret);
       }
     }
     return ret;
@@ -153,7 +153,7 @@ public class HistoryServiceImpl implements HistoryService
     for (WithHistory wh : whanot) {
       for (Class<? extends HistoryPropertyProvider> provider : wh.propertyProvider()) {
         HistoryPropertyProvider prov = createProvider(provider);
-        prov.getProperties(historyMetaInfo, ent, nextMap);
+        prov.getProperties(emgr, historyMetaInfo, ent, nextMap);
       }
 
     }

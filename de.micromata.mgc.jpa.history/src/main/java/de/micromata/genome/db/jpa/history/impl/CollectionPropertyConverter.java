@@ -1,6 +1,5 @@
 package de.micromata.genome.db.jpa.history.impl;
 
-import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -13,6 +12,8 @@ import org.apache.log4j.Logger;
 import de.micromata.genome.db.jpa.history.api.HistProp;
 import de.micromata.genome.db.jpa.history.api.HistoryPropertyConverter;
 import de.micromata.genome.jpa.DbRecord;
+import de.micromata.genome.jpa.IEmgr;
+import de.micromata.genome.jpa.metainf.ColumnMetadata;
 
 /**
  * Converts a collection of Dbrecords.
@@ -25,9 +26,9 @@ public class CollectionPropertyConverter implements HistoryPropertyConverter
   private static final Logger LOG = Logger.getLogger(CollectionPropertyConverter.class);
 
   @Override
-  public List<HistProp> convert(HistoryMetaInfo historyMetaInfo, Object entity, PropertyDescriptor pd)
+  public List<HistProp> convert(IEmgr<?> emgr, HistoryMetaInfo historyMetaInfo, Object entity, ColumnMetadata pd)
   {
-    Collection<?> col = (Collection<?>) SimplePropertyConverter.readPropertyValue(entity, pd);
+    Collection<?> col = (Collection<?>) pd.getGetter().get(entity);
     if (col == null) {
       return Collections.emptyList();
     }

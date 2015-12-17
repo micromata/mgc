@@ -97,6 +97,8 @@ public interface ColumnMetadata extends EmgrDbElement
    */
   List<Annotation> getAnnotations();
 
+  <T extends Annotation> T findAnnoation(Class<T> anotType);
+
   /**
    * The getter to column.
    *
