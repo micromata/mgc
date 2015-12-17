@@ -33,7 +33,7 @@ public class SpringJpaCombinedTest extends MgcTestCase
       MySkillDO mskill = new MySkillDO();
       mskill.setName("Coden");
       mskill.setUser(theuser);
-      emgr.insert(mskill);
+      emgr.insertAttached(mskill);
       mskill.setUser(loadedUser);
       emgr.update(mskill);
       return mskill;
