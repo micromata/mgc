@@ -129,7 +129,7 @@ public class JpaMetadataRepostory
    */
   public List<Annotation> getColumnAnnotations(Class<?> entity, String property)
   {
-    return getColumnData(entity, property, Collections.emptyList(), (cmd) -> cmd.getAnnotations());
+    return (List) getColumnData(entity, property, Collections.emptyList(), (cmd) -> cmd.getAnnotations());
   }
 
   /**
