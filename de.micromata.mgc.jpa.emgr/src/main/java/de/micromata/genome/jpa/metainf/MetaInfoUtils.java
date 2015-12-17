@@ -13,6 +13,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import javax.persistence.Column;
+import javax.persistence.Transient;
 import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.ManagedType;
@@ -74,6 +75,7 @@ public class MetaInfoUtils
       EntityType ift = (EntityType) mt;
       ret.setDatabaseName(ift.getName());
     }
+    // TODO RK delete propDesc
     List<PropertyDescriptor> propDescs = Arrays.asList(PropertyUtils.getPropertyDescriptors(ret.getJavaType()));
     Set<?> attr = mt.getAttributes();
     for (Object oa : attr) {
@@ -82,7 +84,9 @@ public class MetaInfoUtils
       Optional<PropertyDescriptor> pdo = propDescs.stream().filter((el) -> el.getName().equals(at.getName()))
           .findFirst();
       ColumnMetadata colm = getColumnMetaData(mt.getJavaType(), at, pdo);
-      ret.getColumns().put(colm.getName(), colm);
+      if (colm != null) {
+        ret.getColumns().put(colm.getName(), colm);
+      }
     }
 
     return ret;
@@ -136,7 +140,9 @@ public class MetaInfoUtils
     AccessibleObject ao = (AccessibleObject) jm;
     getGetterSetter(entityClass, ao, pdo, ret);
     ret.setAnnotations(getFieldAndMemberAnnots(entityClass, ao));
-
+    if (ret.getAnnotations().stream().filter((anot) -> anot.getClass() == Transient.class).count() > 0) {
+      return null;
+    }
     Column colc = ao.getAnnotation(Column.class);
     if (colc == null) {
       ret.setMaxLength(255);
@@ -164,15 +170,27 @@ public class MetaInfoUtils
     if (accessableObject instanceof Method) {
       ret.setGetter(PrivateBeanUtils.getMethodAttrGetter((Class) entityClass, (Method) accessableObject, Object.class));
     }
-    if (pdo.isPresent() == true) {
-      PropertyDescriptor pd = pdo.get();
-      if (ret.getGetter() != null) {
-        if (pd.getReadMethod() != null) {
-          ret.setGetter(PrivateBeanUtils.getMethodAttrGetter((Class) entityClass, pd.getReadMethod(), Object.class));
-        }
+    //    if (pdo.isPresent() == true) {
+    //      PropertyDescriptor pd = pdo.get();
+    //      if (ret.getGetter() != null) {
+    //        if (pd.getReadMethod() != null) {
+    //          ret.setGetter(PrivateBeanUtils.getMethodAttrGetter((Class) entityClass, pd.getReadMethod(), Object.class));
+    //        }
+    //      }
+    //      if (pd.getWriteMethod() != null) {
+    //        ret.setSetter(PrivateBeanUtils.getMethodAttrSetter((Class) entityClass, pd.getWriteMethod(), Object.class));
+    //      }
+    //    }
+    if (ret.getGetter() == null) {
+      Method method = PrivateBeanUtils.findGetterFromField(entityClass, ret.getName(), ret.getJavaType());
+      if (method != null) {
+        ret.setGetter(PrivateBeanUtils.getMethodAttrGetter((Class) entityClass, method, Object.class));
       }
-      if (pd.getWriteMethod() != null) {
-        ret.setSetter(PrivateBeanUtils.getMethodAttrSetter((Class) entityClass, pd.getWriteMethod(), Object.class));
+    }
+    if (ret.getSetter() == null) {
+      Method method = PrivateBeanUtils.findSetterFromField(entityClass, ret.getName(), ret.getJavaType());
+      if (method != null) {
+        ret.setSetter(PrivateBeanUtils.getMethodAttrSetter((Class) entityClass, method, Object.class));
       }
     }
     if (ret.getSetter() != null && ret.getGetter() != null) {
@@ -180,16 +198,25 @@ public class MetaInfoUtils
     }
     Field field = PrivateBeanUtils.findField(entityClass, ret.getName());
     if (field == null) {
-      LOG.warn(
-          "Cannot determine all setter and getter method or field for " + entityClass.getName() + "." + ret.getName());
+      if (ret.getGetter() != null) {
+        // no warn on collections.
+        LOG.warn(
+            "Cannot determine all getter method or field for " + entityClass.getName() + "."
+                + ret.getName());
+      }
       return;
     }
-    if (ret.getGetter() == null) {
+    if (ret.getGetter() == null)
+
+    {
       ret.setGetter(PrivateBeanUtils.getFieldAttrGetter((Class) entityClass, field, Object.class));
     }
-    if (ret.getSetter() == null) {
+    if (ret.getSetter() == null)
+
+    {
       ret.setSetter(PrivateBeanUtils.getFieldAttrSetter((Class) entityClass, field, Object.class));
     }
+
   }
 
   /**

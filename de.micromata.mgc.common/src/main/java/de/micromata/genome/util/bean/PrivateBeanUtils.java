@@ -119,9 +119,20 @@ public class PrivateBeanUtils
    * @param fieldName the field name
    * @return the getter from field name
    */
-  public static String getGetterFromFieldName(String fieldName)
+  public static String getGetterMethodNameFromFieldName(String fieldName)
   {
-    return getGetterFromFieldName(fieldName, "get");
+    return getGetterOrSetterMethodNameFromFieldName(fieldName, "get");
+  }
+
+  /**
+   * Gets the setter method name from field name.
+   *
+   * @param fieldName the field name
+   * @return the setter method name from field name
+   */
+  public static String getSetterMethodNameFromFieldName(String fieldName)
+  {
+    return getGetterOrSetterMethodNameFromFieldName(fieldName, "set");
   }
 
   /**
@@ -131,7 +142,7 @@ public class PrivateBeanUtils
    * @param prefix the prefix
    * @return the getter from field name
    */
-  public static String getGetterFromFieldName(String fieldName, String prefix)
+  public static String getGetterOrSetterMethodNameFromFieldName(String fieldName, String prefix)
   {
     char fl = Character.toUpperCase(fieldName.charAt(0));
     String getter = prefix + fl;
@@ -151,17 +162,51 @@ public class PrivateBeanUtils
    */
   public static Method findGetterFromField(Class<?> clazz, Field field)
   {
+    return findGetterFromField(clazz, field.getName(), field.getType());
+  }
+
+  /**
+   * Find getter from field.
+   *
+   * @param clazz the clazz
+   * @param fieldName the field name
+   * @param fieldType the field type
+   * @return the method
+   */
+  public static Method findGetterFromField(Class<?> clazz, String fieldName, Class<?> fieldType)
+  {
+
     String prefix = "get";
-    if (field.getType() == Boolean.TYPE) {
+    if (fieldType == Boolean.TYPE) {
       prefix = "is";
     }
-    String methodName = getGetterFromFieldName(field.getName(), prefix);
+    String methodName = getGetterOrSetterMethodNameFromFieldName(fieldName, prefix);
     try {
       Method m = clazz.getMethod(methodName);
       return m;
     } catch (NoSuchMethodException ex) {
       return null;
     }
+  }
+
+  /**
+   * Find setter from field.
+   *
+   * @param clazz the clazz
+   * @param fieldName the field name
+   * @param fieldType the field type
+   * @return the method
+   */
+  public static Method findSetterFromField(Class<?> clazz, String fieldName, Class<?> fieldType)
+  {
+    String methodname = getSetterMethodNameFromFieldName(fieldName);
+    try {
+      Method m = clazz.getMethod(methodname, fieldType);
+      return m;
+    } catch (NoSuchMethodException ex) {
+      return null;
+    }
+
   }
 
   /**
