@@ -2,19 +2,26 @@ package de.micromata.genome.db.jpa.history.impl;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 import de.micromata.genome.db.jpa.history.api.DiffEntry;
 import de.micromata.genome.db.jpa.history.api.HistProp;
 import de.micromata.genome.db.jpa.history.api.HistoryEntry;
+import de.micromata.genome.db.jpa.history.api.HistoryProperty;
+import de.micromata.genome.db.jpa.history.api.HistoryPropertyConverter;
 import de.micromata.genome.db.jpa.history.api.HistoryPropertyProvider;
 import de.micromata.genome.db.jpa.history.api.HistoryService;
 import de.micromata.genome.db.jpa.history.api.WithHistory;
@@ -25,10 +32,12 @@ import de.micromata.genome.db.jpa.history.entities.PropertyOpType;
 import de.micromata.genome.jpa.DbRecord;
 import de.micromata.genome.jpa.EmgrFactory;
 import de.micromata.genome.jpa.IEmgr;
+import de.micromata.genome.jpa.metainf.ColumnMetadata;
 import de.micromata.genome.logging.GenomeLogCategory;
 import de.micromata.genome.logging.LogExceptionAttribute;
 import de.micromata.genome.logging.LogLevel;
 import de.micromata.genome.logging.LoggedRuntimeException;
+import de.micromata.genome.util.bean.PrivateBeanUtils;
 import de.micromata.genome.util.runtime.ClassUtils;
 
 /**
@@ -38,7 +47,7 @@ import de.micromata.genome.util.runtime.ClassUtils;
  */
 public class HistoryServiceImpl implements HistoryService
 {
-
+  private static final Logger LOG = Logger.getLogger(HistoryServiceImpl.class);
   /**
    * The Constant OP_SUFFIX.
    */
@@ -60,7 +69,35 @@ public class HistoryServiceImpl implements HistoryService
     //    emgrFactory.getEventFactory().registerEvent(new HistoryUpdateEventHandler());
     emgrFactory.getEventFactory().registerEvent(new HistoryUpdateCopyFilterEventListener());
     emgrFactory.getEventFactory().registerEvent(new HistoryEmgrAfterInsertedEventHandler());
+  }
 
+  @Override
+  public void registerStandardHistoryPropertyConverter(EmgrFactory<?> emgrFactory)
+  {
+    Map<Class<?>, Object> serviceCustomAttributes = emgrFactory
+        .getMetadataRepository().getServiceCustomAttributes();
+    Map<Class<?>, HistoryPropertyConverter> registry = (Map<Class<?>, HistoryPropertyConverter>) serviceCustomAttributes
+        .get(HistoryPropertyProvider.class);
+    if (registry == null) {
+      registry = new HashMap<>();
+      serviceCustomAttributes.put(HistoryPropertyProvider.class, registry);
+    }
+    ToStringPropertyConverter toStringPropertyConverter = new ToStringPropertyConverter();
+    registry.put(Locale.class, toStringPropertyConverter);
+    registry.put(TimeZone.class, toStringPropertyConverter);
+  }
+
+  private Map<Class<?>, HistoryPropertyConverter> getHistoryPropertyRegistry(IEmgr<?> emgr)
+  {
+    Map<Class<?>, Object> serviceCustomAttributes = emgr.getEmgrFactory()
+        .getMetadataRepository().getServiceCustomAttributes();
+
+    Map<Class<?>, HistoryPropertyConverter> registry = (Map<Class<?>, HistoryPropertyConverter>) serviceCustomAttributes
+        .get(HistoryPropertyProvider.class);
+    if (registry != null) {
+      return registry;
+    }
+    return Collections.emptyMap();
   }
 
   @Override
@@ -379,4 +416,45 @@ public class HistoryServiceImpl implements HistoryService
         cls.getName());
 
   }
+
+  private HistoryPropertyConverter findPropertyConverterFromRegistered(IEmgr<?> emgr, Object entity, ColumnMetadata pd)
+  {
+    Class<?> propClass = pd.getJavaType();
+    Map<Class<?>, HistoryPropertyConverter> regmap = getHistoryPropertyRegistry(emgr);
+    HistoryPropertyConverter conv = regmap.get(propClass);
+    if (conv != null) {
+      return conv;
+    }
+    for (Map.Entry<Class<?>, HistoryPropertyConverter> me : regmap.entrySet()) {
+      if (me.getKey().isAssignableFrom(propClass) == true) {
+        return me.getValue();
+      }
+    }
+    return null;
+  }
+
+  @Override
+  public HistoryPropertyConverter getPropertyConverter(IEmgr<?> emgr, Object entity, ColumnMetadata pd)
+  {
+    HistoryProperty annot = pd.findAnnoation(HistoryProperty.class);
+    if (annot != null) {
+      return PrivateBeanUtils.createInstance(annot.converter());
+    }
+    HistoryPropertyConverter conv = findPropertyConverterFromRegistered(emgr, entity, pd);
+    if (conv != null) {
+      return conv;
+    }
+    Class<?> pclazz = pd.getJavaType();
+    // TODO Locale etc. ueber registrierte?
+    if (DbRecord.class.isAssignableFrom(pclazz) == true) {
+      return new DbRecordPropertyConverter();
+    } else if (Map.class.isAssignableFrom(pclazz) == true) {
+      LOG.fatal("Currenty not supported Map for History: " + entity.getClass() + "." + pd.getName());
+    } else if (Collection.class.isAssignableFrom(pclazz) == true) {
+      return new CollectionPropertyConverter();
+    }
+
+    return new SimplePropertyConverter();
+  }
+
 }

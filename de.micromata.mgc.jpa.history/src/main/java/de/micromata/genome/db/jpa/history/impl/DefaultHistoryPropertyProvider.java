@@ -3,7 +3,6 @@ package de.micromata.genome.db.jpa.history.impl;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -13,11 +12,10 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import de.micromata.genome.db.jpa.history.api.HistProp;
-import de.micromata.genome.db.jpa.history.api.HistoryProperty;
 import de.micromata.genome.db.jpa.history.api.HistoryPropertyConverter;
 import de.micromata.genome.db.jpa.history.api.HistoryPropertyProvider;
+import de.micromata.genome.db.jpa.history.api.HistoryServiceManager;
 import de.micromata.genome.db.jpa.history.api.NoHistory;
-import de.micromata.genome.jpa.DbRecord;
 import de.micromata.genome.jpa.IEmgr;
 import de.micromata.genome.jpa.metainf.ColumnMetadata;
 import de.micromata.genome.jpa.metainf.EntityMetadata;
@@ -25,7 +23,6 @@ import de.micromata.genome.jpa.metainf.JpaMetadataRepostory;
 import de.micromata.genome.logging.GLog;
 import de.micromata.genome.logging.GenomeLogCategory;
 import de.micromata.genome.logging.LogExceptionAttribute;
-import de.micromata.genome.util.bean.PrivateBeanUtils;
 
 /**
  * Use the default properties of the entity.
@@ -44,8 +41,6 @@ public class DefaultHistoryPropertyProvider implements HistoryPropertyProvider
   public void getProperties(IEmgr<?> emgr, HistoryMetaInfo historyMetaInfo, Object entity, Map<String, HistProp> ret)
   {
 
-    //      BeanInfo beanInfo = Introspector.getBeanInfo(entity.getClass(), Object.class);
-    //      PropertyDescriptor[] pds = beanInfo.getPropertyDescriptors();
     JpaMetadataRepostory mrepo = emgr.getEmgrFactory().getMetadataRepository();
     EntityMetadata entityMetadata = mrepo.findEntityMetadata(entity.getClass());
     if (entityMetadata == null) {
@@ -58,7 +53,7 @@ public class DefaultHistoryPropertyProvider implements HistoryPropertyProvider
       if (ignoreForHistory(historyMetaInfo, entity, pd) == true) {
         continue;
       }
-      HistoryPropertyConverter conv = getPropertyConverter(entity, pd);
+      HistoryPropertyConverter conv = getPropertyConverter(emgr, entity, pd);
       List<HistProp> values = conv.convert(emgr, historyMetaInfo, entity, pd);
       for (HistProp hp : values) {
         String key;
@@ -80,23 +75,11 @@ public class DefaultHistoryPropertyProvider implements HistoryPropertyProvider
    * @param pd the pd
    * @return the property converter
    */
-  protected HistoryPropertyConverter getPropertyConverter(Object entity, ColumnMetadata pd)
+  protected HistoryPropertyConverter getPropertyConverter(IEmgr<?> emgr, Object entity, ColumnMetadata pd)
   {
-    HistoryProperty annot = pd.findAnnoation(HistoryProperty.class);
-    if (annot != null) {
-      return PrivateBeanUtils.createInstance(annot.converter());
-    }
-    Class<?> pclazz = pd.getJavaType();
-
-    if (DbRecord.class.isAssignableFrom(pclazz) == true) {
-      return new DbRecordPropertyConverter();
-    } else if (Map.class.isAssignableFrom(pclazz) == true) {
-      LOG.fatal("Currenty not supported Map for History: " + entity.getClass() + "." + pd.getName());
-    } else if (Collection.class.isAssignableFrom(pclazz) == true) {
-      return new CollectionPropertyConverter();
-    }
-
-    return new SimplePropertyConverter();
+    HistoryPropertyConverter conv = HistoryServiceManager.get().getHistoryService().getPropertyConverter(emgr, entity,
+        pd);
+    return conv;
 
   }
 

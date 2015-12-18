@@ -8,7 +8,7 @@ import de.micromata.genome.jpa.IEmgr;
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
  */
-public class EmgrAfterRemovedEvent extends EmgrForEntityObjectEvent
+public class EmgrAfterDeletedEvent extends EmgrForEntityObjectEvent
 {
 
   /**
@@ -17,7 +17,7 @@ public class EmgrAfterRemovedEvent extends EmgrForEntityObjectEvent
    * @param emgr the emgr
    * @param entity the entity
    */
-  public EmgrAfterRemovedEvent(IEmgr<?> emgr, Object entity)
+  public EmgrAfterDeletedEvent(IEmgr<?> emgr, Object entity)
   {
     super(emgr, entity);
   }

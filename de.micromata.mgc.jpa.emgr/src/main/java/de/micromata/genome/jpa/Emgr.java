@@ -19,11 +19,11 @@ import org.apache.commons.lang.Validate;
 import org.apache.log4j.Logger;
 import org.hibernate.jpa.AvailableSettings;
 
-import de.micromata.genome.jpa.events.EmgrAfterBeforeRemovedEvent;
+import de.micromata.genome.jpa.events.EmgrBeforeDeleteEvent;
 import de.micromata.genome.jpa.events.EmgrAfterCopyForUpdateEvent;
 import de.micromata.genome.jpa.events.EmgrAfterDetachEvent;
 import de.micromata.genome.jpa.events.EmgrAfterInsertedEvent;
-import de.micromata.genome.jpa.events.EmgrAfterRemovedEvent;
+import de.micromata.genome.jpa.events.EmgrAfterDeletedEvent;
 import de.micromata.genome.jpa.events.EmgrAfterUpdatedEvent;
 import de.micromata.genome.jpa.events.EmgrBeforeCopyForUpdateEvent;
 import de.micromata.genome.jpa.events.EmgrBeforeCriteriaUpdateEvent;
@@ -38,6 +38,8 @@ import de.micromata.genome.jpa.events.EmgrFindByPkFilterEvent;
 import de.micromata.genome.jpa.events.EmgrInitForInsertEvent;
 import de.micromata.genome.jpa.events.EmgrInitForUpdateEvent;
 import de.micromata.genome.jpa.events.EmgrInsertDbRecordFilterEvent;
+import de.micromata.genome.jpa.events.EmgrMarkDeletedCriteriaUpdateFilterEvent;
+import de.micromata.genome.jpa.events.EmgrMarkUndeletedCriteriaUpdateFilterEvent;
 import de.micromata.genome.jpa.events.EmgrMergeDbRecordFilterEvent;
 import de.micromata.genome.jpa.events.EmgrRemoveDbRecordFilterEvent;
 import de.micromata.genome.jpa.events.EmgrUpdateCopyFilterEvent;
@@ -790,7 +792,7 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
   public EMGR remove(final Object rec)
   {
     if (rec instanceof DbRecord) {
-      invokeEvent(new EmgrAfterBeforeRemovedEvent(this, (DbRecord) rec));
+      invokeEvent(new EmgrBeforeDeleteEvent(this, (DbRecord) rec));
     }
     if (log.isDebugEnabled() == true) {
       log.debug("remove: " + rec + " in thread " + Thread.currentThread().getId() + "; em: "
@@ -802,8 +804,66 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
           // flush necessary, because if detached inside a transaction, entity will not be persisted
           entityManager.flush();
         });
-    invokeEvent(new EmgrAfterRemovedEvent(this, rec));
+    invokeEvent(new EmgrAfterDeletedEvent(this, rec));
     return getThis();
+  }
+
+  /**
+   * Execute the criteria update
+   * 
+   * @param update
+   * @return
+   */
+  private <E> int internalExecuteCriteriaUpdate(CriteriaUpdate<E> update)
+  {
+    Map<String, Object> args = new HashMap<String, Object>();
+    String hql = update.renderHql(args);
+    Query query = createUntypedQuery(hql);
+    for (Map.Entry<String, Object> me : args.entrySet()) {
+      query.setParameter(me.getKey(), me.getValue());
+    }
+    int ret = query.executeUpdate();
+    return ret;
+  }
+
+  @Override
+  public <T extends MarkDeletableRecord<?>> boolean markDeleted(T rec)
+  {
+    CriteriaUpdate<T> update = CriteriaUpdate.createUpdate((Class<T>) rec.getClass());
+    update.set("deleted", true)
+        .addWhere(
+            Clauses.and(
+                Clauses.equal("pk", rec.getPk()),
+                Clauses.equal("deleted", false)));
+
+    Integer res = filterEvent(new EmgrMarkDeletedCriteriaUpdateFilterEvent<T>(this, rec, update),
+        (event) -> {
+          event.setResult(internalExecuteCriteriaUpdate(update));
+        });
+    if (res > 0) {
+      rec.setDeleted(true);
+    }
+    return res > 0;
+  }
+
+  @Override
+  public <T extends MarkDeletableRecord<?>> boolean markUndeleted(T rec)
+  {
+    CriteriaUpdate<T> update = CriteriaUpdate.createUpdate((Class<T>) rec.getClass());
+    update.set("deleted", false)
+        .addWhere(
+            Clauses.and(
+                Clauses.equal("pk", rec.getPk()),
+                Clauses.equal("deleted", true)));
+
+    Integer res = filterEvent(new EmgrMarkUndeletedCriteriaUpdateFilterEvent<T>(this, rec, update),
+        (event) -> {
+          event.setResult(internalExecuteCriteriaUpdate(update));
+        });
+    if (res > 0) {
+      rec.setDeleted(false);
+    }
+    return res > 0;
   }
 
   /**
@@ -932,7 +992,7 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
       R newE,
       boolean overwrite, String... ignoreCopyFields)
   {
-    R oldE = entityManager.find(entityClass, newE.getPk());
+    R oldE = selectByPkAttached(entityClass, newE.getPk());
     invokeEvent(new EmgrBeforeCopyForUpdateEvent(this, iface, oldE, newE, overwrite));
     EmgrUpdateCopyFilterEvent tevent = new EmgrUpdateCopyFilterEvent(this, iface, entityClass, oldE, newE, overwrite);
     filterEvent(tevent,
@@ -981,14 +1041,7 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
   {
     beforeUpdate(update);
     return filterEvent(new EmgrUpdateCriteriaUpdateFilterEvent<R>(this, update), (event) -> {
-      Map<String, Object> args = new HashMap<String, Object>();
-      String hql = update.renderHql(args);
-      Query query = createUntypedQuery(hql);
-      for (Map.Entry<String, Object> me : args.entrySet()) {
-        query.setParameter(me.getKey(), me.getValue());
-      }
-      int ret = query.executeUpdate();
-      event.setResult(ret);
+      event.setResult(internalExecuteCriteriaUpdate(update));
     });
   }
 

@@ -25,6 +25,16 @@ public class JpaMetadataRepostory
    * The entities.
    */
   private Map<Class<?>, EntityMetadata> entities = new HashMap<>();
+  /**
+   * Class is a service implementation, wich can store it's own data. The Attributes should be stored at intialization
+   * time, so that access to the map is not forced to be synchronized.
+   */
+  private Map<Class<?>, Object> serviceCustomAttributes = new HashMap<>();
+
+  public Map<Class<?>, Object> getServiceCustomAttributes()
+  {
+    return serviceCustomAttributes;
+  }
 
   /**
    * Gets the entities.

@@ -6,7 +6,7 @@ package de.micromata.genome.logging;
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
  */
-public interface LogginContextService
+public interface LoggingContextService
 {
   /**
    * Current users id for logging.

@@ -16,7 +16,7 @@ public class LoggingServiceManager
 
   private Logging logging = new Log4JLogging();;
   private LogConfigurationDAO logConfigurationDAO = new Log4JLogConfigurationDAOImpl();
-  private LogginContextService loggingContextService = new LoggingContextServiceDefaultImpl();
+  private LoggingContextService loggingContextService = new LoggingContextServiceDefaultImpl();
   private StatsDAO statsDAO = new NullStatsDAOImpl();
 
   public static LoggingServiceManager get()
@@ -49,12 +49,12 @@ public class LoggingServiceManager
     this.logConfigurationDAO = logConfigurationDAO;
   }
 
-  public LogginContextService getLoggingContextService()
+  public LoggingContextService getLoggingContextService()
   {
     return loggingContextService;
   }
 
-  public void setLoggingContextService(LogginContextService loggingContextService)
+  public void setLoggingContextService(LoggingContextService loggingContextService)
   {
     this.loggingContextService = loggingContextService;
   }

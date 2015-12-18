@@ -321,6 +321,22 @@ public interface IEmgr<EMGR extends IEmgr<?>>
   EMGR delete(Object rec);
 
   /**
+   * Mark deleted.
+   *
+   * @param rec the rec
+   * @return true, if record was found and it was previously not marked as deleted.
+   */
+  <T extends MarkDeletableRecord<?>> boolean markDeleted(T rec);
+
+  /**
+   * Mark undeleted.
+   *
+   * @param rec the rec
+   * @return true, if record was found and it was previously marked as deleted.
+   */
+  <T extends MarkDeletableRecord<?>> boolean markUndeleted(T rec);
+
+  /**
    * Detach.
    *
    * @param entity the entity

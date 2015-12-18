@@ -8,6 +8,7 @@ import de.micromata.genome.db.jpa.history.entities.HistoryMasterDO;
 import de.micromata.genome.jpa.DbRecord;
 import de.micromata.genome.jpa.EmgrFactory;
 import de.micromata.genome.jpa.IEmgr;
+import de.micromata.genome.jpa.metainf.ColumnMetadata;
 
 /**
  * The Interface HistoryService.
@@ -18,11 +19,20 @@ public interface HistoryService
 {
 
   /**
-   * Register the listener to Emgr.
-   *
+   * Register the listener to Emgr. Should be called while initializing EmgrFactory in overwritten
+   * de.micromata.genome.jpa.EmgrFactory.registerEvents().
+   * 
    * @param emgrFactory the emgr factory
    */
   void registerEmgrListener(EmgrFactory<?> emgrFactory);
+
+  /**
+   * Should be called while initializing EmgrFactory in overwritten
+   * de.micromata.genome.jpa.EmgrFactory.registerEvents().
+   * 
+   * @param emgrFactory
+   */
+  void registerStandardHistoryPropertyConverter(EmgrFactory<?> emgrFactory);
 
   /**
    * Internal get properties for history.
@@ -73,11 +83,19 @@ public interface HistoryService
    */
   List<DiffEntry> getDiffEntriesForHistoryMaster(HistoryMasterDO historyMasterDO);
 
+  /**
+   * Gets the history entries.
+   *
+   * @param emgr the emgr
+   * @param stdRecord the std record
+   * @return the history entries
+   */
   List<? extends HistoryEntry> getHistoryEntries(IEmgr<?> emgr, DbRecord<?> stdRecord);
 
   /**
    * Gets the history entries.
    *
+   * @param emgr the emgr
    * @param entityName the entity name
    * @param entityId the entity id
    * @return the history entries
@@ -87,6 +105,7 @@ public interface HistoryService
   /**
    * Find all history entries for given table.
    *
+   * @param emgr the emgr
    * @param cls the cls
    * @return the history entries for entity class
    */
@@ -95,9 +114,19 @@ public interface HistoryService
   /**
    * Removes all history entry for given table.
    *
+   * @param emgr the emgr
    * @param cls the cls
    * @return the count deleted
    */
   int clearHistoryForEntityClass(IEmgr<?> emgr, Class<? extends DbRecord<?>> cls);
+
+  /**
+   * Gets the property converter.
+   *
+   * @param entity the entity
+   * @param pd the pd
+   * @return the property converter
+   */
+  HistoryPropertyConverter getPropertyConverter(IEmgr<?> emgr, Object entity, ColumnMetadata pd);
 
 }

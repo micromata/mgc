@@ -9,13 +9,8 @@ import de.micromata.genome.jpa.IEmgr;
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  * @param <E> the element type
  */
-public class EmgrUpdateCriteriaUpdateFilterEvent<E>extends EmgrFilterEvent<Integer>
+public class EmgrUpdateCriteriaUpdateFilterEvent<E>extends EmgrBaseUpdateFilterEvent<E>
 {
-
-  /**
-   * The update.
-   */
-  private CriteriaUpdate<E> update;
 
   /**
    * Instantiates a new emgr update criteria update filter event.
@@ -25,12 +20,7 @@ public class EmgrUpdateCriteriaUpdateFilterEvent<E>extends EmgrFilterEvent<Integ
    */
   public EmgrUpdateCriteriaUpdateFilterEvent(IEmgr<?> emgr, CriteriaUpdate<E> update)
   {
-    super(emgr);
-    this.update = update;
+    super(emgr, update);
   }
 
-  public CriteriaUpdate<E> getUpdate()
-  {
-    return update;
-  }
 }

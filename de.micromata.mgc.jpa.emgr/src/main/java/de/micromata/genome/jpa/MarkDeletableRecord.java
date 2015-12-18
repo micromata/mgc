@@ -9,7 +9,7 @@ import java.io.Serializable;
  *
  * @param <PK>
  */
-public interface DeletableRecord<PK extends Serializable>extends DbRecord<PK>
+public interface MarkDeletableRecord<PK extends Serializable>extends DbRecord<PK>
 {
 
   /**

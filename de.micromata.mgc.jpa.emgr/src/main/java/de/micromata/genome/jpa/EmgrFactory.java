@@ -24,6 +24,8 @@ import org.hibernate.exception.DataException;
 import de.micromata.genome.jpa.events.EmgrEventRegistry;
 import de.micromata.genome.jpa.events.impl.BeforeCopyForUpdateUpdateCounterEventEventHandler;
 import de.micromata.genome.jpa.events.impl.EmgrAfterCopyForUpdateEventEventHandler;
+import de.micromata.genome.jpa.events.impl.EmgrMarkDeletedCriteriaUpdateFilterEventHandler;
+import de.micromata.genome.jpa.events.impl.EmgrMarkUndeletedCriteriaUpdateFilterEventHandler;
 import de.micromata.genome.jpa.events.impl.InitCreatedStdRecordFieldsEventHandler;
 import de.micromata.genome.jpa.events.impl.InitUpdateStdRecordFieldsEventHandler;
 import de.micromata.genome.jpa.events.impl.UpdateStdRecordCriteriaUpdateEventHandler;
@@ -115,6 +117,10 @@ public abstract class EmgrFactory<E extends IEmgr<?>>
    * The unit name.
    */
   private String unitName;
+
+  /**
+   * The metadata repository.
+   */
   private JpaMetadataRepostory metadataRepository;
 
   /**
@@ -169,6 +175,9 @@ public abstract class EmgrFactory<E extends IEmgr<?>>
     registerEvents();
   }
 
+  /**
+   * Inits the metadata.
+   */
   protected void initMetadata()
   {
     this.metadataRepository = MetaInfoUtils.fillEntityMetadata(this);
@@ -192,6 +201,8 @@ public abstract class EmgrFactory<E extends IEmgr<?>>
     eventFactory.registerEvent(new TracerEmgrUpdateDbRecordFilterEventHandler());
     eventFactory.registerEvent(new TracerEmgrMergeDbRecordFilterEventHandler());
     eventFactory.registerEvent(new TracerEmgrCreateQueryFilterEventHandler());
+    eventFactory.registerEvent(new EmgrMarkUndeletedCriteriaUpdateFilterEventHandler());
+    eventFactory.registerEvent(new EmgrMarkDeletedCriteriaUpdateFilterEventHandler());
 
   }
 
@@ -219,49 +230,6 @@ public abstract class EmgrFactory<E extends IEmgr<?>>
     EntityManagerFactory emf = Persistence.createEntityManagerFactory(unitName, lsMap);
     return emf;
   }
-
-  /**
-   * Creates the entity manager factory.
-   *
-   * @param ex the ex
-   * @return the entity manager factory
-   */
-  //  public EntityManagerFactory createEntityManagerFactory42(String unitName)
-  //  {
-  //    LocalSettings ls = LocalSettings.get();
-  //    Map<String, Object> lsMap = new HashMap<String, Object>();
-  //    for (Map.Entry<String, String> me : ls.getMap().entrySet()) {
-  //      lsMap.put(me.getKey(), me.getValue());
-  //    }
-  //    ClassLoader threadClassLoader = Thread.currentThread().getContextClassLoader();
-  //    lsMap.put(AvailableSettings.APP_CLASSLOADER, threadClassLoader);
-  //    lsMap.put(AvailableSettings.RESOURCES_CLASSLOADER, threadClassLoader);
-  //    lsMap.put(AvailableSettings.HIBERNATE_CLASSLOADER, threadClassLoader);
-  //    lsMap.put(AvailableSettings.ENVIRONMENT_CLASSLOADER, threadClassLoader);
-  //
-  //    ThreadContextClassLoaderScope scope = new ThreadContextClassLoaderScope(getClass().getClassLoader());
-  //    try {
-  //      // following code is similar to  EntityManagerFactory emfac = Persistence.createEntityManagerFactory(unitName, lsMap);
-  //      // but overwrites the classloader
-  //      Ejb3Configuration cfg = new Ejb3Configuration();
-  //      Ejb3Configuration configured = cfg.configure(unitName, lsMap);
-  //      BootstrapServiceRegistryBuilder serviceRegistryBuilder = new BootstrapServiceRegistryBuilder();
-  //      serviceRegistryBuilder.withApplicationClassLoader(threadClassLoader);
-  //      serviceRegistryBuilder.withEnvironmentClassLoader(threadClassLoader);
-  //      serviceRegistryBuilder.withHibernateClassLoader(threadClassLoader);
-  //      serviceRegistryBuilder.withResourceClassLoader(threadClassLoader);
-  //      EntityManagerFactory emfac = configured.buildEntityManagerFactory(serviceRegistryBuilder);
-  //      /**
-  //       * @logging
-  //       * @reason persistence context was initialized.
-  //       * @action nothing.
-  //       */
-  //      GLog.note(GenomeLogCategory.Jpa, "Initialized persistence context: " + unitName);
-  //      return emfac;
-  //    } finally {
-  //      scope.restore();
-  //    }
-  //  }
 
   /**
    * Convert exception.
@@ -586,6 +554,11 @@ public abstract class EmgrFactory<E extends IEmgr<?>>
     return ret;
   }
 
+  /**
+   * Gets the metadata repository.
+   *
+   * @return the metadata repository
+   */
   public JpaMetadataRepostory getMetadataRepository()
   {
     return metadataRepository;

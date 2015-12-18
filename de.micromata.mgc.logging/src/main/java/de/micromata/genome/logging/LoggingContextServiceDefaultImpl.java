@@ -2,7 +2,7 @@ package de.micromata.genome.logging;
 
 import de.micromata.genome.util.runtime.HostUtils;
 
-public class LoggingContextServiceDefaultImpl implements LogginContextService
+public class LoggingContextServiceDefaultImpl implements LoggingContextService
 {
 
   @Override
