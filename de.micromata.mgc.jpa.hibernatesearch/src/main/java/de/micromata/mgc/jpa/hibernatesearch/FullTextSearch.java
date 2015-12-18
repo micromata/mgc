@@ -4,7 +4,7 @@ import javax.persistence.EntityManager;
 
 import org.hibernate.search.jpa.FullTextEntityManager;
 
-import de.micromata.mgc.db.jpa.api.IEmgr;
+import de.micromata.genome.jpa.IEmgr;
 
 /**
  * Little wrapper to Hibernate Search Fulltext wrapper.

@@ -2,7 +2,6 @@ package de.micromata.mgc.jpa.hibernatesearch;
 
 import java.util.List;
 
-import org.hibernate.Session;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.junit.Assert;
 import org.junit.Test;
@@ -18,18 +17,18 @@ import de.micromata.mgc.jpa.hibernatesearch.entities.MyEntityDO;
  */
 public class HibernateSearchTest extends MgcTestCase
 {
+  @SuppressWarnings("unchecked")
   @Test
   public void testFullSearch()
   {
 
-    HibernateSearchTestEmgrFactory.get().runInTrans((emgr) -> {
-      Session sess = emgr.getEntityManager().unwrap(Session.class);
-      MyEntityDO ent = new MyEntityDO();
-      ent.setName("Roger Kommer");
-      emgr.insert(ent);
-      return ent;
+    MyEntityDO ent = HibernateSearchTestEmgrFactory.get().runInTrans((emgr) -> {
+      MyEntityDO ment = new MyEntityDO();
+      ment.setName("Roger Kommer");
+      emgr.insert(ment);
+      return ment;
     });
-    List found = HibernateSearchTestEmgrFactory.get().runWoTrans((emgr) -> {
+    List<MyEntityDO> found = HibernateSearchTestEmgrFactory.get().runWoTrans((emgr) -> {
       FullTextEntityManager fullTextEntityManager = FullTextSearch.getFullTextEntityManager(emgr);
       org.hibernate.search.query.dsl.QueryBuilder qb = fullTextEntityManager.getSearchFactory()
           .buildQueryBuilder().forEntity(MyEntityDO.class).get();
@@ -39,9 +38,41 @@ public class HibernateSearchTest extends MgcTestCase
           .matching("KOMMER")
           .createQuery();
       javax.persistence.Query jpaQuery = fullTextEntityManager.createFullTextQuery(luceneQuery, MyEntityDO.class);
-      List result = jpaQuery.getResultList();
+      List<MyEntityDO> result = jpaQuery.getResultList();
       return result;
     });
     Assert.assertEquals(1, found.size());
+
+    found = HibernateSearchTestEmgrFactory.get().runWoTrans((emgr) -> {
+      FullTextEntityManager fullTextEntityManager = FullTextSearch.getFullTextEntityManager(emgr);
+      org.hibernate.search.query.dsl.QueryBuilder qb = fullTextEntityManager.getSearchFactory()
+          .buildQueryBuilder().forEntity(MyEntityDO.class).get();
+      org.apache.lucene.search.Query luceneQuery = qb
+          .all()
+          .createQuery();
+      javax.persistence.Query jpaQuery = fullTextEntityManager.createFullTextQuery(luceneQuery, MyEntityDO.class);
+      List<MyEntityDO> result = jpaQuery.getResultList();
+      return result;
+    });
+    Assert.assertEquals(1, found.size());
+
+    HibernateSearchTestEmgrFactory.get().runInTrans((emgr) -> {
+      emgr.deleteDetached(ent);
+      return null;
+    });
+
+    found = HibernateSearchTestEmgrFactory.get().runWoTrans((emgr) -> {
+      FullTextEntityManager fullTextEntityManager = FullTextSearch.getFullTextEntityManager(emgr);
+      org.hibernate.search.query.dsl.QueryBuilder qb = fullTextEntityManager.getSearchFactory()
+          .buildQueryBuilder().forEntity(MyEntityDO.class).get();
+      org.apache.lucene.search.Query luceneQuery = qb
+          .all()
+          .createQuery();
+      javax.persistence.Query jpaQuery = fullTextEntityManager.createFullTextQuery(luceneQuery, MyEntityDO.class);
+      List<MyEntityDO> result = jpaQuery.getResultList();
+      return result;
+    });
+
+    Assert.assertEquals(0, found.size());
   }
 }

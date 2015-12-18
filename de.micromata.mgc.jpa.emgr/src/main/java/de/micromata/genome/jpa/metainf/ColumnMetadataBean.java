@@ -16,7 +16,7 @@ import de.micromata.genome.util.bean.AttrSetter;
  */
 public class ColumnMetadataBean extends EmgrDbElementBean implements ColumnMetadata
 {
-
+  private EntityMetadata entity;
   /**
    * The name.
    */
@@ -72,6 +72,8 @@ public class ColumnMetadataBean extends EmgrDbElementBean implements ColumnMetad
    */
   private int scale;
 
+  private EntityMetadata targetEntity;
+
   private AttrGetter<Object, Object> getter;
 
   private AttrSetter<Object, Object> setter;
@@ -79,6 +81,11 @@ public class ColumnMetadataBean extends EmgrDbElementBean implements ColumnMetad
    * The annotations.
    */
   private List<Annotation> annotations = new ArrayList<>();
+
+  public ColumnMetadataBean(EntityMetadata entity)
+  {
+    this.entity = entity;
+  }
 
   @SuppressWarnings("unchecked")
   @Override
@@ -90,6 +97,12 @@ public class ColumnMetadataBean extends EmgrDbElementBean implements ColumnMetad
       }
     }
     return null;
+  }
+
+  @Override
+  public String getShortDeclaration()
+  {
+    return getJavaType().getName() + " " + entity.getJavaType().getName() + "." + getName();
   }
 
   /**
@@ -375,6 +388,28 @@ public class ColumnMetadataBean extends EmgrDbElementBean implements ColumnMetad
   public void setSetter(AttrSetter<Object, Object> setter)
   {
     this.setter = setter;
+  }
+
+  @Override
+  public EntityMetadata getEntity()
+  {
+    return entity;
+  }
+
+  public void setEntity(EntityMetadata entity)
+  {
+    this.entity = entity;
+  }
+
+  @Override
+  public EntityMetadata getTargetEntity()
+  {
+    return targetEntity;
+  }
+
+  public void setTargetEntity(EntityMetadata targetEntity)
+  {
+    this.targetEntity = targetEntity;
   }
 
 }

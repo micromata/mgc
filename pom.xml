@@ -113,6 +113,7 @@
         <module>de.micromata.mgc.jpa.emgr</module>
         <module>de.micromata.mgc.jpa.tabattr</module>
         <module>de.micromata.mgc.jpa.history</module>
+        <module>de.micromata.mgc.jpa.hibernatesearch</module>
         <module>de.micromata.mgc.jpa.spring</module>
       </modules>
     </profile>

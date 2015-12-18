@@ -2,10 +2,10 @@ package de.micromata.mgc.jpa.hibernatesearch;
 
 import javax.persistence.EntityManager;
 
-import de.micromata.mgc.db.jpa.DefaultEmgr;
-import de.micromata.mgc.db.jpa.EmgrFactory;
+import de.micromata.mgc.jpa.hibernatesearch.api.SearchEmgrFactory;
+import de.micromata.mgc.jpa.hibernatesearch.impl.DefaultSearchEmgr;
 
-public class HibernateSearchTestEmgrFactory extends EmgrFactory<DefaultEmgr>
+public class HibernateSearchTestEmgrFactory extends SearchEmgrFactory<DefaultSearchEmgr>
 {
   static HibernateSearchTestEmgrFactory INSTANCE;
 
@@ -24,8 +24,8 @@ public class HibernateSearchTestEmgrFactory extends EmgrFactory<DefaultEmgr>
   }
 
   @Override
-  protected DefaultEmgr createEmgr(EntityManager entityManager)
+  protected DefaultSearchEmgr createEmgr(EntityManager entityManager)
   {
-    return new DefaultEmgr(entityManager, this);
+    return new DefaultSearchEmgr(entityManager, this);
   }
 }

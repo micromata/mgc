@@ -313,12 +313,21 @@ public interface IEmgr<EMGR extends IEmgr<?>>
   <R extends DbRecord<?>> int deleteFromQuery(Class<R> cls, String sql, Object... keyValues);
 
   /**
-   * Delete.
+   * Delete an already attached entity.
    *
    * @param rec the rec
    * @return the emgr
+   * @throws IllegalArgumentException if the instance is not an entity or is a detached entity
    */
-  EMGR delete(Object rec);
+  void deleteAttached(Object rec) throws IllegalArgumentException;
+
+  /**
+   * Delete an detached entity. The entity will first be loaded with selectByPkAttached and this passed to
+   * deleteAttached.
+   *
+   * @param rec the rec
+   */
+  void deleteDetached(DbRecord<?> rec);
 
   /**
    * Mark deleted.

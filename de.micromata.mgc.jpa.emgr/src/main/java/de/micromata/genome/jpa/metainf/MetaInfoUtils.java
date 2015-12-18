@@ -13,6 +13,9 @@ import java.util.Optional;
 import java.util.Set;
 
 import javax.persistence.Column;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.EntityType;
@@ -58,7 +61,70 @@ public class MetaInfoUtils
       EntityMetadata empt = toEntityMetaData(mt);
       nrepo.getEntities().put(empt.getJavaType(), empt);
     }
+    resolve(nrepo);
     return nrepo;
+  }
+
+  private static void resolve(JpaMetadataRepostory nrepo)
+  {
+    for (EntityMetadata ent : nrepo.getEntities().values()) {
+      resolve(nrepo, ent);
+    }
+  }
+
+  private static void resolve(JpaMetadataRepostory nrepo, EntityMetadata ent)
+  {
+    for (ColumnMetadata cmd : ent.getColumns().values()) {
+      resolve(nrepo, (ColumnMetadataBean) cmd);
+    }
+  }
+
+  private static void resolve(JpaMetadataRepostory nrepo, ColumnMetadataBean cmd)
+  {
+    resolveTargetEntity(nrepo, cmd);
+  }
+
+  private static boolean findSetTargetEntity(JpaMetadataRepostory nrepo, Class<?> clazz, ColumnMetadataBean cmd)
+  {
+    if (void.class == clazz) {
+      return false;
+    }
+    EntityMetadata entmeta = nrepo.findEntityMetadata(clazz);
+    if (entmeta == null) {
+      LOG.warn("Cannot find targetEntity: " + clazz);
+      return false;
+    }
+    cmd.setTargetEntity(entmeta);
+    return true;
+  }
+
+  private static void resolveTargetEntity(JpaMetadataRepostory nrepo, ColumnMetadataBean cmd)
+  {
+    {
+      OneToOne anot = cmd.findAnnoation(OneToOne.class);
+      if (anot != null) {
+        if (findSetTargetEntity(nrepo, anot.targetEntity(), cmd) == true) {
+          return;
+        }
+      }
+    }
+    {
+      OneToMany anot = cmd.findAnnoation(OneToMany.class);
+      if (anot != null) {
+        if (findSetTargetEntity(nrepo, anot.targetEntity(), cmd) == true) {
+          return;
+        }
+      }
+    }
+    {
+      ManyToOne anot = cmd.findAnnoation(ManyToOne.class);
+      if (anot != null) {
+        if (findSetTargetEntity(nrepo, anot.targetEntity(), cmd) == true) {
+          return;
+        }
+      }
+    }
+
   }
 
   /**
@@ -83,7 +149,7 @@ public class MetaInfoUtils
       Attribute<?, ?> at = (Attribute<?, ?>) oa;
       Optional<PropertyDescriptor> pdo = propDescs.stream().filter((el) -> el.getName().equals(at.getName()))
           .findFirst();
-      ColumnMetadata colm = getColumnMetaData(mt.getJavaType(), at, pdo);
+      ColumnMetadata colm = getColumnMetaData(ret, mt.getJavaType(), at, pdo);
       if (colm != null) {
         ret.getColumns().put(colm.getName(), colm);
       }
@@ -115,10 +181,10 @@ public class MetaInfoUtils
    * @param at the at
    * @return the column meta data
    */
-  public static ColumnMetadata getColumnMetaData(Class<?> entityClass, Attribute<?, ?> at,
+  public static ColumnMetadata getColumnMetaData(EntityMetadataBean entity, Class<?> entityClass, Attribute<?, ?> at,
       Optional<PropertyDescriptor> pdo)
   {
-    ColumnMetadataBean ret = new ColumnMetadataBean();
+    ColumnMetadataBean ret = new ColumnMetadataBean(entity);
     ret.setName(at.getName());
     ret.setJavaType(at.getJavaType());
     ret.setAssociation(at.isAssociation());

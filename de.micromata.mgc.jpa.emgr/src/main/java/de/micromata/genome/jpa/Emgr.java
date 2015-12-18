@@ -19,14 +19,14 @@ import org.apache.commons.lang.Validate;
 import org.apache.log4j.Logger;
 import org.hibernate.jpa.AvailableSettings;
 
-import de.micromata.genome.jpa.events.EmgrBeforeDeleteEvent;
 import de.micromata.genome.jpa.events.EmgrAfterCopyForUpdateEvent;
+import de.micromata.genome.jpa.events.EmgrAfterDeletedEvent;
 import de.micromata.genome.jpa.events.EmgrAfterDetachEvent;
 import de.micromata.genome.jpa.events.EmgrAfterInsertedEvent;
-import de.micromata.genome.jpa.events.EmgrAfterDeletedEvent;
 import de.micromata.genome.jpa.events.EmgrAfterUpdatedEvent;
 import de.micromata.genome.jpa.events.EmgrBeforeCopyForUpdateEvent;
 import de.micromata.genome.jpa.events.EmgrBeforeCriteriaUpdateEvent;
+import de.micromata.genome.jpa.events.EmgrBeforeDeleteEvent;
 import de.micromata.genome.jpa.events.EmgrBeforeDetachEvent;
 import de.micromata.genome.jpa.events.EmgrBeforeUpdatedEvent;
 import de.micromata.genome.jpa.events.EmgrCreateQueryFilterEvent;
@@ -778,9 +778,16 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    * @return the t
    */
   @Override
-  public EMGR delete(Object rec)
+  public void deleteAttached(Object rec)
   {
-    return remove(rec);
+    remove(rec);
+  }
+
+  @Override
+  public void deleteDetached(DbRecord<?> rec)
+  {
+    DbRecord<?> dbrec = selectByPkAttached(rec.getClass(), rec.getPk());
+    deleteAttached(dbrec);
   }
 
   /**

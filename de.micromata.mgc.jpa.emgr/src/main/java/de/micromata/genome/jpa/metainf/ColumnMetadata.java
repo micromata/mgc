@@ -13,12 +13,21 @@ import de.micromata.genome.util.bean.AttrSetter;
  */
 public interface ColumnMetadata extends EmgrDbElement
 {
+  EntityMetadata getEntity();
+
   /**
    * Java Property name.
    * 
    * @return
    */
   String getName();
+
+  /**
+   * A short declaration.
+   * 
+   * @return
+   */
+  String getShortDeclaration();
 
   /**
    * Gets the max length.
@@ -112,5 +121,12 @@ public interface ColumnMetadata extends EmgrDbElement
    * @return
    */
   AttrSetter<Object, Object> getSetter();
+
+  /**
+   * In relation, reference to target entity. May be null on simple type.
+   * 
+   * @return
+   */
+  EntityMetadata getTargetEntity();
 
 }
