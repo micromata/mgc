@@ -22,6 +22,12 @@ public class EmgrDbElementBean implements EmgrDbElement
    * {@inheritDoc}
    *
    */
+  @Override
+  public String toString()
+  {
+
+    return javaType == null ? super.toString() : javaType.getName();
+  }
 
   @Override
   public Class<?> getJavaType()

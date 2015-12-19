@@ -83,16 +83,71 @@ public class ClassUtils extends org.apache.commons.lang.ClassUtils
    * @param index the index of the generic type
    * @return the generic type or null
    */
-  public static <T> Class<T> getGenericTypeArgument(Class clazz, int index)
+  public static Class<?> getGenericTypeArgument(Class<?> clazz, int index)
   {
     Type genericSuperclass = clazz.getGenericSuperclass();
+    return findGenericTypeArgument(genericSuperclass, index);
+  }
+
+  public static Class<?> findGenericTypeArgument(Type genericSuperclass, int index)
+  {
     // CHECKSTYLE.OFF SIMULIERTE_POLYMORPHIE Necesssary for technical reasons (low level handling).
     while (genericSuperclass != null && !(ParameterizedType.class.isAssignableFrom(genericSuperclass.getClass()))) {
       genericSuperclass = ((Class) genericSuperclass).getGenericSuperclass();
     }
     // CHECKSTYLE.ON
     if (genericSuperclass instanceof ParameterizedType) {
-      return (Class<T>) ((ParameterizedType) genericSuperclass).getActualTypeArguments()[index];
+      return (Class<?>) ((ParameterizedType) genericSuperclass).getActualTypeArguments()[index];
+    }
+    return null;
+  }
+
+  /**
+   * Find generic type from method.
+   *
+   * @param clazz the clazz
+   * @param method the method
+   * @param pos the pos
+   * @return the class
+   */
+  public static Class<?> findGenericTypeFromMethod(Class<?> clazz, Method method, int pos)
+  {
+    java.lang.reflect.Type gent = method.getGenericReturnType();
+    Class<?> gentype = ClassUtils.findGenericTypeArgument(gent, pos);
+    return gentype;
+  }
+
+  /**
+   * Find generic type from field.
+   *
+   * @param clazz the clazz
+   * @param field the field
+   * @param pos the pos
+   * @return the class
+   */
+  public static Class<?> findGenericTypeFromField(Class<?> clazz, Field field, int pos)
+  {
+    java.lang.reflect.Type gent = field.getGenericType();
+    Class<?> gentype = ClassUtils.findGenericTypeArgument(gent, pos);
+    return gentype;
+  }
+
+  /**
+   * Find generic type from property.
+   *
+   * @param clazz the clazz
+   * @param prop the prop
+   * @return the class
+   */
+  public static Class<?> findGenericTypeFromProperty(Class<?> clazz, String prop, int pos)
+  {
+    Method method = ClassUtils.findMethod(clazz, PrivateBeanUtils.getGetterMethodNameFromFieldName(prop));
+    if (method != null) {
+      return findGenericTypeFromMethod(clazz, method, pos);
+    }
+    Field field = PrivateBeanUtils.findField(clazz, prop);
+    if (field != null) {
+      return findGenericTypeFromField(clazz, field, pos);
     }
     return null;
   }
@@ -354,6 +409,23 @@ public class ClassUtils extends org.apache.commons.lang.ClassUtils
     }
     for (Class<?> iclazz : ifaces) {
       collectClassAnnotations(iclazz, annotClass, annots, visitedClasses);
+    }
+  }
+
+  /**
+   * Finds a method.
+   * 
+   * @param clazz
+   * @param name
+   * @param argumentTypes
+   * @return null if not found.
+   */
+  public static Method findMethod(Class<?> clazz, String name, Class<?>... argumentTypes)
+  {
+    try {
+      return clazz.getMethod(name, argumentTypes);
+    } catch (SecurityException | NoSuchMethodException e) {
+      return null;
     }
   }
 }

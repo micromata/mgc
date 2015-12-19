@@ -8,6 +8,7 @@ import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -31,6 +32,7 @@ import org.apache.log4j.Logger;
 
 import de.micromata.genome.jpa.EmgrFactory;
 import de.micromata.genome.util.bean.PrivateBeanUtils;
+import de.micromata.genome.util.runtime.ClassUtils;
 
 /**
  * Utils to build the JpaMetadataRepostory.
@@ -65,6 +67,11 @@ public class MetaInfoUtils
     return nrepo;
   }
 
+  /**
+   * Resolve.
+   *
+   * @param nrepo the nrepo
+   */
   private static void resolve(JpaMetadataRepostory nrepo)
   {
     for (EntityMetadata ent : nrepo.getEntities().values()) {
@@ -72,6 +79,12 @@ public class MetaInfoUtils
     }
   }
 
+  /**
+   * Resolve.
+   *
+   * @param nrepo the nrepo
+   * @param ent the ent
+   */
   private static void resolve(JpaMetadataRepostory nrepo, EntityMetadata ent)
   {
     for (ColumnMetadata cmd : ent.getColumns().values()) {
@@ -79,11 +92,25 @@ public class MetaInfoUtils
     }
   }
 
+  /**
+   * Resolve.
+   *
+   * @param nrepo the nrepo
+   * @param cmd the cmd
+   */
   private static void resolve(JpaMetadataRepostory nrepo, ColumnMetadataBean cmd)
   {
     resolveTargetEntity(nrepo, cmd);
   }
 
+  /**
+   * Find set target entity.
+   *
+   * @param nrepo the nrepo
+   * @param clazz the clazz
+   * @param cmd the cmd
+   * @return true, if successful
+   */
   private static boolean findSetTargetEntity(JpaMetadataRepostory nrepo, Class<?> clazz, ColumnMetadataBean cmd)
   {
     if (void.class == clazz) {
@@ -98,6 +125,12 @@ public class MetaInfoUtils
     return true;
   }
 
+  /**
+   * Resolve target entity.
+   *
+   * @param nrepo the nrepo
+   * @param cmd the cmd
+   */
   private static void resolveTargetEntity(JpaMetadataRepostory nrepo, ColumnMetadataBean cmd)
   {
     {
@@ -124,7 +157,23 @@ public class MetaInfoUtils
         }
       }
     }
-
+    EntityMetadata entmeta = nrepo.findEntityMetadata(cmd.getJavaType());
+    if (entmeta != null) {
+      cmd.setTargetEntity(entmeta);
+      return;
+    }
+    if (Collection.class.isAssignableFrom(cmd.getJavaType()) == true) {
+      Class<?> clazz = cmd.getJavaType();
+      Class<?> entclazz = cmd.getEntity().getJavaType();
+      Class<?> genClazz = ClassUtils.findGenericTypeFromProperty(entclazz, cmd.getName(), 0);
+      if (genClazz != null) {
+        entmeta = nrepo.findEntityMetadata(genClazz);
+        if (entmeta != null) {
+          cmd.setTargetEntity(entmeta);
+          return;
+        }
+      }
+    }
   }
 
   /**
@@ -177,8 +226,10 @@ public class MetaInfoUtils
   /**
    * Gets the column meta data.
    *
+   * @param entity the entity
    * @param entityClass the entity class
    * @param at the at
+   * @param pdo the pdo
    * @return the column meta data
    */
   public static ColumnMetadata getColumnMetaData(EntityMetadataBean entity, Class<?> entityClass, Attribute<?, ?> at,
@@ -230,6 +281,15 @@ public class MetaInfoUtils
     return ret;
   }
 
+  /**
+   * Gets the getter setter.
+   *
+   * @param entityClass the entity class
+   * @param accessableObject the accessable object
+   * @param pdo the pdo
+   * @param ret the ret
+   * @return the getter setter
+   */
   private static void getGetterSetter(Class<?> entityClass, AccessibleObject accessableObject,
       Optional<PropertyDescriptor> pdo, ColumnMetadataBean ret)
   {
@@ -272,14 +332,10 @@ public class MetaInfoUtils
       }
       return;
     }
-    if (ret.getGetter() == null)
-
-    {
+    if (ret.getGetter() == null) {
       ret.setGetter(PrivateBeanUtils.getFieldAttrGetter((Class) entityClass, field, Object.class));
     }
-    if (ret.getSetter() == null)
-
-    {
+    if (ret.getSetter() == null) {
       ret.setSetter(PrivateBeanUtils.getFieldAttrSetter((Class) entityClass, field, Object.class));
     }
 

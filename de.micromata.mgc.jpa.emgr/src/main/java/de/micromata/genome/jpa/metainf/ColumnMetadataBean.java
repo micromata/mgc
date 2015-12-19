@@ -4,8 +4,6 @@ import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
-
 import de.micromata.genome.util.bean.AttrGetter;
 import de.micromata.genome.util.bean.AttrSetter;
 
@@ -113,7 +111,7 @@ public class ColumnMetadataBean extends EmgrDbElementBean implements ColumnMetad
   @Override
   public String toString()
   {
-    return ToStringBuilder.reflectionToString(this);
+    return getShortDeclaration();
   }
 
   /**

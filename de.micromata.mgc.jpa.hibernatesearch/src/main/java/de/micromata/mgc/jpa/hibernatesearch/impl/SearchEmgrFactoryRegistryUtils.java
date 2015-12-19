@@ -1,5 +1,6 @@
 package de.micromata.mgc.jpa.hibernatesearch.impl;
 
+import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +18,7 @@ import de.micromata.genome.jpa.EmgrFactory;
 import de.micromata.genome.jpa.metainf.ColumnMetadata;
 import de.micromata.genome.jpa.metainf.EntityMetadata;
 import de.micromata.genome.jpa.metainf.JpaMetadataRepostory;
+import de.micromata.genome.util.runtime.ClassUtils;
 import de.micromata.mgc.jpa.hibernatesearch.api.SearchEmgrFactory;
 
 /**
@@ -25,9 +27,27 @@ import de.micromata.mgc.jpa.hibernatesearch.api.SearchEmgrFactory;
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
  */
+
 public class SearchEmgrFactoryRegistryUtils
 {
+
   private static final Logger LOG = Logger.getLogger(SearchEmgrFactoryRegistryUtils.class);
+
+  /**
+   * Dummy method to hold default IndexedEmbedded anot.
+   */
+  @IndexedEmbedded()
+  public static void annotationDummyMethod()
+  {
+
+  }
+
+  private static IndexedEmbedded DEFAULT_IndexedEmbedded;
+
+  static {
+    Method method = ClassUtils.findMethod(SearchEmgrFactoryRegistryUtils.class, "annotationDummyMethod");
+    DEFAULT_IndexedEmbedded = method.getAnnotation(IndexedEmbedded.class);
+  }
 
   public static void initJpaMetadataRepostory(EmgrFactory<?> emf)
   {
@@ -97,15 +117,14 @@ public class SearchEmgrFactoryRegistryUtils
         ContainedIn ci = cm.findAnnoation(ContainedIn.class);
         if (ci != null) {
           IndexedEmbedded iemb = cm.findAnnoation(IndexedEmbedded.class);
-          if (iemb != null) {
-            addNestedSearchFields(repo, cm, iemb, maxDepth - 1, ret);
-          } else {
-            LOG.error("ContainedIn found without ContainedIn " + cm);
+          if (iemb == null) {
+            iemb = DEFAULT_IndexedEmbedded;
           }
+          addNestedSearchFields(repo, cm, iemb, maxDepth - 1, ret);
         } else {
           IndexedEmbedded iemb = cm.findAnnoation(IndexedEmbedded.class);
           if (iemb != null) {
-            LOG.error("IndexedEmbedded found without ContainedIn " + cm);
+            addNestedSearchFields(repo, cm, iemb, maxDepth - 1, ret);
           }
         }
       }
@@ -129,7 +148,7 @@ public class SearchEmgrFactoryRegistryUtils
     }
     EntityMetadata assicatedEntity = getAssocatedJavaType(masterColumn);
     if (assicatedEntity == null) {
-      LOG.error("Search; Cannot find EntityMetadata for " + assicatedEntity.getJavaType().getName());
+      LOG.error("Search; Cannot find EntityMetadata for " + masterColumn.getJavaType().getName());
       return;
     }
     int maxLevel = Math.min(iemb.depth(), maxDepth);
@@ -143,7 +162,7 @@ public class SearchEmgrFactoryRegistryUtils
   {
     EntityMetadata targetEnt = masterColumn.getTargetEntity();
     Class<?> javaType = masterColumn.getJavaType();
-    if (Collection.class.isAssignableFrom(javaType) != true || Map.class.isAssignableFrom(javaType) != true) {
+    if (Collection.class.isAssignableFrom(javaType) == true || Map.class.isAssignableFrom(javaType) == true) {
       if (targetEnt == null) {
         LOG.error("Have to define attribute targetEntity in anntotation to support search: "
             + masterColumn.getShortDeclaration());
