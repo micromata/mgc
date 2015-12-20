@@ -67,8 +67,42 @@ public class SearchEmgr<EMGR extends SearchEmgr<?>>extends Emgr<EMGR> implements
         .onFields(fields)
         .matching(expression)
         .createQuery();
+
+    return searchAttached(luceneQuery, type);
+  }
+
+  public <T> List<T> searchWildcardAttached(String expression, Class<T> type, String... fields)
+  {
+    if (fields.length == 0) {
+      fields = getDefaultSearchFields(type);
+    }
+    FullTextEntityManager ftem = getFullTextEntityManager();
+    org.hibernate.search.query.dsl.QueryBuilder qb = ftem.getSearchFactory()
+        .buildQueryBuilder()
+        .forEntity(MyEntityDO.class)
+        .get();
+    org.apache.lucene.search.Query luceneQuery = qb
+        .keyword()
+        .wildcard()
+        .onFields(fields)
+        .matching(expression)
+        .createQuery();
+
+    return searchAttached(luceneQuery, type);
+  }
+
+  public <T> List<T> searchWildcardDetached(String expression, Class<T> type, String... fields)
+  {
+    List<T> ret = searchWildcardAttached(expression, type, fields);
+    detach(ret);
+    return ret;
+  }
+
+  public <T> List<T> searchAttached(org.apache.lucene.search.Query luceneQuery, Class<T> type)
+  {
+    FullTextEntityManager ftem = getFullTextEntityManager();
     javax.persistence.Query jpaQuery = new EmgrEventQuery(this,
-        ftem.createFullTextQuery(luceneQuery, MyEntityDO.class));
+        ftem.createFullTextQuery(luceneQuery, type));
     List<T> lret = jpaQuery.getResultList();
     return lret;
   }

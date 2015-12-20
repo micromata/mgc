@@ -14,11 +14,18 @@ import de.micromata.genome.jpa.IEmgr;
  */
 public interface ISearchEmgr<EMGR extends ISearchEmgr<?>>extends IEmgr<EMGR>
 {
-  org.hibernate.search.query.dsl.QueryBuilder getFullTexteSearchQueryBuilder();
 
   <T> List<T> searchDetached(String expression, Class<T> type, String... fields);
 
   <T> List<T> searchAttached(String expression, Class<T> type, String... fields);
+
+  <T> List<T> searchWildcardDetached(String expression, Class<T> type, String... fields);
+
+  <T> List<T> searchWildcardAttached(String expression, Class<T> type, String... fields);
+
+  org.hibernate.search.query.dsl.QueryBuilder getFullTexteSearchQueryBuilder();
+
+  <T> List<T> searchAttached(org.apache.lucene.search.Query luceneQuery, Class<T> type);
 
   /**
    * Invokes indexing on given entity.
