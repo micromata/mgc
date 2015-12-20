@@ -6,7 +6,7 @@ import javax.persistence.TypedQuery;
 
 import de.micromata.genome.jpa.IEmgr;
 import de.micromata.genome.jpa.WrappedTypedQuery;
-import de.micromata.genome.jpa.events.EmgrTypeQueryGetResultListFilterEvent;
+import de.micromata.genome.jpa.events.EmgrTypedQueryGetResultListFilterEvent;
 
 /**
  * Wrapps the execution of query.
@@ -38,7 +38,7 @@ public class EmgrEventTypedQuery<E>extends WrappedTypedQuery<E>
   public List<E> getResultList()
   {
     return emgr.getEmgrFactory().getEventFactory().invokeEvents(
-        new EmgrTypeQueryGetResultListFilterEvent<E>(emgr, nested),
+        new EmgrTypedQueryGetResultListFilterEvent<E>(emgr, nested),
         (event) -> {
           event.setResult(nested.getResultList());
         });

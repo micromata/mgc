@@ -6,7 +6,6 @@ import org.hibernate.search.jpa.FullTextEntityManager;
 import org.junit.Assert;
 import org.junit.Test;
 
-import de.micromata.mgc.common.test.MgcTestCase;
 import de.micromata.mgc.jpa.hibernatesearch.entities.MyEntityDO;
 
 /**
@@ -15,7 +14,7 @@ import de.micromata.mgc.jpa.hibernatesearch.entities.MyEntityDO;
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
  */
-public class HibernateSearchTest extends MgcTestCase
+public class HibernateSearchTest extends HibernateSearchTestBase
 {
   @SuppressWarnings("unchecked")
   @Test

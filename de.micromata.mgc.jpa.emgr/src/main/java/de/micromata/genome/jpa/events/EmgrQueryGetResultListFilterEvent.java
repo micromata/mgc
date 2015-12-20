@@ -2,28 +2,23 @@ package de.micromata.genome.jpa.events;
 
 import java.util.List;
 
-import javax.persistence.TypedQuery;
+import javax.persistence.Query;
 
 import de.micromata.genome.jpa.IEmgr;
 
 /**
- * Executing getResultList on typed Query.
+ * Executing getResultList on Query.
  *
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  * @param <R> the generic type
  */
-public class EmgrTypeQueryGetResultListFilterEvent<R>extends EmgrFilterEvent<List<R>>
+public class EmgrQueryGetResultListFilterEvent extends EmgrFilterEvent<List<?>>
 {
 
   /**
    * The query.
    */
-  private TypedQuery<R> query;
-
-  public TypedQuery<R> getQuery()
-  {
-    return query;
-  }
+  private Query query;
 
   /**
    * Instantiates a new emgr type query get result list filter event.
@@ -31,10 +26,14 @@ public class EmgrTypeQueryGetResultListFilterEvent<R>extends EmgrFilterEvent<Lis
    * @param emgr the emgr
    * @param query the query
    */
-  public EmgrTypeQueryGetResultListFilterEvent(IEmgr<?> emgr, TypedQuery<R> query)
+  public EmgrQueryGetResultListFilterEvent(IEmgr<?> emgr, Query query)
   {
     super(emgr);
     this.query = query;
   }
 
+  public Query getQuery()
+  {
+    return query;
+  }
 }

@@ -5,7 +5,6 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import de.micromata.mgc.common.test.MgcTestCase;
 import de.micromata.mgc.jpa.hibernatesearch.entities.MyEntityDO;
 
 /**
@@ -14,12 +13,13 @@ import de.micromata.mgc.jpa.hibernatesearch.entities.MyEntityDO;
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
  */
-public class EmgrSearchTest extends MgcTestCase
+public class EmgrSearchTest extends HibernateSearchTestBase
 {
   @Test
   public void testSearch()
   {
     HibernateSearchTestEmgrFactory emf = HibernateSearchTestEmgrFactory.get();
+
     MyEntityDO net = new MyEntityDO();
     net.setName("Bla");
     net.setLoginName("Blub");

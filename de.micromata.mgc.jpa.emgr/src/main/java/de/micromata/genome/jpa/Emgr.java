@@ -13,7 +13,6 @@ import javax.persistence.NoResultException;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaQuery;
 
 import org.apache.commons.lang.Validate;
 import org.apache.log4j.Logger;
@@ -45,6 +44,7 @@ import de.micromata.genome.jpa.events.EmgrRemoveDbRecordFilterEvent;
 import de.micromata.genome.jpa.events.EmgrUpdateCopyFilterEvent;
 import de.micromata.genome.jpa.events.EmgrUpdateCriteriaUpdateFilterEvent;
 import de.micromata.genome.jpa.events.EmgrUpdateDbRecordFilterEvent;
+import de.micromata.genome.jpa.events.impl.EmgrEventQuery;
 import de.micromata.genome.jpa.events.impl.EmgrEventTypedQuery;
 
 /**
@@ -136,27 +136,13 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    * 
    * NOTE this is currenty NOT Wrapped with events.
    * 
-   * @param <C> the generic type
-   * @param cls the cls
-   * @return the criteria query
-   */
-  public <C> CriteriaQuery<C> createQuery(final Class<C> cls)
-  {
-    return entityManager.getCriteriaBuilder().createQuery(cls);
-  }
-
-  /**
-   * Creates the query.
-   * 
-   * NOTE this is currenty NOT Wrapped with events.
-   * 
    * @param sql the sql
    * @return the query
    */
   public Query createQuery(final String sql)
   {
     return filterEvent(new EmgrCreateQueryFilterEvent(this, sql), (event) -> {
-      event.setResult(entityManager.createQuery(sql));
+      event.setResult(new EmgrEventQuery(this, entityManager.createQuery(sql)));
     });
     //    
   }
@@ -170,7 +156,7 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    */
   public Query createQuery(final String sql, final Object... keyValues)
   {
-    Query namedQuery = entityManager.createQuery(sql);
+    Query namedQuery = new EmgrEventQuery(this, entityManager.createQuery(sql));
     setParams(namedQuery, keyValues);
     return namedQuery;
   }

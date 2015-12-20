@@ -9,6 +9,7 @@ import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.query.dsl.QueryBuilder;
 
 import de.micromata.genome.jpa.Emgr;
+import de.micromata.genome.jpa.events.impl.EmgrEventQuery;
 import de.micromata.genome.jpa.metainf.ColumnMetadata;
 import de.micromata.mgc.jpa.hibernatesearch.api.ISearchEmgr;
 import de.micromata.mgc.jpa.hibernatesearch.api.SearchEmgrFactory;
@@ -66,7 +67,8 @@ public class SearchEmgr<EMGR extends SearchEmgr<?>>extends Emgr<EMGR> implements
         .onFields(fields)
         .matching(expression)
         .createQuery();
-    javax.persistence.Query jpaQuery = ftem.createFullTextQuery(luceneQuery, MyEntityDO.class);
+    javax.persistence.Query jpaQuery = new EmgrEventQuery(this,
+        ftem.createFullTextQuery(luceneQuery, MyEntityDO.class));
     List<T> lret = jpaQuery.getResultList();
     return lret;
   }

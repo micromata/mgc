@@ -28,7 +28,7 @@ import de.micromata.genome.jpa.StdRecordDO;
 public class MyEntityDO extends StdRecordDO<Long> implements ComplexEntity
 
 {
-  @Field(index = Index.YES, analyze = Analyze.NO, store = Store.NO)
+  @Field(index = Index.YES, analyze = Analyze.YES, store = Store.NO)
   private String name;
 
   @Field(index = Index.YES, analyze = Analyze.YES, store = Store.NO)

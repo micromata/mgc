@@ -5,11 +5,10 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import de.micromata.mgc.common.test.MgcTestCase;
 import de.micromata.mgc.jpa.hibernatesearch.entities.MyEntityDO;
 import de.micromata.mgc.jpa.hibernatesearch.entities.MyNestedEntity;
 
-public class HibernateSearchComplexTest extends MgcTestCase
+public class HibernateSearchComplexTest extends HibernateSearchTestBase
 {
   @Test
   public void testComplex()

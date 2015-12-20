@@ -31,11 +31,6 @@ public class EmgrSearchCriteriaUpdateTest extends MgcTestCase
   public void testSearch()
   {
     HibernateSearchTestEmgrFactory emf = HibernateSearchTestEmgrFactory.get();
-
-    emf.runInTrans((emgr) -> {
-      return emgr.deleteFromQuery(MyEntityDO.class, "select e from " + MyEntityDO.class.getName() + " e");
-    });
-
     MyEntityDO net = new MyEntityDO();
     net.setName("XThisIsAName");
     net.setLoginName("Blub");
