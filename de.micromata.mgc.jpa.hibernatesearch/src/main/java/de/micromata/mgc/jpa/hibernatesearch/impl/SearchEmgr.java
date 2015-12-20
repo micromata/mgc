@@ -13,6 +13,7 @@ import de.micromata.genome.jpa.metainf.ColumnMetadata;
 import de.micromata.mgc.jpa.hibernatesearch.api.ISearchEmgr;
 import de.micromata.mgc.jpa.hibernatesearch.api.SearchEmgrFactory;
 import de.micromata.mgc.jpa.hibernatesearch.entities.MyEntityDO;
+import de.micromata.mgc.jpa.hibernatesearch.events.SearchEmgrReindexEventFilterEvent;
 
 /**
  * 
@@ -68,6 +69,22 @@ public class SearchEmgr<EMGR extends SearchEmgr<?>>extends Emgr<EMGR> implements
     javax.persistence.Query jpaQuery = ftem.createFullTextQuery(luceneQuery, MyEntityDO.class);
     List<T> lret = jpaQuery.getResultList();
     return lret;
+  }
+
+  @Override
+  public <T> List<T> searchDetached(String expression, Class<T> type, String... fields)
+  {
+    List<T> ret = searchAttached(expression, type, fields);
+    detach(ret);
+    return ret;
+  }
+
+  @Override
+  public void reindex(Object entity)
+  {
+    filterEvent(new SearchEmgrReindexEventFilterEvent(this, entity), (event) -> {
+      event.getSearchEmgr().getFullTextEntityManager().index(event.getEntity());
+    });
   }
 
   @Override

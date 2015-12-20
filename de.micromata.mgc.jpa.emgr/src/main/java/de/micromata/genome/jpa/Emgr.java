@@ -1146,7 +1146,7 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    * @param nested the nested
    * @return the r
    */
-  protected <E extends EmgrFilterEvent<R>, R> R filterEvent(EmgrFilterEvent<R> event, EmgrEventHandler<E> nested)
+  protected <E extends EmgrFilterEvent<R>, R> R filterEvent(E event, EmgrEventHandler<E> nested)
   {
     return getEmgrFactory().getEventFactory().invokeEvents(event, nested);
   }

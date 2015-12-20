@@ -17,11 +17,6 @@ public class EmgrMergeDbRecordFilterEvent<E extends DbRecord>extends EmgrFilterE
    */
   private E entity;
 
-  public E getEntity()
-  {
-    return entity;
-  }
-
   /**
    * Instantiates a new emgr merge db record filter event.
    *
@@ -34,4 +29,8 @@ public class EmgrMergeDbRecordFilterEvent<E extends DbRecord>extends EmgrFilterE
     this.entity = entity;
   }
 
+  public E getEntity()
+  {
+    return entity;
+  }
 }

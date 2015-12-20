@@ -163,7 +163,6 @@ public class MetaInfoUtils
       return;
     }
     if (Collection.class.isAssignableFrom(cmd.getJavaType()) == true) {
-      Class<?> clazz = cmd.getJavaType();
       Class<?> entclazz = cmd.getEntity().getJavaType();
       Class<?> genClazz = ClassUtils.findGenericTypeFromProperty(entclazz, cmd.getName(), 0);
       if (genClazz != null) {
@@ -296,17 +295,6 @@ public class MetaInfoUtils
     if (accessableObject instanceof Method) {
       ret.setGetter(PrivateBeanUtils.getMethodAttrGetter((Class) entityClass, (Method) accessableObject, Object.class));
     }
-    //    if (pdo.isPresent() == true) {
-    //      PropertyDescriptor pd = pdo.get();
-    //      if (ret.getGetter() != null) {
-    //        if (pd.getReadMethod() != null) {
-    //          ret.setGetter(PrivateBeanUtils.getMethodAttrGetter((Class) entityClass, pd.getReadMethod(), Object.class));
-    //        }
-    //      }
-    //      if (pd.getWriteMethod() != null) {
-    //        ret.setSetter(PrivateBeanUtils.getMethodAttrSetter((Class) entityClass, pd.getWriteMethod(), Object.class));
-    //      }
-    //    }
     if (ret.getGetter() == null) {
       Method method = PrivateBeanUtils.findGetterFromField(entityClass, ret.getName(), ret.getJavaType());
       if (method != null) {
