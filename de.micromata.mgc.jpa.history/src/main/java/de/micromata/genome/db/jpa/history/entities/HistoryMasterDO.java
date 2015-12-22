@@ -10,6 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
@@ -26,7 +27,10 @@ import de.micromata.genome.db.jpa.tabattr.entities.JpaTabAttrDataBaseDO;
  *
  */
 @Entity
-@Table(name = "TB_BASE_GHISTORY")
+@Table(name = "TB_BASE_GHISTORY", indexes = {
+    @Index(name = "IX_BASE_GHISTORY_ENT", columnList = "ENTITY_ID,ENTITY_NAME"),
+    @Index(name = "IX_BASE_GHISTORY_MOD", columnList = "MODIFIEDAT")
+})
 @SequenceGenerator(name = "SQ_BASE_GHISTORY_PK", sequenceName = "SQ_BASE_GHISTORY_PK")
 public class HistoryMasterDO extends HistoryMasterBaseDO<HistoryMasterDO, Long>
 {

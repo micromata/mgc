@@ -21,7 +21,7 @@ import de.micromata.genome.db.jpa.tabattr.entities.JpaTabMasterBaseDO;
  */
 @MappedSuperclass
 public abstract class HistoryMasterBaseDO<T extends HistoryMasterBaseDO<?, ?>, PK extends Serializable>
-    extends JpaTabMasterBaseDO<HistoryMasterDO, PK> implements HistoryEntry<PK>
+    extends JpaTabMasterBaseDO<T, PK> implements HistoryEntry<PK>
 {
 
   /**
