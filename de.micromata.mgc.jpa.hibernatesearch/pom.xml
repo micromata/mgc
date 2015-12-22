@@ -24,12 +24,22 @@
       <artifactId>de.micromata.mgc.jpa.emgr</artifactId>
       <version>${mgc.version}</version>
     </dependency>
+    <dependency>
+      <groupId>de.micromata.mgc</groupId>
+      <artifactId>de.micromata.mgc.jpa.history</artifactId>
+      <version>${mgc.version}</version>
+    </dependency>
 
 
     <dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-search-orm</artifactId>
       <version>${org.hibernate-search-orm.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.lucene</groupId>
+      <artifactId>lucene-queryparser</artifactId>
+      <version>${org.apache.lucene.version}</version>
     </dependency>
 
 

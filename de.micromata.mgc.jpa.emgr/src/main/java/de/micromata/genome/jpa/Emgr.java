@@ -669,6 +669,12 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
     return ret;
   }
 
+  @Override
+  public <R> List<R> selectAllAttached(Class<R> cls)
+  {
+    return selectAttached(cls, "select e from " + cls.getName() + " e");
+  }
+
   /**
    * Set the the query to use select for update.
    * 

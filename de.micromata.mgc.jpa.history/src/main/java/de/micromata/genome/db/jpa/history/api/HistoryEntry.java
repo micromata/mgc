@@ -1,5 +1,6 @@
 package de.micromata.genome.db.jpa.history.api;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import de.micromata.genome.jpa.DbRecord;
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
  */
-public interface HistoryEntry extends DbRecord<Long>
+public interface HistoryEntry<PK extends Serializable>extends DbRecord<PK>
 {
 
   /**

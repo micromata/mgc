@@ -41,13 +41,17 @@ public class SimplePropertyConverter implements HistoryPropertyConverter
     HistProp ret = new HistProp();
     ret.setName("");
     ret.setType(pd.getJavaType().getName());
-    String sval;
-    if (value instanceof Enum<?>) {
-      sval = ((Enum<?>) value).name();
-    } else {
-      sval = stringConverter.asString(value);
-    }
-    ret.setValue(sval);
+
+    ret.setValue(convertToString(value, pd));
     return ret;
+  }
+
+  protected String convertToString(Object value, ColumnMetadata pd)
+  {
+    if (value instanceof Enum<?>) {
+      return ((Enum<?>) value).name();
+    }
+    return stringConverter.asString(value);
+
   }
 }

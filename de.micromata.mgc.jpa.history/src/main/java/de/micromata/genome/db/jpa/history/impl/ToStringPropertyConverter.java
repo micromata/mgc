@@ -3,6 +3,8 @@ package de.micromata.genome.db.jpa.history.impl;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.lang.ObjectUtils;
+
 import de.micromata.genome.db.jpa.history.api.HistProp;
 import de.micromata.genome.jpa.IEmgr;
 import de.micromata.genome.jpa.metainf.ColumnMetadata;
@@ -26,4 +28,9 @@ public class ToStringPropertyConverter extends SimplePropertyConverter
     return Collections.singletonList(new HistProp(null, String.class.getName(), bo.toString()));
   }
 
+  @Override
+  protected String convertToString(Object value, ColumnMetadata pd)
+  {
+    return ObjectUtils.toString(value);
+  }
 }

@@ -13,7 +13,6 @@ import de.micromata.genome.jpa.events.impl.EmgrEventQuery;
 import de.micromata.genome.jpa.metainf.ColumnMetadata;
 import de.micromata.mgc.jpa.hibernatesearch.api.ISearchEmgr;
 import de.micromata.mgc.jpa.hibernatesearch.api.SearchEmgrFactory;
-import de.micromata.mgc.jpa.hibernatesearch.entities.MyEntityDO;
 import de.micromata.mgc.jpa.hibernatesearch.events.SearchEmgrReindexEventFilterEvent;
 
 /**
@@ -60,7 +59,7 @@ public class SearchEmgr<EMGR extends SearchEmgr<?>>extends Emgr<EMGR> implements
     FullTextEntityManager ftem = getFullTextEntityManager();
     org.hibernate.search.query.dsl.QueryBuilder qb = ftem.getSearchFactory()
         .buildQueryBuilder()
-        .forEntity(MyEntityDO.class)
+        .forEntity(type)
         .get();
     org.apache.lucene.search.Query luceneQuery = qb
         .keyword()
@@ -71,6 +70,7 @@ public class SearchEmgr<EMGR extends SearchEmgr<?>>extends Emgr<EMGR> implements
     return searchAttached(luceneQuery, type);
   }
 
+  @Override
   public <T> List<T> searchWildcardAttached(String expression, Class<T> type, String... fields)
   {
     if (fields.length == 0) {
@@ -79,7 +79,7 @@ public class SearchEmgr<EMGR extends SearchEmgr<?>>extends Emgr<EMGR> implements
     FullTextEntityManager ftem = getFullTextEntityManager();
     org.hibernate.search.query.dsl.QueryBuilder qb = ftem.getSearchFactory()
         .buildQueryBuilder()
-        .forEntity(MyEntityDO.class)
+        .forEntity(type)
         .get();
     org.apache.lucene.search.Query luceneQuery = qb
         .keyword()
@@ -91,6 +91,7 @@ public class SearchEmgr<EMGR extends SearchEmgr<?>>extends Emgr<EMGR> implements
     return searchAttached(luceneQuery, type);
   }
 
+  @Override
   public <T> List<T> searchWildcardDetached(String expression, Class<T> type, String... fields)
   {
     List<T> ret = searchWildcardAttached(expression, type, fields);
@@ -98,6 +99,7 @@ public class SearchEmgr<EMGR extends SearchEmgr<?>>extends Emgr<EMGR> implements
     return ret;
   }
 
+  @Override
   public <T> List<T> searchAttached(org.apache.lucene.search.Query luceneQuery, Class<T> type)
   {
     FullTextEntityManager ftem = getFullTextEntityManager();

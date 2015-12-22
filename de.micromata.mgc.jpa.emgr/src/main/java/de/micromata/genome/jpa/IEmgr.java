@@ -147,6 +147,16 @@ public interface IEmgr<EMGR extends IEmgr<?>>
   <R> List<R> selectDetached(Class<R> cls, String sql, Map<String, Object> values);
 
   /**
+   * Select all existant entities of given class.
+   * 
+   * Be carfull, use it only for adminstrational usses.
+   * 
+   * @param cls
+   * @return
+   */
+  <R> List<R> selectAllAttached(Class<R> cls);
+
+  /**
    * Creates the query detached.
    * 
    * The query returns the entity detached.

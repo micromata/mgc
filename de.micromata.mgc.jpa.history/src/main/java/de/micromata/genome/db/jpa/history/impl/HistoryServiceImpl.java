@@ -26,7 +26,8 @@ import de.micromata.genome.db.jpa.history.api.HistoryPropertyProvider;
 import de.micromata.genome.db.jpa.history.api.HistoryService;
 import de.micromata.genome.db.jpa.history.api.WithHistory;
 import de.micromata.genome.db.jpa.history.entities.EntityOpType;
-import de.micromata.genome.db.jpa.history.entities.HistoryAttrDO;
+import de.micromata.genome.db.jpa.history.entities.HistoryAttrBaseDO;
+import de.micromata.genome.db.jpa.history.entities.HistoryMasterBaseDO;
 import de.micromata.genome.db.jpa.history.entities.HistoryMasterDO;
 import de.micromata.genome.db.jpa.history.entities.PropertyOpType;
 import de.micromata.genome.jpa.DbRecord;
@@ -62,6 +63,12 @@ public class HistoryServiceImpl implements HistoryService
    * The Constant NEWVAL_SUFFIX.
    */
   private static final String NEWVAL_SUFFIX = ":nv";
+
+  @Override
+  public Class<? extends HistoryMasterBaseDO<?, ?>> getHistoryMasterClass()
+  {
+    return HistoryMasterDO.class;
+  }
 
   @Override
   public void registerEmgrListener(EmgrFactory<?> emgrFactory)
@@ -114,11 +121,16 @@ public class HistoryServiceImpl implements HistoryService
     return ret;
   }
 
+  protected HistoryMasterBaseDO<?, ?> createHistoryMaster()
+  {
+    return PrivateBeanUtils.createInstance(getHistoryMasterClass());
+  }
+
   @Override
   public void internalOnUpdate(IEmgr<?> emgr, String entityName, Serializable entityPk, Map<String, HistProp> oldProps,
       Map<String, HistProp> newProps)
   {
-    HistoryMasterDO hm = new HistoryMasterDO();
+    HistoryMasterBaseDO<?, ?> hm = createHistoryMaster();
     hm.setEntityOpType(EntityOpType.Update);
     hm.setEntityId(castToLong(entityPk));
     hm.setEntityName(entityName);
@@ -194,7 +206,7 @@ public class HistoryServiceImpl implements HistoryService
       }
 
     }
-    HistoryMasterDO hm = new HistoryMasterDO();
+    HistoryMasterBaseDO<?, ?> hm = createHistoryMaster();
     hm.setEntityOpType(EntityOpType.Insert);
     hm.setEntityId(castToLong(entityPk));
     hm.setEntityName(entityName);
@@ -210,10 +222,10 @@ public class HistoryServiceImpl implements HistoryService
     insert(emgr, hm);
   }
 
-  private void putHistProp(HistoryMasterDO hm, DiffEntry de)
+  private void putHistProp(HistoryMasterBaseDO<?, ?> hm, DiffEntry de)
   {
     hm.putAttribute(de.getPropertyName() + OP_SUFFIX, de.getPropertyOpType().name());
-    HistoryAttrDO row = (HistoryAttrDO) hm.getAttributeRow(de.getPropertyName() + OP_SUFFIX);
+    HistoryAttrBaseDO<?, ?> row = (HistoryAttrBaseDO<?, ?>) hm.getAttributeRow(de.getPropertyName() + OP_SUFFIX);
     row.setPropertyTypeClass(de.getPropertyOpType().getClass().getName());
     if (de.getNewProp() != null) {
       putHistProp(hm, de.getPropertyName(), NEWVAL_SUFFIX, de.getPropertyOpType(), de.getNewProp());
@@ -223,14 +235,13 @@ public class HistoryServiceImpl implements HistoryService
     }
   }
 
-  private void putHistProp(HistoryMasterDO hm, String property, String suffix, PropertyOpType propertyOpType,
+  private void putHistProp(HistoryMasterBaseDO<?, ?> hm, String property, String suffix, PropertyOpType propertyOpType,
       HistProp histprop)
   {
     String key = property + suffix;
     hm.putAttribute(key, histprop.getValue());
-    HistoryAttrDO row = (HistoryAttrDO) hm.getAttributeRow(key);
+    HistoryAttrBaseDO<?, ?> row = (HistoryAttrBaseDO<?, ?>) hm.getAttributeRow(key);
     row.setPropertyTypeClass(histprop.getType());
-
   }
 
   /**
@@ -238,7 +249,7 @@ public class HistoryServiceImpl implements HistoryService
    *
    * @param hm the hm
    */
-  protected void insert(IEmgr<?> emgr, HistoryMasterDO hm)
+  protected void insert(IEmgr<?> emgr, HistoryMasterBaseDO<?, ?> hm)
   {
     emgr.insertDetached(hm);
   }
@@ -327,7 +338,7 @@ public class HistoryServiceImpl implements HistoryService
   }
 
   @Override
-  public List<DiffEntry> getDiffEntriesForHistoryMaster(HistoryMasterDO historyMasterDO)
+  public List<DiffEntry> getDiffEntriesForHistoryMaster(HistoryMasterBaseDO<?, ?> historyMasterDO)
   {
     List<DiffEntry> entries = new ArrayList<>();
     for (String key : historyMasterDO.getAttributeKeys()) {
@@ -348,9 +359,9 @@ public class HistoryServiceImpl implements HistoryService
     return entries;
   }
 
-  private HistProp readHistProp(HistoryMasterDO historyMasterDO, String key, String suffix)
+  private HistProp readHistProp(HistoryMasterBaseDO<?, ?> historyMasterDO, String key, String suffix)
   {
-    HistoryAttrDO row = (HistoryAttrDO) historyMasterDO.getAttributeRow(key + suffix);
+    HistoryAttrBaseDO<?, ?> row = (HistoryAttrBaseDO<?, ?>) historyMasterDO.getAttributeRow(key + suffix);
     if (row == null) {
       return null;
     }
@@ -371,8 +382,8 @@ public class HistoryServiceImpl implements HistoryService
   public List<? extends HistoryEntry> getHistoryEntries(IEmgr<?> emgr, String entityName, Serializable entityId)
   {
     Long extPk = castToLong(entityId);
-
-    return emgr.selectDetached(HistoryMasterDO.class, "select h from " + HistoryMasterDO.class.getName()
+    Class<? extends HistoryMasterBaseDO<?, ?>> masterClass = getHistoryMasterClass();
+    return emgr.selectDetached(masterClass, "select h from " + masterClass.getName()
         + " h where h.entityName = :entityName and h.entityId = :entityId", "entityName", entityName, "entityId",
         extPk);
 
@@ -381,8 +392,9 @@ public class HistoryServiceImpl implements HistoryService
   @Override
   public List<? extends HistoryEntry> getHistoryEntriesForEntityClass(IEmgr<?> emgr, Class<? extends DbRecord<?>> cls)
   {
-    return emgr.selectDetached(HistoryMasterDO.class,
-        "select h from " + HistoryMasterDO.class.getName() + " h where h.entityName = :entityName", "entityName",
+    Class<? extends HistoryMasterBaseDO<?, ?>> masterClass = getHistoryMasterClass();
+    return emgr.selectDetached(masterClass,
+        "select h from " + masterClass.getName() + " h where h.entityName = :entityName", "entityName",
         cls.getName());
 
   }
@@ -411,8 +423,9 @@ public class HistoryServiceImpl implements HistoryService
   @Override
   public int clearHistoryForEntityClass(IEmgr<?> emgr, Class<? extends DbRecord<?>> cls)
   {
-    return emgr.deleteFromQuery(HistoryMasterDO.class,
-        "select h from " + HistoryMasterDO.class.getName() + " h where h.entityName = :entityName", "entityName",
+    Class<? extends HistoryMasterBaseDO<?, ?>> masterClass = getHistoryMasterClass();
+    return emgr.deleteFromQuery(masterClass,
+        "select h from " + masterClass.getName() + " h where h.entityName = :entityName", "entityName",
         cls.getName());
 
   }
@@ -445,7 +458,7 @@ public class HistoryServiceImpl implements HistoryService
       return conv;
     }
     Class<?> pclazz = pd.getJavaType();
-    // TODO Locale etc. ueber registrierte?
+
     if (DbRecord.class.isAssignableFrom(pclazz) == true) {
       return new DbRecordPropertyConverter();
     } else if (Map.class.isAssignableFrom(pclazz) == true) {

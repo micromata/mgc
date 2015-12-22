@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-import de.micromata.genome.db.jpa.history.entities.HistoryMasterDO;
+import de.micromata.genome.db.jpa.history.entities.HistoryMasterBaseDO;
 import de.micromata.genome.jpa.DbRecord;
 import de.micromata.genome.jpa.EmgrFactory;
 import de.micromata.genome.jpa.IEmgr;
@@ -17,6 +17,12 @@ import de.micromata.genome.jpa.metainf.ColumnMetadata;
  */
 public interface HistoryService
 {
+  /**
+   * The entity class. The entity class must provide default constructor.
+   * 
+   * @return
+   */
+  Class<? extends HistoryMasterBaseDO<?, ?>> getHistoryMasterClass();
 
   /**
    * Register the listener to Emgr. Should be called while initializing EmgrFactory in overwritten
@@ -81,7 +87,7 @@ public interface HistoryService
    * @param historyMasterDO the history master do
    * @return the diff entries for history master
    */
-  List<DiffEntry> getDiffEntriesForHistoryMaster(HistoryMasterDO historyMasterDO);
+  List<DiffEntry> getDiffEntriesForHistoryMaster(HistoryMasterBaseDO<?, ?> historyMasterDO);
 
   /**
    * Gets the history entries.

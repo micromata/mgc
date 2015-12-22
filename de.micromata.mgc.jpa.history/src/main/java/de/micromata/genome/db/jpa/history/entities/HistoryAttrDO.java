@@ -28,7 +28,6 @@ import javax.persistence.Transient;
 
 import org.hibernate.annotations.Index;
 
-import de.micromata.genome.db.jpa.tabattr.entities.JpaTabAttrBaseDO;
 import de.micromata.genome.db.jpa.tabattr.entities.JpaTabAttrDataBaseDO;
 
 /**
@@ -48,18 +47,13 @@ import de.micromata.genome.db.jpa.tabattr.entities.JpaTabAttrDataBaseDO;
     }, appliesTo = "TB_BASE_GHISTORY_ATTR")
 @DiscriminatorColumn(name = "WITHDATA", discriminatorType = DiscriminatorType.CHAR)
 @DiscriminatorValue("0")
-public class HistoryAttrDO extends JpaTabAttrBaseDO<HistoryMasterDO, Long>
+public class HistoryAttrDO extends HistoryAttrBaseDO<HistoryMasterDO, Long>
 {
 
   /**
    * The Constant serialVersionUID.
    */
   private static final long serialVersionUID = -5490342158738541970L;
-  /**
-   * Name of the type class.
-   */
-
-  private String propertyTypeClass;
 
   /**
    * Instantiates a new history attr do.
@@ -120,17 +114,6 @@ public class HistoryAttrDO extends JpaTabAttrBaseDO<HistoryMasterDO, Long>
   public HistoryMasterDO getParent()
   {
     return super.getParent();
-  }
-
-  @Column(name = "PROPERTY_TYPE_CLASS", length = 128)
-  public String getPropertyTypeClass()
-  {
-    return propertyTypeClass;
-  }
-
-  public void setPropertyTypeClass(String propertyTypeClass)
-  {
-    this.propertyTypeClass = propertyTypeClass;
   }
 
 }

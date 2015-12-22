@@ -222,13 +222,24 @@ public abstract class EmgrFactory<E extends IEmgr<?>>
    */
   public EntityManagerFactory createEntityManagerFactory(String unitName)
   {
+    Map<String, Object> lsMap = getInitEntityManagerFactoryProperties();
+    EntityManagerFactory emf = Persistence.createEntityManagerFactory(unitName, lsMap);
+    return emf;
+  }
+
+  /**
+   * return a modifiable Map for pass to JPA Persistence EntityManagerFactory creation.
+   *
+   * @return the inits the entity manager factory properties
+   */
+  protected Map<String, Object> getInitEntityManagerFactoryProperties()
+  {
     LocalSettings ls = LocalSettings.get();
     Map<String, Object> lsMap = new HashMap<String, Object>();
     for (Map.Entry<String, String> me : ls.getMap().entrySet()) {
       lsMap.put(me.getKey(), me.getValue());
     }
-    EntityManagerFactory emf = Persistence.createEntityManagerFactory(unitName, lsMap);
-    return emf;
+    return lsMap;
   }
 
   /**
