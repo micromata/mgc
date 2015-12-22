@@ -325,9 +325,9 @@ public class LocalSettings
     for (Object k : props.keySet()) {
       String key = (String) k;
       map.put(key, props.getProperty(key));
-      if (log.isDebugEnabled() == true) {
-        log.debug("LC set from env: " + key + "=" + props.getProperty(key));
-      }
+      //      if (log.isDebugEnabled() == true) {
+      //        log.debug("LC set from env: " + key + "=" + props.getProperty(key));
+      //      }
     }
   }
 
