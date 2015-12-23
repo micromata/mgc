@@ -61,7 +61,7 @@ public abstract class HistoryMasterBaseDO<T extends HistoryMasterBaseDO<?, ?>, P
    */
   @Override
   @Enumerated(EnumType.STRING)
-  @Column(name = "ENTITY_OPTYPE")
+  @Column(name = "ENTITY_OPTYPE", length = 32)
   public EntityOpType getEntityOpType()
   {
     return entityOpType;
@@ -83,7 +83,7 @@ public abstract class HistoryMasterBaseDO<T extends HistoryMasterBaseDO<?, ?>, P
    * @return the entity name
    */
   @Override
-  @Column(name = "ENTITY_NAME", length = 64, nullable = false)
+  @Column(name = "ENTITY_NAME", length = 255, nullable = false)
   public String getEntityName()
   {
     return entityName;
