@@ -17,6 +17,7 @@ import javax.persistence.Column;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.EntityType;
@@ -202,7 +203,16 @@ public class MetaInfoUtils
         ret.getColumns().put(colm.getName(), colm);
       }
     }
-
+    /// EntityType.getName() is not correct.
+    Table[] tabs = mt.getJavaType().getAnnotationsByType(Table.class);
+    if (tabs != null && tabs.length > 0) {
+      for (Table tab : tabs) {
+        if (StringUtils.isNotBlank(tab.name()) == true) {
+          ret.setDatabaseName(tab.name());
+          break;
+        }
+      }
+    }
     return ret;
   }
 
