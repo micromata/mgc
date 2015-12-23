@@ -3,6 +3,8 @@ package de.micromata.genome.jpa.metainf;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.Id;
+
 /**
  * Meta data for an entity.
  * 
@@ -36,6 +38,17 @@ public class EntityMetadataBean extends EmgrDbElementBean implements EntityMetad
       return ret;
     }
     throw new JpaMetadataColumnNotFoundException("Metadata column not found" + getJavaType().getName() + "." + name);
+  }
+
+  @Override
+  public ColumnMetadata getIdColumn()
+  {
+    for (ColumnMetadata col : columns.values()) {
+      if (col.findAnnoation(Id.class) != null) {
+        return col;
+      }
+    }
+    throw new JpaMetadataColumnNotFoundException("Id column not found" + getJavaType().getName());
   }
 
   @Override

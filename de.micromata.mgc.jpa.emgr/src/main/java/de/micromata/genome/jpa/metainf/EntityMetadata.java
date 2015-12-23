@@ -28,9 +28,18 @@ public interface EntityMetadata extends EmgrDbElement
   ColumnMetadata getColumn(String name) throws JpaMetadataColumnNotFoundException;
 
   /**
+   * Gets the Id column.
+   *
+   * @return the id column
+   * @throws JpaMetadataColumnNotFoundException the jpa metadata column not found exception
+   */
+  ColumnMetadata getIdColumn() throws JpaMetadataColumnNotFoundException;
+
+  /**
    * Gets the columns.
    *
    * @return the columns
    */
   Map<String, ColumnMetadata> getColumns();
+
 }
