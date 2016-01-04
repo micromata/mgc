@@ -1,7 +1,6 @@
 package de.micromata.genome.jpa;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -863,18 +862,6 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
       rec.setDeleted(false);
     }
     return res > 0;
-  }
-
-  /**
-   * Insert.
-   * 
-   * @param records the records
-   */
-  public void insert(Collection<? extends DbRecord<?>> records)
-  {
-    for (DbRecord<?> rec : records) {
-      insert(rec);
-    }
   }
 
   @Override

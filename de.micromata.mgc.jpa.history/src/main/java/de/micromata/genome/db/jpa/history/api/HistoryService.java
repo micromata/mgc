@@ -135,4 +135,12 @@ public interface HistoryService
    */
   HistoryPropertyConverter getPropertyConverter(IEmgr<?> emgr, Object entity, ColumnMetadata pd);
 
+  /**
+   * Checks if an entity has history.
+   *
+   * @param entityClass the entity class
+   * @return true, if successful
+   */
+  boolean hasHistory(Class<?> entityClass);
+
 }

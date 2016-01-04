@@ -138,7 +138,7 @@ public class JpaMetadataRepostory
    */
   public boolean isKnownEntity(Class<?> clazz)
   {
-    return entities.get(clazz) != null;
+    return entities.containsKey(clazz);
   }
 
   /**

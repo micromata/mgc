@@ -470,4 +470,10 @@ public class HistoryServiceImpl implements HistoryService
     return new SimplePropertyConverter();
   }
 
+  @Override
+  public boolean hasHistory(Class<?> entityClass)
+  {
+    List<WithHistory> whl = ClassUtils.findClassAnnotations(entityClass, WithHistory.class);
+    return whl.isEmpty() == false;
+  }
 }
