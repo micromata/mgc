@@ -739,19 +739,6 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
   }
 
   /**
-   * For version columns, returns the current user id.
-   * 
-   * Delegates to UserDAO by default.
-   * 
-   * @return the short form of a user name.
-   */
-  protected String getCurrentUserName()
-  {
-    // TODO overwrite this
-    return "anon";
-  }
-
-  /**
    * Identity hex.
    * 
    * @param o the o
@@ -988,7 +975,6 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
           update(event.getTarget());
           event.setResult(status);
         });
-    // TODO RRK pass result.
     invokeEvent(
         new EmgrAfterCopyForUpdateEvent(this, tevent.getIface(), tevent.getTarget(), tevent.getSource(), overwrite));
     return tevent.getResult();

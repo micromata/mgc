@@ -99,10 +99,7 @@ public class EmgrPropertyUtils
         if (pd.getReadMethod() == null || pd.getWriteMethod() == null) {
           continue;
         }
-        // TODO RK test only
-        //        if (isBaseTypeOrEnum(pd.getPropertyType()) == false) {
-        //          continue;
-        //        }
+
         if (pd.getReadMethod().getAnnotation(Transient.class) != null) {
           continue;
         }
