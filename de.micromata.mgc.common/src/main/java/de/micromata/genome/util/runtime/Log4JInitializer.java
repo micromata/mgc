@@ -50,7 +50,7 @@ public class Log4JInitializer
   {
     LocalSettings ls = LocalSettings.get();
     File log4jfile = new File(ls.get(LOG4J_PROPERTY_FILE, LOG4J_PROPERTY_FILE));
-    if (log4jfile.canRead() == true) {
+    if (log4jfile.exists() == true && log4jfile.canRead() == true) {
       return initViaFile(log4jfile);
     }
 
@@ -95,7 +95,7 @@ public class Log4JInitializer
     }
     String nname = name.substring(0, lidx) + "-dev" + name.substring(lidx);
     File nf = new File(dir, nname);
-    if (nf.canRead() == true) {
+    if (nf.exists() == true && nf.canRead() == true) {
       return nf;
     }
     return nf;
