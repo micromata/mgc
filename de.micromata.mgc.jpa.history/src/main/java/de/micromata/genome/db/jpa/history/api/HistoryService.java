@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+import de.micromata.genome.db.jpa.history.entities.EntityOpType;
 import de.micromata.genome.db.jpa.history.entities.HistoryMasterBaseDO;
 import de.micromata.genome.jpa.DbRecord;
 import de.micromata.genome.jpa.EmgrFactory;
@@ -17,10 +18,11 @@ import de.micromata.genome.jpa.metainf.ColumnMetadata;
  */
 public interface HistoryService
 {
+
   /**
    * The entity class. The entity class must provide default constructor.
-   * 
-   * @return
+   *
+   * @return the history master class
    */
   Class<? extends HistoryMasterBaseDO<?, ?>> getHistoryMasterClass();
 
@@ -35,8 +37,8 @@ public interface HistoryService
   /**
    * Should be called while initializing EmgrFactory in overwritten
    * de.micromata.genome.jpa.EmgrFactory.registerEvents().
-   * 
-   * @param emgrFactory
+   *
+   * @param emgrFactory the emgr factory
    */
   void registerStandardHistoryPropertyConverter(EmgrFactory<?> emgrFactory);
 
@@ -129,6 +131,7 @@ public interface HistoryService
   /**
    * Gets the property converter.
    *
+   * @param emgr the emgr
    * @param entity the entity
    * @param pd the pd
    * @return the property converter
@@ -142,5 +145,17 @@ public interface HistoryService
    * @return true, if successful
    */
   boolean hasHistory(Class<?> entityClass);
+
+  /**
+   * Internal on mark deleted.
+   *
+   * @param emgr the emgr
+   * @param whanots the whanots
+   * @param name the name
+   * @param entPk the ent pk
+   * @param ent the ent
+   */
+  void internalOnMarkUnmarkDeleted(IEmgr<?> emgr, EntityOpType opType, List<WithHistory> whanots, String name,
+      Serializable entPk, Object ent);
 
 }

@@ -76,6 +76,7 @@ public class HistoryServiceImpl implements HistoryService
     //    emgrFactory.getEventFactory().registerEvent(new HistoryUpdateEventHandler());
     emgrFactory.getEventFactory().registerEvent(new HistoryUpdateCopyFilterEventListener());
     emgrFactory.getEventFactory().registerEvent(new HistoryEmgrAfterInsertedEventHandler());
+    emgrFactory.getEventFactory().registerEvent(new HistoryEmgrMarkDeletedCriteriaUpdateFilterEventHandler());
   }
 
   @Override
@@ -219,6 +220,26 @@ public class HistoryServiceImpl implements HistoryService
     if (hm.getAttributeKeys().isEmpty() == true) {
       return;
     }
+    insert(emgr, hm);
+  }
+
+  @Override
+  public void internalOnMarkUnmarkDeleted(IEmgr<?> emgr, EntityOpType opType, List<WithHistory> whanots, String name,
+      Serializable entPk, Object ent)
+  {
+    HistoryMasterBaseDO<?, ?> hm = createHistoryMaster();
+    hm.setEntityOpType(opType);
+    hm.setEntityId(castToLong(entPk));
+    hm.setEntityName(name);
+    DiffEntry de = new DiffEntry();
+    de.setPropertyName("deleted");
+    String oldVype = opType == EntityOpType.Deleted ? "false" : "true";
+    String newVype = opType != EntityOpType.Deleted ? "false" : "true";
+
+    de.setOldProp(new HistProp("deleted", "boolean", oldVype));
+    de.setNewProp(new HistProp("deleted", "boolean", newVype));
+    de.setPropertyOpType(PropertyOpType.Update);
+    putHistProp(hm, de);
     insert(emgr, hm);
   }
 
