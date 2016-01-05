@@ -443,6 +443,9 @@ public abstract class EmgrFactory<E extends IEmgr<?>>
   public String getCurrentUserId()
   {
     String user = LoggingServiceManager.get().getLoggingContextService().getCurrentUserName();
+    if (StringUtils.isBlank(user) == true) {
+      user = "anon";
+    }
     return user;
   }
 
