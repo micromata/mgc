@@ -76,6 +76,21 @@ public interface HistoryService
   void internalOnInsert(IEmgr<?> emgr, List<WithHistory> whanot, String entityName, Serializable entityPk, Object ent);
 
   /**
+   * Internal on mark deleted.
+   *
+   * @param emgr the emgr
+   * @param whanots the whanots
+   * @param name the name
+   * @param entPk the ent pk
+   * @param ent the ent
+   */
+  void internalOnMarkUnmarkDeleted(IEmgr<?> emgr, EntityOpType opType, List<WithHistory> whanots, String name,
+      Serializable entPk, Object ent);
+
+  void insertManualEntry(IEmgr<?> emgr, EntityOpType opType, String entityName, Serializable entPk, String user,
+      String property, String propertyType, String oldValue, String newValue);
+
+  /**
    * Internal API to find entity with history. If return is empty, no history should be done for this entity.
    *
    * @param entity the entity
@@ -145,17 +160,5 @@ public interface HistoryService
    * @return true, if successful
    */
   boolean hasHistory(Class<?> entityClass);
-
-  /**
-   * Internal on mark deleted.
-   *
-   * @param emgr the emgr
-   * @param whanots the whanots
-   * @param name the name
-   * @param entPk the ent pk
-   * @param ent the ent
-   */
-  void internalOnMarkUnmarkDeleted(IEmgr<?> emgr, EntityOpType opType, List<WithHistory> whanots, String name,
-      Serializable entPk, Object ent);
 
 }

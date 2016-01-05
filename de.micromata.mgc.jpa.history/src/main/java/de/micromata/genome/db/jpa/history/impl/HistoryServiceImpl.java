@@ -243,6 +243,24 @@ public class HistoryServiceImpl implements HistoryService
     insert(emgr, hm);
   }
 
+  @Override
+  public void insertManualEntry(IEmgr<?> emgr, EntityOpType opType, String entityName, Serializable entPk, String user,
+      String property, String propertyType, String oldValue, String newValue)
+  {
+    HistoryMasterBaseDO<?, ?> hm = createHistoryMaster();
+    hm.setEntityOpType(opType);
+    hm.setEntityId(castToLong(entPk));
+    hm.setEntityName(entityName);
+    DiffEntry de = new DiffEntry();
+    de.setPropertyName(property);
+
+    de.setOldProp(new HistProp(property, propertyType, oldValue));
+    de.setNewProp(new HistProp(property, propertyType, newValue));
+    de.setPropertyOpType(PropertyOpType.Update);
+    putHistProp(hm, de);
+    insert(emgr, hm);
+  }
+
   private void putHistProp(HistoryMasterBaseDO<?, ?> hm, DiffEntry de)
   {
     hm.putAttribute(de.getPropertyName() + OP_SUFFIX, de.getPropertyOpType().name());
