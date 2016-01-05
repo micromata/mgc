@@ -48,6 +48,9 @@ public class TimeableListFieldBridge implements FieldBridge
         }
         Field field = new StringField(prefix + rk, svalue, TabAttrFieldBridge.DEFAULT_STORE);
         document.add(field);
+
+        field = new StringField(rk, svalue, TabAttrFieldBridge.DEFAULT_STORE);
+        document.add(field);
       }
     }
   }

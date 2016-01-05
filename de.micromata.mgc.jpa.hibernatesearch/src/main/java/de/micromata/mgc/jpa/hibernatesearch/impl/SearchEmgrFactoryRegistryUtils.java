@@ -3,6 +3,7 @@ package de.micromata.mgc.jpa.hibernatesearch.impl;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
@@ -18,7 +19,10 @@ import de.micromata.genome.jpa.EmgrFactory;
 import de.micromata.genome.jpa.metainf.ColumnMetadata;
 import de.micromata.genome.jpa.metainf.EntityMetadata;
 import de.micromata.genome.jpa.metainf.JpaMetadataRepostory;
+import de.micromata.genome.util.bean.PrivateBeanUtils;
 import de.micromata.genome.util.runtime.ClassUtils;
+import de.micromata.mgc.jpa.hibernatesearch.api.HibernateSearchFieldInfoProvider;
+import de.micromata.mgc.jpa.hibernatesearch.api.HibernateSearchInfo;
 import de.micromata.mgc.jpa.hibernatesearch.api.SearchEmgrFactory;
 
 /**
@@ -129,7 +133,19 @@ public class SearchEmgrFactoryRegistryUtils
         }
       }
     }
+    addCustomSearchFields(ret, entm);
     return ret;
+  }
+
+  private static void addCustomSearchFields(Map<String, ColumnMetadata> ret, EntityMetadata entm)
+  {
+    List<HibernateSearchInfo> cil = ClassUtils.findClassAnnotations(entm.getJavaType(), HibernateSearchInfo.class);
+    for (HibernateSearchInfo ci : cil) {
+      HibernateSearchFieldInfoProvider fip = PrivateBeanUtils.createInstance(ci.fieldInfoProvider());
+      Map<String, ColumnMetadata> sm = fip.getAdditionallySearchFields(entm, ci.param());
+      ret.putAll(sm);
+
+    }
   }
 
   private static void addNestedSearchFields(JpaMetadataRepostory repo, ColumnMetadata masterColumn,

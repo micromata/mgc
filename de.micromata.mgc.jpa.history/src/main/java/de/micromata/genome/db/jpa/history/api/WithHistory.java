@@ -24,20 +24,27 @@ public @interface WithHistory {
    *
    * @return the class<? extends history property provider>[]
    */
-  Class<? extends HistoryPropertyProvider>[]propertyProvider() default { DefaultHistoryPropertyProvider.class };
+  Class<? extends HistoryPropertyProvider>[] propertyProvider() default { DefaultHistoryPropertyProvider.class };
 
   /**
    * List of properties names not create history entries.
    *
    * @return the string[]
    */
-  String[]noHistoryProperties() default {};
+  String[] noHistoryProperties() default {};
 
   /**
    * List of properties, which should make history, even it is in noHistoryProperties.
    *
    * @return the string[]
    */
-  String[]forceHistoryProperties() default {};
+  String[] forceHistoryProperties() default {};
+
+  /**
+   * A class, which have nested history entities.
+   * 
+   * @return
+   */
+  Class<?>[] nestedEntities() default {};
 
 }

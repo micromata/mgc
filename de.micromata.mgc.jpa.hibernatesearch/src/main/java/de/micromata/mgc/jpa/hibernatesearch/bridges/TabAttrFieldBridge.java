@@ -3,6 +3,7 @@ package de.micromata.mgc.jpa.hibernatesearch.bridges;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -49,11 +50,12 @@ public class TabAttrFieldBridge implements FieldBridge, MetadataProvidingFieldBr
     for (Map.Entry me : mes) {
       if ((me.getKey() instanceof String) == false || (me.getValue() instanceof JpaTabAttrBaseDO) == false) {
         LOG.error("Bridge to incompatible type: " + me.getKey() + "=" + me.getValue());
-
+        continue;
       }
       String key = (String) me.getKey();
       JpaTabAttrBaseDO<?, ?> attr = (JpaTabAttrBaseDO<?, ?>) me.getValue();
       String svalue = attr.getStringData();
+      svalue = StringUtils.defaultString(svalue);
       Field field = new StringField(key, svalue, DEFAULT_STORE);
       document.add(field);
       field = new StringField("ALL", svalue, DEFAULT_STORE);
