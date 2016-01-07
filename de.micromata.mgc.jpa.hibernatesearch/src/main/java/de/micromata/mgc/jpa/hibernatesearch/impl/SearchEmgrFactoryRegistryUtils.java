@@ -112,7 +112,6 @@ public class SearchEmgrFactoryRegistryUtils
             "Cannot find nested index type: " + targetent.getJavaType() + " for "
                 + sem.getEntityMetadata().getJavaType().getName() + "." + name);
       }
-      resolveEmbeddedEntityFields(emgr, entitiesWithSearchFields, nsem);
       int maxDepth = nscm.getIndexEmbedded().depth();
       int curDepth = 0;
       String prefix = name;
