@@ -14,6 +14,7 @@ import de.micromata.mgc.jpa.hibernatesearch.api.SearchEmgrFactory;
 import de.micromata.mgc.jpa.hibernatesearch.events.SearchEmgrReindexEventFilterEvent;
 
 /**
+ * Standard implementation of the Emgr with Hibernate Search.
  * 
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *

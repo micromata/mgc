@@ -7,7 +7,8 @@ import de.micromata.genome.util.bean.AttrGetter;
 import de.micromata.genome.util.bean.AttrSetter;
 
 /**
- * The Interface ColumnMetadata.
+ * Provides Information for one JPA column. Also provides convience getter/setter and all annotation on fields and
+ * getter methods.
  *
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  */

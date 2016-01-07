@@ -43,17 +43,17 @@ public abstract class SearchEmgrFactory<EMGR extends ISearchEmgr<?>>extends Emgr
   @SuppressWarnings("unchecked")
   public Map<String, SearchColumnMetadata> getSearchFieldsForEntity(Class<?> entityClass)
   {
-    Map<Class<?>, Map<String, SearchColumnMetadata>> sfm = (Map<Class<?>, Map<String, SearchColumnMetadata>>) getMetadataRepository()
+    Map<Class<?>, SearchEntityMetadata> sfm = (Map<Class<?>, SearchEntityMetadata>) getMetadataRepository()
         .getServiceCustomAttributes()
         .get(REPO_ENTITY_SEARCHFIELDS);
     if (sfm == null) {
       return Collections.emptyMap();
     }
-    Map<String, SearchColumnMetadata> esf = sfm.get(entityClass);
+    SearchEntityMetadata esf = sfm.get(entityClass);
     if (esf == null) {
       return Collections.emptyMap();
     }
-    return esf;
+    return esf.getColumns();
   }
 
   /**

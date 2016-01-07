@@ -9,7 +9,7 @@ import de.micromata.mgc.jpa.hibernatesearch.api.SearchColumnMetadata;
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
  */
-public class SearchColumnMetadataBean implements SearchColumnMetadata
+public class SearchColumnMetadataBean implements SearchColumnMetadata, Cloneable
 {
   private String name;
 
@@ -34,6 +34,17 @@ public class SearchColumnMetadataBean implements SearchColumnMetadata
     super();
     this.name = name;
     this.columnMetadata = columnMetadata;
+  }
+
+  public SearchColumnMetadataBean createCopy()
+  {
+    SearchColumnMetadataBean nc = new SearchColumnMetadataBean(name, columnMetadata);
+    nc.setAnalyzed(isAnalyzed());
+    nc.setIdField(isIdField());
+    nc.setIndexed(isIndexed());
+    nc.setIndexType(getIndexType());
+    nc.setStored(isStored());
+    return nc;
   }
 
   @Override
@@ -102,6 +113,7 @@ public class SearchColumnMetadataBean implements SearchColumnMetadata
     this.analyzed = analyzed;
   }
 
+  @Override
   public boolean isIdField()
   {
     return idField;

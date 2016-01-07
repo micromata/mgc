@@ -18,25 +18,29 @@ public class HibernateSearchComplexTest extends HibernateSearchTestBase
 
       MyEntityDO ent = new MyEntityDO();
       ent.setName("Roger Kommer THISNAME");
+      //      emf.runInTrans((emgr) -> emgr.insertAttached(ent));
+
       MyNestedEntity oent = new MyNestedEntity();
-      oent.setName("Parent Nested PANESTON");
-      oent.setComment("Parent Comment PANESTOC");
+      oent.setNestedName("Parent Nested PANESTON");
+      oent.setNestedComment("Parent Comment PANESTOC");
       emf.runInTrans((emgr) -> emgr.insertAttached(oent));
+      oent.setParent(ent);
       ent.setNested(oent);
       MyNestedEntity fent = new MyNestedEntity();
-      fent.setName("FirstNested XFIRSTNESTNAME");
-      fent.setComment("First Nested Comment XFIRSTNESTCOMMENT");
+      fent.setNestedName("FirstNested XFIRSTNESTNAME");
+      fent.setNestedComment("First Nested Comment XFIRSTNESTCOMMENT");
       //      emf.runInTrans((emgr) -> emgr.insertAttached(fent));
-
+      fent.setParent(ent);
       ent.getAssignedNested().add(fent);
       MyNestedEntity sent = new MyNestedEntity();
-      sent.setName("SecondNested YSECONDNESTNAME");
-      sent.setComment("Second Nested Comment YSECONDNESTCOMMENT");
+      sent.setNestedName("SecondNested YSECONDNESTNAME");
+      sent.setNestedComment("Second Nested Comment YSECONDNESTCOMMENT");
+      sent.setParent(ent);
       ent.getAssignedNested().add(sent);
       //      emf.runInTrans((emgr) -> emgr.insertAttached(sent));
 
       emf.runInTrans((emgr) -> {
-        emgr.insert(ent);
+        emgr.insertAttached(ent);
         return null;
       });
       emf.runWoTrans((emgr) -> {
@@ -57,13 +61,13 @@ public class HibernateSearchComplexTest extends HibernateSearchTestBase
         Assert.assertEquals(1, emgr.searchAttached("THISNAME", MyEntityDO.class, "name").size());
         Assert.assertEquals(0, emgr.searchAttached("THISNAME", MyEntityDO.class, "loginName").size());
 
-        Assert.assertEquals(1, emgr.searchAttached("PANESTON", MyEntityDO.class, "nested.name").size());
+        Assert.assertEquals(1, emgr.searchAttached("PANESTON", MyEntityDO.class, "nested.nestedName").size());
         Assert.assertEquals(1,
-            emgr.searchAttached("YSECONDNESTCOMMENT", MyEntityDO.class, "assignedNested.comment").size());
+            emgr.searchAttached("YSECONDNESTCOMMENT", MyEntityDO.class, "assignedNested.nestedComment").size());
         Assert.assertEquals(1,
-            emgr.searchAttached("XFIRSTNESTCOMMENT", MyEntityDO.class, "assignedNested.comment").size());
+            emgr.searchAttached("XFIRSTNESTCOMMENT", MyEntityDO.class, "assignedNested.nestedComment").size());
         Assert.assertEquals(0,
-            emgr.searchAttached("XFIRSTNESTCOMMENT", MyEntityDO.class, "assignedNested.name").size());
+            emgr.searchAttached("XFIRSTNESTCOMMENT", MyEntityDO.class, "assignedNested.nestedName").size());
         return null;
       });
     } catch (RuntimeException ex) {

@@ -3,12 +3,17 @@ package de.micromata.mgc.jpa.hibernatesearch.entities;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.hibernate.search.annotations.Analyze;
+import org.hibernate.search.annotations.ContainedIn;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.IndexedEmbedded;
 import org.hibernate.search.annotations.Store;
 
 import de.micromata.genome.jpa.StdRecordDO;
@@ -17,16 +22,22 @@ import de.micromata.genome.jpa.StdRecordDO;
 @Indexed
 public class MyNestedEntity extends StdRecordDO<Long>
 {
-  @Field(index = Index.YES, analyze = Analyze.YES, store = Store.NO)
-  private String name;
+  @ContainedIn
+  private MyEntityDO parent;
 
   @Field(index = Index.YES, analyze = Analyze.YES, store = Store.NO)
-  private String comment;
+  private String nestedName;
+
+  @Field(index = Index.YES, analyze = Analyze.YES, store = Store.NO)
+  private String nestedComment;
+
+  @IndexedEmbedded(depth = 1)
+  private MyNestedNestedEntity nestedNested;
 
   @Override
   public int hashCode()
   {
-    return ObjectUtils.hashCode(name);
+    return ObjectUtils.hashCode(nestedName);
   }
 
   @Override
@@ -36,7 +47,7 @@ public class MyNestedEntity extends StdRecordDO<Long>
       return false;
     }
     MyNestedEntity other = (MyNestedEntity) obj;
-    return ObjectUtils.equals(name, other.getName());
+    return ObjectUtils.equals(nestedName, other.getNestedName());
   }
 
   @Id
@@ -47,24 +58,48 @@ public class MyNestedEntity extends StdRecordDO<Long>
     return pk;
   }
 
-  public String getName()
+  @ManyToOne(optional = true)
+  @JoinColumn(name = "parent", referencedColumnName = "pk")
+  public MyEntityDO getParent()
   {
-    return name;
+    return parent;
   }
 
-  public void setName(String name)
+  @OneToOne(optional = true)
+  @JoinColumn(name = "nestednested", referencedColumnName = "pk")
+  public MyNestedNestedEntity getNestedNested()
   {
-    this.name = name;
+    return nestedNested;
   }
 
-  public String getComment()
+  public void setNestedNested(MyNestedNestedEntity nestedNested)
   {
-    return comment;
+    this.nestedNested = nestedNested;
   }
 
-  public void setComment(String comment)
+  public void setParent(MyEntityDO parent)
   {
-    this.comment = comment;
+    this.parent = parent;
+  }
+
+  public String getNestedName()
+  {
+    return nestedName;
+  }
+
+  public void setNestedName(String name)
+  {
+    this.nestedName = name;
+  }
+
+  public String getNestedComment()
+  {
+    return nestedComment;
+  }
+
+  public void setNestedComment(String comment)
+  {
+    this.nestedComment = comment;
   }
 
 }

@@ -2,14 +2,19 @@ package de.micromata.mgc.jpa.hibernatesearch.impl;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.search.annotations.Analyze;
+import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.IndexedEmbedded;
+import org.hibernate.search.annotations.SortableField;
 import org.hibernate.search.annotations.Store;
 import org.hibernate.search.metadata.FieldDescriptor;
 import org.hibernate.search.metadata.IndexedTypeDescriptor;
@@ -26,6 +31,7 @@ import de.micromata.mgc.jpa.hibernatesearch.api.HibernateSearchInfo;
 import de.micromata.mgc.jpa.hibernatesearch.api.ISearchEmgr;
 import de.micromata.mgc.jpa.hibernatesearch.api.SearchColumnMetadata;
 import de.micromata.mgc.jpa.hibernatesearch.api.SearchEmgrFactory;
+import de.micromata.mgc.jpa.hibernatesearch.api.SearchEntityMetadata;
 
 /**
  * Figure out all Search Fields from the entities.
@@ -60,91 +66,185 @@ public class SearchEmgrFactoryRegistryUtils
     emf.runWoTrans((emgr) -> {
 
       JpaMetadataRepostory repo = emf.getMetadataRepository();
-      Map<Class<?>, Map<String, SearchColumnMetadata>> entitiesWithSearchFields = new HashMap<>();
+      Map<Class<?>, SearchEntityMetadata> entitiesWithSearchFields = new HashMap<>();
       for (EntityMetadata entm : repo.getEntities().values()) {
-        Map<String, SearchColumnMetadata> sf = getSearchFields(emgr, repo, entm, Integer.MAX_VALUE);
+        SearchEntityMetadata sf = getSearchFields(emgr, repo, entm, Integer.MAX_VALUE);
         entitiesWithSearchFields.put(entm.getJavaType(), sf);
       }
+      resolveEmbeddedFields(emgr, entitiesWithSearchFields);
       repo.getServiceCustomAttributes().put(SearchEmgrFactory.REPO_ENTITY_SEARCHFIELDS, entitiesWithSearchFields);
       return null;
     });
+
   }
 
-  private static Map<String, SearchColumnMetadata> getSearchFields(ISearchEmgr<?> emgr, JpaMetadataRepostory repo,
+  private static void resolveEmbeddedFields(ISearchEmgr<?> emgr,
+      Map<Class<?>, SearchEntityMetadata> entitiesWithSearchFields)
+  {
+    for (Map.Entry<Class<?>, SearchEntityMetadata> me : entitiesWithSearchFields.entrySet()) {
+      resolveEmbeddedEntityFields(emgr, entitiesWithSearchFields, me.getValue());
+    }
+
+  }
+
+  private static void resolveEmbeddedEntityFields(ISearchEmgr<?> emgr,
+      Map<Class<?>, SearchEntityMetadata> entitiesWithSearchFields,
+      SearchEntityMetadata sem)
+  {
+    SearchEntityMetadataBean semb = (SearchEntityMetadataBean) sem;
+    if (semb.isResolved() == true) {
+      return;
+    }
+    Set<String> names = new HashSet<>(sem.getColumns().keySet());
+    for (String name : names) {
+      SearchColumnMetadata cd = sem.getColumns().get(name);
+      if ((cd instanceof NestedSearchColumnMetaBean) == false) {
+        continue;
+      }
+      NestedSearchColumnMetaBean nscm = (NestedSearchColumnMetaBean) cd;
+      if (nscm.isResolved() == true) {
+        continue;
+      }
+      EntityMetadata targetent = nscm.getColumnMetadata().getTargetEntity();
+      SearchEntityMetadata nsem = entitiesWithSearchFields.get(targetent.getJavaType());
+      if (nsem == null) {
+        throw new IllegalArgumentException(
+            "Cannot find nested index type: " + targetent.getJavaType() + " for "
+                + sem.getEntityMetadata().getJavaType().getName() + "." + name);
+      }
+      resolveEmbeddedEntityFields(emgr, entitiesWithSearchFields, nsem);
+      int maxDepth = nscm.getIndexEmbedded().depth();
+      int curDepth = 0;
+      String prefix = name;
+      addNested(entitiesWithSearchFields, sem, nsem, prefix, curDepth, maxDepth, nscm.getIndexEmbedded());
+    }
+    semb.setResolved(true);
+  }
+
+  private static boolean includeNested(String name, SearchColumnMetadata scm, IndexedEmbedded indexedEmbedded,
+      int curDepth, int maxDepth)
+  {
+    if (indexedEmbedded.includeEmbeddedObjectId() == false && scm.isIdField() == true) {
+      return false;
+    }
+    int dotcount = StringUtils.countMatches(name, ".");
+    if (dotcount > 0) {
+      return false;
+    }
+    if (ArrayUtils.isEmpty(indexedEmbedded.includePaths()) == true) {
+      return true;
+    }
+    for (String incp : indexedEmbedded.includePaths()) {
+      String[] splittet = StringUtils.split(incp, '.');
+      if (ArrayUtils.getLength(splittet) <= curDepth) {
+        continue;
+      }
+      if (splittet[curDepth].equals(name) == true) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private static void addNested(Map<Class<?>, SearchEntityMetadata> entitiesWithSearchFields,
+      SearchEntityMetadata sem, SearchEntityMetadata nsem,
+      String prefix, int curDepth, int maxDepth, IndexedEmbedded indexedEmbedded)
+  {
+    if (maxDepth < 0) {
+      return;
+    }
+    for (Map.Entry<String, SearchColumnMetadata> nc : nsem.getColumns().entrySet()) {
+      SearchColumnMetadata col = nc.getValue();
+      if (includeNested(nc.getKey(), col, indexedEmbedded, curDepth, maxDepth) == false) {
+        continue;
+      }
+      String key = nc.getKey();
+
+      String subprefix = prefix + "." + key;
+      if (col instanceof NestedSearchColumnMetaBean) {
+        if (maxDepth <= 1) {
+          continue;
+        }
+        NestedSearchColumnMetaBean nscm = (NestedSearchColumnMetaBean) col;
+        EntityMetadata targetent = nscm.getColumnMetadata().getTargetEntity();
+        SearchEntityMetadata nnscm = entitiesWithSearchFields.get(targetent.getJavaType());
+        if (nsem == null) {
+          throw new IllegalArgumentException(
+              "Cannot find nested index type: " + targetent.getJavaType() + " for " + prefix + "."
+                  + nc.getKey());
+        }
+
+        addNested(entitiesWithSearchFields, sem, nnscm, subprefix, ++curDepth, --maxDepth,
+            indexedEmbedded);
+      } else {
+        SearchColumnMetadataBean copy = ((SearchColumnMetadataBean) col).createCopy();
+        copy.setName(subprefix);
+        sem.getColumns().put(copy.getName(), copy);
+      }
+
+    }
+
+  }
+
+  private static SearchEntityMetadata getSearchFields(ISearchEmgr<?> emgr, JpaMetadataRepostory repo,
       EntityMetadata entm,
       int maxDepth)
   {
     //    if (entm.getJavaType().getName().indexOf("PfHistoryMasterDO") != -1) {
     //      System.out.println("historymaster");
     //    }
-    Map<String, SearchColumnMetadata> ret = new HashMap<>();
-    addHibernateSearchOwnFields(emgr, ret, entm);
-    addCustomSearchFields(emgr, entm, ret);
-    //    for (ColumnMetadata cm : entm.getColumns().values()) {
-    //
-    //      {
-    //        Field field = cm.findAnnoation(Field.class);
-    //        if (field != null) {
-    //          String name = field.name();
-    //          if (StringUtils.isBlank(name) == true) {
-    //            name = cm.getName();
-    //          }
-    //          ret.put(name, cm);
-    //        }
-    //      }
-    //      {
-    //        SortableField sfield = cm.findAnnoation(SortableField.class);
-    //        if (sfield != null) {
-    //          String name = sfield.forField();
-    //          if (StringUtils.isBlank(name) == true) {
-    //            name = cm.getName();
-    //          }
-    //          ret.put(name, cm);
-    //        }
-    //      }
-    //      {
-    //        Fields fields = cm.findAnnoation(Fields.class);
-    //        if (fields != null) {
-    //          for (Field field : fields.value()) {
-    //            String name = field.name();
-    //            if (StringUtils.isBlank(name) == true) {
-    //              name = cm.getName();
-    //            }
-    //            ret.put(name, cm);
-    //          }
-    //        }
-    //      }
-    //      {
-    //        SortableFields sfields = cm.findAnnoation(SortableFields.class);
-    //        if (sfields != null) {
-    //          for (SortableField field : sfields.value()) {
-    //            String name = field.forField();
-    //            if (StringUtils.isBlank(name) == true) {
-    //              name = cm.getName();
-    //            }
-    //            ret.put(name, cm);
-    //          }
-    //        }
-    //      }
-    //      {
-    //        ContainedIn ci = cm.findAnnoation(ContainedIn.class);
-    //        if (ci != null) {
-    //          IndexedEmbedded iemb = cm.findAnnoation(IndexedEmbedded.class);
-    //          if (iemb == null) {
-    //            iemb = DEFAULT_IndexedEmbedded;
-    //          }
-    //          addNestedSearchFields(emgr, repo, cm, iemb, maxDepth - 1, ret);
-    //        } else {
-    //          IndexedEmbedded iemb = cm.findAnnoation(IndexedEmbedded.class);
-    //          if (iemb != null) {
-    //            addNestedSearchFields(emgr, repo, cm, iemb, maxDepth - 1, ret);
-    //          }
-    //        }
-    //      }
-    //    }
-    //    TODO RK addCustomSearchFields(ret, entm);
+    SearchEntityMetadataBean sem = new SearchEntityMetadataBean(entm);
 
-    return ret;
+    addHibernateSearchOwnFields(emgr, sem.getColumns(), entm);
+    addAnnotationSearchFields(emgr, sem.getColumns(), entm);
+
+    addCustomSearchFields(emgr, entm, sem.getColumns());
+
+    return sem;
+  }
+
+  private static void addAnnotationSearchFields(ISearchEmgr<?> emgr, Map<String, SearchColumnMetadata> ret,
+      EntityMetadata entm)
+  {
+    for (ColumnMetadata cm : entm.getColumns().values()) {
+
+      {
+        Field field = cm.findAnnoation(Field.class);
+        if (field != null) {
+          String name = field.name();
+
+          if (StringUtils.isBlank(name) == true) {
+            name = cm.getName();
+          }
+          if (ret.containsKey(name) == true) {
+            continue;
+          }
+          LOG.warn("Found @Field not in Hibernate Search metadata: " + entm.getJavaType().getName() + "." + name);
+          SearchColumnMetadataBean scmb = new SearchColumnMetadataBean(name, cm);
+          scmb.setAnalyzed(field.analyze() == Analyze.YES);
+          scmb.setIndexed(field.index() == Index.YES);
+          scmb.setStored(field.store() == Store.YES);
+          ret.put(name, scmb);
+          SortableField sfield = cm.findAnnoation(SortableField.class);
+          if (sfield != null) {
+            // TODO RK set sortable.
+          }
+          continue;
+        }
+      }
+
+      {
+
+        IndexedEmbedded iemb = cm.findAnnoation(IndexedEmbedded.class);
+
+        if (iemb != null) {
+          NestedSearchColumnMetaBean nsc = new NestedSearchColumnMetaBean(cm.getName(), cm, iemb);
+          ret.put(cm.getName(), nsc);
+        }
+
+      }
+    }
+
   }
 
   private static void addHibernateSearchOwnFields(ISearchEmgr<?> emgr, Map<String, SearchColumnMetadata> ret,
@@ -155,12 +255,13 @@ public class SearchEmgrFactoryRegistryUtils
     if (tddesc == null) {
       return;
     }
+    Set<FieldDescriptor> fields = tddesc.getIndexedFields();
+
     for (PropertyDescriptor idesc : tddesc.getIndexedProperties()) {
       String name = idesc.getName();
       if (ret.containsKey(name) == true) {
         continue;
       }
-      System.out.println("Found index: " + entm.getJavaType().getName() + "." + name);
       ColumnMetadata coldesc = entm.findColumn(name);
 
       if (coldesc == null) {

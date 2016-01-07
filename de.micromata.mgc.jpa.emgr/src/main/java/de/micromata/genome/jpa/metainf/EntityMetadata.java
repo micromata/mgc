@@ -3,7 +3,7 @@ package de.micromata.genome.jpa.metainf;
 import java.util.Map;
 
 /**
- * The Interface EntityMetadata.
+ * Provides Information about JPA Mappings.
  *
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  */

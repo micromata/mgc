@@ -12,7 +12,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import org.hibernate.search.annotations.Analyze;
-import org.hibernate.search.annotations.ContainedIn;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
@@ -36,11 +35,9 @@ public class MyEntityDO extends StdRecordDO<Long> implements ComplexEntity
 
   private String notSearchable;
 
-  @ContainedIn
-  @IndexedEmbedded(depth = 1, includePaths = { "name" })
+  @IndexedEmbedded(depth = 2, includePaths = { "nestedName", "nestedNested.nestedNestedComment" })
   private MyNestedEntity nested;
 
-  @ContainedIn
   @IndexedEmbedded(depth = 1)
   private Set<MyNestedEntity> assignedNested = new HashSet<>();
 
