@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.IndexedEmbedded;
 import org.hibernate.search.annotations.SortableField;
 import org.hibernate.search.annotations.Store;
@@ -35,6 +36,8 @@ import de.micromata.mgc.jpa.hibernatesearch.api.SearchEntityMetadata;
 
 /**
  * Figure out all Search Fields from the entities.
+ * 
+ * TODO introduce exception for IllegalArgumentException.
  * 
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
@@ -68,6 +71,10 @@ public class SearchEmgrFactoryRegistryUtils
       JpaMetadataRepostory repo = emf.getMetadataRepository();
       Map<Class<?>, SearchEntityMetadata> entitiesWithSearchFields = new HashMap<>();
       for (EntityMetadata entm : repo.getEntities().values()) {
+        Indexed indexed = entm.getJavaType().getAnnotation(Indexed.class);
+        if (indexed == null) {
+          continue;
+        }
         SearchEntityMetadata sf = getSearchFields(emgr, repo, entm, Integer.MAX_VALUE);
         entitiesWithSearchFields.put(entm.getJavaType(), sf);
       }
@@ -152,12 +159,16 @@ public class SearchEmgrFactoryRegistryUtils
     if (maxDepth < 0) {
       return;
     }
-    for (Map.Entry<String, SearchColumnMetadata> nc : nsem.getColumns().entrySet()) {
-      SearchColumnMetadata col = nc.getValue();
-      if (includeNested(nc.getKey(), col, indexedEmbedded, curDepth, maxDepth) == false) {
+    if (curDepth > 5) {
+      throw new IllegalArgumentException(
+          "Oops, recursive definition without limit on " + sem + "." + prefix + "; limit @IndexedEmbedded(depth = 1)");
+    }
+    Set<String> propset = new HashSet<>(nsem.getColumns().keySet());
+    for (String key : propset) {
+      SearchColumnMetadata col = nsem.getColumns().get(key);
+      if (includeNested(key, col, indexedEmbedded, curDepth, maxDepth) == false) {
         continue;
       }
-      String key = nc.getKey();
 
       String subprefix = prefix + "." + key;
       if (col instanceof NestedSearchColumnMetaBean) {
@@ -167,10 +178,10 @@ public class SearchEmgrFactoryRegistryUtils
         NestedSearchColumnMetaBean nscm = (NestedSearchColumnMetaBean) col;
         EntityMetadata targetent = nscm.getColumnMetadata().getTargetEntity();
         SearchEntityMetadata nnscm = entitiesWithSearchFields.get(targetent.getJavaType());
-        if (nsem == null) {
+        if (nnscm == null) {
           throw new IllegalArgumentException(
               "Cannot find nested index type: " + targetent.getJavaType() + " for " + prefix + "."
-                  + nc.getKey());
+                  + key);
         }
 
         addNested(entitiesWithSearchFields, sem, nnscm, subprefix, ++curDepth, --maxDepth,
