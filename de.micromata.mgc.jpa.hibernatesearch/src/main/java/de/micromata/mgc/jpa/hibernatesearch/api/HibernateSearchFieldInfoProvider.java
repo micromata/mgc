@@ -2,7 +2,6 @@ package de.micromata.mgc.jpa.hibernatesearch.api;
 
 import java.util.Map;
 
-import de.micromata.genome.jpa.metainf.ColumnMetadata;
 import de.micromata.genome.jpa.metainf.EntityMetadata;
 
 /**
@@ -19,5 +18,5 @@ public interface HibernateSearchFieldInfoProvider
    * @param entityClass the entity class
    * @return the additionally search fields
    */
-  Map<String, ColumnMetadata> getAdditionallySearchFields(EntityMetadata entm, String params);
+  Map<String, SearchColumnMetadata> getAdditionallySearchFields(EntityMetadata entm, String params);
 }

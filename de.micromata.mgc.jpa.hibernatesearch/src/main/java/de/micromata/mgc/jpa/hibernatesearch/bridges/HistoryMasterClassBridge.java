@@ -15,7 +15,6 @@ import de.micromata.genome.db.jpa.history.entities.HistoryMasterBaseDO;
 /**
  * Stores the History table in hibernate search.
  * 
- * TODO RK not testes, may delete
  * 
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
@@ -30,9 +29,9 @@ public class HistoryMasterClassBridge implements MetadataProvidingFieldBridge
 
     Field field = new LongField("entityId", hm.getEntityId(), Field.Store.YES);
     document.add(field);
-    field = new StringField("entityName", hm.getEntityName(), Field.Store.NO);
+    field = new StringField("entityName", hm.getEntityName(), TabAttrFieldBridge.DEFAULT_STORE);
     document.add(field);
-    field = new LongField("modifiedAt", hm.getModifiedAt().getTime(), Field.Store.NO);
+    field = new LongField("modifiedAt", hm.getModifiedAt().getTime(), TabAttrFieldBridge.DEFAULT_STORE);
     document.add(field);
 
     for (String key : hm.getAttributeKeys()) {
@@ -40,14 +39,15 @@ public class HistoryMasterClassBridge implements MetadataProvidingFieldBridge
       if (StringUtils.isBlank(svalue) == true) {
         continue;
       }
-      field = new StringField(key, svalue, Field.Store.NO);
-      document.add(field);
-      if (StringUtils.endsWith(key, ":nv") == true) {
-        field = new StringField("NEW_VALUE", svalue, Field.Store.NO);
-        document.add(field);
-      }
+      //      field = new StringField(key, svalue, Field.Store.NO);
+      //      document.add(field);
+      //      if (StringUtils.endsWith(key, ":nv") == true) {
+      //        field = new StringField("NEW_VALUE", svalue, Field.Store.NO);
+      //        document.add(field);
+      //      }
       if (StringUtils.endsWith(key, ":ov") == true) {
-        field = new StringField("OLD_VALUE", svalue, Field.Store.NO);
+        field = new StringField("oldValue", svalue, TabAttrFieldBridge.DEFAULT_STORE);
+
         document.add(field);
       }
     }
@@ -56,11 +56,12 @@ public class HistoryMasterClassBridge implements MetadataProvidingFieldBridge
   @Override
   public void configureFieldMetadata(String name, FieldMetadataBuilder builder)
   {
-    builder.field("entityId", FieldType.LONG)
-        .field("entityName", FieldType.STRING)
-        .field("modifiedAt", FieldType.LONG)
-        .field("NEW_VALUE", FieldType.STRING)
-        .field("OLD_VALUE", FieldType.STRING);
+    // does not have a effect on meta info?!?
+    builder.field(name + "entityId", FieldType.LONG)
+        .field(name + "entityName", FieldType.STRING).sortable(true)
+        .field(name + "modifiedAt", FieldType.LONG).sortable(true)
+        //        .field("NEW_VALUE", FieldType.STRING)
+        .field(name + "oldValue", FieldType.STRING).sortable(true);
 
   }
 

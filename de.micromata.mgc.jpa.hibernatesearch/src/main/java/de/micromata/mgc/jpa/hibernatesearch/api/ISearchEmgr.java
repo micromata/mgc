@@ -23,7 +23,7 @@ public interface ISearchEmgr<EMGR extends ISearchEmgr<?>>extends IEmgr<EMGR>
 
   <T> List<T> searchWildcardAttached(String expression, Class<T> type, String... fields);
 
-  org.hibernate.search.query.dsl.QueryBuilder getFullTexteSearchQueryBuilder();
+  //  org.hibernate.search.query.dsl.QueryBuilder getFullTexteSearchQueryBuilder();
 
   <T> List<T> searchAttached(org.apache.lucene.search.Query luceneQuery, Class<T> type);
 

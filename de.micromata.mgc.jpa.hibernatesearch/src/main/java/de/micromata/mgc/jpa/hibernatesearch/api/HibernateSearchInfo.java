@@ -3,6 +3,8 @@ package de.micromata.mgc.jpa.hibernatesearch.api;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+import de.micromata.mgc.jpa.hibernatesearch.impl.ListHibernateFieldInfoProvider;
+
 /**
  * Additionally information for an entity supporting hibernate search.
  * 
@@ -12,7 +14,7 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface HibernateSearchInfo {
 
-  Class<? extends HibernateSearchFieldInfoProvider> fieldInfoProvider();
+  Class<? extends HibernateSearchFieldInfoProvider> fieldInfoProvider() default ListHibernateFieldInfoProvider.class;
 
   /**
    * String encoded parameter passed to HibernateSearchFieldInfoProvider.

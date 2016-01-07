@@ -1,16 +1,14 @@
 package de.micromata.mgc.jpa.hibernatesearch.impl;
 
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 
 import org.hibernate.search.jpa.FullTextEntityManager;
-import org.hibernate.search.query.dsl.QueryBuilder;
 
 import de.micromata.genome.jpa.Emgr;
 import de.micromata.genome.jpa.events.impl.EmgrEventQuery;
-import de.micromata.genome.jpa.metainf.ColumnMetadata;
 import de.micromata.mgc.jpa.hibernatesearch.api.ISearchEmgr;
 import de.micromata.mgc.jpa.hibernatesearch.api.SearchEmgrFactory;
 import de.micromata.mgc.jpa.hibernatesearch.events.SearchEmgrReindexEventFilterEvent;
@@ -30,23 +28,17 @@ public class SearchEmgr<EMGR extends SearchEmgr<?>>extends Emgr<EMGR> implements
 
   }
 
-  @Override
-  public QueryBuilder getFullTexteSearchQueryBuilder()
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
+  //  @Override
+  //  public QueryBuilder getFullTexteSearchQueryBuilder()
+  //  {
+  //    // TODO Auto-generated method stub
+  //    return null;
+  //  }
 
   private String[] getDefaultSearchFields(Class<?> type)
   {
-    Map<String, ColumnMetadata> fm = ((SearchEmgrFactory<?>) getEmgrFactory()).getSearchableFieldsForEntity(type);
-    String[] sfa = new String[fm.size()];
-    int idx = 0;
-    for (String fn : fm.keySet()) {
-      sfa[idx] = fn;
-      ++idx;
-    }
-    return sfa;
+    Set<String> ret = ((SearchEmgrFactory<?>) getEmgrFactory()).getSearchableTextFieldsForEntity(type);
+    return ret.toArray(new String[] {});
   }
 
   @SuppressWarnings("unchecked")
