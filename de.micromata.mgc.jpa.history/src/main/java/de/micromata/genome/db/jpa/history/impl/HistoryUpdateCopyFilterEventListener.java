@@ -41,7 +41,7 @@ public class HistoryUpdateCopyFilterEventListener implements EmgrEventHandler<Em
     event.nextFilter();
 
     Map<String, HistProp> nprops = historyService.internalGetPropertiesForHistory(event.getEmgr(), whanots,
-        event.getSource());
+        event.getTarget());
     historyService.internalOnUpdate(event.getEmgr(), entClass.getName(), entPk, oprops, nprops);
   }
 }
