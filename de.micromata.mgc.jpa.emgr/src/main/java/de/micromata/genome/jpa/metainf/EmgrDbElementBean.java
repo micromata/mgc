@@ -2,6 +2,8 @@ package de.micromata.genome.jpa.metainf;
 
 /**
  * The Class EmgrDbElementBean.
+ * 
+ * equals/hashCode is the underlying javaType.
  *
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  */
@@ -17,6 +19,21 @@ public class EmgrDbElementBean implements EmgrDbElement
    * The database name.
    */
   private String databaseName;
+
+  @Override
+  public int hashCode()
+  {
+    return javaType.hashCode();
+  }
+
+  @Override
+  public boolean equals(Object obj)
+  {
+    if ((obj instanceof EmgrDbElementBean) == false) {
+      return false;
+    }
+    return javaType.equals(((EmgrDbElementBean) obj).javaType);
+  }
 
   /**
    * {@inheritDoc}

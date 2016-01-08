@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 
 import org.apache.log4j.Logger;
@@ -53,17 +55,37 @@ public class JpaSchemaServiceImpl implements JpaSchemaService
   {
     emfac.runInTrans((emgr) -> {
       List<Object> allEntries = new ArrayList<Object>();
-      for (EntityMetadata em : emfac.getMetadataRepository().getTableEntities()) {
-        List<?> entl = emgr.selectAllAttached(em.getJavaType());
-        LOG.info("Delete from " + em + ": " + entl.size());
-        allEntries.addAll(entl);
+      List<EntityMetadata> sortedTables = emfac.getMetadataRepository().getTableEntities();
+      //      Set<EntityMetadata> tables = new HashSet<>(emfac.getMetadataRepository().getTableEntities());
+      //      Collections.reverse(tables);
+      //      List<EntityMetadata> tablesToDelete = new ArrayList<>(tables);
+      LOG.info("Delete from tables: " + sortedTables);
+      EntityManager em = emgr.getEntityManager();
+      for (EntityMetadata table : sortedTables) {
+        //        selectDeleteTablesRec(em, table, tables, allEntries);
+        List<Object> entList = em.createQuery("select e from " + table.getJavaType().getName() + " e").getResultList();
+        LOG.info("Delete " + table + ": " + entList.size());
+        allEntries.addAll(entList);
       }
       for (Object ent : allEntries) {
-        emgr.getEntityManager().remove(ent);
+        em.remove(ent);
       }
-      emgr.getEntityManager().flush();
+      em.flush();
       LOG.info("Delete overall: " + allEntries.size());
       return null;
     });
+  }
+
+  private void selectDeleteTablesRec(EntityManager em, EntityMetadata table, Set<EntityMetadata> tables,
+      List<Object> toDeleteEntities)
+  {
+    if (tables.contains(table) == false) {
+      return;
+    }
+    tables.remove(table);
+    for (EntityMetadata nt : table.getReferencedBy()) {
+      selectDeleteTablesRec(em, nt, tables, toDeleteEntities);
+    }
+    toDeleteEntities.addAll(em.createQuery("select e from " + table.getJavaType().getName() + " e").getResultList());
   }
 }

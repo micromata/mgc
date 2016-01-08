@@ -1,6 +1,7 @@
 package de.micromata.genome.jpa.metainf;
 
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Provides Information about JPA Mappings for one entity.
@@ -49,4 +50,7 @@ public interface EntityMetadata extends EmgrDbElement
    */
   Map<String, ColumnMetadata> getColumns();
 
+  public Set<EntityMetadata> getReferencedBy();
+
+  public Set<EntityMetadata> getReferencesTo();
 }

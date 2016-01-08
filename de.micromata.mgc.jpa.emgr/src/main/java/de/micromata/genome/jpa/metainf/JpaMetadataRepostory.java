@@ -31,6 +31,10 @@ public class JpaMetadataRepostory
    * time, so that access to the map is not forced to be synchronized.
    */
   private Map<Class<?>, Object> serviceCustomAttributes = new HashMap<>();
+  /**
+   * Entities, representing tables. Sorted by dependency
+   */
+  private List<EntityMetadata> tableEntities = new ArrayList<>();
 
   public Map<Class<?>, Object> getServiceCustomAttributes()
   {
@@ -49,18 +53,15 @@ public class JpaMetadataRepostory
 
   /**
    * Get a list of all table entities.
+   * 
+   * The Tables are sorted by dependencies. Tables with less deps are first.
    *
    * @return the table entities
    */
   public List<EntityMetadata> getTableEntities()
   {
-    List<EntityMetadata> ret = new ArrayList<>(entities.size());
-    for (EntityMetadata em : entities.values()) {
-      if (em.isTableEntity() == true) {
-        ret.add(em);
-      }
-    }
-    return ret;
+
+    return tableEntities;
   }
 
   /**
@@ -200,4 +201,5 @@ public class JpaMetadataRepostory
     }
     return null;
   }
+
 }

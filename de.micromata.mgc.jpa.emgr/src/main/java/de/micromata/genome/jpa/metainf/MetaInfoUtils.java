@@ -9,11 +9,14 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.Column;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -58,14 +61,50 @@ public class MetaInfoUtils
   {
     JpaMetadataRepostory nrepo = new JpaMetadataRepostory();
     Metamodel metamodel = emgrFac.getEntityManagerFactory().getMetamodel();
-    //    Set<EntityType<?>> entities = metamodel.getEntities();
     Set<ManagedType<?>> mtl = metamodel.getManagedTypes();
     for (ManagedType<?> mt : mtl) {
       EntityMetadata empt = toEntityMetaData(mt);
       nrepo.getEntities().put(empt.getJavaType(), empt);
     }
     resolve(nrepo);
+    buildReferences(nrepo);
+    List<EntityMetadata> entities = buildSortedEnties(nrepo);
+    nrepo.getTableEntities().addAll(entities);
+
+    if (LOG.isDebugEnabled() == true) {
+      LOG.debug("Sorted entities: "
+          + entities.stream().map((e) -> e.getJavaType().getSimpleName()).collect(Collectors.toList()));
+    }
     return nrepo;
+  }
+
+  private static List<EntityMetadata> buildSortedEnties(JpaMetadataRepostory nrepo)
+  {
+    List<EntityMetadata> unsortedTables = new ArrayList<>(nrepo.getEntities().size());
+    for (EntityMetadata em : nrepo.getEntities().values()) {
+      if (em.isTableEntity() == true) {
+        unsortedTables.add(em);
+      }
+    }
+    Set<EntityMetadata> remainsings = new HashSet<>(unsortedTables);
+    List<EntityMetadata> sortedTables = new ArrayList<>();
+    for (EntityMetadata table : unsortedTables) {
+      addDepsFirst(table, remainsings, sortedTables);
+    }
+    return sortedTables;
+  }
+
+  private static void addDepsFirst(EntityMetadata table, Set<EntityMetadata> remainsings,
+      List<EntityMetadata> sortedTable)
+  {
+    if (remainsings.contains(table) == false) {
+      return;
+    }
+    remainsings.remove(table);
+    for (EntityMetadata nt : table.getReferencedBy()) {
+      addDepsFirst(nt, remainsings, sortedTable);
+    }
+    sortedTable.add(table);
   }
 
   /**
@@ -102,6 +141,29 @@ public class MetaInfoUtils
   private static void resolve(JpaMetadataRepostory nrepo, ColumnMetadataBean cmd)
   {
     resolveTargetEntity(nrepo, cmd);
+  }
+
+  private static void buildReferences(JpaMetadataRepostory nrepo)
+  {
+    for (EntityMetadata ent : nrepo.getEntities().values()) {
+      for (ColumnMetadata col : ent.getColumns().values()) {
+        EntityMetadata te = col.getTargetEntity();
+        if (te == null) {
+          continue;
+        }
+        if (col.isCollection() == true) {
+          ManyToMany mm = col.findAnnoation(ManyToMany.class);
+          if (mm == null) {
+            continue;
+          } else {
+            //            System.out.println("manytomay");
+          }
+
+        }
+        te.getReferencedBy().add(ent);
+        ent.getReferencesTo().add(te);
+      }
+    }
   }
 
   /**

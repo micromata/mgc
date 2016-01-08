@@ -1,7 +1,9 @@
 package de.micromata.genome.jpa.metainf;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -20,6 +22,10 @@ public class EntityMetadataBean extends EmgrDbElementBean implements EntityMetad
    * The columns.
    */
   private Map<String, ColumnMetadata> columns = new HashMap<>();
+
+  private Set<EntityMetadata> referencedBy = new HashSet<>();
+
+  private Set<EntityMetadata> referencesTo = new HashSet<>();
 
   /**
    * {@inheritDoc}
@@ -74,6 +80,18 @@ public class EntityMetadataBean extends EmgrDbElementBean implements EntityMetad
   public void setColumns(Map<String, ColumnMetadata> columns)
   {
     this.columns = columns;
+  }
+
+  @Override
+  public Set<EntityMetadata> getReferencedBy()
+  {
+    return referencedBy;
+  }
+
+  @Override
+  public Set<EntityMetadata> getReferencesTo()
+  {
+    return referencesTo;
   }
 
 }
