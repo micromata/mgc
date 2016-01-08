@@ -29,6 +29,7 @@ import de.micromata.genome.jpa.events.impl.EmgrMarkUndeletedCriteriaUpdateFilter
 import de.micromata.genome.jpa.events.impl.InitCreatedStdRecordFieldsEventHandler;
 import de.micromata.genome.jpa.events.impl.InitUpdateStdRecordFieldsEventHandler;
 import de.micromata.genome.jpa.events.impl.UpdateStdRecordCriteriaUpdateEventHandler;
+import de.micromata.genome.jpa.impl.JpaSchemaServiceImpl;
 import de.micromata.genome.jpa.metainf.JpaMetadataRepostory;
 import de.micromata.genome.jpa.metainf.MetaInfoUtils;
 import de.micromata.genome.jpa.trace.eventhandler.TracerEmgrCreateQueryFilterEventHandler;
@@ -576,5 +577,15 @@ public abstract class EmgrFactory<E extends IEmgr<?>>
   public JpaMetadataRepostory getMetadataRepository()
   {
     return metadataRepository;
+  }
+
+  /**
+   * Provides schema operations.
+   *
+   * @return the jpa schema service
+   */
+  public JpaSchemaService getJpaSchemaService()
+  {
+    return new JpaSchemaServiceImpl(this);
   }
 }

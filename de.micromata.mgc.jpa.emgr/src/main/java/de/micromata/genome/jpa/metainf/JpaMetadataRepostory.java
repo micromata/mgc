@@ -1,6 +1,7 @@
 package de.micromata.genome.jpa.metainf;
 
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -44,6 +45,22 @@ public class JpaMetadataRepostory
   public Map<Class<?>, EntityMetadata> getEntities()
   {
     return entities;
+  }
+
+  /**
+   * Get a list of all table entities.
+   *
+   * @return the table entities
+   */
+  public List<EntityMetadata> getTableEntities()
+  {
+    List<EntityMetadata> ret = new ArrayList<>(entities.size());
+    for (EntityMetadata em : entities.values()) {
+      if (em.isTableEntity() == true) {
+        ret.add(em);
+      }
+    }
+    return ret;
   }
 
   /**

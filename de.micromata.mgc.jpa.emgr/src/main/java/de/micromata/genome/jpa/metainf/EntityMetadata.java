@@ -11,6 +11,13 @@ public interface EntityMetadata extends EmgrDbElement
 {
 
   /**
+   * Is an entity with table.
+   *
+   * @return true, if is table entity
+   */
+  boolean isTableEntity();
+
+  /**
    * Find column.
    *
    * @param name the name

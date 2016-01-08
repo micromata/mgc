@@ -3,7 +3,9 @@ package de.micromata.genome.jpa.metainf;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 
 /**
  * Meta data for an entity.
@@ -23,6 +25,13 @@ public class EntityMetadataBean extends EmgrDbElementBean implements EntityMetad
    * {@inheritDoc}
    *
    */
+
+  @Override
+  public boolean isTableEntity()
+  {
+    return getJavaType().getAnnotation(Entity.class) != null &&
+        getJavaType().getAnnotation(MappedSuperclass.class) == null;
+  }
 
   @Override
   public ColumnMetadata findColumn(String name)
