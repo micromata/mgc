@@ -98,7 +98,7 @@ public class Log4JInitializer
     if (nf.exists() == true && nf.canRead() == true) {
       return nf;
     }
-    return nf;
+    return null;
   }
 
   private static boolean initViaCp()
