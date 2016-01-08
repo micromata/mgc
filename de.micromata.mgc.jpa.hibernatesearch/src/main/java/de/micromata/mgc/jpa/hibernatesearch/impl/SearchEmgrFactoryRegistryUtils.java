@@ -1,6 +1,5 @@
 package de.micromata.mgc.jpa.hibernatesearch.impl;
 
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -57,13 +56,11 @@ public class SearchEmgrFactoryRegistryUtils
 
   }
 
-  private static IndexedEmbedded DEFAULT_IndexedEmbedded;
-
-  static {
-    Method method = ClassUtils.findMethod(SearchEmgrFactoryRegistryUtils.class, "annotationDummyMethod");
-    DEFAULT_IndexedEmbedded = method.getAnnotation(IndexedEmbedded.class);
-  }
-
+  /**
+   * Enrich the SearchEmgrFactory with meta data for the Hibernate search indice.
+   *
+   * @param emf the emf
+   */
   public static void initJpaMetadataRepostory(SearchEmgrFactory<?> emf)
   {
     emf.runWoTrans((emgr) -> {
@@ -320,45 +317,5 @@ public class SearchEmgrFactoryRegistryUtils
       ret.putAll(sm);
     }
   }
-
-  //  private static void addNestedSearchFields(ISearchEmgr<?> emgr, JpaMetadataRepostory repo, ColumnMetadata masterColumn,
-  //      IndexedEmbedded iemb, int maxDepth,
-  //      Map<String, ColumnMetadata> ret)
-  //  {
-  //    if (maxDepth < 1) {
-  //      return;
-  //    }
-  //    String[] paths = iemb.includePaths();
-  //    if (paths.length > 0) {
-  //      for (String path : paths) {
-  //        ret.put(masterColumn.getName() + "." + path, masterColumn);
-  //      }
-  //      return;
-  //    }
-  //    EntityMetadata assicatedEntity = getAssocatedJavaType(masterColumn);
-  //    if (assicatedEntity == null) {
-  //      LOG.error("Search; Cannot find EntityMetadata for " + masterColumn.getJavaType().getName());
-  //      return;
-  //    }
-  //    int maxLevel = Math.min(iemb.depth(), maxDepth);
-  //    // 
-  //    //    Map<String, ColumnMetadata> nested = getSearchFields(emgr, repo, assicatedEntity, maxLevel);
-  //    //    for (Map.Entry<String, ColumnMetadata> me : nested.entrySet()) {
-  //    //      ret.put(masterColumn.getName() + "." + me.getKey(), masterColumn);
-  //    //    }
-  //  }
-
-  //  private static EntityMetadata getAssocatedJavaType(ColumnMetadata masterColumn)
-  //  {
-  //    EntityMetadata targetEnt = masterColumn.getTargetEntity();
-  //    Class<?> javaType = masterColumn.getJavaType();
-  //    if (Collection.class.isAssignableFrom(javaType) == true || Map.class.isAssignableFrom(javaType) == true) {
-  //      if (targetEnt == null) {
-  //        LOG.error("Have to define attribute targetEntity in anntotation to support search: "
-  //            + masterColumn.getShortDeclaration());
-  //      }
-  //    }
-  //    return targetEnt;
-  //  }
 
 }

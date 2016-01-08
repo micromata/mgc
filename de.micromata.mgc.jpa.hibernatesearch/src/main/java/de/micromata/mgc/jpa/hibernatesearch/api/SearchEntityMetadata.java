@@ -12,7 +12,18 @@ import de.micromata.genome.jpa.metainf.EntityMetadata;
  */
 public interface SearchEntityMetadata
 {
+
+  /**
+   * The JPA metadata .
+   *
+   * @return the entity metadata
+   */
   EntityMetadata getEntityMetadata();
 
+  /**
+   * Search columns.
+   *
+   * @return the columns
+   */
   Map<String, SearchColumnMetadata> getColumns();
 }

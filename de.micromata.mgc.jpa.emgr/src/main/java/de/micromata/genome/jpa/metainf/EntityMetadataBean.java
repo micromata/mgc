@@ -14,12 +14,6 @@ import javax.persistence.Id;
 public class EntityMetadataBean extends EmgrDbElementBean implements EntityMetadata
 {
 
-  @Override
-  public String toString()
-  {
-    return super.toString();
-  }
-
   /**
    * The columns.
    */

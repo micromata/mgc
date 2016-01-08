@@ -3,7 +3,7 @@ package de.micromata.mgc.jpa.hibernatesearch.api;
 import de.micromata.genome.jpa.metainf.ColumnMetadata;
 
 /**
- * Meta info about a column searchs.
+ * Meta info about a column searchs. the column is representing a Lucene index, not necessary a jpa column.
  * 
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *

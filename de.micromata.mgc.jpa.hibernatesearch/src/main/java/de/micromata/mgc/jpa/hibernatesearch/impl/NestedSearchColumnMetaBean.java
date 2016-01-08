@@ -5,6 +5,7 @@ import org.hibernate.search.annotations.IndexedEmbedded;
 import de.micromata.genome.jpa.metainf.ColumnMetadata;
 
 /**
+ * Represents an IndexedEmbedded field.
  * 
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *

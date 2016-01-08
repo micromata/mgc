@@ -22,6 +22,12 @@ import de.micromata.genome.jpa.ComplexEntity;
 import de.micromata.genome.jpa.ComplexEntityVisitor;
 import de.micromata.genome.jpa.StdRecordDO;
 
+/**
+ * To test
+ * 
+ * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
+ *
+ */
 @Entity
 @Indexed
 public class MyEntityDO extends StdRecordDO<Long> implements ComplexEntity

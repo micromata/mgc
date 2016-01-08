@@ -18,6 +18,12 @@ import org.hibernate.search.annotations.Store;
 
 import de.micromata.genome.jpa.StdRecordDO;
 
+/**
+ * to test.
+ * 
+ * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
+ *
+ */
 @Entity
 @Indexed
 public class MyNestedEntity extends StdRecordDO<Long>
