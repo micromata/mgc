@@ -184,6 +184,9 @@ public class HistoryServiceImpl implements HistoryService
 
   private Long castToLong(Serializable entityPk)
   {
+    if (entityPk == null) {
+      return null;
+    }
     if (entityPk instanceof Long) {
       return (Long) entityPk;
     }

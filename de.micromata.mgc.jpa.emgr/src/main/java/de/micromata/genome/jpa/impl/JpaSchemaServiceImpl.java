@@ -4,15 +4,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.persistence.EntityManager;
+import javax.persistence.OneToMany;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 
 import org.apache.log4j.Logger;
 
 import de.micromata.genome.jpa.EmgrFactory;
 import de.micromata.genome.jpa.JpaSchemaService;
+import de.micromata.genome.jpa.metainf.ColumnMetadata;
 import de.micromata.genome.jpa.metainf.EntityMetadata;
 
 /**
@@ -53,17 +55,20 @@ public class JpaSchemaServiceImpl implements JpaSchemaService
   @Override
   public void clearDatabase()
   {
+    boolean useDirect = false;
+    if (useDirect == true) {
+      clearDatabaseDirect();
+      return;
+    }
     emfac.runInTrans((emgr) -> {
       List<Object> allEntries = new ArrayList<Object>();
-      List<EntityMetadata> sortedTables = emfac.getMetadataRepository().getTableEntities();
-      //      Set<EntityMetadata> tables = new HashSet<>(emfac.getMetadataRepository().getTableEntities());
-      //      Collections.reverse(tables);
-      //      List<EntityMetadata> tablesToDelete = new ArrayList<>(tables);
+
+      List<EntityMetadata> sortedTables = getNoneChildrenTables(); //emfac.getMetadataRepository().getTableEntities();
       LOG.info("Delete from tables: " + sortedTables);
       EntityManager em = emgr.getEntityManager();
       for (EntityMetadata table : sortedTables) {
         //        selectDeleteTablesRec(em, table, tables, allEntries);
-        List<Object> entList = em.createQuery("select e from " + table.getJavaType().getName() + " e").getResultList();
+        List<Object> entList = em.createQuery("select e  from " + table.getJavaType().getName() + " e").getResultList();
         LOG.info("Delete " + table + ": " + entList.size());
         allEntries.addAll(entList);
       }
@@ -76,16 +81,78 @@ public class JpaSchemaServiceImpl implements JpaSchemaService
     });
   }
 
-  private void selectDeleteTablesRec(EntityManager em, EntityMetadata table, Set<EntityMetadata> tables,
-      List<Object> toDeleteEntities)
+  private boolean hasWithDeleteAssocation(EntityMetadata master, EntityMetadata detail)
   {
-    if (tables.contains(table) == false) {
-      return;
+    for (ColumnMetadata cm : master.getColumns().values()) {
+      if (cm.getTargetEntity() != detail) {
+        continue;
+      }
+      if (cm.isAssociation() == false) {
+        continue;
+      }
+      OneToMany om = cm.findAnnoation(OneToMany.class);
+      if (om != null) {
+        if (om.orphanRemoval() == true) {
+          return true;
+        }
+      }
     }
-    tables.remove(table);
-    for (EntityMetadata nt : table.getReferencedBy()) {
-      selectDeleteTablesRec(em, nt, tables, toDeleteEntities);
-    }
-    toDeleteEntities.addAll(em.createQuery("select e from " + table.getJavaType().getName() + " e").getResultList());
+    return false;
   }
+
+  private boolean isStrictChildren(EntityMetadata table)
+  {
+
+    for (ColumnMetadata cm : table.getColumns().values()) {
+      if (cm.isNullable() == true || cm.isAssociation() == false) {
+        continue;
+      }
+      if (cm.isCollection() == true) {
+        continue;
+      }
+      EntityMetadata ta = cm.getTargetEntity();
+      if (hasWithDeleteAssocation(ta, table) == true) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  List<EntityMetadata> getNoneChildrenTables()
+  {
+    List<EntityMetadata> sortedTables = emfac.getMetadataRepository().getTableEntities();
+    if (true) {
+      return sortedTables;
+    }
+    List<EntityMetadata> ret = new ArrayList<>();
+    for (EntityMetadata em : sortedTables) {
+      if (isStrictChildren(em) == true) {
+        continue;
+      }
+      ret.add(em);
+    }
+    return ret;
+  }
+
+  public void clearDatabaseDirect()
+  {
+    emfac.runInTrans((emgr) -> {
+
+      List<EntityMetadata> sortedTables = emfac.getMetadataRepository().getTableEntities();
+      LOG.info("Delete from tables: " + sortedTables);
+      EntityManager em = emgr.getEntityManager();
+      int count = 0;
+      for (EntityMetadata table : sortedTables) {
+        Query query = em.createQuery("delete  from " + table.getJavaType().getName() + " e");
+        int updated = query.executeUpdate();
+        LOG.info("Delete " + table + ": " + updated);
+        count += updated;
+      }
+
+      em.flush();
+      LOG.info("Delete overall: " + count);
+      return null;
+    });
+  }
+
 }
