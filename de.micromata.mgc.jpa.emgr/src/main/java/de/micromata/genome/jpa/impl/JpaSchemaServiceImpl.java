@@ -63,7 +63,8 @@ public class JpaSchemaServiceImpl implements JpaSchemaService
     emfac.runInTrans((emgr) -> {
       List<Object> allEntries = new ArrayList<Object>();
 
-      List<EntityMetadata> sortedTables = getNoneChildrenTables(); //emfac.getMetadataRepository().getTableEntities();
+      List<EntityMetadata> sortedTables = emfac.getMetadataRepository().getTableEntities();
+      getNoneChildrenTables(); //
       LOG.info("Delete from tables: " + sortedTables);
       EntityManager em = emgr.getEntityManager();
       for (EntityMetadata table : sortedTables) {
@@ -121,9 +122,7 @@ public class JpaSchemaServiceImpl implements JpaSchemaService
   List<EntityMetadata> getNoneChildrenTables()
   {
     List<EntityMetadata> sortedTables = emfac.getMetadataRepository().getTableEntities();
-    if (true) {
-      return sortedTables;
-    }
+
     List<EntityMetadata> ret = new ArrayList<>();
     for (EntityMetadata em : sortedTables) {
       if (isStrictChildren(em) == true) {
