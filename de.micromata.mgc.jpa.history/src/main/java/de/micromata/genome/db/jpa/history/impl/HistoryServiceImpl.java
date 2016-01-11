@@ -24,6 +24,7 @@ import de.micromata.genome.db.jpa.history.api.HistoryProperty;
 import de.micromata.genome.db.jpa.history.api.HistoryPropertyConverter;
 import de.micromata.genome.db.jpa.history.api.HistoryPropertyProvider;
 import de.micromata.genome.db.jpa.history.api.HistoryService;
+import de.micromata.genome.db.jpa.history.api.NoHistory;
 import de.micromata.genome.db.jpa.history.api.WithHistory;
 import de.micromata.genome.db.jpa.history.entities.EntityOpType;
 import de.micromata.genome.db.jpa.history.entities.HistoryAttrBaseDO;
@@ -34,6 +35,7 @@ import de.micromata.genome.jpa.DbRecord;
 import de.micromata.genome.jpa.EmgrFactory;
 import de.micromata.genome.jpa.IEmgr;
 import de.micromata.genome.jpa.metainf.ColumnMetadata;
+import de.micromata.genome.jpa.metainf.EntityMetadata;
 import de.micromata.genome.logging.GenomeLogCategory;
 import de.micromata.genome.logging.LogExceptionAttribute;
 import de.micromata.genome.logging.LogLevel;
@@ -117,6 +119,23 @@ public class HistoryServiceImpl implements HistoryService
       for (Class<? extends HistoryPropertyProvider> provider : wh.propertyProvider()) {
         HistoryPropertyProvider prov = createProvider(provider);
         prov.getProperties(emgr, historyMetaInfo, bean, ret);
+      }
+    }
+    return ret;
+  }
+
+  @Override
+  public Set<String> getNoHistoryProperties(EmgrFactory<?> emgr, Class<?> entity)
+  {
+    Set<String> ret = new HashSet<>();
+    EntityMetadata ent = emgr.getMetadataRepository().getEntityMetadata(entity);
+    if (ent == null) {
+      LOG.warn("Cannot return noHistoryProperties, Class is not registerd as entity: " + entity);
+      return ret;
+    }
+    for (ColumnMetadata cm : ent.getColumns().values()) {
+      if (cm.findAnnoation(NoHistory.class) != null) {
+        ret.add(cm.getName());
       }
     }
     return ret;

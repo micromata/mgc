@@ -3,6 +3,7 @@ package de.micromata.genome.db.jpa.history.api;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import de.micromata.genome.db.jpa.history.entities.EntityOpType;
 import de.micromata.genome.db.jpa.history.entities.HistoryMasterBaseDO;
@@ -51,6 +52,14 @@ public interface HistoryService
    * @return the map
    */
   Map<String, HistProp> internalGetPropertiesForHistory(IEmgr<?> emgr, List<WithHistory> whanot, Object bean);
+
+  /**
+   * Return a set of property names, which are marked with @NoHistory.
+   *
+   * @param entity the entity
+   * @return the non history properties
+   */
+  Set<String> getNoHistoryProperties(EmgrFactory<?> emgr, Class<?> entity);
 
   /**
    * Internal on update.
