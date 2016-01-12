@@ -16,6 +16,7 @@ import de.micromata.genome.jpa.EmgrFactory;
 import de.micromata.genome.jpa.JpaSchemaService;
 import de.micromata.genome.jpa.metainf.ColumnMetadata;
 import de.micromata.genome.jpa.metainf.EntityMetadata;
+import de.micromata.genome.util.bean.PrivateBeanUtils;
 
 /**
  * Standard implementation
@@ -56,30 +57,68 @@ public class JpaSchemaServiceImpl implements JpaSchemaService
   public void clearDatabase()
   {
     boolean useDirect = false;
+    boolean useTruncate = false;
     if (useDirect == true) {
       clearDatabaseDirect();
       return;
     }
+    if (useTruncate == true) {
+      clearDatabaseWithTruncate();
+      return;
+    }
+    List<EntityMetadata> sortedTables = emfac.getMetadataRepository().getTableEntities();
+    //    try {
     emfac.runInTrans((emgr) -> {
       List<Object> allEntries = new ArrayList<Object>();
 
-      List<EntityMetadata> sortedTables = emfac.getMetadataRepository().getTableEntities();
-      getNoneChildrenTables(); //
+      //        getNoneChildrenTables(); //
       LOG.info("Delete from tables: " + sortedTables);
       EntityManager em = emgr.getEntityManager();
       for (EntityMetadata table : sortedTables) {
         //        selectDeleteTablesRec(em, table, tables, allEntries);
-        List<Object> entList = em.createQuery("select e  from " + table.getJavaType().getName() + " e").getResultList();
-        LOG.info("Delete " + table + ": " + entList.size());
-        allEntries.addAll(entList);
+
+        ATableTruncater atrun = table.getJavaType().getAnnotation(ATableTruncater.class);
+        if (atrun != null) {
+          TableTruncater trun = PrivateBeanUtils.createInstance(atrun.value());
+          int count = trun.truncateTable(emgr, table);
+          LOG.info("Delete " + table + ": " + count);
+        } else {
+          List<Object> entList = em.createQuery("select e  from " + table.getJavaType().getName() + " e")
+              .getResultList();
+          LOG.info("Delete " + table + ": " + entList.size());
+          allEntries.addAll(entList);
+        }
       }
       for (Object ent : allEntries) {
         em.remove(ent);
+
       }
       em.flush();
       LOG.info("Delete overall: " + allEntries.size());
       return null;
     });
+    checkAllTablesEmpty(sortedTables);
+    //    } catch (OptimisticLockException ex) {
+    //      checkAllTablesEmpty(sortedTables);
+    //    }
+  }
+
+  private void checkAllTablesEmpty(List<EntityMetadata> sortedTables)
+  {
+    emfac.runWoTrans((emgr) -> {
+      long count = 0;
+      for (EntityMetadata em : sortedTables) {
+        long tableres = emgr
+            .createQueryAttached(Long.class, "select count(*) from " + em.getJavaType().getName() + " e")
+            .getSingleResult();
+        if (tableres > 0) {
+          LOG.warn("Table has still records: " + em.getJavaType() + "; count: " + tableres);
+        }
+        count += tableres;
+      }
+      return null;
+    });
+
   }
 
   private boolean hasWithDeleteAssocation(EntityMetadata master, EntityMetadata detail)
@@ -133,18 +172,37 @@ public class JpaSchemaServiceImpl implements JpaSchemaService
     return ret;
   }
 
+  public void clearDatabaseWithTruncate()
+  {
+    emfac.runInTrans((emgr) -> {
+
+      List<EntityMetadata> sortedTables = emfac.getMetadataRepository().getTableEntities();
+
+      EntityManager em = emgr.getEntityManager();
+      for (EntityMetadata table : sortedTables) {
+        em.createNativeQuery("truncate table " + table.getDatabaseName()).executeUpdate();
+      }
+
+      em.flush();
+      LOG.info("trucated tables");
+      return null;
+    });
+  }
+
   public void clearDatabaseDirect()
   {
     emfac.runInTrans((emgr) -> {
 
       List<EntityMetadata> sortedTables = emfac.getMetadataRepository().getTableEntities();
-      LOG.info("Delete from tables: " + sortedTables);
+
       EntityManager em = emgr.getEntityManager();
       int count = 0;
       for (EntityMetadata table : sortedTables) {
         Query query = em.createQuery("delete  from " + table.getJavaType().getName() + " e");
         int updated = query.executeUpdate();
-        LOG.info("Delete " + table + ": " + updated);
+        if (updated > 0) {
+          LOG.info("Delete " + table + ": " + updated);
+        }
         count += updated;
       }
 

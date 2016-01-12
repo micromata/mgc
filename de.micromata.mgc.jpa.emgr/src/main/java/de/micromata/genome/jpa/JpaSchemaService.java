@@ -27,6 +27,8 @@ public interface JpaSchemaService
    * Clear all tables. NOTE: Do this only in unittest.
    * 
    * The default implementation loads all entities into RAM.
+   * 
+   * If you need special handling, you can annotate entity class with ATableTruncater and implement a own table deleter.
    */
   void clearDatabase();
 }
