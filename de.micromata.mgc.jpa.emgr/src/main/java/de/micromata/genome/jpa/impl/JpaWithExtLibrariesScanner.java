@@ -99,7 +99,8 @@ public class JpaWithExtLibrariesScanner implements Scanner
       return;
     }
     ArchiveContext context = new ArchiveContextImpl(true, collector);
-    if (url.toString().contains("!")) {
+    String surl = url.toString();
+    if (surl.contains("!") && surl.startsWith("jar:") == false) {
       String customUrlStr = url.toString();
       customUrlStr = "jar:" + customUrlStr;
       log.info("Custom URL: " + customUrlStr);
@@ -117,6 +118,31 @@ public class JpaWithExtLibrariesScanner implements Scanner
     }
   }
 
+  URL fixUrlToOpen(URL url)
+  {
+    String surl = url.toString();
+    String orgurl = surl;
+    if (surl.endsWith("!/") == true) {
+      surl = surl.substring(0, surl.length() - 2);
+    }
+    if (StringUtils.startsWith(surl, "jar:jar:file:") == true) {
+      surl = surl.substring("jar:jar:".length());
+
+    }
+    if (StringUtils.startsWith(surl, "jar:file:") == true) {
+      surl = surl.substring("jar:".length());
+    }
+    try {
+      URL ret = new URL(surl);
+      log.info("Patches url from " + orgurl + " to " + surl);
+      return ret;
+    } catch (MalformedURLException ex) {
+      log.warn("Cannot parse patched url: " + surl + "; " + ex.getMessage());
+      return url;
+    }
+
+  }
+
   /**
    * A jar may have also declared more deps in manifest (like surefire).
    * 
@@ -127,11 +153,13 @@ public class JpaWithExtLibrariesScanner implements Scanner
   private void handleClassManifestClassPath(URL url, ScanResultCollector collector, Matcher<String> urlMatcher)
   {
     String urls = url.toString();
-
+    URL urltoopen = fixUrlToOpen(url);
+    urls = urltoopen.toString();
     if (urls.endsWith(".jar") == false) {
       return;
     }
-    try (InputStream is = url.openStream()) {
+
+    try (InputStream is = urltoopen.openStream()) {
       try (JarInputStream jarStream = new JarInputStream(is)) {
         Manifest manifest = jarStream.getManifest();
         if (manifest == null) {

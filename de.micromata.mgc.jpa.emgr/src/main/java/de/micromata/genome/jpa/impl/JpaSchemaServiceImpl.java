@@ -81,11 +81,15 @@ public class JpaSchemaServiceImpl implements JpaSchemaService
         if (atrun != null) {
           TableTruncater trun = PrivateBeanUtils.createInstance(atrun.value());
           int count = trun.truncateTable(emgr, table);
-          LOG.info("Delete " + table + ": " + count);
+          if (count > 0) {
+            LOG.info("Delete " + table + ": " + count);
+          }
         } else {
           List<Object> entList = em.createQuery("select e  from " + table.getJavaType().getName() + " e")
               .getResultList();
-          LOG.info("Delete " + table + ": " + entList.size());
+          if (entList.isEmpty() == false) {
+            LOG.info("Delete " + table + ": " + entList.size());
+          }
           allEntries.addAll(entList);
         }
       }
