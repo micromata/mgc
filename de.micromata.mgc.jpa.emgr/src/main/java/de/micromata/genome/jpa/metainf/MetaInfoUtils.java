@@ -146,6 +146,19 @@ public class MetaInfoUtils
   private static void buildReferences(JpaMetadataRepostory nrepo)
   {
     for (EntityMetadata ent : nrepo.getEntities().values()) {
+      EntityDependencies edeps = ent.getJavaType().getAnnotation(EntityDependencies.class);
+      if (edeps != null) {
+        for (Class<?> ref : edeps.references()) {
+          EntityMetadata other = nrepo.getEntityMetadata(ref);
+          ent.getReferencesTo().add(other);
+          other.getReferencedBy().add(ent);
+        }
+        for (Class<?> ref : edeps.referencedBy()) {
+          EntityMetadata other = nrepo.getEntityMetadata(ref);
+          ent.getReferencedBy().add(other);
+          other.getReferencesTo().add(ent);
+        }
+      }
       for (ColumnMetadata col : ent.getColumns().values()) {
         EntityMetadata te = col.getTargetEntity();
         if (te == null) {
@@ -153,10 +166,9 @@ public class MetaInfoUtils
         }
         if (col.isCollection() == true) {
           ManyToMany mm = col.findAnnoation(ManyToMany.class);
-          if (mm == null) {
+          if (mm != null) {
+            // has to be declared by EntityDependencies
             continue;
-          } else {
-            //            System.out.println("manytomay");
           }
 
         }

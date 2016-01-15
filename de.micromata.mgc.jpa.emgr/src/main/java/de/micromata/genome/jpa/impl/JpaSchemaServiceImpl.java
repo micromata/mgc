@@ -13,6 +13,7 @@ import javax.persistence.Query;
 import org.apache.log4j.Logger;
 
 import de.micromata.genome.jpa.EmgrFactory;
+import de.micromata.genome.jpa.IEmgr;
 import de.micromata.genome.jpa.JpaSchemaService;
 import de.micromata.genome.jpa.metainf.ColumnMetadata;
 import de.micromata.genome.jpa.metainf.EntityMetadata;
@@ -69,6 +70,8 @@ public class JpaSchemaServiceImpl implements JpaSchemaService
     List<EntityMetadata> sortedTables = emfac.getMetadataRepository().getTableEntities();
     //    try {
     emfac.runInTrans((emgr) -> {
+      clearManyToManies(emgr, sortedTables);
+
       List<Object> allEntries = new ArrayList<Object>();
 
       //        getNoneChildrenTables(); //
@@ -76,7 +79,6 @@ public class JpaSchemaServiceImpl implements JpaSchemaService
       EntityManager em = emgr.getEntityManager();
       for (EntityMetadata table : sortedTables) {
         //        selectDeleteTablesRec(em, table, tables, allEntries);
-
         ATableTruncater atrun = table.getJavaType().getAnnotation(ATableTruncater.class);
         if (atrun != null) {
           TableTruncater trun = PrivateBeanUtils.createInstance(atrun.value());
@@ -105,6 +107,11 @@ public class JpaSchemaServiceImpl implements JpaSchemaService
     //    } catch (OptimisticLockException ex) {
     //      checkAllTablesEmpty(sortedTables);
     //    }
+  }
+
+  private void clearManyToManies(IEmgr<?> emgr, List<EntityMetadata> sortedTables)
+  {
+
   }
 
   private void checkAllTablesEmpty(List<EntityMetadata> sortedTables)
