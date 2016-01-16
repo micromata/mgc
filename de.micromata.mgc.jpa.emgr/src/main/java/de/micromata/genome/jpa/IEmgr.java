@@ -91,6 +91,8 @@ public interface IEmgr<EMGR extends IEmgr<?>>
    */
   <R> R selectSingleAttached(final Class<R> cls, final String sql, final Object... keyValues);
 
+  <R> List<R> selectAttached(final Class<R> cls, final String sql, final Object... keyValues);
+
   /**
    * Select single detached.
    *

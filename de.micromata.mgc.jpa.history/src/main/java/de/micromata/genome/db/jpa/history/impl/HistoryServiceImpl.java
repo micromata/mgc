@@ -283,7 +283,7 @@ public class HistoryServiceImpl implements HistoryService
     insert(emgr, hm);
   }
 
-  private void putHistProp(HistoryMasterBaseDO<?, ?> hm, DiffEntry de)
+  public static void putHistProp(HistoryMasterBaseDO<?, ?> hm, DiffEntry de)
   {
     hm.putAttribute(de.getPropertyName() + OP_SUFFIX, de.getPropertyOpType().name());
     HistoryAttrBaseDO<?, ?> row = (HistoryAttrBaseDO<?, ?>) hm.getAttributeRow(de.getPropertyName() + OP_SUFFIX);
@@ -296,7 +296,8 @@ public class HistoryServiceImpl implements HistoryService
     }
   }
 
-  private void putHistProp(HistoryMasterBaseDO<?, ?> hm, String property, String suffix, PropertyOpType propertyOpType,
+  private static void putHistProp(HistoryMasterBaseDO<?, ?> hm, String property, String suffix,
+      PropertyOpType propertyOpType,
       HistProp histprop)
   {
     String key = property + suffix;

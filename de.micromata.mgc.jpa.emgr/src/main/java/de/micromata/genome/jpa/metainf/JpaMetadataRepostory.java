@@ -202,4 +202,29 @@ public class JpaMetadataRepostory
     return null;
   }
 
+  /**
+   * Gets the entity meta data by simple class name.
+   *
+   * @param classname the classname
+   * @return the entity meta data by simple class name
+   * @throws JpaMetadataEntityNotFoundException the jpa metadata entity not found exception in case of not found and
+   *           ambiguent multiple found.
+   */
+  public EntityMetadata getEntityMetaDataBySimpleClassName(String classname) throws JpaMetadataEntityNotFoundException
+  {
+    EntityMetadata found = null;
+    for (EntityMetadata em : entities.values()) {
+      if (em.getJavaType().getSimpleName().equals(classname) == true) {
+        if (found != null) {
+          throw new JpaMetadataEntityNotFoundException("Multiple matching simple classname found: "
+              + em.getJavaType().getName() + ", " + found.getJavaType().getName());
+        }
+        found = em;
+      }
+    }
+    if (found == null) {
+      throw new JpaMetadataEntityNotFoundException("No entity Found by simple classname: " + classname);
+    }
+    return found;
+  }
 }
