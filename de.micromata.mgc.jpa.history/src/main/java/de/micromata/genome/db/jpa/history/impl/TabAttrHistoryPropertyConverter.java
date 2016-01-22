@@ -41,6 +41,9 @@ public class TabAttrHistoryPropertyConverter implements HistoryPropertyConverter
   private String typeCharToClassName(char type)
   {
     ConvertedStringTypes ct = ConvertedStringTypes.getValueTypeByShortName(type);
+    if (ct.getEncodeClass() == null) {
+      return void.class.getName();
+    }
     return ct.getEncodeClass().getName();
   }
 

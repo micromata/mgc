@@ -13,20 +13,44 @@ import de.micromata.genome.jpa.EmgrFactory;
  */
 public interface JpaXmlDumpService
 {
+
+  /**
+   * Dump all table entities into xml.
+   *
+   * @param fac the fac
+   * @return the string
+   */
   String dumpToXml(EmgrFactory<?> fac);
 
+  /**
+   * Dump to xml.
+   *
+   * @param fac the fac
+   * @param outfile the outfile
+   */
   void dumpToXml(EmgrFactory<?> fac, File outfile);
 
+  /**
+   * Dump to xml.
+   *
+   * @param fac the fac
+   * @param writer the writer
+   */
   void dumpToXml(EmgrFactory<?> fac, Writer writer);
 
+  /**
+   * The Enum RestoreMode.
+   */
   public static enum RestoreMode
   {
+
     /**
-     * Asume Pks are stable, and only insert new entities
+     * Asume Pks are stable, and only insert new entities.
      */
     InsertNew,
+
     /**
-     * Asume Pks are stable merge
+     * Asume Pks are stable merge.
      */
     OverWrite,
     /**
@@ -35,8 +59,22 @@ public interface JpaXmlDumpService
     InsertAll
   }
 
+  /**
+   * Restore db.
+   *
+   * @param fac the fac
+   * @param inputStream the input stream
+   * @param restoreMode the restore mode
+   */
   void restoreDb(EmgrFactory<?> fac, InputStream inputStream, RestoreMode restoreMode);
 
+  /**
+   * Restore db.
+   *
+   * @param fac the fac
+   * @param file the file
+   * @param restoreMode the restore mode
+   */
   void restoreDb(EmgrFactory<?> fac, File file, RestoreMode restoreMode);
 
 }

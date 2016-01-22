@@ -8,6 +8,8 @@ import javax.naming.spi.InitialContextFactory;
 import javax.naming.spi.InitialContextFactoryBuilder;
 import javax.naming.spi.NamingManager;
 
+import org.apache.commons.dbcp.BasicDataSource;
+import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -168,7 +170,7 @@ public class SimpleNamingContextBuilder implements InitialContextFactoryBuilder
   public void bind(String name, Object obj)
   {
     if (logger.isInfoEnabled()) {
-      logger.info("Static JNDI binding: [" + name + "] = [" + obj + "]");
+      logger.info("Static JNDI binding: [" + name + "] = [" + jndiObjectToString(obj) + "]");
     }
     this.boundObjects.put(name, obj);
   }
@@ -232,5 +234,15 @@ public class SimpleNamingContextBuilder implements InitialContextFactoryBuilder
   public static Class<?> forName(String name, ClassLoader classLoader) throws ClassNotFoundException, LinkageError
   {
     return Class.forName(name);
+  }
+
+  public static String jndiObjectToString(Object obj)
+  {
+    if (obj instanceof BasicDataSource) {
+      BasicDataSource bds = (BasicDataSource) obj;
+      return "BasicDataSource: " + bds.getUsername() + "@" + bds.getUrl();
+    } else {
+      return ObjectUtils.toString(obj);
+    }
   }
 }

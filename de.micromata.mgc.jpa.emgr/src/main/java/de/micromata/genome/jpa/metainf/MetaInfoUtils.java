@@ -170,10 +170,21 @@ public class MetaInfoUtils
             // has to be declared by EntityDependencies
             continue;
           }
-
+          ent.getReferencedBy().add(te);
+          te.getReferencesTo().add(ent);
+          continue;
         }
-        te.getReferencedBy().add(ent);
-        ent.getReferencesTo().add(te);
+        ManyToOne mo = col.findAnnoation(ManyToOne.class);
+        OneToMany om = col.findAnnoation(OneToMany.class);
+        ManyToMany mm = col.findAnnoation(ManyToMany.class);
+
+        if (mo != null) {
+          te.getReferencedBy().add(ent);
+          ent.getReferencesTo().add(te);
+        } else {
+          ent.getReferencedBy().add(te);
+          te.getReferencesTo().add(ent);
+        }
       }
     }
   }
@@ -451,5 +462,46 @@ public class MetaInfoUtils
     for (Annotation anot : ao.getAnnotations()) {
       anots.add(anot);
     }
+  }
+
+  public static String dumpMetaTableReferenceByTree(List<EntityMetadata> deps, boolean fullTree)
+  {
+    Set<EntityMetadata> printed = new HashSet<>();
+    StringBuilder sb = new StringBuilder();
+    for (EntityMetadata em : deps) {
+      sb.append(em);
+      sb.append("\n");
+      for (EntityMetadata re : em.getReferencedBy()) {
+
+        if (fullTree == false) {
+          if (printed.contains(re) == true) {
+            continue;
+          }
+          printed.add(re);
+        }
+        String ident = "  ";
+        HashSet<EntityMetadata> used = new HashSet<>();
+
+        dumpReferencePath(sb, re, fullTree ? used : printed, ident);
+      }
+    }
+    return sb.toString();
+  }
+
+  private static void dumpReferencePath(StringBuilder sb, EntityMetadata em, Set<EntityMetadata> visited, String ident)
+  {
+    sb.append(ident).append(em);
+    if (visited.contains(em) == true) {
+      sb.append(" < CYCLIC ").append("\n");
+      return;
+    }
+    visited.add(em);
+    sb.append("\n");
+
+    for (EntityMetadata re : em.getReferencedBy()) {
+      dumpReferencePath(sb, re, visited, ident + "  ");
+
+    }
+
   }
 }

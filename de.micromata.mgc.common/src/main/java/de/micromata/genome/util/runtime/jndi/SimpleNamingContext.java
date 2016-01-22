@@ -172,7 +172,8 @@ public class SimpleNamingContext implements Context
   public void bind(String name, Object obj)
   {
     if (logger.isInfoEnabled()) {
-      logger.info("Static JNDI binding: [" + this.root + name + "] = [" + obj + "]");
+      logger.info("Static JNDI binding: [" + this.root + name + "] = ["
+          + SimpleNamingContextBuilder.jndiObjectToString(obj) + "]");
     }
     this.boundObjects.put(this.root + name, obj);
   }

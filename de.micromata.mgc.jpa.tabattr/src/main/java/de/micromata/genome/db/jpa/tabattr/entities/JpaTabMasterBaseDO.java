@@ -39,7 +39,7 @@ public abstract class JpaTabMasterBaseDO<M extends JpaTabMasterBaseDO<?, ?>, PK 
   /**
    * The string converter.
    */
-  private StringConverter stringConverter = StandardStringConverter.get();
+  private transient StringConverter stringConverter = StandardStringConverter.get();
 
   /**
    * holds the attributes.

@@ -1,5 +1,7 @@
 package de.micromata.genome.db.jpa.xmldump.impl;
 
+import org.hibernate.proxy.HibernateProxy;
+
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.core.ReferenceByIdMarshaller;
@@ -42,7 +44,7 @@ public class ProxyIdRefMarshaller extends ReferenceByIdMarshaller
     //    }
 
     Converter converter = converterLookup.lookupConverterForType(targetClass);
-    Object realItem = HibernateProxyHelper.get(item);
+    Object realItem = unbox(item);
 
     if (classMapper.isImmutableValueType(realItem.getClass())) {
       // strings, ints, dates, etc... don't bother using references.
@@ -50,5 +52,22 @@ public class ProxyIdRefMarshaller extends ReferenceByIdMarshaller
     } else {
       super.convertAnother(realItem);
     }
+  }
+
+  /**
+   * get the implementation behind object if it proxied, otherwise the object itself
+   * 
+   * @param <T> the type of the Object
+   * @param object an object, might facaded by HibernateProxy
+   * @return the initialized object behind the proxy
+   */
+  @SuppressWarnings("unchecked")
+  public static <T> T unbox(T object)
+  {
+    if (object instanceof HibernateProxy) {
+      HibernateProxy proxy = (HibernateProxy) object;
+      return (T) proxy.getHibernateLazyInitializer().getImplementation();
+    }
+    return object;
   }
 }
