@@ -10,8 +10,15 @@ import org.junit.BeforeClass;
 
 import de.micromata.genome.util.runtime.LocalSettings;
 import de.micromata.genome.util.runtime.LocalSettingsEnv;
+import de.micromata.genome.util.runtime.Log4JInitializer;
 import de.micromata.genome.util.runtime.jndi.JndiMockupNamingContextBuilder;
 
+/**
+ * Base class for MGC tests with initializing localsettings.
+ * 
+ * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
+ *
+ */
 public class MgcTestCase
 {
   protected static LocalSettingsEnv localSettingsEnv;
@@ -21,6 +28,7 @@ public class MgcTestCase
   {
     LocalSettings ls = LocalSettings.get();
     prepareJndi();
+    Log4JInitializer.initializeLog4J();
   }
 
   protected static void prepareJndi()
