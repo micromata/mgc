@@ -23,8 +23,18 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.mapper.Mapper;
 
+/**
+ * The Class ProxyIdRefMarshallingStrategy.
+ *
+ * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
+ */
 public class ProxyIdRefMarshallingStrategy extends ReferenceByIdMarshallingStrategy
 {
+
+  /**
+   * {@inheritDoc}
+   *
+   */
 
   @Override
   public Object unmarshal(Object root, HierarchicalStreamReader reader, DataHolder dataHolder,
@@ -32,6 +42,11 @@ public class ProxyIdRefMarshallingStrategy extends ReferenceByIdMarshallingStrat
   {
     return new ReferenceByIdUnmarshaller(root, reader, converterLookup, classMapper).start(dataHolder);
   }
+
+  /**
+   * {@inheritDoc}
+   *
+   */
 
   @Override
   public void marshal(HierarchicalStreamWriter writer, Object obj, ConverterLookup converterLookup,

@@ -19,21 +19,49 @@ import de.micromata.genome.jpa.EmgrFactory;
 import de.micromata.genome.jpa.metainf.EntityMetadata;
 
 /**
- * 
- * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
+ * The Class XStreamRecordConverter.
  *
+ * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  */
 public class XStreamRecordConverter implements Converter
 {
+
+  /**
+   * The Constant LOG.
+   */
   private static final Logger LOG = Logger.getLogger(XStreamRecordConverter.class);
 
+  /**
+   * The converter lookup.
+   */
   private final ConverterLookup converterLookup;
+
+  /**
+   * The emgrfac.
+   */
   private EmgrFactory<?> emgrfac;
+
+  /**
+   * The entities.
+   */
   private Map<EntityMetadata, List<Object>> entities = new HashMap<>();
+
+  /**
+   * The xml id to object map.
+   */
   private Map<Object, Object> xmlIdToObjectMap = new HashMap<>();
 
+  /**
+   * The table classes.
+   */
   private Map<Class<?>, EntityMetadata> tableClasses = new HashMap<>();
 
+  /**
+   * Instantiates a new x stream record converter.
+   *
+   * @param xstream the xstream
+   * @param emgrfac the emgrfac
+   */
   public XStreamRecordConverter(XStream xstream, EmgrFactory<?> emgrfac)
   {
     converterLookup = new XStream().getConverterLookup();
@@ -41,11 +69,21 @@ public class XStreamRecordConverter implements Converter
     emgrfac.getMetadataRepository().getTableEntities().forEach((e) -> tableClasses.put(e.getJavaType(), e));
   }
 
+  /**
+   * {@inheritDoc}
+   *
+   */
+
   @Override
   public void marshal(Object arg0, HierarchicalStreamWriter arg1, MarshallingContext arg2)
   {
     converterLookup.lookupConverterForType(arg0.getClass()).marshal(arg0, arg1, arg2);
   }
+
+  /**
+   * {@inheritDoc}
+   *
+   */
 
   @Override
   public Object unmarshal(final HierarchicalStreamReader streamReader, UnmarshallingContext context)
@@ -67,6 +105,12 @@ public class XStreamRecordConverter implements Converter
     return result;
   }
 
+  /**
+   * Find table meta data.
+   *
+   * @param clazz the clazz
+   * @return the entity metadata
+   */
   private EntityMetadata findTableMetaData(Class<?> clazz)
   {
     for (EntityMetadata md : emgrfac.getMetadataRepository().getTableEntities()) {
@@ -77,6 +121,12 @@ public class XStreamRecordConverter implements Converter
     return null;
   }
 
+  /**
+   * Register object.
+   *
+   * @param byidunm the byidunm
+   * @param result the result
+   */
   private void registerObject(XStreamReferenceByIdUnmarshaller byidunm, Object result)
   {
     if (result == null) {
@@ -96,6 +146,11 @@ public class XStreamRecordConverter implements Converter
     }
     list.add(result);
   }
+
+  /**
+   * {@inheritDoc}
+   *
+   */
 
   @SuppressWarnings("rawtypes")
   @Override

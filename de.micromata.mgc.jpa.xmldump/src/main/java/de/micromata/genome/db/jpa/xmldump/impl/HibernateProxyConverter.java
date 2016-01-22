@@ -34,6 +34,8 @@ import com.thoughtworks.xstream.mapper.Mapper;
 
 /**
  * 
+ * For marshaling, unboxing proxies.
+ * 
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
  */
