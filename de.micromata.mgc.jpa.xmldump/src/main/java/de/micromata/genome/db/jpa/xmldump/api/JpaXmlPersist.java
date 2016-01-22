@@ -20,4 +20,13 @@ public @interface JpaXmlPersist {
    * @return
    */
   Class<? extends JpaXmlBeforePersistListener>[] beforePersistListener() default {};
+
+  /**
+   * If set to true, the entities will not store to database.
+   * 
+   * This may be usefull for 100% children.
+   *
+   * @return true, if successful
+   */
+  boolean noStore() default false;
 }

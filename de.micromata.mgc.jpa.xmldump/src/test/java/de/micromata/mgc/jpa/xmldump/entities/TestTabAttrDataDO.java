@@ -26,6 +26,7 @@ import org.hibernate.annotations.Index;
 import org.junit.Ignore;
 
 import de.micromata.genome.db.jpa.tabattr.entities.JpaTabAttrDataBaseDO;
+import de.micromata.genome.db.jpa.xmldump.api.JpaXmlPersist;
 
 /**
  * JPA entity for TB_TA_GATTR_DATA
@@ -33,6 +34,7 @@ import de.micromata.genome.db.jpa.tabattr.entities.JpaTabAttrDataBaseDO;
  * @author roger
  * 
  */
+@JpaXmlPersist(noStore = true)
 @Ignore
 @Entity
 @Table(name = "TB_TST_ATTRMASTER_ATTR_DATA")

@@ -121,7 +121,6 @@ public class JpaXmlDumpServiceImpl implements JpaXmlDumpService, XmlJpaPersistSe
 
   protected void init(XStream xstream)
   {
-    // TODO Auto-generated method stub
 
   }
 
@@ -231,7 +230,7 @@ public class JpaXmlDumpServiceImpl implements JpaXmlDumpService, XmlJpaPersistSe
     objects.forEach((el) -> clearPks(fac, el));
     List<EntityMetadata> ttableEnts = fac.getMetadataRepository().getTableEntities();
     Collections.reverse(ttableEnts);
-    List<EntityMetadata> tableEnts = orderTableEntities(ttableEnts);
+    List<EntityMetadata> tableEnts = filterSortTableEntities(ttableEnts);
     //System.out.println(MetaInfoUtils.dumpMetaTableReferenceByTree(tableEnts, true));
 
     fac.runInTrans((emgr) -> {
@@ -249,9 +248,23 @@ public class JpaXmlDumpServiceImpl implements JpaXmlDumpService, XmlJpaPersistSe
     });
   }
 
-  protected List<EntityMetadata> orderTableEntities(List<EntityMetadata> tables)
+  protected List<EntityMetadata> filterSortTableEntities(List<EntityMetadata> tables)
   {
+    tables = filterNoStoreEntities(tables);
     return tables;
+  }
+
+  private List<EntityMetadata> filterNoStoreEntities(List<EntityMetadata> tables)
+  {
+    List<EntityMetadata> ret = tables.stream().filter((emd) -> {
+      JpaXmlPersist jpa = emd.getJavaType().getAnnotation(JpaXmlPersist.class);
+      if (jpa == null) {
+        return true;
+      }
+      boolean nostore = jpa.noStore();
+      return nostore == false;
+    }).collect(Collectors.toList());
+    return ret;
   }
 
   protected List<Object> orderPersist(IEmgr<?> emgr, EntityMetadata entityMetadata, List<Object> datas)

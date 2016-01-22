@@ -12,6 +12,7 @@ import javax.persistence.OrderColumn;
 import org.junit.Ignore;
 
 import de.micromata.genome.db.jpa.tabattr.entities.JpaTabAttrDataBaseDO;
+import de.micromata.genome.db.jpa.xmldump.api.JpaXmlPersist;
 
 /**
  * Entity holds Strings longer than fits into one attribute value.
@@ -19,6 +20,7 @@ import de.micromata.genome.db.jpa.tabattr.entities.JpaTabAttrDataBaseDO;
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  * 
  */
+@JpaXmlPersist(noStore = true)
 @Ignore
 @Entity
 @DiscriminatorValue("1")

@@ -1,7 +1,9 @@
 package de.micromata.mgc.jpa.xmldump;
 
 import java.io.File;
+import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import de.micromata.genome.db.jpa.xmldump.api.JpaXmlDumpService;
@@ -52,7 +54,7 @@ public class XmlDumpTest extends MgcTestCase
       emgr.update(pwl);
 
       TestMasterAttrDO tm = new TestMasterAttrDO();
-      tm.setAbrn("abr");
+      tm.setAbrn("XmlDumpTest");
       tm.putAttribute("myProp", "My Value");
       tm.putAttribute("myLongProp", createLongAttr(6000));
       emgr.insert(tm);
@@ -71,6 +73,17 @@ public class XmlDumpTest extends MgcTestCase
       emfac.getJpaSchemaService().clearDatabase();
 
       xmlDumpService.restoreDb(emfac, file, RestoreMode.InsertAll);
+
+      emfac.runInTrans((emgr) -> {
+        List<TestMasterAttrDO> ret = emgr.selectDetached(TestMasterAttrDO.class,
+            "select e from " + TestMasterAttrDO.class.getName() + " e where e.abrn = :abrn", "abrn", "XmlDumpTest");
+        Assert.assertTrue(ret.isEmpty() == false);
+        TestMasterAttrDO attr = ret.get(0);
+        Assert.assertEquals("My Value", attr.getStringAttribute("myProp"));
+        Assert.assertEquals(createLongAttr(6000), attr.getStringAttribute("myLongProp"));
+        return null;
+      });
+
     } catch (RuntimeException ex) {
       ex.printStackTrace();
       throw ex;
