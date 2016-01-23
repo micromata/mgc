@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import de.micromata.genome.db.jpa.history.api.HistProp;
@@ -14,6 +15,7 @@ import de.micromata.genome.db.jpa.history.api.HistoryPropertyConverter;
 import de.micromata.genome.jpa.DbRecord;
 import de.micromata.genome.jpa.IEmgr;
 import de.micromata.genome.jpa.metainf.ColumnMetadata;
+import de.micromata.genome.jpa.metainf.EntityMetadata;
 
 /**
  * Converts a collection of Dbrecords.
@@ -32,16 +34,42 @@ public class CollectionPropertyConverter implements HistoryPropertyConverter
     if (col == null) {
       return Collections.emptyList();
     }
+    EntityMetadata targetEntity = pd.getTargetEntity();
     if (col.isEmpty() == true) {
       HistProp hp = new HistProp();
       hp.setName("");
-      hp.setType(col.getClass().getName());
+      if (targetEntity != null) {
+        hp.setType(targetEntity.getJavaType().getName());
+      } else {
+        hp.setType(col.getClass().getName());
+      }
       hp.setValue("");
       return Collections.singletonList(hp);
     }
+
+    if (targetEntity != null) {
+      List<Object> pks = new ArrayList<>();
+      for (Object ob : col) {
+        Object pk = targetEntity.getIdColumn().getGetter().get(ob);
+        if (pk == null) {
+          LOG.warn("Unsaved entity in history");
+          return Collections.emptyList();
+        }
+        pks.add(pk);
+      }
+      String sval = StringUtils.join(pks, ',');
+      HistProp hp = new HistProp();
+      hp.setName("");
+      hp.setType(targetEntity.getJavaType().getName());
+      hp.setValue(sval);
+      return Collections.singletonList(hp);
+    }
+
     Map<Long, Class<?>> pkSet = new TreeMap<>();
     int idx = 0;
+
     for (Object ob : col) {
+
       if ((ob instanceof DbRecord) == false) {
         LOG.warn("Cannot create collection history on non DbRecord: " + entity.getClass().getName() + "." + pd.getName()
             + "[" + idx + "]" + ob.getClass().getName());

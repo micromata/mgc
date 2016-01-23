@@ -53,6 +53,9 @@ public class DefaultHistoryPropertyProvider implements HistoryPropertyProvider
       if (ignoreForHistory(historyMetaInfo, entity, pd) == true) {
         continue;
       }
+      if (pd.getName().equals("assignedGroups") == true) {
+        System.out.println("asdf");
+      }
       HistoryPropertyConverter conv = getPropertyConverter(emgr, entity, pd);
       List<HistProp> values = conv.convert(emgr, historyMetaInfo, entity, pd);
       for (HistProp hp : values) {
