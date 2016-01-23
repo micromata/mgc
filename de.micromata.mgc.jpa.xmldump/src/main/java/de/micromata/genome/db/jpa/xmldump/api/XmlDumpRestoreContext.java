@@ -42,7 +42,7 @@ public class XmlDumpRestoreContext
   /**
    * The old pk to entities.
    */
-  private Map<Object, Object> oldPkToEntities = new HashMap<>();
+  private Map<Class<?>, Map<Object, Object>> oldPkToEntities = new HashMap<>();
 
   /**
    * The emgr.
@@ -87,6 +87,20 @@ public class XmlDumpRestoreContext
     return persistedObjects.containsKey(entity);
   }
 
+  public <T> T findEntityByOldPk(Object oldPk, Class<T> entityClass)
+  {
+    Map<Object, Object> pkm = oldPkToEntities.get(entityClass);
+    if (pkm == null) {
+      return null;
+    }
+    return (T) pkm.get(oldPk);
+  }
+
+  public EntityMetadata findEntityMetaData(Class<?> entityClazz)
+  {
+    return emgr.getEmgrFactory().getMetadataRepository().findEntityMetadata(entityClazz);
+  }
+
   /**
    * Gets the all entities.
    *
@@ -107,12 +121,7 @@ public class XmlDumpRestoreContext
     return persistedObjects;
   }
 
-  /**
-   * Gets the old pk to entities.
-   *
-   * @return the old pk to entities
-   */
-  public Map<Object, Object> getOldPkToEntities()
+  public Map<Class<?>, Map<Object, Object>> getOldPkToEntities()
   {
     return oldPkToEntities;
   }

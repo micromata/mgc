@@ -13,6 +13,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -219,7 +220,12 @@ public class JpaXmlDumpServiceImpl implements JpaXmlDumpService, XmlJpaPersistSe
       }
       list.add(ent);
       Object id = entm.getIdColumn().getGetter().get(ent);
-      ctx.getOldPkToEntities().put(id, ent);
+      Map<Object, Object> pkm = ctx.getOldPkToEntities().get(entm.getJavaType());
+      if (pkm == null) {
+        pkm = new HashMap<>();
+        ctx.getOldPkToEntities().put(entm.getJavaType(), pkm);
+      }
+      pkm.put(id, ent);
     });
     return ctx;
   }
