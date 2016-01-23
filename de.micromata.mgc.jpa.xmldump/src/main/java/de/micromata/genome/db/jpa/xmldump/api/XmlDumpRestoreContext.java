@@ -96,6 +96,17 @@ public class XmlDumpRestoreContext
     return (T) pkm.get(oldPk);
   }
 
+  public <PK> PK findNewPkForOldPk(Object oldPk, Class<?> entityClass, Class<PK> pktype)
+  {
+    Object entity = findEntityByOldPk(oldPk, entityClass);
+    if (entity == null) {
+      return null;
+    }
+    EntityMetadata em = getEmgr().getEmgrFactory().getMetadataRepository().getEntityMetadata(entityClass);
+    Object id = em.getIdColumn().getGetter().get(entity);
+    return (PK) id;
+  }
+
   public EntityMetadata findEntityMetaData(Class<?> entityClazz)
   {
     return emgr.getEmgrFactory().getMetadataRepository().findEntityMetadata(entityClazz);

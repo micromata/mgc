@@ -2,7 +2,9 @@ package de.micromata.genome.db.jpa.xmldump.api;
 
 import java.io.File;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Writer;
+import java.util.List;
 
 import de.micromata.genome.jpa.EmgrFactory;
 
@@ -29,6 +31,8 @@ public interface JpaXmlDumpService
    * @param outfile the outfile
    */
   void dumpToXml(EmgrFactory<?> fac, File outfile);
+
+  void dumpToXml(EmgrFactory<?> fac, OutputStream outfile);
 
   /**
    * Dump to xml.
@@ -65,8 +69,9 @@ public interface JpaXmlDumpService
    * @param fac the fac
    * @param inputStream the input stream
    * @param restoreMode the restore mode
+   * @return the number of records are inside the xml
    */
-  void restoreDb(EmgrFactory<?> fac, InputStream inputStream, RestoreMode restoreMode);
+  int restoreDb(EmgrFactory<?> fac, InputStream inputStream, RestoreMode restoreMode);
 
   /**
    * Restore db.
@@ -74,7 +79,17 @@ public interface JpaXmlDumpService
    * @param fac the fac
    * @param file the file
    * @param restoreMode the restore mode
+   * @return the number of records are inside the xml
    */
-  void restoreDb(EmgrFactory<?> fac, File file, RestoreMode restoreMode);
+  int restoreDb(EmgrFactory<?> fac, File file, RestoreMode restoreMode);
 
+  /**
+   * Registed global listener. Modify this list only on initializion/constructor phase of the service, because list not
+   * synchronized.
+   * 
+   * You can initialize the Listener with the JRE ServiceLoader mechanism.
+   * 
+   * @return
+   */
+  List<JpaXmlBeforePersistListener> getGlobalBeforeListener();
 }

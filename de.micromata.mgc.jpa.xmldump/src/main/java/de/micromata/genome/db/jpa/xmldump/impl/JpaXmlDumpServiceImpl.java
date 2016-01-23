@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -16,6 +17,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ServiceLoader;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
@@ -56,6 +58,20 @@ public class JpaXmlDumpServiceImpl implements JpaXmlDumpService, XmlJpaPersistSe
 {
   private static final Logger LOG = Logger.getLogger(JpaXmlDumpServiceImpl.class);
 
+  private List<JpaXmlBeforePersistListener> globalBeforeListener = new ArrayList<>();
+
+  public JpaXmlDumpServiceImpl()
+  {
+    initGlobalListener();
+  }
+
+  protected void initGlobalListener()
+  {
+    for (JpaXmlBeforePersistListener sl : ServiceLoader.load(JpaXmlBeforePersistListener.class)) {
+      globalBeforeListener.add(sl);
+    }
+  }
+
   @Override
   public String dumpToXml(EmgrFactory<?> fac)
   {
@@ -75,7 +91,17 @@ public class JpaXmlDumpServiceImpl implements JpaXmlDumpService, XmlJpaPersistSe
   }
 
   @Override
-  public void dumpToXml(EmgrFactory<?> fac, final Writer writer)
+  public void dumpToXml(EmgrFactory<?> fac, OutputStream out)
+  {
+    try (Writer wout = new OutputStreamWriter(out)) {
+      dumpToXml(fac, wout);
+    } catch (IOException ex) {
+      throw new RuntimeIOException(ex);
+    }
+  }
+
+  @Override
+  public void dumpToXml(EmgrFactory<?> fac, Writer writer)
   {
     fac.runWoTrans((emgr) -> {
       List<Object> all = getObjectsToDump((Emgr<?>) emgr);
@@ -169,17 +195,17 @@ public class JpaXmlDumpServiceImpl implements JpaXmlDumpService, XmlJpaPersistSe
   }
 
   @Override
-  public void restoreDb(EmgrFactory<?> fac, File file, RestoreMode restoreMode)
+  public int restoreDb(EmgrFactory<?> fac, File file, RestoreMode restoreMode)
   {
     try {
-      restoreDb(fac, new FileInputStream(file), restoreMode);
+      return restoreDb(fac, new FileInputStream(file), restoreMode);
     } catch (FileNotFoundException ex) {
       throw new RuntimeIOException(ex);
     }
   }
 
   @Override
-  public void restoreDb(EmgrFactory<?> fac, InputStream inputStream, RestoreMode restoreMode)
+  public int restoreDb(EmgrFactory<?> fac, InputStream inputStream, RestoreMode restoreMode)
   {
     XStream xstream = new XStream();
     xstream.setMarshallingStrategy(new ReferenceByIdMarshallingStrategy()
@@ -205,7 +231,7 @@ public class JpaXmlDumpServiceImpl implements JpaXmlDumpService, XmlJpaPersistSe
     } else {
       throw new UnsupportedOperationException("restoreMode " + restoreMode + " currently not supported");
     }
-
+    return objects.size();
   }
 
   protected XmlDumpRestoreContext createRestoreContext(EmgrFactory<?> fac, List<Object> objects)
@@ -334,16 +360,26 @@ public class JpaXmlDumpServiceImpl implements JpaXmlDumpService, XmlJpaPersistSe
   @Override
   public boolean preparePersist(XmlDumpRestoreContext ctx, EntityMetadata entityMetadata, Object data)
   {
+    for (JpaXmlBeforePersistListener gl : getGlobalBeforeListener()) {
+      if (gl.preparePersist(entityMetadata, data, ctx) == false) {
+        return false;
+      }
+    }
     List<JpaXmlPersist> anots = ClassUtils.findClassAnnotations(entityMetadata.getJavaType(), JpaXmlPersist.class);
     for (JpaXmlPersist anot : anots) {
       for (Class<? extends JpaXmlBeforePersistListener> clzz : anot.beforePersistListener()) {
-        JpaXmlBeforePersistListener listener = PrivateBeanUtils.createInstance(clzz);
+        JpaXmlBeforePersistListener listener = createInstance(clzz);
         if (listener.preparePersist(entityMetadata, data, ctx) == false) {
           return false;
         }
       }
     }
     return true;
+  }
+
+  protected <T> T createInstance(Class<T> clazz)
+  {
+    return PrivateBeanUtils.createInstance(clazz);
   }
 
   private boolean hasGeneratedId(ColumnMetadata colm)
@@ -366,4 +402,11 @@ public class JpaXmlDumpServiceImpl implements JpaXmlDumpService, XmlJpaPersistSe
       colm.getSetter().set(obj, null);
     }
   }
+
+  @Override
+  public List<JpaXmlBeforePersistListener> getGlobalBeforeListener()
+  {
+    return globalBeforeListener;
+  }
+
 }
