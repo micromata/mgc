@@ -56,6 +56,17 @@ public abstract class SearchEmgrFactory<EMGR extends ISearchEmgr<?>>extends Emgr
     return esf.getColumns();
   }
 
+  public Set<Class<?>> getSearchableEntities()
+  {
+    Map<Class<?>, SearchEntityMetadata> sfm = (Map<Class<?>, SearchEntityMetadata>) getMetadataRepository()
+        .getServiceCustomAttributes()
+        .get(REPO_ENTITY_SEARCHFIELDS);
+    if (sfm == null) {
+      return Collections.emptySet();
+    }
+    return sfm.keySet();
+  }
+
   /**
    * Return only indexed text fields.
    *

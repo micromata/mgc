@@ -17,7 +17,7 @@ public interface XmlJpaPersistService
    * @param ctx the ctx
    * @param data the data
    */
-  void persist(XmlDumpRestoreContext ctx, Object data);
+  Object persist(XmlDumpRestoreContext ctx, Object data);
 
   /**
    * Calls listener and then store.
@@ -25,8 +25,9 @@ public interface XmlJpaPersistService
    * @param ctx the ctx
    * @param entityMetadata the entity metadata
    * @param entity the entity
+   * @return the stored attached object
    */
-  void persist(XmlDumpRestoreContext ctx, EntityMetadata entityMetadata, Object entity);
+  Object persist(XmlDumpRestoreContext ctx, EntityMetadata entityMetadata, Object entity);
 
   /**
    * Store entity.
@@ -34,8 +35,16 @@ public interface XmlJpaPersistService
    * @param ctx the ctx
    * @param entityMetadata the entity metadata
    * @param entity the entity
+   * @return the stored attached object
    */
-  void store(XmlDumpRestoreContext ctx, EntityMetadata entityMetadata, Object entity);
+  Object store(XmlDumpRestoreContext ctx, EntityMetadata entityMetadata, Object entity);
+
+  /**
+   * Flush the underlying entitymanager.
+   * 
+   * @param ctx
+   */
+  void flush(XmlDumpRestoreContext ctx);
 
   /**
    * Prepare persist.
@@ -43,7 +52,7 @@ public interface XmlJpaPersistService
    * @param ctx the ctx
    * @param entityMetadata the entity metadata
    * @param data the data
-   * @return true, if successful
+   * @return != null if the entity is already persistet.
    */
-  boolean preparePersist(XmlDumpRestoreContext ctx, EntityMetadata entityMetadata, Object data);
+  Object preparePersist(XmlDumpRestoreContext ctx, EntityMetadata entityMetadata, Object data);
 }

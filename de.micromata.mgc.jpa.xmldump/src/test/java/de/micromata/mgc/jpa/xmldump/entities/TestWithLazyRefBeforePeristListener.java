@@ -13,15 +13,15 @@ public class TestWithLazyRefBeforePeristListener implements JpaXmlBeforePersistL
 {
 
   @Override
-  public boolean preparePersist(EntityMetadata entityMetadata, Object entity, XmlDumpRestoreContext ctx)
+  public Object preparePersist(EntityMetadata entityMetadata, Object entity, XmlDumpRestoreContext ctx)
   {
     TestWithLazyRef lr = (TestWithLazyRef) entity;
     if (lr.getParent() == null) {
-      return true;
+      return null;
     }
-    ctx.getPersistService().persist(ctx, entityMetadata, lr.getParent());
-
-    return true;
+    TestWithLazyRef pre = (TestWithLazyRef) ctx.getPersistService().persist(ctx, entityMetadata, lr.getParent());
+    lr.setParent(pre);
+    return null;
   }
 
 }

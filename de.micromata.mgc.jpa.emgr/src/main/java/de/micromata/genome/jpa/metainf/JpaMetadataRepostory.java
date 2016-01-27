@@ -60,7 +60,6 @@ public class JpaMetadataRepostory
    */
   public List<EntityMetadata> getTableEntities()
   {
-
     return tableEntities;
   }
 

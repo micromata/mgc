@@ -18,7 +18,7 @@ public interface JpaXmlBeforePersistListener
    * @param entityMetadata the entity metadata
    * @param entity the entity
    * @param ctx the ctx
-   * @return true, if entity should be persisted.
+   * @return persisted attached object, otherwise null.
    */
-  public boolean preparePersist(EntityMetadata entityMetadata, Object entity, XmlDumpRestoreContext ctx);
+  public Object preparePersist(EntityMetadata entityMetadata, Object entity, XmlDumpRestoreContext ctx);
 }

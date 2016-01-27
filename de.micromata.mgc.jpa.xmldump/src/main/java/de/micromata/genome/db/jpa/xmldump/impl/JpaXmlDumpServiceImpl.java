@@ -15,9 +15,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
@@ -45,6 +47,7 @@ import de.micromata.genome.jpa.EmgrFactory;
 import de.micromata.genome.jpa.IEmgr;
 import de.micromata.genome.jpa.metainf.ColumnMetadata;
 import de.micromata.genome.jpa.metainf.EntityMetadata;
+import de.micromata.genome.jpa.metainf.JpaMetadataRepostory;
 import de.micromata.genome.util.bean.PrivateBeanUtils;
 import de.micromata.genome.util.runtime.ClassUtils;
 import de.micromata.genome.util.runtime.RuntimeIOException;
@@ -135,12 +138,14 @@ public class JpaXmlDumpServiceImpl implements JpaXmlDumpService, XmlJpaPersistSe
         return new HibernateMapper(new HibernateCollectionsMapper(next));
       }
     };
+    xstream.ignoreUnknownElements();
     // Converter für die Hibernate-Collections
     xstream.registerConverter(new HibernateCollectionConverter(xstream.getConverterLookup()));
     xstream.registerConverter(
         new HibernateProxyConverter(xstream.getMapper(), new PureJavaReflectionProvider(),
             xstream.getConverterLookup()),
         XStream.PRIORITY_VERY_HIGH);
+
     xstream.setMarshallingStrategy(new ProxyIdRefMarshallingStrategy());
     init(xstream);
     return xstream;
@@ -220,17 +225,21 @@ public class JpaXmlDumpServiceImpl implements JpaXmlDumpService, XmlJpaPersistSe
 
     XStreamRecordConverter recorder = new XStreamRecordConverter(xstream, fac);
     xstream.registerConverter(recorder, 10);
+    xstream.registerConverter(new SkippUnkownElementsCollectionConverter(xstream.getMapper()),
+        XStream.PRIORITY_VERY_HIGH);
 
     List<Object> objects = new ArrayList<>();
     Object result = xstream.fromXML(inputStream, objects);
     objects = (List<Object>) result;
-    XmlDumpRestoreContext ctx = createRestoreContext(fac, objects);
+    List<Object> recObjects = recorder.getAllEnties();
+    XmlDumpRestoreContext ctx = createRestoreContext(fac, recObjects);
     LOG.info("Readed object from xml: " + objects.size());
     if (restoreMode == RestoreMode.InsertAll) {
       insertAll(fac, ctx);
     } else {
       throw new UnsupportedOperationException("restoreMode " + restoreMode + " currently not supported");
     }
+    LOG.info("Imported entities: " + objects.size());
     return objects.size();
   }
 
@@ -260,24 +269,63 @@ public class JpaXmlDumpServiceImpl implements JpaXmlDumpService, XmlJpaPersistSe
   {
     List<Object> objects = ctx.getAllEntities();
     objects.forEach((el) -> clearPks(fac, el));
-    List<EntityMetadata> ttableEnts = fac.getMetadataRepository().getTableEntities();
-    Collections.reverse(ttableEnts);
+    List<EntityMetadata> ttableEnts = buildSortedEnties(fac.getMetadataRepository());
     List<EntityMetadata> tableEnts = filterSortTableEntities(ttableEnts);
-    //System.out.println(MetaInfoUtils.dumpMetaTableReferenceByTree(tableEnts, true));
 
+    insertEntities(fac, ctx, objects, tableEnts);
+  }
+
+  protected void insertEntities(EmgrFactory<?> fac, XmlDumpRestoreContext ctx, List<Object> objects,
+      List<EntityMetadata> tableEnts)
+  {
     fac.runInTrans((emgr) -> {
       ctx.setEmgr(emgr);
 
-      for (EntityMetadata em : tableEnts) {
-        List<Object> ents = objects.stream().filter((e) -> em.getJavaType().isAssignableFrom(e.getClass()))
-            .collect(Collectors.toList());
-        ents = orderPersist(emgr, em, ents);
-        for (Object obj : ents) {
-          persist(ctx, em, obj);
-        }
-      }
+      insertEntitiesInTrans(ctx, objects, tableEnts, emgr);
       return null;
     });
+  }
+
+  protected void insertEntitiesInTrans(XmlDumpRestoreContext ctx, List<Object> objects, List<EntityMetadata> tableEnts,
+      IEmgr<?> emgr)
+  {
+    for (EntityMetadata em : tableEnts) {
+      List<Object> ents = objects.stream().filter((e) -> em.getJavaType().isAssignableFrom(e.getClass()))
+          .collect(Collectors.toList());
+      ents = orderPersist(emgr, em, ents);
+      for (Object obj : ents) {
+        persist(ctx, em, obj);
+      }
+    }
+  }
+
+  protected List<EntityMetadata> buildSortedEnties(JpaMetadataRepostory nrepo)
+  {
+    List<EntityMetadata> unsortedTables = nrepo.getTableEntities();
+    Set<EntityMetadata> remainsings = new HashSet<>(unsortedTables);
+    List<EntityMetadata> sortedTables = new ArrayList<>();
+    for (EntityMetadata table : unsortedTables) {
+      addDepsFirst(nrepo, table, remainsings, sortedTables);
+    }
+    return sortedTables;
+  }
+
+  protected void addDepsFirst(JpaMetadataRepostory nrepo, EntityMetadata table, Set<EntityMetadata> remainsings,
+      List<EntityMetadata> sortedTable)
+  {
+    if (remainsings.contains(table) == false) {
+      return;
+    }
+    remainsings.remove(table);
+    for (JpaXmlPersist jp : ClassUtils.findClassAnnotations(table.getJavaType(), JpaXmlPersist.class)) {
+      for (Class<?> cls : jp.persistAfter()) {
+        addDepsFirst(nrepo, nrepo.getEntityMetadata(cls), remainsings, sortedTable);
+      }
+    }
+    for (EntityMetadata nt : table.getReferencesTo()) {
+      addDepsFirst(nrepo, nt, remainsings, sortedTable);
+    }
+    sortedTable.add(table);
   }
 
   protected List<EntityMetadata> filterSortTableEntities(List<EntityMetadata> tables)
@@ -305,45 +353,54 @@ public class JpaXmlDumpServiceImpl implements JpaXmlDumpService, XmlJpaPersistSe
   }
 
   @Override
-  public void persist(XmlDumpRestoreContext ctx, Object data)
+  public Object persist(XmlDumpRestoreContext ctx, Object data)
   {
     if (ctx.isPersisted(data) == true) {
-      return;
+      return data;
     }
     EntityMetadata entityMetadata = ctx.getEmgr().getEmgrFactory().getMetadataRepository()
         .getEntityMetadata(data.getClass());
-    persist(ctx, entityMetadata, data);
+    return persist(ctx, entityMetadata, data);
   }
 
   @Override
-  public void persist(XmlDumpRestoreContext ctx, EntityMetadata entityMetadata, Object entity)
+  public Object persist(XmlDumpRestoreContext ctx, EntityMetadata entityMetadata, Object entity)
   {
     if (ctx.isPersisted(entity) == true) {
-      return;
+      return entity;
     }
-    if (preparePersist(ctx, entityMetadata, entity) == false) {
-      return;
+    Object rentity = preparePersist(ctx, entityMetadata, entity);
+    if (rentity != null) {
+      return rentity;
     }
-    store(ctx, entityMetadata, entity);
+    return store(ctx, entityMetadata, entity);
   }
 
   @Override
-  public void store(XmlDumpRestoreContext ctx, EntityMetadata entityMetadata, Object entity)
+  public Object store(XmlDumpRestoreContext ctx, EntityMetadata entityMetadata, Object entity)
   {
 
     if (ctx.isPersisted(entity) == true) {
-      return;
+      return entity;
     }
     EntityManager entityManager = ctx.getEmgr().getEntityManager();
     ColumnMetadata idcol = entityMetadata.getIdColumn();
+    boolean forcePersist = false;
     if (hasGeneratedId(idcol) == true) {
       Object pk = entityMetadata.getIdColumn().getGetter().get(entity);
 
       if (pk != null) {
-        LOG.info(
-            "Already Persisted " + entity.getClass().getName() + "("
-                + entityMetadata.getIdColumn().getGetter().get(entity) + ")");
-        return;
+
+        Object ret = entityManager.find(entityMetadata.getJavaType(), pk);
+        if (ret == null) {
+          LOG.info("Cannot find entity " + entityMetadata.getJavaType() + "(" + pk + ") persist it");
+          forcePersist = true;
+        } else {
+          LOG.info(
+              "Already Persisted " + entity.getClass().getName() + "("
+                  + entityMetadata.getIdColumn().getGetter().get(entity) + ")");
+          return ret;
+        }
       }
     }
     if (entityManager.contains(entity) == true) {
@@ -354,27 +411,35 @@ public class JpaXmlDumpServiceImpl implements JpaXmlDumpService, XmlJpaPersistSe
     ctx.getPersistedObjects().put(entity, entity);
     LOG.info(
         "Persisted " + entity.getClass().getName() + "(" + entityMetadata.getIdColumn().getGetter().get(entity) + ")");
-
+    return entity;
   }
 
   @Override
-  public boolean preparePersist(XmlDumpRestoreContext ctx, EntityMetadata entityMetadata, Object data)
+  public void flush(XmlDumpRestoreContext ctx)
+  {
+    ctx.getEmgr().getEntityManager().flush();
+  }
+
+  @Override
+  public Object preparePersist(XmlDumpRestoreContext ctx, EntityMetadata entityMetadata, Object data)
   {
     for (JpaXmlBeforePersistListener gl : getGlobalBeforeListener()) {
-      if (gl.preparePersist(entityMetadata, data, ctx) == false) {
-        return false;
+      Object p = gl.preparePersist(entityMetadata, data, ctx);
+      if (p != null) {
+        return p;
       }
     }
     List<JpaXmlPersist> anots = ClassUtils.findClassAnnotations(entityMetadata.getJavaType(), JpaXmlPersist.class);
     for (JpaXmlPersist anot : anots) {
       for (Class<? extends JpaXmlBeforePersistListener> clzz : anot.beforePersistListener()) {
         JpaXmlBeforePersistListener listener = createInstance(clzz);
-        if (listener.preparePersist(entityMetadata, data, ctx) == false) {
-          return false;
+        Object p = listener.preparePersist(entityMetadata, data, ctx);
+        if (p != null) {
+          return p;
         }
       }
     }
-    return true;
+    return null;
   }
 
   protected <T> T createInstance(Class<T> clazz)

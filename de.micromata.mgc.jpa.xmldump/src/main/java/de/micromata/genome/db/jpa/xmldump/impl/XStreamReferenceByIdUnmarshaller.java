@@ -23,4 +23,5 @@ public class XStreamReferenceByIdUnmarshaller extends ReferenceByIdUnmarshaller
   {
     return getCurrentReferenceKey();
   }
+
 }

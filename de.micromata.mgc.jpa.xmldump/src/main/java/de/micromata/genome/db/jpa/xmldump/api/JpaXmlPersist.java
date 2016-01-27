@@ -29,4 +29,11 @@ public @interface JpaXmlPersist {
    * @return true, if successful
    */
   boolean noStore() default false;
+
+  /**
+   * The listed classes should be persisted before this class.
+   * 
+   * @return
+   */
+  Class<?>[] persistAfter() default {};
 }

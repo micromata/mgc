@@ -41,6 +41,7 @@ public class XStreamRecordConverter implements Converter
    */
   private EmgrFactory<?> emgrfac;
 
+  private List<Object> allEnties = new ArrayList<>();
   /**
    * The entities.
    */
@@ -94,6 +95,10 @@ public class XStreamRecordConverter implements Converter
       targetType = context.getRequiredType();
       Converter conv = converterLookup.lookupConverterForType(targetType);
       result = conv.unmarshal(streamReader, context);
+      //      LOG.info("Restored: " + targetType);
+      if (targetType.getName().endsWith("KontoDO") == true) {
+        LOG.info("Restored: " + targetType);
+      }
     } catch (final Exception ex) {
       LOG.warn("Ignore unknown class or property " + targetType + " " + ex.getMessage());
       return null;
@@ -137,6 +142,7 @@ public class XStreamRecordConverter implements Converter
     if (entityMetadata == null) {
       return;
     }
+    allEnties.add(result);
     //    Object id = byidunm.getCurrentId();
     xmlIdToObjectMap.put(System.identityHashCode(result), result);
     List<Object> list = entities.get(entityMetadata);
@@ -157,6 +163,11 @@ public class XStreamRecordConverter implements Converter
   public boolean canConvert(final Class clazz)
   {
     return tableClasses.containsKey(clazz);
+  }
+
+  public List<Object> getAllEnties()
+  {
+    return allEnties;
   }
 
 }
