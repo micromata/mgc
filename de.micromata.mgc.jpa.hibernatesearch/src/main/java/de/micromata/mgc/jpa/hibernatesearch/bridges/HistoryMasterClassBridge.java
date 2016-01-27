@@ -21,6 +21,10 @@ import de.micromata.genome.db.jpa.history.entities.HistoryMasterBaseDO;
  */
 public class HistoryMasterClassBridge implements MetadataProvidingFieldBridge
 {
+  /**
+   * Limit of Lucene.
+   */
+  private static final int MAX_FULLTEXT_FIELDLENGTH = 30000;
 
   @Override
   public void set(String name, Object value, Document document, LuceneOptions luceneOptions)
@@ -46,8 +50,11 @@ public class HistoryMasterClassBridge implements MetadataProvidingFieldBridge
       //        document.add(field);
       //      }
       if (StringUtils.endsWith(key, ":ov") == true) {
-        field = new StringField("oldValue", svalue, TabAttrFieldBridge.DEFAULT_STORE);
-
+        String indexv = svalue;
+        if (indexv.length() > MAX_FULLTEXT_FIELDLENGTH) {
+          indexv = indexv.substring(0, MAX_FULLTEXT_FIELDLENGTH);
+        }
+        field = new StringField("oldValue", indexv, TabAttrFieldBridge.DEFAULT_STORE);
         document.add(field);
       }
     }
