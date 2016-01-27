@@ -73,7 +73,7 @@
 
     <net.sourceforge.collections_generic.version>4.01</net.sourceforge.collections_generic.version>
     
-    <org.codehaus.groovy.groovy-all.version>2.1.0</org.codehaus.groovy.groovy-all.version>
+    <org.codehaus.groovy.groovy-all.version>2.4.5</org.codehaus.groovy.groovy-all.version>
 
     <!-- JAVAX VERSIONS -->
     <javax.servlet.api.version>3.0.1</javax.servlet.api.version>
