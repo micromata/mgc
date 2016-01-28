@@ -84,10 +84,10 @@
 
 
     <org.hibernate.javax.persistence.hibernate-jpa-2.0-api.version>1.0.1.Final</org.hibernate.javax.persistence.hibernate-jpa-2.0-api.version>
-    <org.hibernate-search-orm.version>5.5.1.Final</org.hibernate-search-orm.version>
+    <org.hibernate-search-orm.version>5.5.2.Final</org.hibernate-search-orm.version>
     <org.apache.lucene.version>5.3.1</org.apache.lucene.version>
     <!-- old 4.1.9.Final -->
-    <org.hibernate.hibernate-entitymanager.version>5.0.5.Final</org.hibernate.hibernate-entitymanager.version>
+    <org.hibernate.hibernate-entitymanager.version>5.0.7.Final</org.hibernate.hibernate-entitymanager.version>
     
     <spring.version>4.2.3.RELEASE</spring.version>
     
