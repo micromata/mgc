@@ -4,6 +4,7 @@ import javax.persistence.EntityManager;
 
 import de.micromata.genome.jpa.DefaultEmgr;
 import de.micromata.genome.jpa.EmgrFactory;
+import de.micromata.genome.jpa.EmgrTx;
 
 public class MultiPcFirstEmgrFactory extends EmgrFactory<DefaultEmgr>
 {
@@ -24,9 +25,9 @@ public class MultiPcFirstEmgrFactory extends EmgrFactory<DefaultEmgr>
   }
 
   @Override
-  protected DefaultEmgr createEmgr(EntityManager entityManager)
+  protected DefaultEmgr createEmgr(EntityManager entityManager, EmgrTx<DefaultEmgr> emgrTx)
   {
-    return new DefaultEmgr(entityManager, this);
+    return new DefaultEmgr(entityManager, this, emgrTx);
   }
 
 }

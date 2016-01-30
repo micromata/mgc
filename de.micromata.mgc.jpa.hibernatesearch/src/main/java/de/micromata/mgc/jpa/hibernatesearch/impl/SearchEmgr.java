@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 import org.hibernate.search.jpa.FullTextEntityManager;
 
 import de.micromata.genome.jpa.Emgr;
+import de.micromata.genome.jpa.EmgrTx;
 import de.micromata.genome.jpa.events.impl.EmgrEventQuery;
 import de.micromata.mgc.jpa.hibernatesearch.api.ISearchEmgr;
 import de.micromata.mgc.jpa.hibernatesearch.api.SearchEmgrFactory;
@@ -23,9 +24,9 @@ import de.micromata.mgc.jpa.hibernatesearch.events.SearchEmgrReindexEventFilterE
 public class SearchEmgr<EMGR extends SearchEmgr<?>>extends Emgr<EMGR> implements ISearchEmgr<EMGR>
 {
 
-  public SearchEmgr(EntityManager entityManager, SearchEmgrFactory<EMGR> emgrFactory)
+  public SearchEmgr(EntityManager entityManager, SearchEmgrFactory<EMGR> emgrFactory, EmgrTx<EMGR> emgrTx)
   {
-    super(entityManager, emgrFactory);
+    super(entityManager, emgrFactory, emgrTx);
 
   }
 

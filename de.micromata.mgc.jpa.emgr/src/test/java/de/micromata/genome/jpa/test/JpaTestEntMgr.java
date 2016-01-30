@@ -13,6 +13,7 @@ package de.micromata.genome.jpa.test;
 import javax.persistence.EntityManager;
 
 import de.micromata.genome.jpa.Emgr;
+import de.micromata.genome.jpa.EmgrTx;
 
 /**
  * Entity Manager for AttrBaseDAOImpl
@@ -26,9 +27,9 @@ public class JpaTestEntMgr extends Emgr<JpaTestEntMgr>
   /**
    * @param entityManager
    */
-  public JpaTestEntMgr(EntityManager entityManager, JpaTestEntMgrFactory emgrFactory)
+  public JpaTestEntMgr(EntityManager entityManager, JpaTestEntMgrFactory emgrFactory, EmgrTx<JpaTestEntMgr> emgrTx)
   {
-    super(entityManager, emgrFactory);
+    super(entityManager, emgrFactory, emgrTx);
   }
 
 }

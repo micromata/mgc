@@ -6,6 +6,7 @@ import org.junit.Ignore;
 
 import de.micromata.genome.jpa.DefaultEmgr;
 import de.micromata.genome.jpa.EmgrFactory;
+import de.micromata.genome.jpa.EmgrTx;
 
 /**
  * emgr factory for tests.
@@ -34,9 +35,9 @@ public class XmlDumpEntityMgrFactory extends EmgrFactory<DefaultEmgr>
   }
 
   @Override
-  protected DefaultEmgr createEmgr(EntityManager entitManager)
+  protected DefaultEmgr createEmgr(EntityManager entitManager, EmgrTx<DefaultEmgr> emgrTx)
   {
-    return new DefaultEmgr(entitManager, this);
+    return new DefaultEmgr(entitManager, this, emgrTx);
   }
 
 }

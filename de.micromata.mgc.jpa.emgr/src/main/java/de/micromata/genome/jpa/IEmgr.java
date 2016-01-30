@@ -35,6 +35,13 @@ public interface IEmgr<EMGR extends IEmgr<?>>
   EmgrFactory<EMGR> getEmgrFactory();
 
   /**
+   * Get the Transaction.
+   *
+   * @return the emgr tx
+   */
+  EmgrTx<EMGR> getEmgrTx();
+
+  /**
    * Find by pk attached.
    *
    * @param <R> the generic type
@@ -223,6 +230,15 @@ public interface IEmgr<EMGR extends IEmgr<?>>
    * @return the emgr
    */
   EMGR setSelectForUpdate(Query query, int lockTimetimeInMs);
+
+  /**
+   * Sets the timeout.
+   *
+   * @param query the query
+   * @param timeOutInMs the time out in ms
+   * @return the emgr
+   */
+  EMGR setQueryTimeout(Query query, int timeOutInMs);
 
   /**
    * Find single detached.

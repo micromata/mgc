@@ -3,6 +3,7 @@ package de.micromata.genome.jpa.test;
 import javax.persistence.EntityManager;
 
 import de.micromata.genome.jpa.EmgrFactory;
+import de.micromata.genome.jpa.EmgrTx;
 
 /**
  * Just a manager factory for testing.
@@ -30,9 +31,9 @@ public class JpaTestEntMgrFactory extends EmgrFactory<JpaTestEntMgr>
   }
 
   @Override
-  protected JpaTestEntMgr createEmgr(EntityManager entitManager)
+  protected JpaTestEntMgr createEmgr(EntityManager entitManager, EmgrTx<JpaTestEntMgr> emgrTx)
   {
-    return new JpaTestEntMgr(entitManager, this);
+    return new JpaTestEntMgr(entitManager, this, emgrTx);
   }
 
 }

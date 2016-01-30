@@ -27,6 +27,8 @@ import de.micromata.genome.jpa.EmgrCallable;
  */
 public class BaseOpTest extends GenomeTestCase
 {
+  TestTabAttrEntityMgrFactory mgrfac = TestTabAttrEntityMgrFactory.get();
+
   @Test
   public void testOps()
   {
@@ -54,7 +56,7 @@ public class BaseOpTest extends GenomeTestCase
     dao.insert(master);
     JpaTabAttrBaseDO<TestMasterAttrDO, Long> key = master.getAttributeRow("Key No " + 1);
     final Long pk = key.getPk();
-    final TestTabAttrEntityMgrFactory mgrfac = TestTabAttrEntityMgrFactory.get();
+
     mgrfac.runWoTrans(new EmgrCallable<Void, TestTabAttrEntityMgr>()
     {
 
@@ -135,6 +137,16 @@ public class BaseOpTest extends GenomeTestCase
     TestMasterAttrDO testMasterAttrDO = dao.loadByPk(master.getPk());
     byte[] attribute = (byte[]) testMasterAttrDO.getAttribute(longValueKey);
     Assert.assertArrayEquals(bytes, attribute);
+    byte[] nattr = new byte[attribute.length + 1];
+
+    nattr[0] = 'x';
+    System.arraycopy(attribute, 0, nattr, 1, attribute.length);
+    master.putAttribute(longValueKey, nattr);
+    mgrfac.runInTrans((emgr) -> {
+      emgr.update(TestMasterAttrDO.class, TestMasterAttrDO.class, master, false);
+      return null;
+    });
+
   }
 
 }

@@ -57,12 +57,13 @@ import de.micromata.genome.jpa.events.impl.EmgrEventTypedQuery;
  * @param <EMGR> thistype
  */
 public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
-
 {
   /**
    * The Constant log.
    */
   private static final Logger log = Logger.getLogger(Emgr.class);
+
+  public static final String HINT_QUERY_TIMEOUT = "javax.persistence.query.timeout";
 
   /**
    * Underlying jpa.
@@ -73,16 +74,19 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    */
   private final EmgrFactory<EMGR> emgrFactory;
 
+  private EmgrTx<EMGR> emgrTx;
+
   /**
    * Instantiates a new emgr.
    *
    * @param entityManager the entity manager
    * @param emgrFactory the emgr factory
    */
-  public Emgr(EntityManager entityManager, EmgrFactory<EMGR> emgrFactory)
+  public Emgr(EntityManager entityManager, EmgrFactory<EMGR> emgrFactory, EmgrTx<EMGR> emgrTx)
   {
     this.entityManager = entityManager;
     this.emgrFactory = emgrFactory;
+    this.emgrTx = emgrTx;
   }
 
   /**
@@ -141,7 +145,7 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
   public Query createQuery(final String sql)
   {
     return filterEvent(new EmgrCreateQueryFilterEvent(this, sql), (event) -> {
-      event.setResult(new EmgrEventQuery(this, entityManager.createQuery(sql)));
+      event.setResult(new EmgrEventQuery(this, setQueryTimeout(entityManager.createQuery(sql))));
     });
     //    
   }
@@ -155,9 +159,25 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    */
   public Query createQuery(final String sql, final Object... keyValues)
   {
-    Query namedQuery = new EmgrEventQuery(this, entityManager.createQuery(sql));
+    Query namedQuery = new EmgrEventQuery(this, setQueryTimeout(entityManager.createQuery(sql)));
     setParams(namedQuery, keyValues);
     return namedQuery;
+  }
+
+  protected <T> TypedQuery<T> createQuery(String sqlString, Class<T> resultClass)
+  {
+    return setQueryTimeout(entityManager.createQuery(sqlString, resultClass));
+  }
+
+  protected <Q extends Query> Q setQueryTimeout(Q query)
+  {
+    if (emgrTx.getTimeout() != -1) {
+      Object timeout = query.getHints().get(HINT_QUERY_TIMEOUT);
+      if (timeout != null) {
+        query.setHint(HINT_QUERY_TIMEOUT, (int) emgrTx.getTimeout());
+      }
+    }
+    return query;
   }
 
   /**
@@ -178,7 +198,7 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
   public <R> TypedQuery<R> createQueryAttached(final Class<R> cls, final String sql, final Map<String, Object> values)
   {
     return filterEvent(new EmgrCreateTypedQueryFilterEvent<R>(this, cls, sql, values), (event) -> {
-      TypedQuery<R> q = new EmgrEventTypedQuery<>(this, entityManager.createQuery(sql, cls));
+      TypedQuery<R> q = new EmgrEventTypedQuery<>(this, createQuery(sql, cls));
       for (Map.Entry<String, Object> me : values.entrySet()) {
         q.setParameter(me.getKey(), me.getValue());
       }
@@ -199,7 +219,7 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
   public <R> TypedQuery<R> createQueryDetached(final Class<R> cls, final String sql, final Map<String, Object> values)
   {
     return filterEvent(new EmgrCreateTypedQueryFilterEvent<R>(this, cls, sql, values), (event) -> {
-      TypedQuery<R> q = new EmgrEventTypedQuery<R>(this, entityManager.createQuery(sql, cls))
+      TypedQuery<R> q = new EmgrEventTypedQuery<R>(this, createQuery(sql, cls))
       {
         @Override
         public List<R> getResultList()
@@ -242,7 +262,8 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
   public <R> TypedQuery<R> createQueryAttached(final Class<R> cls, final String sql, final Object... keyValues)
   {
     return filterEvent(new EmgrCreateTypedQueryFilterEvent<R>(this, cls, sql, keyValues), (event) -> {
-      TypedQuery<R> q = new EmgrEventTypedQuery<>(this, entityManager.createQuery(sql, cls));
+      TypedQuery<R> q = new EmgrEventTypedQuery<>(this, createQuery(sql, cls));
+
       setParams(q, keyValues);
       event.setResult(q);
     });
@@ -261,7 +282,7 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
   public <R> TypedQuery<R> createQueryDetached(final Class<R> cls, final String sql, final Object... keyValues)
   {
     return filterEvent(new EmgrCreateTypedQueryFilterEvent<R>(this, cls, sql, keyValues), (event) -> {
-      TypedQuery<R> q = new EmgrEventTypedQuery<R>(this, entityManager.createQuery(sql, cls))
+      TypedQuery<R> q = new EmgrEventTypedQuery<R>(this, createQuery(sql, cls))
       {
         @Override
         public List<R> getResultList()
@@ -606,6 +627,7 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    * @param keyValues the key values
    * @return the list
    */
+  @Override
   public <R> List<R> selectAttached(Class<R> cls, String sql, Object... keyValues)
   {
     TypedQuery<R> q = createQuery(cls, sql, keyValues);
@@ -684,13 +706,23 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
   @Override
   public EMGR setSelectForUpdate(Query query, int lockTimetimeInMs)
   {
-    // "javax.persistence.query.timeout"
-    // javax.persistence.lock.timeout
     query.setHint(AvailableSettings.LOCK_TIMEOUT, lockTimetimeInMs);
-    query.setHint("javax.persistence.query.timeout", lockTimetimeInMs);
+    setQueryTimeout(query, lockTimetimeInMs);
     query.setLockMode(LockModeType.PESSIMISTIC_WRITE);
     return getThis();
   }
+
+  @Override
+  public EMGR setQueryTimeout(Query query, int timeOutInMs)
+  {
+    // "javax.persistence.query.timeout"
+    // javax.persistence.lock.timeout
+
+    query.setHint(HINT_QUERY_TIMEOUT, timeOutInMs);
+    return getThis();
+  }
+
+  // TODO RK to api set query timeout.
 
   /**
    * Gets the this.
@@ -999,6 +1031,11 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
           final R merged = entityManager.merge(rec);
           event.setResult(merged);
         });
+  }
+
+  public EmgrTx<EMGR> getEmgrTx()
+  {
+    return emgrTx;
   }
 
   /**

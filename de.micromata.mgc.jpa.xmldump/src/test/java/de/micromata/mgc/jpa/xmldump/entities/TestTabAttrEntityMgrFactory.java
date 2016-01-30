@@ -5,6 +5,7 @@ import javax.persistence.EntityManager;
 import org.junit.Ignore;
 
 import de.micromata.genome.jpa.EmgrFactory;
+import de.micromata.genome.jpa.EmgrTx;
 
 /**
  * emgr factory for tests.
@@ -33,9 +34,9 @@ public class TestTabAttrEntityMgrFactory extends EmgrFactory<TestTabAttrEntityMg
   }
 
   @Override
-  protected TestTabAttrEntityMgr createEmgr(EntityManager entitManager)
+  protected TestTabAttrEntityMgr createEmgr(EntityManager entitManager, EmgrTx<TestTabAttrEntityMgr> emgrTx)
   {
-    return new TestTabAttrEntityMgr(entitManager, this);
+    return new TestTabAttrEntityMgr(entitManager, this, emgrTx);
   }
 
 }

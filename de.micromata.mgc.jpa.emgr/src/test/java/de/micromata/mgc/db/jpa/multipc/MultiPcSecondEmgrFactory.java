@@ -4,6 +4,7 @@ import javax.persistence.EntityManager;
 
 import de.micromata.genome.jpa.DefaultEmgr;
 import de.micromata.genome.jpa.EmgrFactory;
+import de.micromata.genome.jpa.EmgrTx;
 
 public class MultiPcSecondEmgrFactory extends EmgrFactory<DefaultEmgr>
 {
@@ -20,14 +21,13 @@ public class MultiPcSecondEmgrFactory extends EmgrFactory<DefaultEmgr>
 
   protected MultiPcSecondEmgrFactory()
   {
-    //    super("de.micromata.genome.jpa.multipc.second");
     super("de.micromata.genome.jpa.multipc.auto");
   }
 
   @Override
-  protected DefaultEmgr createEmgr(EntityManager entityManager)
+  protected DefaultEmgr createEmgr(EntityManager entityManager, EmgrTx<DefaultEmgr> emgrTx)
   {
-    return new DefaultEmgr(entityManager, this);
+    return new DefaultEmgr(entityManager, this, emgrTx);
   }
 
 }

@@ -17,9 +17,9 @@ public class DefaultEmgr extends Emgr<DefaultEmgr>
    * @param entityManager the entity manager
    * @param emgrFactory the emgr factory
    */
-  public DefaultEmgr(EntityManager entityManager, EmgrFactory<DefaultEmgr> emgrFactory)
+  public DefaultEmgr(EntityManager entityManager, EmgrFactory<DefaultEmgr> emgrFactory, EmgrTx<DefaultEmgr> emgrTx)
   {
-    super(entityManager, emgrFactory);
+    super(entityManager, emgrFactory, emgrTx);
   }
 
 }

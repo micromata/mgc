@@ -9,11 +9,9 @@ import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
 import javax.persistence.QueryTimeoutException;
-import javax.persistence.RollbackException;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -51,63 +49,6 @@ import de.micromata.genome.util.runtime.LocalSettings;
  */
 public abstract class EmgrFactory<E extends IEmgr<?>>
 {
-
-  /**
-   * The Enum TaFlags.
-   */
-  public static enum TaFlags
-  {
-    /**
-     * automatically participate existing, if parent is same ro or rw.
-     */
-    None(0x0),
-
-    /**
-     * Force readonly.
-     */
-    ReadOnly(0x1),
-
-    /**
-     * Creates new EntiManager.
-     */
-    RequireNew(0x2);
-
-    /**
-     * The flag mask.
-     */
-    private final int flagMask;
-
-    /**
-     * Instantiates a new ta flags.
-     *
-     * @param flags the flags
-     */
-    private TaFlags(int flags)
-    {
-      this.flagMask = flags;
-    }
-
-    /**
-     * Gets the flag mask.
-     *
-     * @return the flag mask
-     */
-    public int getFlagMask()
-    {
-      return flagMask;
-    }
-
-    /**
-     * Matches.
-     *
-     * @param flags the flags
-     * @return true, if successful
-     */
-    public boolean matches(int flags)
-    {
-      return (flags & flagMask) == flagMask;
-    }
-  }
 
   /**
    * The Constant log.
@@ -153,15 +94,15 @@ public abstract class EmgrFactory<E extends IEmgr<?>>
    * The event factory.
    */
   protected EmgrEventRegistry eventFactory = new EmgrEventRegistry();
-  /**
-   * The thread emgr.
-   */
-  private final ThreadLocal<E> threadEmgr = new ThreadLocal<E>();
 
   /**
    * Registered copied to type.
    */
   private Map<Class<?>, List<Class<? extends EntityCopier>>> registeredCopier = new HashMap<>();
+  /**
+   * The thread emgr.
+   */
+  private final ThreadLocal<E> threadEmgr = new ThreadLocal<E>();
 
   /**
    * Instantiates a new emgr factory.
@@ -213,7 +154,7 @@ public abstract class EmgrFactory<E extends IEmgr<?>>
    * @param entityManager the entity manager
    * @return the e
    */
-  protected abstract E createEmgr(EntityManager entityManager);
+  abstract protected E createEmgr(EntityManager entityManager, EmgrTx<E> emgrTx);
 
   /**
    * Creates a new Emgr object.
@@ -285,6 +226,16 @@ public abstract class EmgrFactory<E extends IEmgr<?>>
     return ex;
   }
 
+  public EmgrTx<E> tx()
+  {
+    return new EmgrTx<E>(this);
+  }
+
+  public EmgrTx<E> notx()
+  {
+    return new EmgrTx<E>(this).noTx();
+  }
+
   /**
    * Run wo trans.
    * 
@@ -294,29 +245,7 @@ public abstract class EmgrFactory<E extends IEmgr<?>>
    */
   public <R> R runWoTrans(EmgrCallable<R, E> call)
   {
-    E emgr = threadEmgr.get();
-    if (emgr != null) {
-      if (log.isDebugEnabled() == true) {
-        log.debug("em shortcut " + Thread.currentThread().getId());
-      }
-      return call.call(emgr);
-    }
-    EntityManager entityManager = entityManagerFactory.createEntityManager();
-    if (log.isDebugEnabled() == true) {
-      log.debug("em created " + Thread.currentThread().getId());
-    }
-    try {
-      emgr = createEmgr(entityManager);
-
-      threadEmgr.set(emgr);
-      return call.call(emgr);
-    } finally {
-      threadEmgr.set(null);
-      entityManager.close();
-      if (log.isDebugEnabled() == true) {
-        log.debug("em closed " + Thread.currentThread().getId());
-      }
-    }
+    return tx().noTx().go(call);
   }
 
   /**
@@ -328,7 +257,7 @@ public abstract class EmgrFactory<E extends IEmgr<?>>
    */
   public <R> R runInTrans(final EmgrCallable<R, E> call)
   {
-    return runInTrans(TaFlags.None.getFlagMask(), call);
+    return tx().go(call);
   }
 
   /**
@@ -340,90 +269,7 @@ public abstract class EmgrFactory<E extends IEmgr<?>>
    */
   public <R> R runRoTrans(final EmgrCallable<R, E> call)
   {
-    return runInTrans(TaFlags.ReadOnly.getFlagMask(), call);
-  }
-
-  /**
-   * Run new trans.
-   *
-   * @param <R> the generic type
-   * @param call the call
-   * @return the r
-   */
-  public <R> R runNewTrans(final EmgrCallable<R, E> call)
-  {
-    return runInTrans(TaFlags.RequireNew.getFlagMask(), call);
-  }
-
-  /**
-   * Run in trans.
-   *
-   * @param <R> the generic type
-   * @param flags the flags
-   * @param call the call
-   * @return the r
-   */
-  public <R> R runInTrans(int flags, final EmgrCallable<R, E> call)
-  {
-    return runWoTrans(new EmgrCallable<R, E>()
-    {
-
-      @Override
-      public R call(E emgr)
-      {
-        EntityTransaction tx = emgr.getEntityManager().getTransaction();
-        if (tx.isActive() == true) {
-          if (log.isInfoEnabled() == true) {
-            log.info("nested tx shortcut " + Thread.currentThread().getId());
-          }
-          try {
-            return call.call(emgr);
-          } catch (RollbackException ex) { // NOSONAR Catching 'RuntimeException' is not allowed - Framework
-            // nothing
-            if (log.isDebugEnabled() == true) {
-              log.debug("rollback tx:  in thread " + Thread.currentThread().getId() + "; " + ex.getMessage());
-            }
-            throw ex;
-          } catch (RuntimeException ex) { // NOSONAR "Illegal Catch" framework
-            if (log.isDebugEnabled() == true) {
-              log.debug(
-                  "rollback tx because ex:  in thread " + Thread.currentThread().getId() + "; " + ex.getMessage());
-            }
-
-            throw convertException(ex);
-          }
-        }
-        try {
-          if (log.isDebugEnabled() == true) {
-            log.debug("begin tx:  in thread " + Thread.currentThread().getId());
-          }
-          tx.begin();
-          R ret = call.call(emgr);
-
-          if (log.isDebugEnabled() == true) {
-            log.debug("commit tx:  in thread " + Thread.currentThread().getId());
-          }
-          emgr.getEntityManager().flush();
-          tx.commit();
-          return ret;
-        } catch (RollbackException ex) {
-          // nothing
-          if (log.isDebugEnabled() == true) {
-            log.debug("rollback tx:  in thread " + Thread.currentThread().getId() + "; " + ex.getMessage());
-          }
-          throw ex;
-        } catch (RuntimeException ex) { // NOSONAR Catching 'RuntimeException' is not allowed - Framework
-          if (log.isDebugEnabled() == true) {
-            log.debug("rollback tx because ex:  in thread " + Thread.currentThread().getId() + "; " + ex.getMessage());
-          }
-          if (tx.isActive() == true) {
-            tx.rollback();
-          }
-          throw convertException(ex);
-        }
-      }
-    });
-
+    return tx().rollback().go(call);
   }
 
   /**

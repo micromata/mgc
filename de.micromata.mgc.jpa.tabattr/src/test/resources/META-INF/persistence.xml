@@ -11,7 +11,9 @@
     <class>de.micromata.genome.db.jpa.tabattr.testentities.TestTabAttrDO</class>
     <class>de.micromata.genome.db.jpa.tabattr.testentities.TestTabAttrWithDataDO</class>
     <class>de.micromata.genome.db.jpa.tabattr.testentities.TestTabAttrDataDO</class>
-            
+    
+    <class>de.micromata.genome.db.jpa.tabattr.testentities.TJpaMasterDO</class>
+    <class>de.micromata.genome.db.jpa.tabattr.testentities.TJpaMasterAttrDO</class>   
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
   </persistence-unit>
 </persistence>
