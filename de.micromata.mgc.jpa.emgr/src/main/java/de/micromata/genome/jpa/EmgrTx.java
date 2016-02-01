@@ -250,6 +250,17 @@ public class EmgrTx<E extends IEmgr<?>>
     return this;
   }
 
+  /**
+   * Read only.
+   *
+   * @return the tx info
+   */
+  public EmgrTx<E> timeOut(long timeout)
+  {
+    this.timeout = timeout;
+    return this;
+  }
+
   public EmgrFactory<E> getEmfac()
   {
     return emfac;

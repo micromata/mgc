@@ -19,25 +19,36 @@ import de.micromata.mgc.common.test.MgcTestCase;
  */
 public class JpaDemoTest extends MgcTestCase
 {
+  static JpaTestEntMgrFactory emfac = JpaTestEntMgrFactory.get();
+
   @Test
   public void testSelectComplex()
   {
-    List<GenomeJpaTestTableDO> list;
-    list = JpaTestEntMgrFactory.get().runWoTrans((emgr) -> {
-      TypedQuery<GenomeJpaTestTableDO> query = emgr.createQuery(GenomeJpaTestTableDO.class,
-          "select e from " + GenomeJpaTestTableDO.class.getName() + " e where e.firstName = :firstName");
-      query.setParameter("firstName", "Roger");
-      List<GenomeJpaTestTableDO> rlist = query.getResultList();
-      emgr.detach(rlist);
-      return rlist;
+    GenomeJpaTestTableDO table = new GenomeJpaTestTableDO();
+    table.setFirstName("Roger");
+    // insert the entity. 
+    Long pk = emfac.tx().go((emgr) -> {
+      return emgr.insertDetached(table);
+    });
+    Assert.assertNotNull(pk);
+    // select the entity by pk
+    GenomeJpaTestTableDO readed = emfac.notx().go((emgr) -> emgr.selectByPkAttached(GenomeJpaTestTableDO.class, pk));
+    Assert.assertNotNull(readed);
+
+    // select entities by criterias
+    List<GenomeJpaTestTableDO> list = emfac.notx().go((emgr) -> {
+      return emgr.selectDetached(GenomeJpaTestTableDO.class,
+          "select e from " + GenomeJpaTestTableDO.class.getName() + " e where e.firstName = :firstName",
+          "firstName", "Roger");
     });
     Assert.assertNotNull(list);
+    Assert.assertEquals(1, list.size());
   }
 
   public void testSelectComplexWithDetached()
   {
     List<GenomeJpaTestTableDO> list;
-    list = JpaTestEntMgrFactory.get().runWoTrans((emgr) -> {
+    list = emfac.runWoTrans((emgr) -> {
       TypedQuery<GenomeJpaTestTableDO> query = emgr.createQueryDetached(GenomeJpaTestTableDO.class,
           "select e from " + GenomeJpaTestTableDO.class.getName() + " e where e.firstName = :firstName");
       query.setParameter("firstName", "Roger");
@@ -51,7 +62,7 @@ public class JpaDemoTest extends MgcTestCase
   public void testSelectSimplified()
   {
     List<GenomeJpaTestTableDO> list;
-    list = JpaTestEntMgrFactory.get().runWoTrans((emgr) -> {
+    list = emfac.runWoTrans((emgr) -> {
       return emgr.selectDetached(GenomeJpaTestTableDO.class,
           "select e from " + GenomeJpaTestTableDO.class.getName() + " e where e.firstName = :firstName",
           "firstName", "Roger");
@@ -62,7 +73,7 @@ public class JpaDemoTest extends MgcTestCase
   @Test
   public void testUpdateWithCriteria()
   {
-    JpaTestEntMgrFactory.get().runInTrans((emgr) -> {
+    emfac.runInTrans((emgr) -> {
       CriteriaUpdate<GenomeJpaTestTableDO> cu = CriteriaUpdate.createUpdate(GenomeJpaTestTableDO.class)
           .addWhere(Clauses.equal("firstName", "Roger"))
           .set("firstName", "Roger Rene ");
