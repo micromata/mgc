@@ -5,10 +5,9 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "TJPA_MASTER_ATTR", uniqueConstraints = @UniqueConstraint(columnNames = { "parent", "propertyName" }) )
+@Table(name = "TJPA_MASTER_ATTR")
 public class TJpaMasterAttrDO extends TJpaBaseDO
 {
   private TJpaMasterDO parent;
