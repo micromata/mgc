@@ -37,7 +37,7 @@ public class AttrUpdateTest extends GenomeTestCase
         emgr.insertDetached(master);
         return null;
       });
-      TestMasterAttrDO raster;
+
       String rflognew;
 
       master.putAttribute(longAttrKey, "x");
@@ -45,18 +45,18 @@ public class AttrUpdateTest extends GenomeTestCase
         emgr.merge(master);
         return null;
       });
-      raster = mgrfac
+      TestMasterAttrDO raster = mgrfac
           .runWoTrans((emgr) -> emgr.selectByPkDetached(TestMasterAttrDO.class, master.getPk()));
       rflognew = raster.getAttribute(longAttrKey, String.class);
       Assert.assertEquals("x", rflognew);
 
       String flongnew = getLongStringValue(62000);
-      master.putAttribute(longAttrKey, flongnew);
+      raster.putAttribute(longAttrKey, flongnew);
       mgrfac.runInTrans((emgr) -> {
-        emgr.merge(master);
+        emgr.merge(raster);
         return null;
       });
-      raster = mgrfac
+      TestMasterAttrDO raster2 = mgrfac
           .runWoTrans((emgr) -> emgr.selectByPkDetached(TestMasterAttrDO.class, master.getPk()));
       rflognew = raster.getAttribute(longAttrKey, String.class);
       Assert.assertEquals(flongnew, rflognew);
