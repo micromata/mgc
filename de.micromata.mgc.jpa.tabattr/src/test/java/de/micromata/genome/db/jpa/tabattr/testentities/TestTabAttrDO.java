@@ -25,7 +25,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.Index;
 import org.junit.Ignore;
@@ -41,9 +40,7 @@ import de.micromata.genome.db.jpa.tabattr.entities.JpaTabAttrDataBaseDO;
  */
 @Ignore
 @Entity
-@Table(name = "TB_TST_ATTRMASTER_ATTR",
-    uniqueConstraints = @UniqueConstraint(name = "ctx_tst_attrmaster_attr",
-        columnNames = { "MASTER_FK", "PROPERTYNAME" }) )
+@Table(name = "TB_TST_ATTRMASTER_ATTR")
 @SequenceGenerator(name = "SQ_TST_ATTRMASTER_ATTR_PK", sequenceName = "SQ_TST_ATTRMASTER_ATTR_PK")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @org.hibernate.annotations.Table(//
