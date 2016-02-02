@@ -8,7 +8,6 @@
   </parent>
   <artifactId>de.micromata.mgc.jpa.history</artifactId>
   <packaging>jar</packaging>
-  <name>de.micromata.mgc.jpa.history</name>
   <description>
     JPA with Hibernate search.
   </description>
@@ -26,7 +25,7 @@
               <archive>
                 <manifestEntries>
                   <Genome-Import-Library>
-                    P${de.micromata.genome.db.jpa.version}_de.micromata.mgc.jpa.tabattr;reexport:=true
+                    P${mgc.version}_de.micromata.mgc.jpa.tabattr;reexport:=true
                   </Genome-Import-Library>
                 </manifestEntries>
               </archive>

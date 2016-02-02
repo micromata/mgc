@@ -12,6 +12,7 @@ package de.micromata.genome.logging;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Collection;
+import java.util.Collections;
 
 /**
  * Wrapps an Exception with a LogAttribute.
@@ -54,14 +55,14 @@ public class LogExceptionAttribute extends LogAttribute implements WithLogAttrib
     if (shortMessage == false || cause instanceof NullPointerException) {
       StringWriter sout = new StringWriter();
       PrintWriter pout = new PrintWriter(sout);
-      cause.printStackTrace(pout);
+      cause.printStackTrace(pout); // NOSONAR by design
       setValue(sout.getBuffer().toString());
     } else {
       StringBuilder sb = new StringBuilder();
       sb.append(getDescription(cause));
-      if (cause.getCause() != null && cause != cause.getCause()) {
-        cause = cause.getCause();
-        sb.append("\n\t").append(getDescription(cause));
+      if (cause.getCause() != null && cause != cause.getCause()) { // NOSONAR same instance of ex
+        Throwable ccause = cause.getCause();
+        sb.append("\n\t").append(getDescription(ccause));
       }
       setValue(sb.toString());
     }
@@ -73,12 +74,9 @@ public class LogExceptionAttribute extends LogAttribute implements WithLogAttrib
    * @param t Nie <code>null</code>
    * @return Nie <code>null</code>
    */
-  protected String getDescription(Throwable t)
+  protected static String getDescription(Throwable t)
   {
     String result = t.getMessage();
-    // if (StringUtils.isBlank(result) == true) {
-    // result = t.toString();
-    // }
     return result;
   }
 
@@ -89,8 +87,7 @@ public class LogExceptionAttribute extends LogAttribute implements WithLogAttrib
     if (exception instanceof WithLogAttributes) {
       return ((WithLogAttributes) exception).getLogAttributes();
     }
-    // return CollectionUtils.EMPTY_COLLECTION;
-    return null;
+    return Collections.emptyList();
   }
 
   public Throwable getException()

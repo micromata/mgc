@@ -175,7 +175,7 @@ public class LogEntry
       return null;
     }
     for (LogAttribute la : attributes) {
-      if (la.getType() == type) {
+      if (la.getType().name().equals(type.name())) {
         return la;
       }
     }

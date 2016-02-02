@@ -20,5 +20,5 @@ public interface LoggingServiceProvider
    *
    * @return the logging
    */
-  LoggingServiceManager getLogging();
+  LoggingServiceManager getLoggingServiceManager();
 }

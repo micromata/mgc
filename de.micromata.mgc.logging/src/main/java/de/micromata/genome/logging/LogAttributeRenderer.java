@@ -1,6 +1,5 @@
 package de.micromata.genome.logging;
 
-import javax.xml.ws.spi.http.HttpContext;
 
 /**
  * Um die {@link LogAttribute} zu rendern.
@@ -15,7 +14,7 @@ public interface LogAttributeRenderer
    * z.B, richige Links zu rendern, etc.
    * 
    * @param attr {@link LogAttribute}
-   * @param ctx {@link HttpContext} optionales Element. Die Implementierung sorgt dafür ob die es optinal braucht oder
+   * @param ctx HttpContext optionales Element. Die Implementierung sorgt dafür ob die es optinal braucht oder
    *          pflicht ist
    * @return {@link String} Html Representation des {@link LogAttribute} Wert
    */

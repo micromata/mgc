@@ -89,7 +89,7 @@ public class LogAttribute implements Serializable
   @Override
   public int hashCode()
   {
-    return ObjectUtils.hashCode(type) * 17 + ObjectUtils.hashCode(value);
+    return ObjectUtils.hashCode(type);// don't because has to be equals * 17 + ObjectUtils.hashCode(value);
   }
 
   /**

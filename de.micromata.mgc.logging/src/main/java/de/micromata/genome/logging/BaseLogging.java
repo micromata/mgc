@@ -316,8 +316,8 @@ public abstract class BaseLogging implements Logging
   /*
    * (non-Javadoc)
    * 
-   * @see de.micromata.genome.logging.Logging#doLog(de.micromata.genome.logging.LogLevel,
-   * de.micromata.genome.logging.LogCategory, java.lang.String, de.micromata.genome.logging.LogAttribute[])
+   * @see de.micromata.genome.logging.Logging#doLog(de.micromata.genome.logging.LogLevel, de.micromata.genome.logging.LogCategory,
+   * java.lang.String, de.micromata.genome.logging.LogAttribute[])
    */
   @Override
   public void doLog(LogLevel ll, LogCategory cat, String msg, LogAttribute... attributes)
@@ -342,12 +342,10 @@ public abstract class BaseLogging implements Logging
             addLogs = new ArrayList<LogAttribute>();
           }
           Collection<LogAttribute> wattrs = wa.getLogAttributes();
-          if (wattrs != null) {
             addLogs.addAll(wattrs);
           }
         }
       }
-    }
     if (addLogs == null) {
       return;
     }
@@ -376,8 +374,8 @@ public abstract class BaseLogging implements Logging
   }
 
   /**
-   * Ensure an attribute list contains no duplicates with the same LogAttributeType Duplicates are removed for the list
-   * starting at the head. Therefore were there is a duplicate the entry nearest the end of the list will survive.
+   * Ensure an attribute list contains no duplicates with the same LogAttributeType Duplicates are removed for the list starting at the
+   * head. Therefore were there is a duplicate the entry nearest the end of the list will survive.
    * 
    * The algoritem has N^2 complexity and should only be used on short lists
    *
@@ -449,13 +447,11 @@ public abstract class BaseLogging implements Logging
     for (LogAttribute sa : src) {
       if (sa instanceof WithLogAttributes) {
         Collection<LogAttribute> wattrs = ((WithLogAttributes) sa).getLogAttributes();
-        if (wattrs != null) {
           for (LogAttribute ctxa : wattrs) {
             addMe.add(ctxa);
           }
         }
       }
-    }
     for (LogAttribute la : addMe) {
       pushAttribute(dest, la);
     }
@@ -464,6 +460,7 @@ public abstract class BaseLogging implements Logging
   /**
    * @return
    */
+  @SuppressWarnings("unchecked")
   public List<LogWriteFilter> getWriteFilters()
   {
 

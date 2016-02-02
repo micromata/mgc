@@ -2,6 +2,8 @@ package de.micromata.genome.logging;
 
 import java.util.ServiceLoader;
 
+import org.apache.log4j.Logger;
+
 import de.micromata.genome.logging.spi.LoggingServiceProvider;
 import de.micromata.genome.logging.spi.log4j.Log4JLogConfigurationDAOImpl;
 import de.micromata.genome.logging.spi.log4j.Log4JLogging;
@@ -16,6 +18,9 @@ import de.micromata.genome.stats.StatsDAO;
  */
 public class LoggingServiceManager
 {
+  private static final Logger LOG = Logger.getLogger(LoggingServiceManager.class);
+
+  private static LoggingServiceManager DEFAULT_INSTANCE = new LoggingServiceManager();
   private static LoggingServiceManager INSTANCE;
 
   private Logging logging = new Log4JLogging();
@@ -27,17 +32,25 @@ public class LoggingServiceManager
   private StatsDAO statsDAO = new NullStatsDAOImpl();
 
   static {
-    ServiceLoader<LoggingServiceProvider> loader = ServiceLoader.load(LoggingServiceProvider.class);
-    if (loader.iterator().hasNext() == true) {
-      LoggingServiceProvider lps = loader.iterator().next();
-      INSTANCE = lps.getLogging();
-    } else {
-      INSTANCE = new LoggingServiceManager();
+    try {
+      ServiceLoader<LoggingServiceProvider> loader = ServiceLoader.load(LoggingServiceProvider.class);
+      if (loader.iterator().hasNext() == true) {
+        LoggingServiceProvider lps = loader.iterator().next();
+        INSTANCE = lps.getLoggingServiceManager();
+      } else {
+        INSTANCE = new LoggingServiceManager();
+      }
+    } catch (Exception ex) {
+      LOG.fatal("Unable to load LoggingServiceManager: " + ex.getMessage(), ex);
+      throw ex;
     }
   }
 
   public static LoggingServiceManager get()
   {
+    if (INSTANCE == null) {
+      return DEFAULT_INSTANCE;
+    }
     return INSTANCE;
   }
 

@@ -110,12 +110,10 @@ public class LogAttributeRuntimeException extends RuntimeException implements Wi
     }
     if (cause instanceof WithLogAttributes) {
       Collection<LogAttribute> wattrs = ((WithLogAttributes) cause).getLogAttributes();
-      if (wattrs != null) {
         for (LogAttribute la : wattrs) {
           if (logAttributeMap.containsKey(la.getType().name()) == false) {
             logAttributeMap.put(la.getType().name(), la);
           }
-        }
       }
     }
     if (captureLogContext == true) {

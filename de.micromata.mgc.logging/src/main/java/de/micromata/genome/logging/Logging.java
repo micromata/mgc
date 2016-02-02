@@ -40,6 +40,12 @@ public interface Logging
 
     }
 
+    public OrderBy(String column, boolean descending)
+    {
+      this.column = column;
+      this.descending = descending;
+    }
+
     public String getColumn()
     {
       return column;

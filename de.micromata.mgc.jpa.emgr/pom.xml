@@ -22,6 +22,16 @@
             <groupId>de.micromata.genome</groupId>
             <artifactId>genome-mvn2-plugin</artifactId>
             <version>${genome.mvn.plugin.version}</version>
+             <configuration>
+              <archive>
+                <manifestEntries>
+                  <Genome-Import-Library>
+                    hibernate-entitymanager-${org.hibernate.hibernate-entitymanager.version};reexport:=true,
+                    javax.transaction-api-1.2;reexport:=true
+                  </Genome-Import-Library>
+                </manifestEntries>
+              </archive>
+            </configuration>
             <executions>
               <execution>
                 <phase>package</phase>
