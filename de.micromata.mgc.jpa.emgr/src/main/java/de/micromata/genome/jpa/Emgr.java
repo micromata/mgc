@@ -1,6 +1,7 @@
 package de.micromata.genome.jpa;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -98,6 +99,19 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
   public EntityManager getEntityManager()
   {
     return entityManager;
+  }
+
+  public static Object[] argMapToArray(Map<String, Object> map)
+  {
+    Object[] ret = new Object[map.size() * 2];
+    int idx = 0;
+    for (Map.Entry<String, Object> me : map.entrySet()) {
+      ret[idx] = me.getKey();
+      ++idx;
+      ret[idx] = me.getValue();
+      ++idx;
+    }
+    return ret;
   }
 
   /**
@@ -613,9 +627,10 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    * @param args the args
    * @return the list
    */
+  @Override
   public <R> List<R> selectAttached(Class<R> cls, String sql, Map<String, Object> args)
   {
-    return createQuery(cls, sql, args).getResultList();
+    return selectAttached(cls, sql, argMapToArray(args));
   }
 
   /**
@@ -891,8 +906,23 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
     return ret;
   }
 
+  public <PK extends Serializable> void insertDetached(Collection<DbRecord<PK>> recs)
+  {
+    insertAttached(recs);
+    detach(recs);
+
+  }
+
+  public <PK extends Serializable> void insertAttached(Collection<DbRecord<PK>> recs)
+  {
+    for (DbRecord<PK> rec : recs) {
+      insertAttached(rec);
+    }
+    detach(recs);
+  }
+
   @Override
-  public <PK extends Serializable> PK insertAttached(final DbRecord<PK> rec)
+  public <PK extends Serializable> PK insertAttached(DbRecord<PK> rec)
   {
     initForCreate(rec);
     filterEvent(new EmgrInsertDbRecordFilterEvent(this, rec),
@@ -1033,6 +1063,7 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
         });
   }
 
+  @Override
   public EmgrTx<EMGR> getEmgrTx()
   {
     return emgrTx;

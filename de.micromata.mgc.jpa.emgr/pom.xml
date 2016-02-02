@@ -8,7 +8,6 @@
   </parent>
   <artifactId>de.micromata.mgc.jpa.emgr</artifactId>
   <packaging>jar</packaging>
-  <name>de.micromata.mgc.jpa.emgr</name>
   <description>
     JPA Wrapper to manage local transaction.
   </description>
