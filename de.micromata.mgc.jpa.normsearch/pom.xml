@@ -8,47 +8,47 @@
   </parent>
   <artifactId>de.micromata.mgc.jpa.normsearch</artifactId>
   <packaging>jar</packaging>
-  <!-- <build>
-    <plugins>
-      <plugin>
-        <groupId>de.micromata.genome</groupId>
-        <artifactId>genome-mvn2-plugin</artifactId>
-        <version>${genome.mvn.plugin.version}</version>
-        <configuration>
-          <archive>
-            <manifestEntries>
-              <Genome-Import-Library>
-                P${de.micromata.genome.db.jpa.version}_de.micromata.genome.db.jpa;reexport:=true
-              </Genome-Import-Library>
-            </manifestEntries>
-          </archive>
-        </configuration>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>buildjarmodule</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
-  -->
+
+  <profiles>
+    <profile>
+      <id>genome</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>de.micromata.genome</groupId>
+            <artifactId>genome-mvn2-plugin</artifactId>
+            <version>${genome.mvn.plugin.version}</version>
+            <configuration>
+              <archive>
+                <manifestEntries>
+                  <Genome-Import-Library>
+                    P${mgc.version}_de.micromata.mgc.jpa.emgr;reexport:=true
+                  </Genome-Import-Library>
+                </manifestEntries>
+              </archive>
+            </configuration>
+            <executions>
+              <execution>
+                <phase>package</phase>
+                <goals>
+                  <goal>buildjarmodule</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+ 
   <dependencies>
     <dependency>
       <groupId>de.micromata.mgc</groupId>
       <artifactId>de.micromata.mgc.jpa.emgr</artifactId>
       <version>${mgc.version}</version>
     </dependency>
-    <!--
-    <dependency>
-      <groupId>de.micromata.genome</groupId>
-      <artifactId>genome-testbuilder</artifactId>
-      <version>${genome.genome-testbuilder.version}</version>
-      <scope>test</scope>
-    </dependency>
-    -->
+    <!-- <dependency> <groupId>de.micromata.genome</groupId> <artifactId>genome-testbuilder</artifactId> <version>${genome.genome-testbuilder.version}</version> 
+      <scope>test</scope> </dependency> -->
     <dependency>
       <groupId>de.micromata.mgc</groupId>
       <artifactId>de.micromata.mgc.common.test</artifactId>
@@ -86,12 +86,12 @@
       <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
-      <dependency>
+    <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
       <version>${javax.servlet.api.version}</version>
-       <scope>test</scope>
+      <scope>test</scope>
     </dependency>
-    
+
   </dependencies>
 </project>

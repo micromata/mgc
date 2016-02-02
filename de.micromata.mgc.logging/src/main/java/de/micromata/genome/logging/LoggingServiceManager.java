@@ -1,23 +1,40 @@
 package de.micromata.genome.logging;
 
+import java.util.ServiceLoader;
+
+import de.micromata.genome.logging.spi.LoggingServiceProvider;
 import de.micromata.genome.logging.spi.log4j.Log4JLogConfigurationDAOImpl;
 import de.micromata.genome.logging.spi.log4j.Log4JLogging;
 import de.micromata.genome.stats.NullStatsDAOImpl;
 import de.micromata.genome.stats.StatsDAO;
 
 /**
+ * Service Manager for Logging.
  * 
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
  */
 public class LoggingServiceManager
 {
-  private static LoggingServiceManager INSTANCE = new LoggingServiceManager();
+  private static LoggingServiceManager INSTANCE;
 
-  private Logging logging = new Log4JLogging();;
+  private Logging logging = new Log4JLogging();
+
   private LogConfigurationDAO logConfigurationDAO = new Log4JLogConfigurationDAOImpl();
+
   private LoggingContextService loggingContextService = new LoggingContextServiceDefaultImpl();
+
   private StatsDAO statsDAO = new NullStatsDAOImpl();
+
+  static {
+    ServiceLoader<LoggingServiceProvider> loader = ServiceLoader.load(LoggingServiceProvider.class);
+    if (loader.iterator().hasNext() == true) {
+      LoggingServiceProvider lps = loader.iterator().next();
+      INSTANCE = lps.getLogging();
+    } else {
+      INSTANCE = new LoggingServiceManager();
+    }
+  }
 
   public static LoggingServiceManager get()
   {

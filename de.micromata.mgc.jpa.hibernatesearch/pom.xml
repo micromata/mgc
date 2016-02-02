@@ -8,15 +8,41 @@
   </parent>
   <artifactId>de.micromata.mgc.jpa.hibernatesearch</artifactId>
   <packaging>jar</packaging>
-  <name>de.micromata.mgc.jpa.hibernatesearch</name>
   <description>
     JPA with Hibernate search.
   </description>
 
-  <properties>
-
-  </properties>
-
+ <profiles>
+    <profile>
+      <id>genome</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>de.micromata.genome</groupId>
+            <artifactId>genome-mvn2-plugin</artifactId>
+            <version>${genome.mvn.plugin.version}</version>
+            <configuration>
+              <archive>
+                <manifestEntries>
+                  <Genome-Import-Library>
+                    P${mgc.version}_de.micromata.mgc.jpa.history;reexport:=true
+                  </Genome-Import-Library>
+                </manifestEntries>
+              </archive>
+            </configuration>
+            <executions>
+              <execution>
+                <phase>package</phase>
+                <goals>
+                  <goal>buildjarmodule</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
   <dependencies>
     <dependency>

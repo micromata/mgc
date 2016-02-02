@@ -12,11 +12,29 @@
     JPA Wrapper to manage local transaction.
   </description>
 
-  <properties>
 
-  </properties>
-
-
+  <profiles>
+    <profile>
+      <id>genome</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>de.micromata.genome</groupId>
+            <artifactId>genome-mvn2-plugin</artifactId>
+            <version>${genome.mvn.plugin.version}</version>
+            <executions>
+              <execution>
+                <phase>package</phase>
+                <goals>
+                  <goal>buildjarmodule</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
   <dependencies>
     <dependency>
       <groupId>de.micromata.mgc</groupId>
