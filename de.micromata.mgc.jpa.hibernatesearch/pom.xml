@@ -25,7 +25,9 @@
               <archive>
                 <manifestEntries>
                   <Genome-Import-Library>
-                    P${mgc.version}_de.micromata.mgc.jpa.history;reexport:=true
+                    P${mgc.version}_de.micromata.mgc.jpa.history;reexport:=true,
+                    hibernate-search-orm-${org.hibernate-search-orm.version};reexport:=true,
+                    lucene-queryparser-${org.apache.lucene.version};reexport:=true
                   </Genome-Import-Library>
                 </manifestEntries>
               </archive>
