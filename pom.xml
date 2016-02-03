@@ -283,6 +283,23 @@
         <enabled>false</enabled>
       </snapshots>
     </pluginRepository>
+    <!-- used for genome mvn plugin -->
+    <pluginRepository>
+     	<id>genome-releases</id>
+			<name>genome-releases</name>
+			<url>http://repo.micromata.priv:8081/nexus/content/repositories/genome</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </pluginRepository>
+    <pluginRepository>
+     <id>genome-snapshots</id>
+			<name>genome-snapshots</name>
+			<url>http://repo.micromata.priv:8081/nexus/content/repositories/genome-snapshot/</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </pluginRepository>
   </pluginRepositories>
 
 
