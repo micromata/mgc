@@ -101,7 +101,8 @@ public class FileLogConfigurationDAOImpl extends PropLogConfigurationDAOBase
         npattern.add(new Pair<String, Integer>(pattern, ilev));
       }
     }
-    Collections.sort(npattern, new Comparator<Pair<String, Integer>>() {
+    Collections.sort(npattern, new Comparator<Pair<String, Integer>>()
+    {
 
       /**
        * @param o1
@@ -136,15 +137,18 @@ public class FileLogConfigurationDAOImpl extends PropLogConfigurationDAOBase
       File pf = new File(pfile);
       p.store(new FileOutputStream(pf), "# Genome LogConfiguration");
     } catch (IOException ex) {
-      throw new LoggedRuntimeException(LogLevel.Warn, GenomeLogCategory.Configuration, "Cannot store GenomeLogConfiguration: "
-          + ex.getMessage(), new LogAttribute(GenomeAttributeType.Miscellaneous, pfile), new LogExceptionAttribute(ex));
+      throw new LoggedRuntimeException(LogLevel.Warn, GenomeLogCategory.Configuration,
+          "Cannot store GenomeLogConfiguration: "
+              + ex.getMessage(),
+          new LogAttribute(GenomeAttributeType.Miscellaneous, pfile), new LogExceptionAttribute(ex));
     }
   }
 
   /*
    * (non-Javadoc)
    * 
-   * @see de.micromata.genome.logging.spi.PropLogConfigurationDAOBase#setLogLevel(de.micromata.genome.logging.LogLevel, java.lang.String)
+   * @see de.micromata.genome.logging.spi.PropLogConfigurationDAOBase#setLogLevel(de.micromata.genome.logging.LogLevel,
+   * java.lang.String)
    */
   @Override
   public void setLogLevel(LogLevel logLevel, String patternString)
@@ -159,6 +163,7 @@ public class FileLogConfigurationDAOImpl extends PropLogConfigurationDAOBase
       p.setProperty(patternString, logLevel.toString());
     }
     storeProperties(p);
+    buildPattern();
   }
 
   public String getFqFileName()
