@@ -7,7 +7,7 @@
 // Copyright Micromata 23.02.2008
 //
 /////////////////////////////////////////////////////////////////////////////
-package de.micromata.genome.util.collection;
+package de.micromata.genome.util.collections;
 
 import java.util.ArrayList;
 import java.util.Collections;

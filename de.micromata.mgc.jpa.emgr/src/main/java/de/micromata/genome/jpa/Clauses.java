@@ -397,6 +397,14 @@ public final class Clauses
       }
     }
 
+    public LogicClause add(Clause... clauses)
+    {
+      for (Clause clause : clauses) {
+        this.clauses.add(clause);
+      }
+      return this;
+    }
+
     /**
      * {@inheritDoc}
      */

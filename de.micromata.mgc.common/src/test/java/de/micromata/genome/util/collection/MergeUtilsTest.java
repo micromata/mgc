@@ -16,6 +16,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
+import de.micromata.genome.util.collections.MergeUtils;
 import de.micromata.genome.util.types.Pair;
 import de.micromata.genome.util.types.Triple;
 
