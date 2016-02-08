@@ -6,6 +6,7 @@ package de.micromata.genome.util.strings;
  * @author roger
  * 
  */
+@Deprecated
 public class StringUtils extends org.apache.commons.lang.StringUtils
 {
   /**
