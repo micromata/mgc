@@ -186,10 +186,7 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
   protected <Q extends Query> Q setQueryTimeout(Q query)
   {
     if (emgrTx.getTimeout() != -1) {
-      Object timeout = query.getHints().get(HINT_QUERY_TIMEOUT);
-      if (timeout != null) {
-        query.setHint(HINT_QUERY_TIMEOUT, (int) emgrTx.getTimeout());
-      }
+      query.setHint(HINT_QUERY_TIMEOUT, (int) emgrTx.getTimeout());
     }
     return query;
   }

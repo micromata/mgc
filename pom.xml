@@ -38,12 +38,21 @@
     </license>
   </licenses>
   <distributionManagement>
-    <repository>
-      <id>ProjectForge</id>
-      <name>ProjectForge M2</name>
-      <url>http://www.projectforge.org/nexus/content/repositories/ProjectForge-Snapshots</url>
-    </repository>
-  </distributionManagement>
+		<repository>
+			<id>genome-releases</id>
+			<name>genome-releases</name>
+			<url>http://repo.micromata.priv:8081/nexus/content/repositories/genome
+      </url>
+		</repository>
+		<snapshotRepository>
+			<id>genome-snapshots</id>
+			<name>genome-snapshots</name>
+			<url>http://repo.micromata.priv:8081/nexus/content/repositories/genome-snapshot/</url>
+			<uniqueVersion>false</uniqueVersion>
+		</snapshotRepository>
+	</distributionManagement>
+
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
