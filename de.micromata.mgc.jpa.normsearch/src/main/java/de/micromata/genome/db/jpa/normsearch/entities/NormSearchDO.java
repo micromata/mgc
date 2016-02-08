@@ -3,7 +3,7 @@ package de.micromata.genome.db.jpa.normsearch.entities;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
-import de.micromata.genome.jpa.DbRecordDO;
+import de.micromata.genome.jpa.StdRecordDO;
 
 /**
  * Base table for normalized search.
@@ -12,7 +12,7 @@ import de.micromata.genome.jpa.DbRecordDO;
  *
  */
 @MappedSuperclass
-public abstract class NormSearchDO extends DbRecordDO<Long> {
+public abstract class NormSearchDO extends StdRecordDO<Long> {
 
 	/**
 	 * The Constant serialVersionUID.
