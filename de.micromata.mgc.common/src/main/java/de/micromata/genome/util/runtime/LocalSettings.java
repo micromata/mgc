@@ -33,6 +33,8 @@ public class LocalSettings
    */
   private static final Logger log = Logger.getLogger(LocalSettings.class);
 
+  public static String localSettingsPrefixName = "local-settings";
+
   /**
    * The instance.
    */
@@ -58,6 +60,9 @@ public class LocalSettings
    */
   private String localSettingsFile;
 
+  private List<File> loadedFiles = new ArrayList<>();
+
+  private List<String> warns = new ArrayList<>();
   /**
    * The map.
    */
@@ -302,7 +307,7 @@ public class LocalSettings
   {
     localSettingsFile = System.getProperty("localsettings");
     if (StringUtils.isEmpty(localSettingsFile) == true) {
-      localSettingsFile = "local-settings.properties";
+      localSettingsFile = localSettingsPrefixName + ".properties";
     }
     loadSettings();
   }
@@ -312,10 +317,10 @@ public class LocalSettings
    */
   public void loadSettings()
   {
-    log.info("Loading localSettingsfile: " + new File(localSettingsFile).getAbsolutePath());
+    //log.info("Loading localSettingsfile: " + new File(localSettingsFile).getAbsolutePath());
     loadSettings(localSettingsFile, true);
 
-    loadSettings("local-settings-dev.properties", false);
+    loadSettings(localSettingsPrefixName + "-dev.properties", false);
     Map<String, String> envmap = System.getenv();
 
     for (Map.Entry<String, String> me : envmap.entrySet()) {
@@ -343,7 +348,7 @@ public class LocalSettings
     File f = new File(localSettingsFile);
     if (f.exists() == false) {
       if (warn == true) {
-        log.warn("Cannot find localsettings file: " + f.getAbsolutePath());
+        warns.add("Cannot find localsettings file: " + f.getAbsolutePath());
       }
       return false;
     }
@@ -363,6 +368,7 @@ public class LocalSettings
     } finally {
       IOUtils.closeQuietly(fin);
     }
+    loadedFiles.add(f);
     return true;
   }
 
@@ -433,6 +439,25 @@ public class LocalSettings
       ret.put(me.getKey(), me.getValue());
     }
     return ret;
+  }
+
+  /**
+   * Call this after loading local settings and initialized logging.
+   */
+  public void logloadedFiles()
+  {
+    for (String warn : warns) {
+      log.warn(warn);
+    }
+    if (log.isInfoEnabled() == false) {
+      return;
+    }
+    StringBuilder sb = new StringBuilder();
+    sb.append("Loaded localsettings: ");
+    for (File lf : loadedFiles) {
+      sb.append(lf.getAbsolutePath()).append(", ");
+    }
+    log.info(sb.toString());
 
   }
 
