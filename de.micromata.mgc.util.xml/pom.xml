@@ -12,7 +12,36 @@
     Little utilities to generate XML/HTML.
   </description>
 
-
+  <profiles>
+    <profile>
+      <id>genome</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>de.micromata.genome</groupId>
+            <artifactId>genome-mvn2-plugin</artifactId>
+            <version>${genome.mvn.plugin.version}</version>
+            <configuration>
+              <archive>
+                <manifestEntries>
+                  <Genome-Import-Library>
+                  </Genome-Import-Library>
+                </manifestEntries>
+              </archive>
+            </configuration>
+            <executions>
+              <execution>
+                <phase>package</phase>
+                <goals>
+                  <goal>buildjarmodule</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
 
   <dependencies>
