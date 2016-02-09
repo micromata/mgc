@@ -4,7 +4,7 @@ import javax.persistence.EntityManager;
 
 import org.junit.Ignore;
 
-import de.micromata.genome.db.jpa.normsearch.NormalizedSearchDaoManager;
+import de.micromata.genome.db.jpa.normsearch.NormalizedSearchServiceManager;
 import de.micromata.genome.jpa.DefaultEmgr;
 import de.micromata.genome.jpa.EmgrFactory;
 import de.micromata.genome.jpa.EmgrTx;
@@ -45,7 +45,7 @@ public class TestNSearchMgrFactory extends EmgrFactory<DefaultEmgr>
   protected void registerEvents()
   {
     super.registerEvents();
-    NormalizedSearchDaoManager.get().getNormalizedSearchDAO().registerEmgrListener(this);
+    NormalizedSearchServiceManager.get().getNormalizedSearchDAO().registerEmgrListener(this);
   }
 
 }

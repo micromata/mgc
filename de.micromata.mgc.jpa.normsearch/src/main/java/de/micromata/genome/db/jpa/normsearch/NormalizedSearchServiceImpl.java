@@ -32,7 +32,7 @@ import de.micromata.genome.util.bean.PrivateBeanUtils;
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  * 
  */
-public class NormalizedSearchDAOImpl implements NormalizedSearchDAO
+public class NormalizedSearchServiceImpl implements NormalizedSearchService
 {
   @Override
   public void registerEmgrListener(EmgrFactory<?> emgrFactory)

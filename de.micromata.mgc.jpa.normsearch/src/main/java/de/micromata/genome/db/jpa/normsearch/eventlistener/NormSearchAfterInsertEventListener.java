@@ -1,6 +1,6 @@
 package de.micromata.genome.db.jpa.normsearch.eventlistener;
 
-import de.micromata.genome.db.jpa.normsearch.NormalizedSearchDaoManager;
+import de.micromata.genome.db.jpa.normsearch.NormalizedSearchServiceManager;
 import de.micromata.genome.jpa.DbRecord;
 import de.micromata.genome.jpa.Emgr;
 import de.micromata.genome.jpa.events.EmgrAfterInsertedEvent;
@@ -24,7 +24,7 @@ public class NormSearchAfterInsertEventListener implements EmgrEventHandler<Emgr
     if ((event.getEntity() instanceof DbRecord) == false) {
       return;
     }
-    NormalizedSearchDaoManager.get().getNormalizedSearchDAO().insert((Emgr) event.getEmgr(),
+    NormalizedSearchServiceManager.get().getNormalizedSearchDAO().insert((Emgr) event.getEmgr(),
         (DbRecord) event.getEntity());
 
   }

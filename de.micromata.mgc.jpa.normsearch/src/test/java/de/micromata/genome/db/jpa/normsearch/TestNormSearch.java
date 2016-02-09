@@ -45,7 +45,7 @@ public class TestNormSearch extends MgcTestCase
     });
 
     // search entity
-    NormalizedSearchDAOImpl searchdao = NormalizedSearchDaoManager.get().getNormalizedSearchDAO();
+    NormalizedSearchServiceImpl searchdao = NormalizedSearchServiceManager.get().getNormalizedSearchDAO();
     List<Long> res = TestNSearchMgrFactory.get().runInTrans((emgr) -> {
       return searchdao.search(emgr, TestTableMasterSearchDO.class, "KOMM");
     });

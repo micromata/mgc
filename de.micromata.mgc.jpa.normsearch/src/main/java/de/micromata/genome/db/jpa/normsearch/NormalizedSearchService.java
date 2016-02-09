@@ -13,7 +13,7 @@ import de.micromata.genome.jpa.IEmgr;
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  * 
  */
-public interface NormalizedSearchDAO
+public interface NormalizedSearchService
 {
   /**
    * Register the listener to Emgr.

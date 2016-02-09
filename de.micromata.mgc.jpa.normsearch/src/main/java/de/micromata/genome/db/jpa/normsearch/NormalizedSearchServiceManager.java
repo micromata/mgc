@@ -5,25 +5,25 @@ package de.micromata.genome.db.jpa.normsearch;
  *
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  */
-public class NormalizedSearchDaoManager
+public class NormalizedSearchServiceManager
 {
 
   /**
    * The instance.
    */
-  private static NormalizedSearchDaoManager INSTANCE = new NormalizedSearchDaoManager();
+  private static NormalizedSearchServiceManager INSTANCE = new NormalizedSearchServiceManager();
 
   /**
    * The normalized search dao.
    */
-  private NormalizedSearchDAOImpl normalizedSearchDAO = new NormalizedSearchDAOImpl();
+  private NormalizedSearchServiceImpl normalizedSearchDAO = new NormalizedSearchServiceImpl();
 
   /**
    * Gets the.
    *
    * @return the normalized search dao manager
    */
-  public static NormalizedSearchDaoManager get()
+  public static NormalizedSearchServiceManager get()
   {
     return INSTANCE;
   }
@@ -33,7 +33,7 @@ public class NormalizedSearchDaoManager
    *
    * @return the normalized search dao
    */
-  public NormalizedSearchDAOImpl getNormalizedSearchDAO()
+  public NormalizedSearchServiceImpl getNormalizedSearchDAO()
   {
     return normalizedSearchDAO;
   }
@@ -43,7 +43,7 @@ public class NormalizedSearchDaoManager
    *
    * @param normalizedSearchDAO the new normalized search dao
    */
-  public void setNormalizedSearchDAO(NormalizedSearchDAOImpl normalizedSearchDAO)
+  public void setNormalizedSearchDAO(NormalizedSearchServiceImpl normalizedSearchDAO)
   {
     this.normalizedSearchDAO = normalizedSearchDAO;
   }
