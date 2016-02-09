@@ -24,7 +24,7 @@ public class NormSearchAfterInsertEventListener implements EmgrEventHandler<Emgr
     if ((event.getEntity() instanceof DbRecord) == false) {
       return;
     }
-    NormalizedSearchServiceManager.get().getNormalizedSearchDAO().insert((Emgr) event.getEmgr(),
+    NormalizedSearchServiceManager.get().getNormalizedSearchService().insert((Emgr) event.getEmgr(),
         (DbRecord) event.getEntity());
 
   }

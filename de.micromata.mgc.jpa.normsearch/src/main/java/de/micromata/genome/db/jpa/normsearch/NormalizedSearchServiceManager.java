@@ -16,7 +16,7 @@ public class NormalizedSearchServiceManager
   /**
    * The normalized search dao.
    */
-  private NormalizedSearchServiceImpl normalizedSearchDAO = new NormalizedSearchServiceImpl();
+  private NormalizedSearchService normalizedSearchService = new NormalizedSearchServiceImpl();
 
   /**
    * Gets the.
@@ -33,9 +33,9 @@ public class NormalizedSearchServiceManager
    *
    * @return the normalized search dao
    */
-  public NormalizedSearchServiceImpl getNormalizedSearchDAO()
+  public NormalizedSearchService getNormalizedSearchService()
   {
-    return normalizedSearchDAO;
+    return normalizedSearchService;
   }
 
   /**
@@ -43,9 +43,9 @@ public class NormalizedSearchServiceManager
    *
    * @param normalizedSearchDAO the new normalized search dao
    */
-  public void setNormalizedSearchDAO(NormalizedSearchServiceImpl normalizedSearchDAO)
+  public void setNormalizedSearchService(NormalizedSearchService normalizedSearchDAO)
   {
-    this.normalizedSearchDAO = normalizedSearchDAO;
+    this.normalizedSearchService = normalizedSearchDAO;
   }
 
 }

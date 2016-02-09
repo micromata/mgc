@@ -24,7 +24,7 @@ public class NormSearchAfterDeleteListener implements EmgrEventHandler<EmgrAfter
     if ((event.getEntity() instanceof DbRecord) == false) {
       return;
     }
-    NormalizedSearchServiceManager.get().getNormalizedSearchDAO().delete((Emgr) event.getEmgr(),
+    NormalizedSearchServiceManager.get().getNormalizedSearchService().delete((Emgr) event.getEmgr(),
         (DbRecord) event.getEntity());
 
   }

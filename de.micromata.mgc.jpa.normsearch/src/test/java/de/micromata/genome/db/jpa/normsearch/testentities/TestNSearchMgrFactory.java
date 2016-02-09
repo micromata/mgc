@@ -45,7 +45,7 @@ public class TestNSearchMgrFactory extends EmgrFactory<DefaultEmgr>
   protected void registerEvents()
   {
     super.registerEvents();
-    NormalizedSearchServiceManager.get().getNormalizedSearchDAO().registerEmgrListener(this);
+    NormalizedSearchServiceManager.get().getNormalizedSearchService().registerEmgrListener(this);
   }
 
 }
