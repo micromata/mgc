@@ -279,7 +279,7 @@ public interface IEmgr<EMGR extends IEmgr<?>>
    * @param rec the rec
    * @return the emgr
    */
-  EMGR updateAttached(final DbRecord<?> rec);
+  void updateAttached(final DbRecord<?> rec);
 
   /**
    * Update copy.

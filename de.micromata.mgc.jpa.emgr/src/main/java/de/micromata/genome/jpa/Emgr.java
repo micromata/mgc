@@ -561,21 +561,6 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    * @param <R> the generic type
    * @param cls the cls
    * @param sql the sql
-   * @param values the values
-   * @param readOnly the read only
-   * @return the list
-   */
-  public <R> List<R> select(Class<R> cls, String sql, Map<String, Object> values, boolean readOnly)
-  {
-    return selectDetached(cls, sql, values);
-  }
-
-  /**
-   * Select.
-   * 
-   * @param <R> the generic type
-   * @param cls the cls
-   * @param sql the sql
    * @param keyValues the key values
    * @return the list
    */
@@ -944,14 +929,14 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    * @return the t
    */
 
-  public <PK extends Serializable> PK insert(final DbRecord<PK> rec)
+  public <PK extends Serializable> PK insert(DbRecord<PK> rec)
   {
     return insertDetached(rec);
   }
 
-  public EMGR update(final DbRecord<?> rec)
+  public void update(final DbRecord<?> rec)
   {
-    return updateAttached(rec);
+    updateAttached(rec);
   }
 
   /**
@@ -962,7 +947,7 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    * @return the t
    */
   @Override
-  public EMGR updateAttached(final DbRecord<?> rec)
+  public void updateAttached(final DbRecord<?> rec)
   {
     invokeEvent(new EmgrBeforeUpdatedEvent(this, rec));
     filterEvent(new EmgrUpdateDbRecordFilterEvent(this, rec),
@@ -977,7 +962,7 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
         });
 
     invokeEvent(new EmgrAfterUpdatedEvent(this, rec));
-    return getThis();
+
   }
 
   /**
