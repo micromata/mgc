@@ -67,6 +67,13 @@
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-entitymanager</artifactId>
       <version>${org.hibernate.hibernate-entitymanager.version}</version>
+      <exclusions>
+        <!--  old version of JAXBContext -->
+        <exclusion>
+          <groupId>jaxme</groupId>
+          <artifactId>jaxme-api</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
