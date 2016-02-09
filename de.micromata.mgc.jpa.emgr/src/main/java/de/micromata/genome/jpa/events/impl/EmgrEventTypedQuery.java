@@ -1,7 +1,10 @@
 package de.micromata.genome.jpa.events.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.TypedQuery;
 
 import de.micromata.genome.jpa.IEmgr;
@@ -48,7 +51,21 @@ public class EmgrEventTypedQuery<E>extends WrappedTypedQuery<E>
   @Override
   public E getSingleResult()
   {
-    return nested.getSingleResult();
+
+    List<E> res = emgr.getEmgrFactory().getEventFactory().invokeEvents(
+        new EmgrTypedQueryGetResultListFilterEvent<E>(emgr, nested),
+        (event) -> {
+          List<E> resl = new ArrayList<>();
+          resl.add(nested.getSingleResult());
+          event.setResult(resl);
+        });
+    if (res.isEmpty() == true) {
+      throw new NoResultException("No entity found for query");
+    }
+    if (res.size() > 1) {
+      throw new NonUniqueResultException("result returns more than one elements");
+    }
+    return res.get(0);
   }
 
   @Override

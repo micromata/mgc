@@ -274,7 +274,6 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
   {
     return filterEvent(new EmgrCreateTypedQueryFilterEvent<R>(this, cls, sql, keyValues), (event) -> {
       TypedQuery<R> q = new EmgrEventTypedQuery<>(this, createQuery(sql, cls));
-
       setParams(q, keyValues);
       event.setResult(q);
     });
@@ -803,7 +802,7 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    * @param rec the rec
    * @return the t
    */
-  public EMGR remove(final Object rec)
+  public void remove(final Object rec)
   {
     if (rec instanceof DbRecord) {
       invokeEvent(new EmgrBeforeDeleteEvent(this, (DbRecord) rec));
@@ -819,7 +818,6 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
           entityManager.flush();
         });
     invokeEvent(new EmgrAfterDeletedEvent(this, rec));
-    return getThis();
   }
 
   /**
@@ -1016,6 +1014,10 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
         (EmgrUpdateCopyFilterEvent event) -> {
           EntityCopyStatus status = EmgrCopyUtils.copyTo(this, event.getIface(), event.getTarget(), event.getSource(),
               ignoreCopyFields);
+          if (status == EntityCopyStatus.NONE) {
+            event.setResult(status);
+            return;
+          }
           update(event.getTarget());
           event.setResult(status);
         });
