@@ -129,6 +129,7 @@
         <module>de.micromata.mgc.jpa.hibernatesearch</module>
         <module>de.micromata.mgc.jpa.spring</module>
         <module>de.micromata.mgc.jpa.xmldump</module>
+        <module>de.micromata.mgc.jpa.logging</module>
       </modules>
     </profile>
 
