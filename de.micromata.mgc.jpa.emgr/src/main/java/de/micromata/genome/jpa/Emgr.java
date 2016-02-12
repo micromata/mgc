@@ -14,6 +14,7 @@ import javax.persistence.OptimisticLockException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.Validate;
 import org.apache.log4j.Logger;
 import org.hibernate.jpa.AvailableSettings;
@@ -74,7 +75,9 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    * The factory created this Emgr.
    */
   private final EmgrFactory<EMGR> emgrFactory;
-
+  /**
+   * The transaction.
+   */
   private EmgrTx<EMGR> emgrTx;
 
   /**
@@ -790,9 +793,18 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
   }
 
   @Override
-  public void deleteDetached(DbRecord<?> rec)
+  public void deleteDetached(DbRecord<?> rec, boolean overwrite) throws OptimisticLockException
   {
     DbRecord<?> dbrec = selectByPkAttached(rec.getClass(), rec.getPk());
+    if (overwrite == false && rec instanceof StdRecord && dbrec instanceof StdRecord) {
+      Integer thisupc = ((StdRecord<?>) rec).getUpdateCounter();
+      Integer dbupc = ((StdRecord<?>) dbrec).getUpdateCounter();
+      if (ObjectUtils.equals(thisupc, dbupc) == false) {
+        throw new OptimisticLockException("Cannot delete " + dbrec.getClass().getName() + "(" + dbrec.getPk()
+            + ") because version conflict: " + " old updatecounter: " + thisupc
+            + "; new updatecounter: " + dbupc, null, dbrec);
+      }
+    }
     deleteAttached(dbrec);
   }
 

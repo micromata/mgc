@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.OptimisticLockException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
@@ -356,8 +357,10 @@ public interface IEmgr<EMGR extends IEmgr<?>>
    * deleteAttached.
    *
    * @param rec the rec
+   * @param overwrite checks if entity has the same modification counter.
+   * @throws OptimisticLockException in case updatecounter doesn't match.
    */
-  void deleteDetached(DbRecord<?> rec);
+  void deleteDetached(DbRecord<?> rec, boolean overwrite) throws OptimisticLockException;
 
   /**
    * Mark deleted.
