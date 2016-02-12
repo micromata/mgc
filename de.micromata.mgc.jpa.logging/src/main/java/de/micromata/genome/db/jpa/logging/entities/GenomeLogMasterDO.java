@@ -17,9 +17,9 @@ import org.hibernate.annotations.Index;
 
 /**
  * The logging master entity.
- * 
+ *
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
- * 
+ *
  */
 @Entity
 @Table(name = "TB_TA_GLOG_MASTER")
