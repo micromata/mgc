@@ -49,42 +49,12 @@ public interface NormalizedSearchService
   public List<Long> search(IEmgr<?> emgr, Class<? extends NormSearchDO> clazz, String expression);
 
   /**
-   * internal to insert normalized values.
-   * 
-   * Note: All operations has be done inside a transaction. Normally the transaction, which also insert/update/delete
-   * the rec.
-   * 
-   * @param emgr Entity Manager
-   * @param rec the table row, containing the columns/properties
-   * @param fields property names of columns
-   */
-  public void insert(IEmgr<?> emgr, NormSearchMasterTable rec, String... fields);
-
-  /**
-   * internal to update normalized values.
-   *
-   * @param emgr Entity Manager
-   * @param rec the table row, containing the columns/properties
-   * @param fields property names of columns
-   */
-  public void update(IEmgr<?> emgr, NormSearchMasterTable rec, String... fields);
-
-  /**
-   * internal to delete normalized values.
-   *
-   * @param emgr Entity Manager
-   * @param rec the table row, containing the columns/properties
-   * @param fields property names of columns
-   */
-  public void delete(IEmgr<?> emgr, NormSearchMasterTable rec, String... fields);
-
-  /**
    * Insert using the NormSearchTable annotation.
    *
    * @param emgr the emgr
    * @param entity the entity
    */
-  public void insert(IEmgr<?> emgr, DbRecord entity);
+  public void onInsert(IEmgr<?> emgr, DbRecord<?> entity);
 
   /**
    * Update using the NormSearchTable annotation.
@@ -92,7 +62,7 @@ public interface NormalizedSearchService
    * @param emgr the emgr
    * @param entity the entity
    */
-  public void update(IEmgr<?> emgr, DbRecord entity);
+  public void onUpdate(IEmgr<?> emgr, DbRecord<?> entity);
 
   /**
    * delete using the NormSearchTable annotation.
@@ -100,6 +70,14 @@ public interface NormalizedSearchService
    * @param emgr the emgr
    * @param entity the entity
    */
-  public void delete(IEmgr<?> emgr, DbRecord entity);
+  public void onDelete(IEmgr<?> emgr, DbRecord<?> entity);
 
+  /**
+   * Creates an default normsearch entity instance.
+   * 
+   * @param entity
+   * @param normSearchEntity
+   * @return
+   */
+  public <T extends NormSearchDO> T createDefaultNormSearchEntry(DbRecord<?> entity, Class<T> normSearchEntity);
 }

@@ -18,6 +18,8 @@ import de.micromata.genome.db.jpa.normsearch.entities.NormSearchDO;
 import de.micromata.genome.db.jpa.normsearch.eventlistener.NormSearchAfterDeleteListener;
 import de.micromata.genome.db.jpa.normsearch.eventlistener.NormSearchAfterInsertEventListener;
 import de.micromata.genome.db.jpa.normsearch.eventlistener.NormSearchAfterUpdateEventListener;
+import de.micromata.genome.jpa.ComplexEntity;
+import de.micromata.genome.jpa.ComplexEntityVisitor;
 import de.micromata.genome.jpa.DbRecord;
 import de.micromata.genome.jpa.EmgrFactory;
 import de.micromata.genome.jpa.IEmgr;
@@ -125,32 +127,31 @@ public class NormalizedSearchServiceImpl implements NormalizedSearchService
     return entries;
   }
 
-  @Override
-  public void update(IEmgr<?> emgr, final NormSearchMasterTable rec, final String... fields)
-  {
-    // TODO do merge here.
-    delete(emgr, rec, fields);
-    insert(emgr, rec, fields);
-  }
-
-  @Override
-  public void insert(IEmgr<?> emgr, NormSearchMasterTable rec, String... fields)
-  {
-    final List<NormSearchDO> entries = read(rec, fields);
-    for (NormSearchDO ns : entries) {
-      emgr.insertDetached(ns);
-    }
-
-  }
-
-  @Override
-  public void delete(IEmgr<?> emgr, final NormSearchMasterTable rec, final String... fields)
-  {
-    Query q = emgr.createUntypedQuery(
-        "delete from " + rec.getNormSearchTableClass().getCanonicalName() + " d where d.parent = :parent", "parent",
-        rec.getPk());
-    q.executeUpdate();
-  }
+  //  @Override
+  //  public void update(IEmgr<?> emgr, final NormSearchMasterTable rec, final String... fields)
+  //  {
+  //    delete(emgr, rec, fields);
+  //    insert(emgr, rec, fields);
+  //  }
+  //
+  //  @Override
+  //  public void insert(IEmgr<?> emgr, NormSearchMasterTable rec, String... fields)
+  //  {
+  //    final List<NormSearchDO> entries = read(rec, fields);
+  //    for (NormSearchDO ns : entries) {
+  //      emgr.insertDetached(ns);
+  //    }
+  //
+  //  }
+  //
+  //  @Override
+  //  public void delete(IEmgr<?> emgr, final NormSearchMasterTable rec, final String... fields)
+  //  {
+  //    Query q = emgr.createUntypedQuery(
+  //        "delete from " + rec.getNormSearchTableClass().getCanonicalName() + " d where d.parent = :parent", "parent",
+  //        rec.getPk());
+  //    q.executeUpdate();
+  //  }
 
   /**
    * Gets the search fields.
@@ -198,8 +199,7 @@ public class NormalizedSearchServiceImpl implements NormalizedSearchService
       }
       String[] tokens = tokenize(val.toString());
       for (String tk : tokens) {
-        NormSearchDO sd = PrivateBeanUtils.createInstance(tableClass);
-        sd.setParent(fkToLong(rec.getPk()));
+        NormSearchDO sd = createDefaultNormSearchEntry(rec, tableClass);
         sd.setColName(field.getName());
         sd.setValue(tk);
         entries.add(sd);
@@ -208,44 +208,112 @@ public class NormalizedSearchServiceImpl implements NormalizedSearchService
     return entries;
   }
 
-  @Override
-  public void update(IEmgr<?> emgr, DbRecord entity)
+  protected boolean isForNormSearch(DbRecord<?> entity)
   {
-    NormSearchTable nsanot = entity.getClass().getAnnotation(NormSearchTable.class);
-    if (nsanot == null) {
-      return;
+    if (entity instanceof NormSearchTable) {
+      return true;
     }
-    delete(emgr, entity);
-    insert(emgr, entity);
+    NormSearchTable nsanot = entity.getClass().getAnnotation(NormSearchTable.class);
+    return nsanot != null;
   }
 
   @Override
-  public void insert(IEmgr<?> emgr, DbRecord entity)
+  public void onUpdate(IEmgr<?> emgr, DbRecord<?> entity)
   {
-    NormSearchTable nsanot = entity.getClass().getAnnotation(NormSearchTable.class);
-    if (nsanot == null) {
+    if (isForNormSearch(entity) == false) {
       return;
     }
-    Class<? extends NormSearchDO> table = nsanot.normSearchTable();
-    List<Field> fields = getSearchFields(nsanot, entity);
-    List<NormSearchDO> nes = getNormSearchEntries(table, entity, fields);
-    for (NormSearchDO ns : nes) {
+    onDelete(emgr, entity);
+    onInsert(emgr, entity);
+  }
+
+  @Override
+  public void onInsert(IEmgr<?> emgr, DbRecord<?> entity)
+  {
+
+    if (entity instanceof ComplexEntity == false) {
+      insertImpl(emgr, entity);
+      return;
+    }
+    ComplexEntity ce = (ComplexEntity) entity;
+    ce.visit(new ComplexEntityVisitor()
+    {
+      @Override
+      public void visit(DbRecord rec)
+      {
+        insertImpl(emgr, rec);
+      }
+    });
+  }
+
+  protected void insertImpl(IEmgr<?> emgr, DbRecord<?> entity)
+  {
+    NormSearchTable nsanot = entity.getClass().getAnnotation(NormSearchTable.class);
+    if (nsanot != null) {
+      Class<? extends NormSearchDO> table = nsanot.normSearchTable();
+      List<Field> fields = getSearchFields(nsanot, entity);
+      List<NormSearchDO> nes = getNormSearchEntries(table, entity, fields);
+      for (NormSearchDO ns : nes) {
+        emgr.insertDetached(ns);
+      }
+    }
+    if (entity instanceof NormSearchMasterTable) {
+      insertImpl(emgr, entity, (NormSearchMasterTable) entity);
+    }
+  }
+
+  protected void insertImpl(IEmgr<?> emgr, DbRecord<?> entity, NormSearchMasterTable normSearchTable)
+  {
+    List<NormSearchDO> entries = read(normSearchTable, normSearchTable.getSearchPropertyNames());
+    for (NormSearchDO ns : entries) {
       emgr.insertDetached(ns);
     }
   }
 
   @Override
-  public void delete(IEmgr<?> emgr, DbRecord entity)
+  public void onDelete(IEmgr<?> emgr, DbRecord<?> entity)
   {
-    NormSearchTable nsanot = entity.getClass().getAnnotation(NormSearchTable.class);
-    if (nsanot == null) {
+    if (entity instanceof ComplexEntity == false) {
+      deleteImpl(emgr, entity);
       return;
     }
-    Class<? extends NormSearchDO> nstable = nsanot.normSearchTable();
+    ComplexEntity ce = (ComplexEntity) entity;
+    ce.visit(new ComplexEntityVisitor()
+    {
+      @Override
+      public void visit(DbRecord rec)
+      {
+        deleteImpl(emgr, rec);
+      }
+    });
+
+  }
+
+  protected void deleteImpl(IEmgr<?> emgr, DbRecord entity)
+  {
+
+    NormSearchTable nsanot = entity.getClass().getAnnotation(NormSearchTable.class);
+    Class<? extends NormSearchDO> nstable;
+    if (nsanot != null) {
+      nstable = nsanot.normSearchTable();
+    } else if (entity instanceof NormSearchMasterTable) {
+      nstable = ((NormSearchMasterTable) entity).getNormSearchTableClass();
+    } else {
+      return;
+    }
+
     Query q = emgr.createUntypedQuery(
         "delete from " + nstable.getName() + " d where d.parent = :parent", "parent",
         entity.getPk());
     q.executeUpdate();
+  }
+
+  @Override
+  public <T extends NormSearchDO> T createDefaultNormSearchEntry(DbRecord<?> entity, Class<T> normSearchEntity)
+  {
+    T sd = PrivateBeanUtils.createInstance(normSearchEntity);
+    sd.setParent(fkToLong(entity.getPk()));
+    return sd;
   }
 
 }

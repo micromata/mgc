@@ -11,6 +11,7 @@ import de.micromata.genome.jpa.StdRecord;
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  * 
  */
+
 public interface NormSearchMasterTable extends StdRecord<Long>
 {
   /**
@@ -29,4 +30,12 @@ public interface NormSearchMasterTable extends StdRecord<Long>
    */
   @Transient
   public Class<? extends NormSearchDO> getNormSearchTableClass();
+
+  /**
+   * The columns to search with values.
+   *
+   * @return never null
+   */
+  @Transient
+  String[] getSearchPropertyNames();
 }

@@ -2,7 +2,6 @@ package de.micromata.genome.db.jpa.normsearch.eventlistener;
 
 import de.micromata.genome.db.jpa.normsearch.NormalizedSearchServiceManager;
 import de.micromata.genome.jpa.DbRecord;
-import de.micromata.genome.jpa.Emgr;
 import de.micromata.genome.jpa.events.EmgrAfterDeletedEvent;
 import de.micromata.genome.jpa.events.EmgrEventHandler;
 
@@ -18,14 +17,12 @@ public class NormSearchAfterDeleteListener implements EmgrEventHandler<EmgrAfter
   @Override
   public void onEvent(EmgrAfterDeletedEvent event)
   {
-    if ((event.getEmgr() instanceof Emgr) == false) {
-      return;
-    }
+
     if ((event.getEntity() instanceof DbRecord) == false) {
       return;
     }
-    NormalizedSearchServiceManager.get().getNormalizedSearchService().delete((Emgr) event.getEmgr(),
-        (DbRecord) event.getEntity());
+    NormalizedSearchServiceManager.get().getNormalizedSearchService().onDelete(event.getEmgr(),
+        (DbRecord<?>) event.getEntity());
 
   }
 

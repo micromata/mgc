@@ -21,7 +21,14 @@ public @interface NormSearchTable {
    * 
    * @return
    */
-  Class<? extends NormSearchDO>normSearchTable();
+  Class<? extends NormSearchDO> normSearchTable();
+
+  /**
+   * Provide an option creator for a NormSearch entry.
+   * 
+   * @return empty or size 1 element.
+   */
+  Class<? extends NormalizedSearchEntryCreator>[] creator() default {};
 
   /**
    * Which properties of the Entity should be stored in the normalized search.
@@ -30,5 +37,6 @@ public @interface NormSearchTable {
    * 
    * @return the string[]
    */
-  String[]normSearchFields() default {};
+  String[] normSearchFields() default {
+  };
 }
