@@ -467,7 +467,7 @@ public abstract class BaseJpaLoggingImpl<M extends BaseLogMasterDO<?>> extends F
 			}
 		}
 
-		final JpaLoggingEntMgrFactory mgrfac = JpaLoggingEntMgrFactory.get();
+		EmgrFactory<DefaultEmgr> mgrfac = getEmgrFactory();
 		mgrfac.runInTrans(new EmgrCallable<Void, DefaultEmgr>() {
 			@Override
 			public Void call(DefaultEmgr mgr) {
@@ -547,7 +547,7 @@ public abstract class BaseJpaLoggingImpl<M extends BaseLogMasterDO<?>> extends F
 	@Override
 	protected void selectLogsImpl(List<Object> logIds, final boolean masterOnly, LogEntryCallback callback)
 			throws EndOfSearch {
-		final JpaLoggingEntMgrFactory mgrfac = JpaLoggingEntMgrFactory.get();
+		EmgrFactory<DefaultEmgr> mgrfac = getEmgrFactory();
 		for (final Object logId : logIds) {
 			LogEntry le = mgrfac.runWoTrans(new EmgrCallable<LogEntry, DefaultEmgr>() {
 				@Override
