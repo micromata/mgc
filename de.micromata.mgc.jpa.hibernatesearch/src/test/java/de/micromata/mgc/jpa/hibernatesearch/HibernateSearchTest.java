@@ -56,7 +56,7 @@ public class HibernateSearchTest extends HibernateSearchTestBase
     Assert.assertEquals(1, found.size());
 
     HibernateSearchTestEmgrFactory.get().runInTrans((emgr) -> {
-      emgr.deleteDetached(ent);
+      emgr.deleteDetached(ent, true);
       return null;
     });
 

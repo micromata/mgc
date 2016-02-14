@@ -178,6 +178,8 @@ public interface IEmgr<EMGR extends IEmgr<?>>
    * @param sql the sql
    * @param values the values
    * @return the typed query
+   * @events EmgrCreateTypedQueryFilterEvent, EmgrTypedQueryGetResultListFilterEvent, EmgrBeforeDetachEvent,
+   *         EmgrAfterDetachEvent
    */
   <R> TypedQuery<R> createQueryDetached(final Class<R> cls, final String sql, final Map<String, Object> values);
 
@@ -189,6 +191,7 @@ public interface IEmgr<EMGR extends IEmgr<?>>
    * @param sql the sql
    * @param keyValues the key values
    * @return the typed query
+   * @events EmgrCreateTypedQueryFilterEvent, EmgrTypedQueryGetResultListFilterEvent
    */
   <R> TypedQuery<R> createQueryAttached(final Class<R> cls, final String sql, final Object... keyValues);
 
@@ -200,6 +203,7 @@ public interface IEmgr<EMGR extends IEmgr<?>>
    * @param sql the sql
    * @param values the values
    * @return the typed query
+   * @events EmgrCreateTypedQueryFilterEvent, EmgrTypedQueryGetResultListFilterEvent
    */
   <R> TypedQuery<R> createQueryAttached(final Class<R> cls, final String sql, final Map<String, Object> values);
 
@@ -213,6 +217,8 @@ public interface IEmgr<EMGR extends IEmgr<?>>
    * @param sql the sql
    * @param keyValues the key values
    * @return the typed query
+   * @events EmgrCreateTypedQueryFilterEvent, EmgrTypedQueryGetResultListFilterEvent, EmgrBeforeDetachEvent,
+   *         EmgrAfterDetachEvent
    */
   <R> TypedQuery<R> createQueryDetached(final Class<R> cls, final String sql, final Object... keyValues);
 
@@ -375,6 +381,7 @@ public interface IEmgr<EMGR extends IEmgr<?>>
    *
    * @param rec the rec
    * @return true, if record was found and it was previously marked as deleted.
+   * @events EmgrMarkUndeletedCriteriaUpdateFilterEvent
    */
   <T extends MarkDeletableRecord<?>> boolean markUndeleted(T rec);
 
@@ -383,6 +390,7 @@ public interface IEmgr<EMGR extends IEmgr<?>>
    *
    * @param entity the entity
    * @return the emgr
+   * @events EmgrBeforeDetachEvent, EmgrAfterDetachEvent
    */
   EMGR detach(final Object entity);
 
@@ -392,6 +400,7 @@ public interface IEmgr<EMGR extends IEmgr<?>>
    * @param <R> the generic type
    * @param result the result
    * @return the emgr
+   * @events EmgrBeforeDetachEvent, EmgrAfterDetachEvent for each entity
    */
   <R> EMGR detach(List<R> result);
 

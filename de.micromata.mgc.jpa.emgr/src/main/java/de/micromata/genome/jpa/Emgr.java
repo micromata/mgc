@@ -154,7 +154,6 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
   /**
    * Creates the query.
    * 
-   * NOTE this is currenty NOT Wrapped with events.
    * 
    * @param sql the sql
    * @return the query
@@ -169,6 +168,9 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
 
   /**
    * Creates the query. NOTE this is currenty NOT Wrapped with events.
+   * 
+   * 
+   * TODO RK check delete and use Attached/detached variante
    * 
    * @param sql the sql
    * @param keyValues list of pairs. first is column name, second is value
