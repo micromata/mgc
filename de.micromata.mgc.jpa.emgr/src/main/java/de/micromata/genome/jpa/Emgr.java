@@ -912,7 +912,6 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
     for (DbRecord<PK> rec : recs) {
       insertAttached(rec);
     }
-    detach(recs);
   }
 
   @Override
