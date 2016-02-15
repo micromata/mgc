@@ -12,7 +12,7 @@ import javax.persistence.TypedQuery;
 
 /**
  * Basic interface to an Entitymanager.
- * 
+ *
  * find*-Methods may return null.
  *
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
@@ -160,9 +160,9 @@ public interface IEmgr<EMGR extends IEmgr<?>>
 
   /**
    * Select all existant entities of given class.
-   * 
+   *
    * Be carfull, use it only for adminstrational usses.
-   * 
+   *
    * @param cls
    * @return
    */
@@ -170,7 +170,7 @@ public interface IEmgr<EMGR extends IEmgr<?>>
 
   /**
    * Creates the query detached.
-   * 
+   *
    * The query returns the entity detached.
    *
    * @param <R> the generic type
@@ -209,7 +209,7 @@ public interface IEmgr<EMGR extends IEmgr<?>>
 
   /**
    * Creates the query detached.
-   * 
+   *
    * The query returns the entity detached.
    *
    * @param <R> the generic type
@@ -264,7 +264,7 @@ public interface IEmgr<EMGR extends IEmgr<?>>
    * Inserts an entity.
    *
    * Entity is detachaed.
-   * 
+   *
    * @param <PK> the generic type
    * @param rec the rec
    * @return PK of the inserted entity.
@@ -356,7 +356,7 @@ public interface IEmgr<EMGR extends IEmgr<?>>
    * @return the emgr
    * @throws IllegalArgumentException if the instance is not an entity or is a detached entity
    */
-  void deleteAttached(Object rec) throws IllegalArgumentException;
+  void deleteAttached(DbRecord<?> rec) throws IllegalArgumentException;
 
   /**
    * Delete an detached entity. The entity will first be loaded with selectByPkAttached and this passed to

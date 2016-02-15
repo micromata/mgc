@@ -5,7 +5,7 @@ import de.micromata.genome.jpa.IEmgr;
 
 /**
  * Filters de.micromata.genome.jpa.Emgr.remove(DbRecord).
- * 
+ *
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
  */
@@ -15,9 +15,9 @@ public class EmgrRemoveDbRecordFilterEvent extends EmgrFilterEvent<Void>
   /**
    * The entity.
    */
-  private Object entity;
+  private DbRecord<?> entity;
 
-  public Object getEntity()
+  public DbRecord<?> getEntity()
   {
     return entity;
   }
@@ -28,7 +28,7 @@ public class EmgrRemoveDbRecordFilterEvent extends EmgrFilterEvent<Void>
    * @param emgr the emgr
    * @param entity the entity
    */
-  public EmgrRemoveDbRecordFilterEvent(IEmgr<?> emgr, Object entity)
+  public EmgrRemoveDbRecordFilterEvent(IEmgr<?> emgr, DbRecord<?> entity)
   {
     super(emgr);
     this.entity = entity;
