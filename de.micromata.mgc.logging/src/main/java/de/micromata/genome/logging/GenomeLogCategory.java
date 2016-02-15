@@ -162,7 +162,14 @@ public enum GenomeLogCategory implements LogCategory
   /**
    * User management.
    */
-  Umgmt;
+  Umgmt,
+
+
+  /**
+   * Files
+   */
+  Files
+  ;
 
   static {
     BaseLogging.registerLogCategories(values());
