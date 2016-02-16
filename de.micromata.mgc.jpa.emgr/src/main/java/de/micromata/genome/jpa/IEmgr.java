@@ -238,7 +238,7 @@ public interface IEmgr<EMGR extends IEmgr<?>>
    * @param lockTimetimeInMs the lock timetime in ms
    * @return the emgr
    */
-  EMGR setSelectForUpdate(Query query, int lockTimetimeInMs);
+  void setSelectForUpdate(Query query, int lockTimetimeInMs);
 
   /**
    * Sets the timeout.
@@ -247,7 +247,7 @@ public interface IEmgr<EMGR extends IEmgr<?>>
    * @param timeOutInMs the time out in ms
    * @return the emgr
    */
-  EMGR setQueryTimeout(Query query, int timeOutInMs);
+  void setQueryTimeout(Query query, int timeOutInMs);
 
   /**
    * Find single detached.
@@ -392,7 +392,7 @@ public interface IEmgr<EMGR extends IEmgr<?>>
    * @return the emgr
    * @events EmgrBeforeDetachEvent, EmgrAfterDetachEvent
    */
-  EMGR detach(final Object entity);
+  void detach(final Object entity);
 
   /**
    * Detach.
@@ -402,6 +402,6 @@ public interface IEmgr<EMGR extends IEmgr<?>>
    * @return the emgr
    * @events EmgrBeforeDetachEvent, EmgrAfterDetachEvent for each entity
    */
-  <R> EMGR detach(List<R> result);
+  <R> void detach(List<R> result);
 
 }

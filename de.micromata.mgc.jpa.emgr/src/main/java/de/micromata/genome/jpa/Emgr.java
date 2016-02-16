@@ -124,15 +124,14 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    * @return the t
    */
   @Override
-  public EMGR detach(final Object entity)
+  public void detach(final Object entity)
   {
     if (entity instanceof DbRecord == false) {
-      return getThis();
+      return;
     }
     emgrFactory.getEventFactory().invokeEvents(new EmgrBeforeDetachEvent(this, (DbRecord<?>) entity));
     entityManager.detach(entity);
     emgrFactory.getEventFactory().invokeEvents(new EmgrAfterDetachEvent(this, (DbRecord<?>) entity));
-    return getThis();
   }
 
   /**
@@ -143,15 +142,15 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    * @return the t
    */
   @Override
-  public <R> EMGR detach(List<R> result)
+  public <R> void detach(List<R> result)
   {
     if (result == null) {
-      return getThis();
+      return;
     }
     for (R entity : result) {
       detach(entity);
     }
-    return getThis();
+
   }
 
   /**
@@ -709,35 +708,20 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    * @return the t
    */
   @Override
-  public EMGR setSelectForUpdate(Query query, int lockTimetimeInMs)
+  public void setSelectForUpdate(Query query, int lockTimetimeInMs)
   {
     query.setHint(AvailableSettings.LOCK_TIMEOUT, lockTimetimeInMs);
     setQueryTimeout(query, lockTimetimeInMs);
     query.setLockMode(LockModeType.PESSIMISTIC_WRITE);
-    return getThis();
   }
 
   @Override
-  public EMGR setQueryTimeout(Query query, int timeOutInMs)
+  public void setQueryTimeout(Query query, int timeOutInMs)
   {
     // "javax.persistence.query.timeout"
     // javax.persistence.lock.timeout
 
     query.setHint(HINT_QUERY_TIMEOUT, timeOutInMs);
-    return getThis();
-  }
-
-  // TODO RK to api set query timeout.
-
-  /**
-   * Gets the this.
-   *
-   * @return the this
-   */
-  @SuppressWarnings("unchecked")
-  protected final EMGR getThis()
-  {
-    return (EMGR) this;
   }
 
   /**
@@ -745,10 +729,9 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    *
    * @return this
    */
-  public EMGR flush()
+  public void flush()
   {
     entityManager.flush();
-    return getThis();
   }
 
   /**
@@ -757,10 +740,9 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    * @param rec the rec
    * @return the t
    */
-  public EMGR persist(DbRecord<?> rec)
+  public void persist(DbRecord<?> rec)
   {
     entityManager.persist(rec);
-    return getThis();
   }
 
   /**
@@ -769,10 +751,9 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    * @param rec the rec
    * @return the t
    */
-  public EMGR initForUpdate(DbRecord<?> rec)
+  public void initForUpdate(DbRecord<?> rec)
   {
     invokeEvent(new EmgrInitForUpdateEvent(this, rec));
-    return getThis();
   }
 
   /**
@@ -1105,10 +1086,9 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    * @param rec the rec
    * @return the t
    */
-  public EMGR initForCreate(DbRecord<?> rec)
+  public void initForCreate(DbRecord<?> rec)
   {
     invokeEvent(new EmgrInitForInsertEvent(this, rec));
-    return getThis();
   }
 
   /**
