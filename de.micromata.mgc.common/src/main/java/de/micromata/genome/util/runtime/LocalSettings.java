@@ -342,6 +342,20 @@ public class LocalSettings
   }
 
   /**
+   * Check if local settings file exists.;
+   * 
+   * @return
+   */
+  public static boolean localSettingsExists()
+  {
+    String localSettingsFile = System.getProperty("localsettings");
+    if (StringUtils.isEmpty(localSettingsFile) == true) {
+      localSettingsFile = localSettingsPrefixName + ".properties";
+    }
+    return new File(localSettingsFile).exists();
+  }
+
+  /**
    * Load settings.
    *
    * @param localSettingsFile the local settings file
