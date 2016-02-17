@@ -109,7 +109,7 @@ public class ThreadContextClassLoaderScope
    * In most cases combines are not what you want.
    *
    * @param newClassLoader must not null
-   * @deprecated use PluginContext.runIn...(...)
+
    */
   public ThreadContextClassLoaderScope(CombinedClassLoader newClassLoader)
   {
