@@ -14,12 +14,12 @@ import java.util.List;
 
 /**
  * Better Use PluginContext.runInXXX().
- * 
+ *
  * Erzeugt einen neuen Thread Context Classloader muss innerhalb try/finally aufgerufen werden, wobei im finally-Block
  * ThreadContextClassLoaderScope.restore() aufgerufen werden muss.
- * 
+ *
  * @author roger@micromata.de
- * 
+ *
  */
 public class ThreadContextClassLoaderScope
 {
@@ -107,11 +107,10 @@ public class ThreadContextClassLoaderScope
 
   /**
    * In most cases combines are not what you want.
-   * 
+   *
    * @param newClassLoader must not null
    * @deprecated use PluginContext.runIn...(...)
    */
-  @Deprecated
   public ThreadContextClassLoaderScope(CombinedClassLoader newClassLoader)
   {
     previousClassLoader = Thread.currentThread().getContextClassLoader();
