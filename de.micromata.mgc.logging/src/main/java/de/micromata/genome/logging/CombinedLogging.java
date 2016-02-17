@@ -1,7 +1,6 @@
 package de.micromata.genome.logging;
 
 import java.sql.Timestamp;
-import java.util.Collection;
 import java.util.List;
 
 import de.micromata.genome.util.types.Pair;
@@ -9,12 +8,13 @@ import de.micromata.genome.util.types.Pair;
 /**
  * Overwrites de.micromata.genome.logging.CombinedLogging.doLogImpl() to primary and secondary.
  * 
- * All other methods delegates to primary.
+ * Search methods delegates to primary.
+ * 
  * 
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
  */
-public class CombinedLogging implements Logging
+public class CombinedLogging extends BaseLogging
 {
 
   /**
@@ -52,164 +52,11 @@ public class CombinedLogging implements Logging
         callback);
   }
 
-  /**
-   * {@inheritDoc}
-   *
-   */
-
-  @Override
-  public void selectLogs(List<Object> logId, boolean masterOnly, LogEntryCallback callback)
-  {
-    primary.selectLogs(logId, masterOnly, callback);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   */
-
-  @Override
-  public void debug(LogCategory cat, String msg, LogAttribute... attributes)
-  {
-    primary.debug(cat, msg, attributes);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   */
-
-  @Override
-  public void trace(LogCategory cat, String msg, LogAttribute... attributes)
-  {
-    primary.trace(cat, msg, attributes);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   */
-
-  @Override
-  public void info(LogCategory cat, String msg, LogAttribute... attributes)
-  {
-    primary.info(cat, msg, attributes);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   */
-
-  @Override
-  public void note(LogCategory cat, String msg, LogAttribute... attributes)
-  {
-    primary.note(cat, msg, attributes);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   */
-
-  @Override
-  public void warn(LogCategory cat, String msg, LogAttribute... attributes)
-  {
-    primary.warn(cat, msg, attributes);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   */
-
-  @Override
-  public void error(LogCategory cat, String msg, LogAttribute... attributes)
-  {
-    primary.error(cat, msg, attributes);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   */
-
-  @Override
-  public void fatal(LogCategory cat, String msg, LogAttribute... attributes)
-  {
-    primary.fatal(cat, msg, attributes);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   */
-
-  @Override
-  public void doLog(LogLevel ll, LogCategory cat, String msg, LogAttribute... attributes)
-  {
-    primary.doLog(ll, cat, msg, attributes);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   */
-
-  @Override
-  public void logPreStart(LogLevel ll, LogCategory cat, String msg, LogAttribute... attributes)
-  {
-    primary.logPreStart(ll, cat, msg, attributes);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   */
-
-  @Override
-  public LogLevel getConfigMinLogLevel()
-  {
-    return primary.getConfigMinLogLevel();
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   */
-
-  @Override
-  public Collection<LogCategory> getRegisteredCategories()
-  {
-    return primary.getRegisteredCategories();
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   */
-
-  @Override
-  public Collection<LogAttributeType> getRegisteredAttributes()
-  {
-    return primary.getRegisteredAttributes();
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   */
-
   @Override
   public boolean supportsSearch()
   {
     return primary.supportsSearch();
   }
-
-  /**
-   * {@inheritDoc}
-   *
-   */
 
   @Override
   public boolean supportsFulltextSearch()
@@ -217,32 +64,11 @@ public class CombinedLogging implements Logging
     return primary.supportsFulltextSearch();
   }
 
-  /**
-   * {@inheritDoc}
-   *
-   */
-
-  @Override
-  public Collection<LogAttributeType> getSearchAttributes()
-  {
-    return primary.getSearchAttributes();
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   */
-
   @Override
   public String formatLogId(Object logId)
   {
     return primary.formatLogId(logId);
   }
-
-  /**
-   * {@inheritDoc}
-   *
-   */
 
   @Override
   public Object parseLogId(String logId)
@@ -256,9 +82,9 @@ public class CombinedLogging implements Logging
    */
 
   @Override
-  public void logLwe(LogWriteEntry lwe)
+  public void selectLogs(List<Object> logId, boolean masterOnly, LogEntryCallback callback)
   {
-    primary.logLwe(lwe);
+    primary.selectLogs(logId, masterOnly, callback);
   }
 
   public Logging getPrimary()
@@ -279,5 +105,21 @@ public class CombinedLogging implements Logging
   public void setSecondary(Logging secondary)
   {
     this.secondary = secondary;
+  }
+
+  @Override
+  protected void selectLogsImpl(Timestamp start, Timestamp end, Integer loglevel, String category, String msg,
+      List<Pair<String, String>> logAttributes, int startRow, int maxRow, List<OrderBy> orderBy, boolean masterOnly,
+      LogEntryCallback callback) throws EndOfSearch
+  {
+    // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  protected void selectLogsImpl(List<Object> logId, boolean masterOnly, LogEntryCallback callback) throws EndOfSearch
+  {
+    // TODO Auto-generated method stub
+
   }
 }
