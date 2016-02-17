@@ -55,6 +55,11 @@ public class LocalSettings
     return INSTANCE;
   }
 
+  public static void reset()
+  {
+    INSTANCE = null;
+  }
+
   /**
    * The local settings file.
    */

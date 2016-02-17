@@ -11,8 +11,12 @@ import java.util.function.Supplier;
 import javax.mail.Authenticator;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
+import javax.naming.CompositeName;
 import javax.naming.Context;
 import javax.naming.InitialContext;
+import javax.naming.InvalidNameException;
+import javax.naming.Name;
+import javax.naming.NameAlreadyBoundException;
 import javax.naming.NameNotFoundException;
 import javax.naming.NamingException;
 import javax.naming.NoInitialContextException;
@@ -33,6 +37,11 @@ import de.micromata.genome.util.types.Pair;
  */
 public class LocalSettingsEnv
 {
+  /**
+   * if true, binds old legacy jndi genome specifc values.
+   */
+  private static boolean bindDefaultGenomeEnvs = true;
+
   private static LocalSettingsEnv INSTANCE;
   /**
    * The Constant log.
@@ -89,6 +98,11 @@ public class LocalSettingsEnv
     }
     INSTANCE = createJndiLocalSettingsEnv();
     return INSTANCE;
+  }
+
+  public static void reset()
+  {
+    INSTANCE = null;
   }
 
   private static LocalSettingsEnv createJndiLocalSettingsEnv()
@@ -319,12 +333,46 @@ public class LocalSettingsEnv
    */
   protected void bindInternal(String path, Object object) throws NamingException
   {
+    Name name = jndiName(path);
     try {
-      initialContext.bind(path, object);
+      // OJEJEJEJE bind modifies name and make it unusable!
+      initialContext.bind(name, object);
+    } catch (NameAlreadyBoundException ex) {
+      // org.eclipse.jetty.jndi.NamingContext buggy, does not use internal normalize to find first component.
+      name = jndiName(path);
+      initialContext.unbind(name);
+      name = jndiName(path);
+      initialContext.bind(name, object);
     } catch (NameNotFoundException ex) {
       createSubContextDirs(path);
-      initialContext.bind(path, object);
+      name = jndiName(path);
+      initialContext.bind(name, object);
     }
+  }
+
+  private Name jndiName(String path) throws InvalidNameException
+  {
+    String striped = stripJndiProtocol(path);
+    String[] components = StringUtils.split(striped, '/');
+    if (striped.startsWith("/") == true) {
+      striped = striped.substring(1);
+    }
+    CompositeName ret = new CompositeName(path);
+
+    return ret;
+  }
+
+  public static final String URL_PREFIX = "java:";
+
+  protected String stripJndiProtocol(String name)
+  {
+    if (StringUtils.isEmpty(name) == true) {
+      return name;
+    }
+    if (name.startsWith(URL_PREFIX) == true) {
+      return name.substring(URL_PREFIX.length());
+    }
+    return name;
   }
 
   /**
@@ -378,7 +426,10 @@ public class LocalSettingsEnv
    */
   protected void bindStandards() throws NamingException
   {
-    initialContext.createSubcontext("java:/comp/env");
+    if (bindDefaultGenomeEnvs == false) {
+      return;
+    }
+    createSubContext("java:/comp/env");
     File genomeHome = new File(localSettings.get("genome.home", "."));
 
     bind("java:/comp/env/log4jConfigLocation",
@@ -390,6 +441,15 @@ public class LocalSettingsEnv
     bind("java:/comp/env/ApplicationPublicUrl", publicUrl);
     bind("java:/comp/env/DatabaseProvider", localSettings.getDatabaseProvider());
     bind("java:/comp/env/ApplicationEnvironment", localSettings.getApplicationEnvironment());
+  }
+
+  private void createSubContext(String context) throws NamingException
+  {
+    try {
+      initialContext.createSubcontext(context);
+    } catch (NameAlreadyBoundException ex) {
+      // ignore
+    }
   }
 
   public LocalSettings getLocalSettings()
