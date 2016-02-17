@@ -15,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
@@ -26,6 +27,41 @@ import org.apache.commons.lang.Validate;
  */
 public class DateUtils
 {
+  /**
+   * Standard date format according to ISO 8601.
+   */
+  private static ThreadLocal<SimpleDateFormat> standardDateTimeFormat = new ThreadLocal<SimpleDateFormat>()
+  {
+    @Override
+    protected SimpleDateFormat initialValue()
+    {
+      return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss:SSS", Locale.US);
+    }
+  };
+
+  /**
+   * Standard date format according to ISO 8601.
+   */
+  private static ThreadLocal<SimpleDateFormat> standardDateFormat = new ThreadLocal<SimpleDateFormat>()
+  {
+    @Override
+    protected SimpleDateFormat initialValue()
+    {
+      return new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+    }
+  };
+
+  /**
+   * Standard date format according to ISO 8601.
+   */
+  private static ThreadLocal<SimpleDateFormat> standardTimeFormat = new ThreadLocal<SimpleDateFormat>()
+  {
+    @Override
+    protected SimpleDateFormat initialValue()
+    {
+      return new SimpleDateFormat("HH:mm", Locale.US);
+    }
+  };
 
   /**
    * The Constant MINUTES_PER_DAY.
@@ -36,6 +72,36 @@ public class DateUtils
    * The Constant ddMMyyyy_DATE_FORMAT.
    */
   public static final DateFormat ddMMyyyy_DATE_FORMAT = new SimpleDateFormat("ddMMyyyy");
+
+  /**
+   * Returns the (thread-local) standard date format.
+   *
+   * @return the standard date format.
+   */
+  public static SimpleDateFormat getStandardDateTimeFormat()
+  {
+    return standardDateTimeFormat.get();
+  }
+
+  /**
+   * Returns the (thread-local) standard date format.
+   *
+   * @return the standard date format.
+   */
+  public static SimpleDateFormat getStandardDateFormat()
+  {
+    return standardDateFormat.get();
+  }
+
+  /**
+   * Returns the (thread-local) standard time format.
+   *
+   * @return the standard time format.
+   */
+  public static SimpleDateFormat getStandardTimeFormat()
+  {
+    return standardTimeFormat.get();
+  }
 
   /**
    * Locale?
