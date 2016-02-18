@@ -1,6 +1,7 @@
 package de.micromata.genome.util.runtime.jndi;
 
 import java.util.Collection;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -248,6 +249,19 @@ public class SimpleNamingContext implements Context
   {
   }
 
+  public String nameToString(Name name)
+  {
+    StringBuilder sb = new StringBuilder();
+    Enumeration<String> en = name.getAll();
+    while (en.hasMoreElements()) {
+      String part = en.nextElement();
+      if (sb.length() > 0) {
+        sb.append('/');
+      }
+      sb.append(part);
+    }
+    return sb.toString();
+  }
   // Unsupported methods follow: no support for javax.naming.Name
 
   @Override
@@ -277,48 +291,50 @@ public class SimpleNamingContext implements Context
   @Override
   public void bind(Name name, Object obj) throws NamingException
   {
-    throw new OperationNotSupportedException("SimpleNamingContext does not support [javax.naming.Name]");
+    bind(nameToString(name), obj);
   }
 
   @Override
   public void unbind(Name name) throws NamingException
   {
-    throw new OperationNotSupportedException("SimpleNamingContext does not support [javax.naming.Name]");
+    unbind(nameToString(name));
   }
 
   @Override
   public void rebind(Name name, Object obj) throws NamingException
   {
-    throw new OperationNotSupportedException("SimpleNamingContext does not support [javax.naming.Name]");
+    rebind(nameToString(name), obj);
   }
 
   @Override
   public void rename(Name oldName, Name newName) throws NamingException
   {
-    throw new OperationNotSupportedException("SimpleNamingContext does not support [javax.naming.Name]");
+    rename(nameToString(oldName), nameToString(newName));
   }
 
   @Override
   public Context createSubcontext(Name name) throws NamingException
   {
-    throw new OperationNotSupportedException("SimpleNamingContext does not support [javax.naming.Name]");
+    return createSubcontext(nameToString(name));
   }
 
   @Override
   public void destroySubcontext(Name name) throws NamingException
   {
-    throw new OperationNotSupportedException("SimpleNamingContext does not support [javax.naming.Name]");
+    destroySubcontext(nameToString(name));
   }
 
   @Override
   public String getNameInNamespace() throws NamingException
   {
+
     throw new OperationNotSupportedException("SimpleNamingContext does not support [javax.naming.Name]");
   }
 
   @Override
   public NameParser getNameParser(Name name) throws NamingException
   {
+
     throw new OperationNotSupportedException("SimpleNamingContext does not support [javax.naming.Name]");
   }
 
