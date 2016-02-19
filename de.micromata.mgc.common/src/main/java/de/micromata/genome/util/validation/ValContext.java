@@ -38,6 +38,8 @@ public class ValContext
   {
     return new ValContextDelegate(this)
     {
+      private List<ValMessage> localMessages = new ArrayList<>();
+
       @Override
       public ValMessage createValMessage()
       {
@@ -45,6 +47,19 @@ public class ValContext
         vm.setReference(reference);
         vm.setProperty(property);
         return vm;
+      }
+
+      @Override
+      public void addMessage(ValMessage vm)
+      {
+        super.addMessage(vm);
+        localMessages.add(vm);
+      }
+
+      @Override
+      public boolean hasLocalError()
+      {
+        return hasAtLeastLevel(localMessages, ValState.Error);
       }
 
     };
@@ -65,6 +80,38 @@ public class ValContext
     add(ValState.Error, property, i18nkey);
   }
 
+  public void error(String property, String i18nkey, Exception ex)
+  {
+    add(ValState.Error, property, i18nkey, ex);
+  }
+
+  public void warn(String i18nkey)
+  {
+    add(ValState.Warning, null, i18nkey);
+  }
+
+  public void warn(String property, String i18nkey)
+  {
+    add(ValState.Warning, property, i18nkey);
+  }
+
+  public void info(String i18nkey)
+  {
+    add(ValState.Info, null, i18nkey);
+  }
+
+  public void info(String property, String i18nkey)
+  {
+    add(ValState.Info, property, i18nkey);
+  }
+
+  public void translateMessages(ValTranslateService transService)
+  {
+    for (ValMessage message : messages) {
+      transService.translate(message);
+    }
+  }
+
   /**
    * Creates the val message.
    *
@@ -83,10 +130,16 @@ public class ValContext
    */
   public void add(ValState valState, String property, String i18nkey)
   {
+    add(valState, property, i18nkey, null);
+  }
+
+  public void add(ValState valState, String property, String i18nkey, Exception ex)
+  {
     ValMessage vm = createValMessage();
     vm.addProperty(property);
     vm.setValState(valState);
     vm.setI18nkey(i18nkey);
+    vm.setException(ex);
     addMessage(vm);
   }
 
@@ -114,6 +167,21 @@ public class ValContext
   public boolean hasMessages()
   {
     return getMessages().isEmpty() == false;
+  }
+
+  public boolean hasErrors()
+  {
+    return hasAtLeastLevel(messages, ValState.Error);
+  }
+
+  protected boolean hasAtLeastLevel(List<ValMessage> messages, ValState state)
+  {
+    return messages.stream().anyMatch(msg -> compareValidationLevels(msg.getValState(), state) >= 0);
+  }
+
+  public boolean hasLocalError()
+  {
+    return hasErrors();
   }
 
   /**

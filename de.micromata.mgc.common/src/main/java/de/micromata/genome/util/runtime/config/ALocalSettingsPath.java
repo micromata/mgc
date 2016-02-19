@@ -15,7 +15,26 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface ALocalSettingsPath {
 
-  String key();
+  /**
+   * Property name for local-settings.
+   * 
+   * if "<fieldName>" use the annotated fields name.
+   * 
+   * @return
+   */
+  String key() default "<fieldName>";
 
+  /**
+   * default value.
+   * 
+   * @return
+   */
   String defaultValue() default "";
+
+  /**
+   * Used in persistence of properties to comment this key.
+   * 
+   * @return
+   */
+  String comment() default "";
 }

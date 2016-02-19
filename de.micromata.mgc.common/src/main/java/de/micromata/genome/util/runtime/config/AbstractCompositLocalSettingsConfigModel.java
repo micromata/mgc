@@ -14,7 +14,8 @@ import de.micromata.genome.util.matcher.CommonMatchers;
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
  */
-public abstract class AbstractCompositLocalSettingsConfigModel implements CastableLocalSettingsConfigModel
+public abstract class AbstractCompositLocalSettingsConfigModel extends AbstractLocalSettingsConfigModel
+    implements CastableLocalSettingsConfigModel
 {
 
   @Override

@@ -1,7 +1,5 @@
 package de.micromata.genome.util.runtime.config;
 
-import java.util.Map;
-
 import de.micromata.genome.util.runtime.LocalSettings;
 import de.micromata.genome.util.validation.ValContext;
 
@@ -21,22 +19,32 @@ public interface LocalSettingsConfigModel
   public void validate(ValContext ctx);
 
   /**
+   * When store into properties.
+   * 
+   * @return
+   */
+  String getSectionComment();
+
+  /**
    * store the configuration into local settings.
    * 
    * @param props
    */
-  public default void toProperties(Map<String, String> props)
-  {
-    LocalSettingsConfigUtils.toProperties(this, props);
-  }
+  void toProperties(LocalSettingsWriter writer);
 
   /**
    * load the configuration from local settings.
    * 
    * @param localSettings
    */
-  public default void fromLocalSettings(LocalSettings localSettings)
-  {
-    LocalSettingsConfigUtils.initFromLocalSettings(this, localSettings);
-  }
+  void fromLocalSettings(LocalSettings localSettings);
+
+  /**
+   * Build a key from base key name.
+   * 
+   * @param key
+   * @return
+   */
+  String buildKey(String key);
+
 }

@@ -2,10 +2,13 @@ package de.micromata.genome.util.runtime;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Properties;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
@@ -18,7 +21,8 @@ import org.apache.log4j.PropertyConfigurator;
 public class Log4JInitializer
 {
   private static Logger LOG = Logger.getLogger(Log4JInitializer.class);
-  private static final String LOG4J_PROPERTY_FILE = "log4j.properties";
+
+  public static final String LOG4J_PROPERTY_FILE = "log4j.properties";
 
   private static boolean log4jInitialized = false;
 
@@ -44,6 +48,28 @@ public class Log4JInitializer
   public static boolean isLog4JInitialized()
   {
     return log4jInitialized;
+  }
+
+  /**
+   * Copies the log4j.properties load from cp into file defined in localsettings if not exists
+   */
+  public static void copyLogConfigFileFromCp()
+  {
+    LocalSettings ls = LocalSettings.get();
+    File log4jfile = new File(ls.get(LOG4J_PROPERTY_FILE, LOG4J_PROPERTY_FILE));
+    if (log4jfile.exists() == true) {
+      return;
+    }
+    try (InputStream is = Log4JInitializer.class.getClassLoader().getResourceAsStream(LOG4J_PROPERTY_FILE)) {
+      if (is != null) {
+        try (OutputStream os = new FileOutputStream(log4jfile)) {
+          IOUtils.copy(is, os);
+        }
+      }
+    } catch (IOException ex) {
+      throw new RuntimeIOException(ex);
+    }
+
   }
 
   private static boolean initializeLog4JIntern()
