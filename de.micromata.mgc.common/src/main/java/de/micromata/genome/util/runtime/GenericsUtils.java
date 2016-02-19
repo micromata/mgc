@@ -20,15 +20,15 @@ import java.util.Map;
  */
 public class GenericsUtils
 {
-  public static Class< ? > getClass(Type type)
+  public static Class<?> getClass(Type type)
   {
     if (type instanceof Class) {
-      return (Class< ? >) type;
+      return (Class<?>) type;
     } else if (type instanceof ParameterizedType) {
       return getClass(((ParameterizedType) type).getRawType());
     } else if (type instanceof GenericArrayType) {
       Type componentType = ((GenericArrayType) type).getGenericComponentType();
-      Class< ? > componentClass = getClass(componentType);
+      Class<?> componentClass = getClass(componentType);
       if (componentClass != null) {
         return Array.newInstance(componentClass, 0).getClass();
       } else {
@@ -39,8 +39,9 @@ public class GenericsUtils
     }
   }
 
-  public static Class< ? > getMethodExceptionType(Class< ? > cls, String methodName, Class< ? >[] argTypes, int methodPosition,
-      int classPosition, Class< ? > defaultType)
+  public static Class<?> getMethodExceptionType(Class<?> cls, String methodName, Class<?>[] argTypes,
+      int methodPosition,
+      int classPosition, Class<?> defaultType)
   {
     try {
 
@@ -51,7 +52,7 @@ public class GenericsUtils
     }
   }
 
-  public static Class< ? > getClassGenericTypeFromSuperClass(Class< ? > cls, int typePosition, Class< ? > defaultClass)
+  public static Class<?> getClassGenericTypeFromSuperClass(Class<?> cls, int typePosition, Class<?> defaultClass)
   {
     Type t = cls.getGenericSuperclass();
     if (t instanceof ParameterizedType) {
@@ -59,18 +60,28 @@ public class GenericsUtils
       Type optt = ptt.getOwnerType();
 
       Type[] pts = ptt.getActualTypeArguments();
-      if (pts.length <= typePosition)
+      if (pts.length <= typePosition) {
         return defaultClass;
+      }
       Type pt = pts[typePosition];
-      Class< ? > fcls = getClass(pt);
-      if (pt instanceof Class< ? >)
-        return (Class< ? >) pt;
+      Class<?> fcls = getClass(pt);
+      if (pt instanceof Class<?>) {
+        return (Class<?>) pt;
+      }
 
     }
     return defaultClass;
   }
 
-  public static Class< ? > getClassGenericTypeFromSuperClass(Class< ? > cls, String typeName, Class< ? > defaultClass)
+  /**
+   * TODO RK implement or delete
+   * 
+   * @param cls
+   * @param typeName
+   * @param defaultClass
+   * @return
+   */
+  public static Class<?> getClassGenericTypeFromSuperClass(Class<?> cls, String typeName, Class<?> defaultClass)
   {
     Type t = cls.getGenericSuperclass();
     if (t instanceof ParameterizedType) {
@@ -78,7 +89,7 @@ public class GenericsUtils
       Type optt = ptt.getOwnerType();
 
       Type[] pts = ptt.getActualTypeArguments();
-      Class< ? > rt = (Class< ? >) ptt.getRawType();
+      Class<?> rt = (Class<?>) ptt.getRawType();
       Type rtsc = rt.getGenericSuperclass();
       // if (pts.length <= typePosition)
       // return defaultClass;
@@ -108,43 +119,48 @@ public class GenericsUtils
   // return defaultClass;
   // }
 
-  public static Class< ? > getClassGenericTypeFromInterface(Class< ? > cls, int interfacePosition, int typePosition, Class< ? > defaultClass)
+  public static Class<?> getClassGenericTypeFromInterface(Class<?> cls, int interfacePosition, int typePosition,
+      Class<?> defaultClass)
   {
     Type[] tps = cls.getGenericInterfaces();
-    if (tps.length <= interfacePosition)
+    if (tps.length <= interfacePosition) {
       return defaultClass;
+    }
     Type t = tps[interfacePosition];
     if (t instanceof ParameterizedType) {
       ParameterizedType ptt = (ParameterizedType) t;
       Type[] pts = ptt.getActualTypeArguments();
-      if (pts.length <= typePosition)
+      if (pts.length <= typePosition) {
         return defaultClass;
+      }
       Type pt = pts[typePosition];
 
-      if (pt instanceof Class< ? >)
-        return (Class< ? >) pt;
-      Class< ? > fcls = getClass(pt);
+      if (pt instanceof Class<?>) {
+        return (Class<?>) pt;
+      }
+      Class<?> fcls = getClass(pt);
     }
     return defaultClass;
   }
 
-  public static int findParameterPosition(Class< ? > rawClass, String typeName)
+  public static int findParameterPosition(Class<?> rawClass, String typeName)
   {
-    TypeVariable< ? >[] tps = rawClass.getTypeParameters();
+    TypeVariable<?>[] tps = rawClass.getTypeParameters();
     for (int i = 0; i < tps.length; ++i) {
-      TypeVariable< ? > rtc = tps[i];
-      if (rtc.getName().equals(typeName) == true)
+      TypeVariable<?> rtc = tps[i];
+      if (rtc.getName().equals(typeName) == true) {
         return i;
+      }
     }
     return -1;
   }
 
-  public static Class< ? > getClassGenericTypeFromSuperClass(Class< ? > rtClass, Class< ? > declClass, String typeName,
-      Class< ? > defaultClass)
+  public static Class<?> getClassGenericTypeFromSuperClass(Class<?> rtClass, Class<?> declClass, String typeName,
+      Class<?> defaultClass)
   {
     // printGenericClass(rtClass);
-    TypeVariable< ? >[] orgParamTypes = rtClass.getTypeParameters();
-    Class< ? > cls = rtClass.getSuperclass();
+    TypeVariable<?>[] orgParamTypes = rtClass.getTypeParameters();
+    Class<?> cls = rtClass.getSuperclass();
     Type gsc = rtClass.getGenericSuperclass();
 
     Type[] ifaces = cls.getGenericInterfaces();
@@ -152,11 +168,12 @@ public class GenericsUtils
       ParameterizedType tp = (ParameterizedType) gsc;
       Type rt = tp.getRawType();
       Type owner = tp.getOwnerType();
-      if (rt instanceof Class< ? >) {
-        Class< ? > rawClass = (Class< ? >) rt;
+      if (rt instanceof Class<?>) {
+        Class<?> rawClass = (Class<?>) rt;
         int paramPos = findParameterPosition(rawClass, typeName);
-        if (paramPos == -1)
+        if (paramPos == -1) {
           return defaultClass;
+        }
         Type pp = tp.getActualTypeArguments()[paramPos];
         return getClass(pp);
       }
@@ -164,7 +181,7 @@ public class GenericsUtils
     return defaultClass;
   }
 
-  public static Class< ? > getMethodType(String tp, Method m)
+  public static Class<?> getMethodType(String tp, Method m)
   {
     for (Type pt : m.getGenericParameterTypes()) {
       printType(pt);
@@ -172,41 +189,46 @@ public class GenericsUtils
     return null;
   }
 
-  public static Class< ? > getMethodType(Class< ? > cls, String methodName, String typeName)
+  public static Class<?> getMethodType(Class<?> cls, String methodName, String typeName)
   {
     Method m = ClassUtils.findFirstMethod(cls, methodName);
-    if (m == null)
+    if (m == null) {
       return null;
+    }
     return getMethodType(typeName, m);
   }
 
-  public static Class< ? > getMethodExceptionType(Class< ? > cls, Method m, int methodPosition, int classPosition, Class< ? > defaultType)
+  public static Class<?> getMethodExceptionType(Class<?> cls, Method m, int methodPosition, int classPosition,
+      Class<?> defaultType)
   {
-    Class< ? > fcls = null;
+    Class<?> fcls = null;
     Type[] types = m.getGenericExceptionTypes();
-    if (types.length <= methodPosition)
+    if (types.length <= methodPosition) {
       return defaultType;
+    }
     Type tp = types[methodPosition];
-    if (tp instanceof Class< ? >) {
-      return (Class< ? >) tp;
-    } else if (tp instanceof TypeVariable< ? >) {
-      TypeVariable< ? > tv = (TypeVariable< ? >) tp;
+    if (tp instanceof Class<?>) {
+      return (Class<?>) tp;
+    } else if (tp instanceof TypeVariable<?>) {
+      TypeVariable<?> tv = (TypeVariable<?>) tp;
       String name = tv.getName();
-      Class< ? > declClass = m.getDeclaringClass();
+      Class<?> declClass = m.getDeclaringClass();
       fcls = getClassGenericTypeFromSuperClass(cls, declClass, name, null);
-      if (fcls != null)
+      if (fcls != null) {
         return fcls;
+      }
     }
     fcls = getClassGenericTypeFromSuperClass(cls, classPosition, null);
-    if (fcls != null)
+    if (fcls != null) {
       return fcls;
+    }
     printType("", tp);
     return defaultType;
   }
 
   // from http://www.artima.com/weblogs/viewpost.jsp?thread=208860
 
-  public static List<Class< ? >> getTypeArguments(Class< ? > baseClass, Class< ? > childClass)
+  public static List<Class<?>> getTypeArguments(Class<?> baseClass, Class<?> childClass)
   {
     Map<Type, Type> resolvedTypes = new HashMap<Type, Type>();
     Type type = childClass;
@@ -214,13 +236,13 @@ public class GenericsUtils
     while (!getClass(type).equals(baseClass)) {
       if (type instanceof Class) {
         // there is no useful information for us in raw types, so just keep going.
-        type = ((Class< ? >) type).getGenericSuperclass();
+        type = ((Class<?>) type).getGenericSuperclass();
       } else {
         ParameterizedType parameterizedType = (ParameterizedType) type;
-        Class< ? > rawType = (Class< ? >) parameterizedType.getRawType();
+        Class<?> rawType = (Class<?>) parameterizedType.getRawType();
 
         Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
-        TypeVariable< ? >[] typeParameters = rawType.getTypeParameters();
+        TypeVariable<?>[] typeParameters = rawType.getTypeParameters();
         for (int i = 0; i < actualTypeArguments.length; i++) {
           resolvedTypes.put(typeParameters[i], actualTypeArguments[i]);
         }
@@ -239,7 +261,7 @@ public class GenericsUtils
     } else {
       actualTypeArguments = ((ParameterizedType) type).getActualTypeArguments();
     }
-    List<Class< ? >> typeArgumentsAsClasses = new ArrayList<Class< ? >>();
+    List<Class<?>> typeArgumentsAsClasses = new ArrayList<Class<?>>();
     // resolve types by chasing down type variables.
     for (Type baseType : actualTypeArguments) {
       while (resolvedTypes.containsKey(baseType)) {
@@ -250,17 +272,17 @@ public class GenericsUtils
     return typeArgumentsAsClasses;
   }
 
-  public static void printGenericClass(Class< ? > cls)
+  public static void printGenericClass(Class<?> cls)
   {
     StringBuilder sb = new StringBuilder();
     printGenericClass("", cls, sb);
     System.out.println(sb.toString());
   }
 
-  public static void printGenericClass(String indent, Class< ? > cls, StringBuilder sb)
+  public static void printGenericClass(String indent, Class<?> cls, StringBuilder sb)
   {
     sb.append(indent).append("class: ").append(cls).append("\n");
-    TypeVariable< ? >[] orgParamTypes = cls.getTypeParameters();
+    TypeVariable<?>[] orgParamTypes = cls.getTypeParameters();
     indent = indent + "  ";
     if (orgParamTypes.length > 0) {
       sb.append(indent).append("ParamTypes:\n");
@@ -271,8 +293,8 @@ public class GenericsUtils
     Type st = cls.getGenericSuperclass();
     if (st != null && st != Object.class) {
       sb.append(indent).append("GenericSuperclass:\n");
-      if (st instanceof Class< ? >) {
-        printGenericClass(indent + "  ", (Class< ? >) st, sb);
+      if (st instanceof Class<?>) {
+        printGenericClass(indent + "  ", (Class<?>) st, sb);
       } else {
         printType(indent + "  ", st, sb);
       }
@@ -289,9 +311,9 @@ public class GenericsUtils
       sb.append(indent).append("Super:\n");
       printGenericClass(indent + "  ", cls.getSuperclass(), sb);
     }
-    Class< ? >[] ifaces = cls.getInterfaces();
+    Class<?>[] ifaces = cls.getInterfaces();
     if (ifaces.length > 0) {
-      for (Class< ? > iface : ifaces) {
+      for (Class<?> iface : ifaces) {
         sb.append(indent).append("Interface:\n");
         printGenericClass(indent + "  ", iface, sb);
       }
@@ -312,7 +334,7 @@ public class GenericsUtils
 
   public static void printType(String indent, Type type, StringBuilder sb)
   {
-    if (type instanceof Class< ? >) {
+    if (type instanceof Class<?>) {
       sb.append(indent + "Class: " + type.toString() + "\n");
     } else if (type instanceof ParameterizedType) {
       ParameterizedType pt = (ParameterizedType) type;
@@ -332,7 +354,7 @@ public class GenericsUtils
       TypeVariable tp = (TypeVariable) type;
       sb.append(indent + "TypeVariable: " + tp.toString() + "\n").append(indent + "  Bounds:\n");
       GenericDeclaration gd = tp.getGenericDeclaration();
-      TypeVariable< ? >[] gdtv = gd.getTypeParameters();
+      TypeVariable<?>[] gdtv = gd.getTypeParameters();
       // tp.get
       for (Type b : tp.getBounds()) {
         printType(indent + "    ", b, sb);
@@ -357,14 +379,16 @@ public class GenericsUtils
    * @param position position of the generic type
    * @return null if none found
    */
-  public static Class< ? > getConcretTypeParameter(Class< ? > desiredType, Class< ? > concretType, int position)
+  public static Class<?> getConcretTypeParameter(Class<?> desiredType, Class<?> concretType, int position)
   {
     Type[] types = getTypeParameters(desiredType, concretType);
-    if (types == null || types.length <= position)
+    if (types == null || types.length <= position) {
       return null;
+    }
     Type typ = types[position];
-    if (typ instanceof Class< ? >)
-      return (Class< ? >) typ;
+    if (typ instanceof Class<?>) {
+      return (Class<?>) typ;
+    }
     return null;
   }
 
@@ -376,17 +400,17 @@ public class GenericsUtils
    * @param genTypeName
    * @return null if none found
    */
-  public static Class< ? > getConcretTypeParameter(Class< ? > desiredType, Class< ? > concretType, String genTypeName)
+  public static Class<?> getConcretTypeParameter(Class<?> desiredType, Class<?> concretType, String genTypeName)
   {
     // Type[] types = getTypeParameters(desiredType, concretType);
     Type genSuperCls = concretType.getGenericSuperclass();
     if (genSuperCls instanceof ParameterizedType) {
       ParameterizedType pt = (ParameterizedType) genSuperCls;
-      Class< ? > rawType = (Class< ? >) pt.getRawType();
-      TypeVariable< ? >[] rawTypeParams = rawType.getTypeParameters();
+      Class<?> rawType = (Class<?>) pt.getRawType();
+      TypeVariable<?>[] rawTypeParams = rawType.getTypeParameters();
       int foundPos = -1;
       for (int i = 0; i < rawTypeParams.length; ++i) {
-        TypeVariable< ? > tv = rawTypeParams[i];
+        TypeVariable<?> tv = rawTypeParams[i];
         if (tv.getName().equals(genTypeName) == true) {
           foundPos = i;
           break;
@@ -399,11 +423,11 @@ public class GenericsUtils
     for (Type superType : concretType.getGenericInterfaces()) {
       if (superType instanceof ParameterizedType) {
         ParameterizedType pt = (ParameterizedType) superType;
-        Class< ? > rawType = (Class< ? >) pt.getRawType();
-        TypeVariable< ? >[] rawTypeParams = rawType.getTypeParameters();
+        Class<?> rawType = (Class<?>) pt.getRawType();
+        TypeVariable<?>[] rawTypeParams = rawType.getTypeParameters();
         int foundPos = -1;
         for (int i = 0; i < rawTypeParams.length; ++i) {
-          TypeVariable< ? > tv = rawTypeParams[i];
+          TypeVariable<?> tv = rawTypeParams[i];
           if (tv.getName().equals(genTypeName) == true) {
             foundPos = i;
             break;
@@ -419,10 +443,10 @@ public class GenericsUtils
   }
 
   // from org/apache/xbean/recipe/RecipeHelper.java
-  public static Type[] getTypeParameters(Class< ? > desiredType, Type type)
+  public static Type[] getTypeParameters(Class<?> desiredType, Type type)
   {
     if (type instanceof Class) {
-      Class< ? > rawClass = (Class< ? >) type;
+      Class<?> rawClass = (Class<?>) type;
 
       // if this is the collection class we're done
       if (desiredType.equals(type)) {
