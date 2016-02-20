@@ -244,7 +244,6 @@ public class LocalSettingsEnv
 
     bindStandards();
     // bindMailSession();
-    bindHibernateSettings();
     bindJndi();
   }
 
@@ -401,23 +400,6 @@ public class LocalSettingsEnv
   // bind("java:/comp/env/genome/mail/mailSession", mailSession);
   // bind("java:/comp/env/mail/Session", mailSession);
   // }
-
-  /**
-   * Bind hibernate settings.
-   *
-   * @throws NamingException the naming exception
-   */
-  protected void bindHibernateSettings() throws NamingException
-  {
-    String hibernateDialect = localSettings.getProperty("env.HibernateDialect");
-    if (StringUtils.isNotEmpty(hibernateDialect) == true) {
-      bind("java:/comp/env/HibernateDialect", hibernateDialect);
-    }
-    String hibernateSchemaUpdate = localSettings.getProperty("env.HibernateSchemaUpdate");
-    if (StringUtils.isNotEmpty(hibernateDialect) == true) {
-      bind("java:/comp/env/HibernateSchemaUpdate", Boolean.getBoolean(hibernateSchemaUpdate));
-    }
-  }
 
   /**
    * Bind standards.
