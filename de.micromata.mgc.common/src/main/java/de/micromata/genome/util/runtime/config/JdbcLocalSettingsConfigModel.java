@@ -15,7 +15,7 @@ import de.micromata.genome.util.validation.ValContext;
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
  */
-public class DatasourceLocalSettingsConfigModel extends AbstractLocalSettingsConfigModel
+public class JdbcLocalSettingsConfigModel extends AbstractLocalSettingsConfigModel
 {
   @ALocalSettingsPath(key = "drivername", comment = "JDBC Java class")
   private String drivername;
@@ -27,13 +27,26 @@ public class DatasourceLocalSettingsConfigModel extends AbstractLocalSettingsCon
 
   @ALocalSettingsPath(key = "url", comment = "JDBC url to connect to DB")
   private String url;
-  @ALocalSettingsPath(key = "name", comment = "Name of the data soruce")
+  /**
+   * Has to be set outside.
+   */
   private String name;
+  /**
+   * If set, the datasource will be registered as jndi name.
+   */
+  private String jndiName;
 
-  public DatasourceLocalSettingsConfigModel(String name, String comment)
+  public JdbcLocalSettingsConfigModel(String name, String comment)
   {
     super(comment);
     this.name = name;
+  }
+
+  public JdbcLocalSettingsConfigModel(String name, String comment, String jndiName)
+  {
+    super(comment);
+    this.name = name;
+    this.jndiName = jndiName;
   }
 
   @Override
@@ -85,9 +98,83 @@ public class DatasourceLocalSettingsConfigModel extends AbstractLocalSettingsCon
   }
 
   @Override
+  public LocalSettingsWriter toProperties(LocalSettingsWriter writer)
+  {
+    writer = super.toProperties(writer);
+    writer.put("db.ds." + name + ".name", name);
+    if (StringUtils.isBlank(jndiName) == true) {
+      return writer;
+    }
+    LocalSettingsWriter sw = writer.newSection("JNDI for Datasource " + name);
+    sw.put("jndi.bind." + name + ".target", jndiName);
+    sw.put("jndi.bind." + name + ".type", "DataSource");
+    sw.put("jndi.bind." + name + ".source", name);
+    return writer;
+  }
+
+  @Override
   public String buildKey(String key)
   {
     return "db.ds." + name + "." + key;
   }
 
+  public String getDrivername()
+  {
+    return drivername;
+  }
+
+  public void setDrivername(String drivername)
+  {
+    this.drivername = drivername;
+  }
+
+  public String getUsername()
+  {
+    return username;
+  }
+
+  public void setUsername(String username)
+  {
+    this.username = username;
+  }
+
+  public String getPassword()
+  {
+    return password;
+  }
+
+  public void setPassword(String password)
+  {
+    this.password = password;
+  }
+
+  public String getUrl()
+  {
+    return url;
+  }
+
+  public void setUrl(String url)
+  {
+    this.url = url;
+  }
+
+  public String getName()
+  {
+    return name;
+  }
+
+  public void setName(String name)
+  {
+    this.name = name;
+  }
+
+  public String getJndiName()
+  {
+    return jndiName;
+  }
+
+  public void setJndiName(String jndiName)
+  {
+    this.jndiName = jndiName;
+  }
 }

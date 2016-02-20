@@ -10,6 +10,8 @@
 package de.micromata.genome.logging;
 
 import de.micromata.genome.logging.spi.log4j.Log4JLogging;
+import de.micromata.genome.util.validation.ValMessage;
+import de.micromata.genome.util.validation.ValState;
 
 /**
  * Simplified interface for logging.
@@ -150,6 +152,42 @@ public class GLog
       LoggingServiceManager.get().getLogging().fatal(cat, msg, attributes);
     } catch (Exception ex) { // NOSONAR "Illegal Catch" framework
       fallBackLogging.fatal(cat, msg, attributes);
+    }
+  }
+
+  public static LogLevel valStateToLogLevel(ValState level)
+  {
+    switch (level) {
+      case BlockingError:
+        return LogLevel.Fatal;
+      case Error:
+        return LogLevel.Error;
+      case Warning:
+        return LogLevel.Warn;
+      case Info:
+        return LogLevel.Note;
+      default:
+        return LogLevel.Debug;
+    }
+  }
+
+  /**
+   * The message has to be translated before
+   * 
+   * @param cat
+   * @param msg
+   */
+  public static void logValMessage(LogCategory cat, ValMessage msg)
+  {
+    LogLevel level = valStateToLogLevel(msg.getValState());
+    String message = msg.getMessage();
+    if (message == null) {
+      message = "???" + msg.getI18nkey() + "???";
+    }
+    if (msg.getException() != null) {
+      doLog(level, cat, message, new LogExceptionAttribute(msg.getException()));
+    } else {
+      doLog(level, cat, message);
     }
   }
 

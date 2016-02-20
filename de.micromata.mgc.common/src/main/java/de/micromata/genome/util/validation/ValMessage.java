@@ -58,11 +58,24 @@ public class ValMessage implements Serializable
 
   }
 
+  public ValMessage(ValState valState, String i18nkey)
+  {
+    this(valState, i18nkey, (Object[]) null);
+  }
+
+  public ValMessage(ValState valState, String i18nkey, Exception ex)
+  {
+    this(valState, i18nkey, (Object[]) null);
+    this.exception = ex;
+  }
+
   public ValMessage(ValState valState, String i18nkey, Object[] arguments)
   {
     this.valState = valState;
     this.i18nkey = i18nkey;
-    this.arguments = arguments;
+    if (arguments != null) {
+      this.arguments = arguments;
+    }
   }
 
   public void addProperty(String property)

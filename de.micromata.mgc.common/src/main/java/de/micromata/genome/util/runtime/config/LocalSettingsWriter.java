@@ -77,7 +77,7 @@ public class LocalSettingsWriter
 
   public LocalSettingsWriter put(String key, String value, String comment)
   {
-    checkDuplicated(key, value);
+    addcheckDuplicated(key, value);
     currentSection().put(key, value, comment);
     return this;
   }
@@ -93,14 +93,14 @@ public class LocalSettingsWriter
       @Override
       public LocalSettingsWriter put(String key, String value, String comment)
       {
-        parent.checkDuplicated(key, value);
-        lsection.put(key, value, comment);
+        parent.put(key, value, comment);
+        //        lsection.put(key, value, comment);
         return this;
       }
     };
   }
 
-  protected void checkDuplicated(String key, String value)
+  protected void addcheckDuplicated(String key, String value)
   {
     if (allEntries.containsKey(key) == true) {
       throw new IllegalArgumentException("Key is dublicated: " + key);

@@ -37,9 +37,9 @@ public abstract class AbstractLocalSettingsConfigModel implements LocalSettingsC
    * @param props
    */
   @Override
-  public void toProperties(LocalSettingsWriter writer)
+  public LocalSettingsWriter toProperties(LocalSettingsWriter writer)
   {
-    LocalSettingsConfigUtils.toProperties(this, writer);
+    return LocalSettingsConfigUtils.toProperties(this, writer);
   }
 
   /**

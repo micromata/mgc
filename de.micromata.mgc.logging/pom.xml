@@ -8,7 +8,6 @@
   </parent>
   <artifactId>de.micromata.mgc.logging</artifactId>
   <packaging>jar</packaging>
-  <name>de.micromata.mgc.logging</name>
   <description>
     Extended Logging
   </description>

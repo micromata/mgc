@@ -29,8 +29,9 @@ public interface LocalSettingsConfigModel
    * store the configuration into local settings.
    * 
    * @param props
+   * @return if created a new section writer, returned this.
    */
-  void toProperties(LocalSettingsWriter writer);
+  LocalSettingsWriter toProperties(LocalSettingsWriter writer);
 
   /**
    * load the configuration from local settings.

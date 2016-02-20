@@ -5,8 +5,18 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import de.micromata.mgc.jettystarter.JettyConfigModel;
 import de.micromata.mgc.jettystarter.JettyServer;
 
+/**
+ * 
+ * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
+ *
+ */
 public class SampleJettyServer extends JettyServer
 {
+
+  public SampleJettyServer(JettyConfigModel config)
+  {
+    super(config);
+  }
 
   @Override
   protected ServletContextHandler createContextHandler(JettyConfigModel config)

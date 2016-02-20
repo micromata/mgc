@@ -33,24 +33,6 @@ public class ValContextDelegate extends ValContext
   }
 
   @Override
-  public void error(String i18nkey)
-  {
-    parent.error(i18nkey);
-  }
-
-  @Override
-  public void error(String property, String i18nkey)
-  {
-    parent.error(property, i18nkey);
-  }
-
-  @Override
-  public void add(ValState valState, String property, String i18nkey)
-  {
-    parent.add(valState, property, i18nkey);
-  }
-
-  @Override
   public void addMessage(ValMessage vm)
   {
     parent.addMessage(vm);
@@ -96,36 +78,6 @@ public class ValContextDelegate extends ValContext
   public void error(String property, String i18nkey, Exception ex)
   {
     parent.error(property, i18nkey, ex);
-  }
-
-  @Override
-  public void warn(String i18nkey)
-  {
-    parent.warn(i18nkey);
-  }
-
-  @Override
-  public void warn(String property, String i18nkey)
-  {
-    parent.warn(property, i18nkey);
-  }
-
-  @Override
-  public void info(String i18nkey)
-  {
-    parent.info(i18nkey);
-  }
-
-  @Override
-  public void info(String property, String i18nkey)
-  {
-    parent.info(property, i18nkey);
-  }
-
-  @Override
-  public void add(ValState valState, String property, String i18nkey, Exception ex)
-  {
-    parent.add(valState, property, i18nkey, ex);
   }
 
   @Override

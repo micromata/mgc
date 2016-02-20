@@ -43,11 +43,12 @@ public class LocalSettingsConfigUtils
    * @param bean the bean
    * @param ret the ret
    */
-  public static void toProperties(LocalSettingsConfigModel bean, LocalSettingsWriter writer)
+  public static LocalSettingsWriter toProperties(LocalSettingsConfigModel bean, LocalSettingsWriter writer)
   {
     String comment = bean.getSectionComment();
     LocalSettingsWriter lw = writer.newSection(comment);
     toPropertiesInSection(bean, lw);
+    return lw;
   }
 
   public static void toPropertiesInSection(LocalSettingsConfigModel bean, LocalSettingsWriter writer)

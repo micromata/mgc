@@ -24,6 +24,8 @@ import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 
+import de.micromata.genome.util.runtime.LocalSettingsEnv;
+
 /**
  * Wrapper for Jetty Server.
  * 
@@ -36,6 +38,8 @@ public abstract class JettyServer
 
   protected Server server;
 
+  protected JettyConfigModel configModel;
+
   protected abstract ServletContextHandler createContextHandler(JettyConfigModel config);
 
   public JettyServer()
@@ -45,39 +49,9 @@ public abstract class JettyServer
 
   public JettyServer(JettyConfigModel config)
   {
+    this.configModel = config;
     initJetty(config);
-  }
 
-  public void start()
-  {
-    try {
-      server.start();
-    } catch (Exception ex) {
-      // TOOD RK introduce own ex
-      throw new RuntimeException(ex);
-    }
-  }
-
-  public void stop()
-  {
-    try {
-      server.stop();
-    } catch (Exception ex) {
-      // TOOD RK introduce own ex
-      throw new RuntimeException(ex);
-    }
-
-  }
-
-  public void stopAndWait()
-  {
-    stop();
-    try {
-      server.join();
-    } catch (Exception ex) {
-      // TOOD RK introduce own ex
-      throw new RuntimeException(ex);
-    }
   }
 
   public Server getServer()
@@ -87,7 +61,7 @@ public abstract class JettyServer
 
   public void initJetty(JettyConfigModel config)
   {
-    //    LocalSettingsEnv localEnv = LocalSettingsEnv.get();
+    LocalSettingsEnv localEnv = LocalSettingsEnv.get();
 
     //    LocalSettings localSettings = localEnv.getLocalSettings();
     server = new Server();

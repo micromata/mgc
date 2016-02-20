@@ -3,11 +3,15 @@ package de.micromata.mgc.jettystarter.sample;
 import javax.servlet.http.HttpServletResponse;
 
 import de.micromata.genome.util.runtime.LocalSettings;
+import de.micromata.genome.util.runtime.config.LocalSettingsConfigModel;
 import de.micromata.genome.util.validation.ValContext;
 import de.micromata.genome.util.validation.ValMessage;
+import de.micromata.genome.util.validation.ValTranslateService;
 import de.micromata.genome.util.validation.ValTranslateServices;
 import de.micromata.mgc.jettystarter.JettyConfigModel;
+import de.micromata.mgc.jettystarter.JettyServer;
 import de.micromata.mgc.jettystarter.JettyServerRunner;
+import de.micromata.mgc.jettystarter.MgcApplicationWithJettyApplication;
 
 /**
  * 
@@ -30,8 +34,36 @@ public class SampleJettyMain
       }
       System.exit(10);
     }
-    SampleJettyServer server = new SampleJettyServer();
-    server.initJetty(jc);
+    MgcApplicationWithJettyApplication server = new MgcApplicationWithJettyApplication()
+    {
+
+      @Override
+      public ValTranslateService getTranslateService()
+      {
+        return ValTranslateServices.noTranslation();
+      }
+
+      @Override
+      public void reInit()
+      {
+        // TODO Auto-generated method stub
+
+      }
+
+      @Override
+      protected JettyServer newJettyServer(JettyConfigModel cfg)
+      {
+        return new SampleJettyServer(cfg);
+      }
+
+      @Override
+      protected LocalSettingsConfigModel newModel()
+      {
+        return new JettyConfigModel();
+      }
+
+    };
+
     new JettyServerRunner().runServer(server);
   }
 }

@@ -132,6 +132,7 @@
         <module>de.micromata.mgc.jpa.xmldump</module>
         <module>de.micromata.mgc.jpa.logging</module>
         <module>de.micromata.mgc.jettystarter</module>
+        <module>de.micromata.mgc.javafx.launcher</module>
         <module>samples</module>
       </modules>
     </profile>
