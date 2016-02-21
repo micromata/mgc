@@ -59,11 +59,11 @@
     <mgc.version>2.1.0-SNAPSHOT</mgc.version><!-- MGCVERSION -->
 
 
-    
-    <log4j.version>1.2.17</log4j.version>
-    
 
-    <junit.version>4.11</junit.version>
+    <log4j.version>1.2.17</log4j.version>
+
+
+    <junit.version>4.12</junit.version>
 
     <!-- COMMONS VERSIONS -->
     <commons-digester.version>2.1</commons-digester.version>
@@ -81,7 +81,7 @@
     <commons-fileupload.version>1.2.2</commons-fileupload.version>
 
     <net.sourceforge.collections_generic.version>4.01</net.sourceforge.collections_generic.version>
-    
+
     <org.codehaus.groovy.groovy-all.version>2.4.4</org.codehaus.groovy.groovy-all.version>
 
     <!-- JAVAX VERSIONS -->
@@ -97,14 +97,14 @@
     <org.apache.lucene.version>5.3.1</org.apache.lucene.version>
     <!-- old 4.1.9.Final -->
     <org.hibernate.hibernate-entitymanager.version>5.0.7.Final</org.hibernate.hibernate-entitymanager.version>
-    
+
     <spring.version>4.2.3.RELEASE</spring.version>
-    
+
 		<org.apache.derby.version>10.12.1.1</org.apache.derby.version>
  		<!-- old <hsqldb.version>1.8.0.10</hsqldb.version> -->
     <hsqldb.version>2.3.3</hsqldb.version>
 		<com.oracle.ojdbc6.version>11.2.0.2.0</com.oracle.ojdbc6.version>
-		<genome.mvn.plugin.version>2.1.0-SNAPSHOT</genome.mvn.plugin.version>    
+		<genome.mvn.plugin.version>2.1.0-SNAPSHOT</genome.mvn.plugin.version>
     <!-- ARGLINE -->
     <argLine>-XX:MaxPermSize=268m</argLine>
 
@@ -155,7 +155,7 @@
         <sonar.jdbc.password>vls_sonar</sonar.jdbc.password>
         <sonar.host.url>http://vls-its:9000/</sonar.host.url>
         <!-- use next part when locally installed sonar is running -->
-        <!--<sonar.jdbc.url>jdbc:h2:tcp://localhost:9092/sonar</sonar.jdbc.url> <sonar.jdbc.username>sonar</sonar.jdbc.username> 
+        <!--<sonar.jdbc.url>jdbc:h2:tcp://localhost:9092/sonar</sonar.jdbc.url> <sonar.jdbc.username>sonar</sonar.jdbc.username>
           <sonar.jdbc.password>sonar</sonar.jdbc.password> <sonar.host.url>http://localhost:9000/</sonar.host.url> -->
         <sonar.exclusions>**/src-gen/**/*.java,**/genome-tools/**/*.java,**/plugins/umgmt/**/*,**/plugins/popstats/**/*,**/GenomeDaoManager.java,**/UmgmtDaoManager.java,**/Emgr.java,**/EmgrFactory.java</sonar.exclusions>
       </properties>
