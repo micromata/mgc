@@ -11,6 +11,7 @@ import de.micromata.genome.util.validation.ValTranslateService;
  */
 public interface MgcApplication<M extends LocalSettingsConfigModel>
 {
+  MgcApplicationInfo getApplicationInfo();
 
   /**
    * get the current configuration model

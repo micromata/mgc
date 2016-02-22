@@ -1,9 +1,14 @@
 package de.micromata.mgc.javafx.launcher.gui;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
+import de.micromata.genome.util.bean.FieldMatchers;
 import de.micromata.genome.util.bean.PrivateBeanUtils;
+import de.micromata.genome.util.matcher.CommonMatchers;
 import de.micromata.genome.util.runtime.GenericsUtils;
 import de.micromata.genome.util.runtime.config.LocalSettingsConfigModel;
 import de.micromata.genome.util.validation.ValMessage;
@@ -13,6 +18,7 @@ import de.micromata.mgc.javafx.feedback.FeedbackPanel;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Control;
 import javafx.scene.layout.Pane;
 
 public abstract class AbstractConfigTabController<M extends LocalSettingsConfigModel>extends AbstractController<M>
@@ -45,6 +51,18 @@ public abstract class AbstractConfigTabController<M extends LocalSettingsConfigM
     Class<?> type = GenericsUtils.getClassGenericTypeFromSuperClass(getClass(), 0, LocalSettingsConfigModel.class);
     Node node = (Node) PrivateBeanUtils.readField(this, fieldName);
     FXEvents.get().registerValMessageReceiver(this, node, type, fieldName);
+  }
+
+  protected void registerValMessageReceivers()
+  {
+    Class<?> type = GenericsUtils.getClassGenericTypeFromSuperClass(getClass(), 0, LocalSettingsConfigModel.class);
+    List<Field> fields = PrivateBeanUtils.findAllFields(getClass(),
+        CommonMatchers.and(FieldMatchers.hasNotModifier(Modifier.STATIC), FieldMatchers.assignableTo(Control.class)));
+    for (Field field : fields) {
+      Control ctl = (Control) PrivateBeanUtils.readField(this, field);
+      FXEvents.get().registerValMessageReceiver(this, ctl, type, field.getName());
+    }
+
   }
 
   public Pane getTabPane()

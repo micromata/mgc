@@ -18,11 +18,17 @@ import org.apache.commons.lang.Validate;
 
 import de.micromata.genome.util.runtime.RuntimeIOException;
 import de.micromata.genome.util.types.Pair;
+import de.micromata.mgc.javafx.launcher.gui.AbstractController;
+import de.micromata.mgc.javafx.launcher.gui.AbstractMainWindow;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 /**
  * This class provides basic methods for loading FXMLs that are defined with {@link FXMLFile}. Load your FXMLs if you
@@ -144,6 +150,30 @@ public class ControllerService
     }
   }
 
+  public <M, C extends AbstractController<M>> C loadAsDialog(AbstractMainWindow<?> mainWindow, Class<C> controllerClass,
+      String dialogTitle)
+  {
+    Pair<Pane, C> pair = loadControl(controllerClass, Pane.class);
+    Stage stage = new Stage();
+    stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> {
+      stage.hide();
+      e.consume();
+    });
+    Pane root = pair.getFirst();
+    C controller = pair.getSecond();
+    //    controller.setOwningStage(stage);
+    Scene s = new Scene(root);//, AbstractConfigDialog.PREF_WIDTH, AbstractConfigDialog.PREF_HEIGHT
+    controller.setParent(root);
+    controller.setScene(s);
+    controller.setStage(stage);
+    stage.setScene(s);
+    stage.initModality(Modality.APPLICATION_MODAL);
+    //stage.setResizable(false);
+    stage.setTitle(dialogTitle);
+    return controller;
+  }
+
+  // TODO RK review and delete following
   /**
    * Evaluates every validation message an sets {@link #CSS_CLASS_ERROR} add controls that matches the
    * {@link ValidationMessage#getProperty()}.

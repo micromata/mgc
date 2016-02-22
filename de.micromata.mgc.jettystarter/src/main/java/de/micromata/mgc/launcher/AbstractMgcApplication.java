@@ -26,6 +26,12 @@ public abstract class AbstractMgcApplication<M extends LocalSettingsConfigModel>
     ranslateService = ValTranslateServices.noTranslation();
   }
 
+  @Override
+  public MgcApplicationInfo getApplicationInfo()
+  {
+    return new ManifestMgcApplicationInfo(this);
+  }
+
   protected abstract M newModel();
 
   @Override

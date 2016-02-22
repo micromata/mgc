@@ -1,21 +1,19 @@
 package de.micromata.mgc.javafx.launcher.gui;
 
-import java.awt.Desktop;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 import org.apache.commons.lang.StringUtils;
 
 import de.micromata.genome.util.runtime.LocalSettings;
+import de.micromata.genome.util.runtime.LocalSettingsEnv;
 import de.micromata.genome.util.runtime.config.LocalSettingsConfigModel;
 import de.micromata.genome.util.types.Pair;
 import de.micromata.genome.util.validation.ValMessage;
 import de.micromata.mgc.javafx.ControllerService;
 import de.micromata.mgc.javafx.FXCssUtil;
 import de.micromata.mgc.javafx.FXEvents;
+import de.micromata.mgc.javafx.SystemService;
 import de.micromata.mgc.javafx.launcher.MgcApplicationStartStopToEventListener;
 import de.micromata.mgc.javafx.launcher.MgcLauncher;
 import de.micromata.mgc.javafx.launcher.MgcLauncherEvent;
@@ -125,6 +123,8 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>exte
   public void startServer()
   {
     MgcApplicationStartStopToEventListener listener = new MgcApplicationStartStopToEventListener();
+    LocalSettings.reset();
+    LocalSettingsEnv.reset();
     if (LocalSettings.localSettingsExists() == false) {
       loggingController.warn("GWiki is not configured.");
       return;
@@ -202,7 +202,7 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>exte
     controller.setStage(stage);
     stage.setScene(s);
     stage.initModality(Modality.APPLICATION_MODAL);
-    stage.setResizable(false);
+    //stage.setResizable(false);
     stage.setTitle("Configuration");
     controller.initializeWithModel(application.getConfigModel());
     stage.show();
@@ -235,21 +235,21 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>exte
       loggingController.error("No public url configured");
       return;
     }
+    SystemService.get().openUrlInBrowser(puburl);
+  }
 
-    Desktop desktop = null;
-    if (Desktop.isDesktopSupported()) {
-      desktop = Desktop.getDesktop();
-    }
+  protected Class<? extends AboutDialogController> getAboutDialogControllerClass()
+  {
+    return AboutDialogController.class;
+  }
 
-    if (desktop != null) {
-      try {
-        desktop.browse(new URI(puburl));
-      } catch (final IOException e) {
-        loggingController.error("Can't launch browser: " + e.getMessage(), e);
-      } catch (final URISyntaxException e) {
-        loggingController.error("Can't launch browser: " + e.getMessage(), e);
-      }
-    }
+  @FXML
+  protected void showAboutDialog(ActionEvent event)
+  {
+    AboutDialogController controller = ControllerService.get()
+        .loadAsDialog(this, getAboutDialogControllerClass(), "About");
+    controller.initWithApplication(application);
+    controller.getStage().show();
   }
 
   public MgcApplication<M> getApplication()

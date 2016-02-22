@@ -1,7 +1,15 @@
 package de.micromata.mgc.javafx;
 
+import java.awt.Desktop;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+
+import de.micromata.genome.logging.GLog;
+import de.micromata.genome.logging.GenomeLogCategory;
+import de.micromata.genome.logging.LogExceptionAttribute;
 
 /**
  * Some system services.
@@ -39,5 +47,26 @@ public class SystemService
 
     }
     return ret;
+  }
+
+  public void openUrlInBrowser(String url)
+  {
+    Desktop desktop = null;
+    if (Desktop.isDesktopSupported()) {
+      desktop = Desktop.getDesktop();
+    } else {
+      GLog.warn(GenomeLogCategory.System, "Launching Browser not supported");
+      return;
+    }
+
+    if (desktop != null) {
+      try {
+        desktop.browse(new URI(url));
+      } catch (final IOException ex) {
+        GLog.error(GenomeLogCategory.System, "Can't launch browser: " + ex.getMessage(), new LogExceptionAttribute(ex));
+      } catch (final URISyntaxException ex) {
+        GLog.error(GenomeLogCategory.System, "Can't launch browser: " + ex.getMessage(), new LogExceptionAttribute(ex));
+      }
+    }
   }
 }

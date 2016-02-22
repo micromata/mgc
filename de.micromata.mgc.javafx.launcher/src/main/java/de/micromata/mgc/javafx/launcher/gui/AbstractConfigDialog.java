@@ -37,12 +37,12 @@ public abstract class AbstractConfigDialog<M extends LocalSettingsConfigModel>ex
   /**
    * Preferred Scene Width.
    */
-  public static final int PREF_WIDTH = 830;
+  public static final int PREF_WIDTH = 700;
 
   /**
    * Preferred Scene Height.
    */
-  public static final int PREF_HEIGHT = 410;
+  public static final int PREF_HEIGHT = 500;
 
   protected AbstractMainWindow<M> mainWindow;
   @FXML
@@ -82,6 +82,7 @@ public abstract class AbstractConfigDialog<M extends LocalSettingsConfigModel>ex
       configurationTabs.getTabs().add(tabB);
       tabController.add(contrl);
       contrl.initWithModel(tabc.configModel);
+      contrl.registerValMessageReceivers();
     }
   }
 
