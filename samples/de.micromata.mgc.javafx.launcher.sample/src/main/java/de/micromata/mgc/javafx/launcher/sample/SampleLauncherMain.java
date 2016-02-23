@@ -1,7 +1,6 @@
 package de.micromata.mgc.javafx.launcher.sample;
 
 import de.micromata.mgc.javafx.launcher.MgcLauncher;
-import de.micromata.mgc.javafx.launcher.gui.AbstractMainWindow;
 import de.micromata.mgc.javafx.launcher.gui.generic.GenericMainWindow;
 
 /**
@@ -19,7 +18,6 @@ public class SampleLauncherMain extends MgcLauncher<SampleLocalSettingsConfigMod
 
   public SampleLauncherMain()
   {
-    super(new SampleLauncherApplication(),
-        (Class<? extends AbstractMainWindow<SampleLocalSettingsConfigModel>>) GenericMainWindow.class);
+    super(new SampleLauncherApplication(), (Class) GenericMainWindow.class);
   }
 }
