@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.apache.commons.lang.ObjectUtils;
 
+import de.micromata.genome.util.i18n.I18NTranslationProvider;
+
 /**
  * A Validation Context.
  * 
@@ -105,10 +107,10 @@ public class ValContext
     add(ValState.Info, property, i18nkey);
   }
 
-  public void translateMessages(ValTranslateService transService)
+  public void translateMessages(I18NTranslationProvider transService)
   {
     for (ValMessage message : messages) {
-      transService.translate(message);
+      message.getTranslatedMessage(transService);
     }
   }
 

@@ -3,11 +3,14 @@ package de.micromata.mgc.javafx;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ResourceBundle;
 
 import org.apache.commons.lang.Validate;
 
+import de.micromata.genome.util.i18n.I18NTranslations;
 import de.micromata.genome.util.runtime.RuntimeIOException;
 import de.micromata.genome.util.types.Pair;
+import de.micromata.mgc.javafx.launcher.MgcLauncher;
 import de.micromata.mgc.javafx.launcher.gui.AbstractController;
 import de.micromata.mgc.javafx.launcher.gui.AbstractMainWindow;
 import javafx.application.Platform;
@@ -99,7 +102,9 @@ public class ControllerService
     } catch (IOException ex) {
       throw new IllegalArgumentException("Canot find fxml file: " + path);
     }
-    FXMLLoader fxmlLoader = new FXMLLoader(ControllerService.class.getResource(path));
+    ResourceBundle resbundle = I18NTranslations
+        .asResourceBundle(MgcLauncher.get().getApplication().getTranslateService());
+    FXMLLoader fxmlLoader = new FXMLLoader(ControllerService.class.getResource(path), resbundle);
     try {
       Object loaded = fxmlLoader.load();
       Object controler = fxmlLoader.getController();

@@ -1,5 +1,11 @@
 package de.micromata.mgc.jettystarter;
 
+import de.micromata.genome.util.i18n.ChainedResourceBundleTranslationResolver;
+import de.micromata.genome.util.i18n.DefaultWarnI18NTranslationProvider;
+import de.micromata.genome.util.i18n.I18NTranslationProvider;
+import de.micromata.genome.util.i18n.I18NTranslationProviderImpl;
+import de.micromata.genome.util.i18n.I18NTranslations;
+import de.micromata.genome.util.i18n.PlaceholderTranslationProvider;
 import de.micromata.genome.util.runtime.LocalSettingsEnv;
 import de.micromata.genome.util.runtime.config.CastableLocalSettingsConfigModel;
 import de.micromata.genome.util.runtime.config.LocalSettingsConfigModel;
@@ -17,6 +23,14 @@ public abstract class MgcApplicationWithJettyApplication<M extends LocalSettings
   protected JettyServer jettyServer;
 
   protected abstract JettyServer newJettyServer(JettyConfigModel cfg);
+
+  public MgcApplicationWithJettyApplication()
+  {
+    I18NTranslationProvider provider = new DefaultWarnI18NTranslationProvider(new PlaceholderTranslationProvider(
+        new I18NTranslationProviderImpl(I18NTranslations.systemDefaultLocaleProvider(),
+            new ChainedResourceBundleTranslationResolver("mgcapp", "mgcjetty"))));
+    setTranslateService(provider);
+  }
 
   protected void getCreateJettyServer()
   {
@@ -52,11 +66,12 @@ public abstract class MgcApplicationWithJettyApplication<M extends LocalSettings
       LocalSettingsEnv.get();
       jettyServer.getServer().start();
 
-      listener.listen(this, MgcApplicationStartStopStatus.StartSuccess, new ValMessage(ValState.Info, "Jetty started"));
+      listener.listen(this, MgcApplicationStartStopStatus.StartSuccess,
+          new ValMessage(ValState.Info, "mgc.jetty.msg.jettystarted"));
       return MgcApplicationStartStopStatus.StartSuccess;
     } catch (Exception ex) {
       listener.listen(this, MgcApplicationStartStopStatus.StartError,
-          new ValMessage(ValState.Error, "Jetty start failed", ex));
+          new ValMessage(ValState.Error, "mgc.jetty.msg.jettystartedfailed", ex, new Object[] { ex.getMessage() }));
       return MgcApplicationStartStopStatus.StartError;
     }
   }
@@ -66,16 +81,17 @@ public abstract class MgcApplicationWithJettyApplication<M extends LocalSettings
   {
     if (jettyServer == null) {
       listener.listen(this, MgcApplicationStartStopStatus.StopAlreadyStopped,
-          new ValMessage(ValState.Warning, "Jetty already stopped"));
+          new ValMessage(ValState.Warning, "mgc.jetty.msg.jettyalreadystopped"));
       return MgcApplicationStartStopStatus.StopAlreadyStopped;
     }
     try {
       jettyServer.getServer().stop();
-      listener.listen(this, MgcApplicationStartStopStatus.StopSuccess, new ValMessage(ValState.Info, "Jetty stopped"));
+      listener.listen(this, MgcApplicationStartStopStatus.StopSuccess,
+          new ValMessage(ValState.Info, "mgc.jetty.msg.jettystopped"));
       return MgcApplicationStartStopStatus.StopSuccess;
     } catch (Exception ex) {
       listener.listen(this, MgcApplicationStartStopStatus.StopError,
-          new ValMessage(ValState.Error, "Jetty stop failed", ex));
+          new ValMessage(ValState.Error, "mgc.jetty.msg.jettystopFailed", ex, new Object[] { ex.getMessage() }));
       return MgcApplicationStartStopStatus.StopError;
     }
   }

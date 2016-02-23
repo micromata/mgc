@@ -166,8 +166,8 @@ public class LoggingController implements Initializable
     lwe.setCategory("Launcher");
 
     lwe.setLevel(GLog.valStateToLogLevel(item.getValState()));
-    MgcLauncher.get().getApplication().getTranslateService().translate(item);
-    lwe.setMessage(item.getMessage());
+    String message = item.getTranslatedMessage(MgcLauncher.get().getApplication().getTranslateService());
+    lwe.setMessage(message);
     if (item.getException() != null) {
       lwe.getAttributes().add(new LogExceptionAttribute(item.getException()));
     }

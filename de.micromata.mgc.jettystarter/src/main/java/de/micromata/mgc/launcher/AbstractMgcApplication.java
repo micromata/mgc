@@ -2,12 +2,12 @@ package de.micromata.mgc.launcher;
 
 import java.io.File;
 
+import de.micromata.genome.util.i18n.I18NTranslationProvider;
+import de.micromata.genome.util.i18n.I18NTranslations;
 import de.micromata.genome.util.runtime.LocalSettings;
 import de.micromata.genome.util.runtime.config.LocalSettingsConfigModel;
 import de.micromata.genome.util.runtime.config.LocalSettingsWriter;
 import de.micromata.genome.util.validation.ValContext;
-import de.micromata.genome.util.validation.ValTranslateService;
-import de.micromata.genome.util.validation.ValTranslateServices;
 
 /**
  * 
@@ -19,11 +19,11 @@ public abstract class AbstractMgcApplication<M extends LocalSettingsConfigModel>
 {
   private M model;
 
-  protected ValTranslateService ranslateService;
+  protected I18NTranslationProvider translateService;
 
   public AbstractMgcApplication()
   {
-    ranslateService = ValTranslateServices.noTranslation();
+    translateService = I18NTranslations.noTranslationProvider();
   }
 
   @Override
@@ -70,4 +70,16 @@ public abstract class AbstractMgcApplication<M extends LocalSettingsConfigModel>
     File file = new File(LocalSettings.get().getLocalSettingsFile());
     writer.store(file);
   }
+
+  @Override
+  public I18NTranslationProvider getTranslateService()
+  {
+    return translateService;
+  }
+
+  public void setTranslateService(I18NTranslationProvider translateService)
+  {
+    this.translateService = translateService;
+  }
+
 }

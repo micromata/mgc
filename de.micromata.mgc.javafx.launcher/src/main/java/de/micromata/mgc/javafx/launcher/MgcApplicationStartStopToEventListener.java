@@ -19,6 +19,7 @@ public class MgcApplicationStartStopToEventListener implements MgcApplicationSta
   @Override
   public void listen(MgcApplication<?> application, MgcApplicationStartStopStatus status, ValMessage msg)
   {
+    msg.getTranslatedMessage(application.getTranslateService());
     GLog.logValMessage(GenomeLogCategory.System, msg);
     switch (status) {
       case StartError:

@@ -6,6 +6,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
+import de.micromata.genome.util.i18n.I18NTranslationProvider;
+
 /**
  * A Validation Message.
  * 
@@ -69,13 +71,19 @@ public class ValMessage implements Serializable
     this.exception = ex;
   }
 
-  public ValMessage(ValState valState, String i18nkey, Object[] arguments)
+  public ValMessage(ValState valState, String i18nkey, Exception ex, Object[] arguments)
   {
     this.valState = valState;
     this.i18nkey = i18nkey;
+    this.exception = ex;
     if (arguments != null) {
       this.arguments = arguments;
     }
+  }
+
+  public ValMessage(ValState valState, String i18nkey, Object[] arguments)
+  {
+    this(valState, i18nkey, null, arguments);
   }
 
   public void addProperty(String property)
@@ -88,6 +96,19 @@ public class ValMessage implements Serializable
     } else {
       this.property = this.property + '.' + property;
     }
+  }
+
+  public String getTranslatedMessage(I18NTranslationProvider transprov)
+  {
+    if (message != null) {
+      return message;
+    }
+    String msg = (String) transprov.getTranslationForKey(getI18nkey());
+    if (getArguments() != null && getArguments().length > 0) {
+      msg = String.format(msg, getArguments());
+    }
+    message = msg;
+    return message;
   }
 
   /**

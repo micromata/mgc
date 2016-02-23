@@ -17,7 +17,7 @@ public class StandardMgcApplicationStartStopListener implements MgcApplicationSt
   {
 
     // TODO invoke event, so buttons can react.
-    application.getTranslateService().translate(msg);
+    msg.getTranslatedMessage(application.getTranslateService());
     GLog.logValMessage(GenomeLogCategory.System, msg);
   }
 

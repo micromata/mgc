@@ -1,8 +1,8 @@
 package de.micromata.mgc.launcher;
 
+import de.micromata.genome.util.i18n.I18NTranslationProvider;
 import de.micromata.genome.util.runtime.config.LocalSettingsConfigModel;
 import de.micromata.genome.util.validation.ValContext;
-import de.micromata.genome.util.validation.ValTranslateService;
 
 /**
  * 
@@ -45,5 +45,5 @@ public interface MgcApplication<M extends LocalSettingsConfigModel>
 
   boolean isRunning();
 
-  ValTranslateService getTranslateService();
+  I18NTranslationProvider getTranslateService();
 }

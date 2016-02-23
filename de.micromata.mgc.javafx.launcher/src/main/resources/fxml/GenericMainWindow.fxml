@@ -7,6 +7,7 @@
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
@@ -15,26 +16,29 @@
    <children>
       <MenuBar prefHeight="24.0" prefWidth="904.0">
         <menus>
-          <Menu mnemonicParsing="false" text="Starter">
+          <Menu mnemonicParsing="false" text="%mgc.launcher.gui.menu.appmenu">
             <items>
-                  <MenuItem mnemonicParsing="false" onAction="#openConfigDialog" text="Configure" />
+                  <MenuItem mnemonicParsing="false" onAction="#openConfigDialog" text="%mgc.launcher.gui.menu.configure" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" onAction="#hideWindow" text="Hide" />
-              <MenuItem mnemonicParsing="false" onAction="#closeApplication" text="Quit" />
+                  <MenuItem mnemonicParsing="false" onAction="#hideWindow" text="%mgc.launcher.gui.menu.hide" />
+              <MenuItem mnemonicParsing="false" onAction="#closeApplication" text="%mgc.launcher.gui.menu.quit">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="F4" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Help">
+          <Menu mnemonicParsing="false" text="%mgc.launcher.gui.menu.help">
             <items>
-              <MenuItem mnemonicParsing="false" onAction="#showAboutDialog" text="About" />
+              <MenuItem mnemonicParsing="false" onAction="#showAboutDialog" text="%mgc.launcher.gui.menu.about" />
             </items>
           </Menu>
         </menus>
       </MenuBar>
       <Pane maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="60.0" prefHeight="98.0" prefWidth="1000.0">
          <children>
-            <Button fx:id="startServerButton" layoutX="724.0" layoutY="29.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" text="Start" />
-            <Button fx:id="stopServerButton" layoutX="813.0" layoutY="29.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" text="Stop" />
-            <Button fx:id="openBrowser" layoutX="589.0" layoutY="29.0" mnemonicParsing="false" text="Browser" />
+            <Button fx:id="startServerButton" layoutX="724.0" layoutY="29.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" text="%mgc.launcher.gui.button.startServer" />
+            <Button fx:id="stopServerButton" layoutX="813.0" layoutY="29.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" text="%mgc.launcher.gui.button.stopServer" />
+            <Button fx:id="openBrowser" layoutX="475.0" layoutY="29.0" mnemonicParsing="false" text="%mgc.launcher.gui.button.openBrowser" />
             <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="14.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@/style/genome_dashboard.png" />
