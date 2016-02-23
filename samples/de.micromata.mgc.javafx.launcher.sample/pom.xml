@@ -1,21 +1,25 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
+  <!-- <parent> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-starter-parent</artifactId> <version>1.3.1.RELEASE</version> 
+    </parent> -->
   <parent>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-parent</artifactId>
-    <version>1.3.1.RELEASE</version>
+    <artifactId>de.micromata.mgc.samples</artifactId>
+    <groupId>de.micromata.mgc</groupId>
+    <version>2.1.0-SNAPSHOT</version><!-- MGC -->
   </parent>
+
   <groupId>de.micromata.mgc</groupId>
   <artifactId>de.micromata.mgc.javafx.launcher.sample</artifactId>
   <packaging>jar</packaging>
-  <version>2.1.0-SNAPSHOT</version><!-- MGC -->
+
   <description>
    Sample for the Genome Launcher
   </description>
   <properties>
     <mgc.version>2.1.0-SNAPSHOT</mgc.version><!-- MGC -->
     <start-class>de.micromata.mgc.javafx.launcher.sample.SampleLauncherMain</start-class>
+    <spring-boot.version>1.3.1.RELEASE</spring-boot.version>
   </properties>
 
 
@@ -37,6 +41,7 @@
       <version>${mgc.version}</version>
     </dependency>
   </dependencies>
+
   <build>
     <plugins>
       <plugin>
@@ -53,6 +58,8 @@
               <MgcDescription>Sample Launcher</MgcDescription>
               <MgcHomeUrl>http://labs.micromata.de</MgcHomeUrl>
               <MgcLargLogoPath>/style/gwikiLogo.png</MgcLargLogoPath>
+              <mainClass>${start-class}</mainClass>
+              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
             </manifestEntries>
           </archive>
         </configuration>
@@ -65,6 +72,36 @@
           <layout>ZIP</layout>
         </configuration>
       </plugin>
+
+      <!-- Support our own plugin -->
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <version>${spring-boot.version}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>repackage</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <mainClass>${start-class}</mainClass>
+        </configuration>
+      </plugin>
+      
     </plugins>
   </build>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <!-- Import dependency management from Spring Boot -->
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>${spring-boot.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 </project>
