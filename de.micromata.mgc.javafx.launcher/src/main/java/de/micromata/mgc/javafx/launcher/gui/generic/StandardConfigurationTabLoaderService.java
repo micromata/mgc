@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.micromata.genome.util.runtime.config.CastableLocalSettingsConfigModel;
+import de.micromata.genome.util.runtime.config.HibernateSchemaConfigModel;
 import de.micromata.genome.util.runtime.config.MailSessionLocalSettingsConfigModel;
 import de.micromata.mgc.javafx.launcher.gui.TabConfig;
 import de.micromata.mgc.javafx.launcher.gui.jetty.JettyConfigTabController;
@@ -35,6 +36,11 @@ public class StandardConfigurationTabLoaderService implements ConfigurationTabLo
     if (emailConfig != null) {
       ret.add(new TabConfig(MailSessionConfigTabController.class, emailConfig));
     }
+    HibernateSchemaConfigModel hibernateConfig = configModel.castTo(HibernateSchemaConfigModel.class);
+    if (hibernateConfig != null) {
+      ret.add(new TabConfig(HibernateSchemaConfigTabController.class, hibernateConfig));
+    }
+
     return ret;
   }
 
