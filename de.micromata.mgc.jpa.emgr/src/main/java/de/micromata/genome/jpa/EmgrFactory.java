@@ -41,7 +41,7 @@ import de.micromata.genome.util.runtime.LocalSettings;
 
 /**
  * Factory class to create an Emgr instance. This class should be held by a singleton.
- * 
+ *
  * With the method runWoTrans/runInTrans an Emgr Instance will be provided.
  *
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
@@ -106,7 +106,7 @@ public abstract class EmgrFactory<E extends IEmgr<?>>
 
   /**
    * Instantiates a new emgr factory.
-   * 
+   *
    * @param unitName the unit name
    */
   protected EmgrFactory(String unitName)
@@ -115,6 +115,7 @@ public abstract class EmgrFactory<E extends IEmgr<?>>
     entityManagerFactory = createEntityManagerFactory(unitName);
     initMetadata();
     registerEvents();
+    EmgrFactoryServiceManager.get().getEmgrFactoryService().register(this);
   }
 
   /**
@@ -150,7 +151,7 @@ public abstract class EmgrFactory<E extends IEmgr<?>>
 
   /**
    * Creates a new specific Emgr .
-   * 
+   *
    * @param entityManager the entity manager
    * @return the e
    */
@@ -186,7 +187,7 @@ public abstract class EmgrFactory<E extends IEmgr<?>>
 
   /**
    * Convert exception.
-   * 
+   *
    * @param ex the ex
    * @return the runtime exception
    */
@@ -238,7 +239,7 @@ public abstract class EmgrFactory<E extends IEmgr<?>>
 
   /**
    * Run wo trans.
-   * 
+   *
    * @param <R> the generic type
    * @param call the call
    * @return the r
