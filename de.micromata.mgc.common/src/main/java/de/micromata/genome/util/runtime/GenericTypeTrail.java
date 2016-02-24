@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
  */
 public class GenericTypeTrail
 {
-  static final Logger LOG = Logger.getLogger(GenericUtilsTest.class);
+  static final Logger LOG = Logger.getLogger(GenericTypeTrail.class);
   /**
    * the link to the derived class.
    */
