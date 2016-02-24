@@ -58,12 +58,17 @@ public class LogAttributeTypeWrapper implements LogAttributeType
     this.name = name;
   }
 
+  public LogAttributeTypeWrapper(LogAttributeType attributeType)
+  {
+    this(attributeType, false);
+  }
+
   /**
    * Instantiates a new log attribute type wrapper.
    *
    * @param attributeType the attribute type
    */
-  public LogAttributeTypeWrapper(LogAttributeType attributeType)
+  public LogAttributeTypeWrapper(LogAttributeType attributeType, boolean dumpDataOnly)
   {
     if (attributeType instanceof LogAttributeTypeWrapper) {
       orignalAttributeTypeClassName = ((LogAttributeTypeWrapper) attributeType).getOrignalAttributeTypeClassName();
@@ -74,7 +79,9 @@ public class LogAttributeTypeWrapper implements LogAttributeType
     this.isSearchKey = attributeType.isSearchKey();
     this.maxValueSize = attributeType.maxValueSize();
     this.name = attributeType.name();
-    this.renderer = attributeType.getRenderer();
+    if (dumpDataOnly == false) {
+      this.renderer = attributeType.getRenderer();
+    }
   }
 
   @Override

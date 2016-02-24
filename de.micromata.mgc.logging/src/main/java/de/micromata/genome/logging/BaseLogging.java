@@ -16,6 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.map.AbstractReferenceMap;
+import org.apache.commons.collections15.map.ReferenceMap;
 import org.apache.commons.lang.StringUtils;
 
 import de.micromata.genome.stats.Stats;
@@ -53,12 +55,12 @@ public abstract class BaseLogging implements Logging
   /**
    * do not call any modifable access to these. But constructes new copy and asign.
    */
-  protected static Map<String, LogAttributeType> registerdLogAttributes = new HashMap<String, LogAttributeType>();
+  protected static Map<String, LogAttributeType> registerdLogAttributes = new HashMap<>();
 
   /**
    * do not call any modifable access to these. But constructes new copy and asign.
    */
-  protected static Map<String, LogAttributeType> defaultLogAttributes = new HashMap<String, LogAttributeType>();
+  protected static Map<String, LogAttributeType> defaultLogAttributes = new HashMap<>();
 
   /**
    * do not call any modifable access to these. But constructes new copy and asign.
@@ -91,6 +93,29 @@ public abstract class BaseLogging implements Logging
    */
   private List<LogFilter> readFilters = new ArrayList<>();
 
+  protected static <V> Map<String, V> createNewCacheMap(Map<String, V> oldValues)
+  {
+    ReferenceMap<String, V> ret = new ReferenceMap<>(AbstractReferenceMap.HARD, AbstractReferenceMap.WEAK);
+    ret.putAll(oldValues);
+    return ret;
+  }
+
+  protected static <V> Map<String, V> createNewDisposableMap(Map<String, V> oldValues, Map<String, V> newValues)
+  {
+    Map<String, V> ret = createNewCacheMap(oldValues);
+    ret.putAll(newValues);
+    return ret;
+
+  }
+
+  protected static <V> Map<String, V> createNewMap(Map<String, V> oldValues, Map<String, V> newValues)
+  {
+    Map<String, V> ret = new HashMap<>(oldValues);
+    ret.putAll(newValues);
+    return ret;
+
+  }
+
   /**
    * Um die zu Anwendung neu gekommene(z.B. durch ein Plugin) {@link LogCategory} s zu registreren.
    * 
@@ -98,6 +123,7 @@ public abstract class BaseLogging implements Logging
    */
   public static void registerLogCategories(LogCategory... cats)
   {
+    Map<String, LogCategory> ncats = new HashMap<>(registerdLogCategories);
     for (LogCategory c : cats) {
       if (c.getFqName().length() > 30) {
         /**
@@ -109,10 +135,11 @@ public abstract class BaseLogging implements Logging
             "LogCategory to long (30 chars max): "
                 + c.getFqName());
       }
-      Map<String, LogCategory> nregisterdLogCategories = new HashMap<String, LogCategory>(registerdLogCategories);
-      nregisterdLogCategories.put(c.getFqName(), new LogCategoryWrapper(c));
-      registerdLogCategories = nregisterdLogCategories;
+      ncats.put(c.getFqName(), new LogCategoryWrapper(c));
     }
+
+    registerdLogCategories = ncats;
+
   }
 
   /**
@@ -133,6 +160,11 @@ public abstract class BaseLogging implements Logging
    */
   public static void registerLogAttributeType(LogAttributeType... attTypes)
   {
+    Map<String, LogAttributeType> nlogAttr = new HashMap<>();
+    Map<String, LogAttributeType> nlogAttrFiller = new HashMap<>();
+
+    Map<String, LogAttributeType> nsearchKeys = new HashMap<>();
+
     for (LogAttributeType c : attTypes) {
       if (c.name().length() > 30) {
         /**
@@ -145,23 +177,25 @@ public abstract class BaseLogging implements Logging
                 + c.name());
       }
       if (c.isSearchKey() == true) {
-        Map<String, LogAttributeType> nsearchLogAttributes = new HashMap<String, LogAttributeType>(searchLogAttributes);
-        nsearchLogAttributes.put(c.name(), c);
-        searchLogAttributes = nsearchLogAttributes;
+        LogAttributeTypeWrapper wat = new LogAttributeTypeWrapper(c, true);
+        nsearchKeys.put(c.name(), wat);
       }
       if (c.getAttributeDefaultFiller() != null) {
-        Map<String, LogAttributeType> ndefaultLogAttributes = new HashMap<String, LogAttributeType>(
-            defaultLogAttributes);
-        ndefaultLogAttributes.put(c.name(), c);
-        defaultLogAttributes = ndefaultLogAttributes;
-
+        nlogAttrFiller.put(c.name(), c);
       }
-      Map<String, LogAttributeType> nregisterdLogAttributes = new HashMap<String, LogAttributeType>(
-          registerdLogAttributes);
-      LogAttributeTypeWrapper wat = new LogAttributeTypeWrapper(c);
-      nregisterdLogAttributes.put(c.name(), wat);
-      registerdLogAttributes = nregisterdLogAttributes;
-
+      nlogAttr.put(c.name(), c);
+    }
+    if (nlogAttr.isEmpty() == false) {
+      // the renderer will be used. so do directly add LogAttribute, but as weak reference
+      registerdLogAttributes = createNewDisposableMap(registerdLogAttributes, nlogAttr);
+    }
+    if (nlogAttrFiller.isEmpty() == false) {
+      // the filler will be used. so do directly add LogAttribute, but as weak reference
+      defaultLogAttributes = createNewDisposableMap(defaultLogAttributes, nlogAttrFiller);
+    }
+    if (nsearchKeys.isEmpty() == false) {
+      // this is stored as dump wrapper, no need to have disposable
+      searchLogAttributes = createNewMap(searchLogAttributes, nsearchKeys);
     }
   }
 
@@ -290,14 +324,6 @@ public abstract class BaseLogging implements Logging
     doLog(LogLevel.Fatal, cat, msg, attributes);
   }
 
-  // private LogAttribute[] pushAttribute(List<LogAttribute> attributes, LogAttribute newAttribute)
-  // {
-  //
-  // if (ArrayUtils.indexOf(attributes, newAttribute) != -1)
-  // return attributes;
-  // return (LogAttribute[]) ArrayUtils.add(attributes, newAttribute);
-  // }
-
   /**
    * Do log.
    *
@@ -316,8 +342,8 @@ public abstract class BaseLogging implements Logging
   /*
    * (non-Javadoc)
    * 
-   * @see de.micromata.genome.logging.Logging#doLog(de.micromata.genome.logging.LogLevel, de.micromata.genome.logging.LogCategory,
-   * java.lang.String, de.micromata.genome.logging.LogAttribute[])
+   * @see de.micromata.genome.logging.Logging#doLog(de.micromata.genome.logging.LogLevel,
+   * de.micromata.genome.logging.LogCategory, java.lang.String, de.micromata.genome.logging.LogAttribute[])
    */
   @Override
   public void doLog(LogLevel ll, LogCategory cat, String msg, LogAttribute... attributes)
@@ -342,10 +368,10 @@ public abstract class BaseLogging implements Logging
             addLogs = new ArrayList<LogAttribute>();
           }
           Collection<LogAttribute> wattrs = wa.getLogAttributes();
-            addLogs.addAll(wattrs);
-          }
+          addLogs.addAll(wattrs);
         }
       }
+    }
     if (addLogs == null) {
       return;
     }
@@ -374,8 +400,8 @@ public abstract class BaseLogging implements Logging
   }
 
   /**
-   * Ensure an attribute list contains no duplicates with the same LogAttributeType Duplicates are removed for the list starting at the
-   * head. Therefore were there is a duplicate the entry nearest the end of the list will survive.
+   * Ensure an attribute list contains no duplicates with the same LogAttributeType Duplicates are removed for the list
+   * starting at the head. Therefore were there is a duplicate the entry nearest the end of the list will survive.
    * 
    * The algoritem has N^2 complexity and should only be used on short lists
    *
@@ -447,11 +473,11 @@ public abstract class BaseLogging implements Logging
     for (LogAttribute sa : src) {
       if (sa instanceof WithLogAttributes) {
         Collection<LogAttribute> wattrs = ((WithLogAttributes) sa).getLogAttributes();
-          for (LogAttribute ctxa : wattrs) {
-            addMe.add(ctxa);
-          }
+        for (LogAttribute ctxa : wattrs) {
+          addMe.add(ctxa);
         }
       }
+    }
     for (LogAttribute la : addMe) {
       pushAttribute(dest, la);
     }
