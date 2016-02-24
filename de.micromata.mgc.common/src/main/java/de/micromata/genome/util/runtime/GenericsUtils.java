@@ -1,6 +1,7 @@
 package de.micromata.genome.util.runtime;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.GenericDeclaration;
 import java.lang.reflect.Method;
@@ -487,5 +488,29 @@ public class GenericsUtils
       return collectionTypes;
     }
     return null;
+  }
+
+  /**
+   * Figure out the concrete type of the field based on the concrete class clazz.
+   * 
+   * @param clazz
+   * @param field
+   * @return
+   */
+  public static Class<?> getConcreteFieldType(Class<?> clazz, Field field)
+  {
+    Type genType = field.getGenericType();
+    if (genType instanceof Class) {
+      return (Class<?>) genType;
+    }
+    Map<Class<?>, GenericTypeTrail> typetrails = GenericTypeTrail.buildTypeTransMap(clazz);
+    GenericTypeTrail baseTrail = typetrails.get(field.getDeclaringClass());
+    if (baseTrail == null) {
+      // TODO RK log
+      return field.getType();
+    }
+    Class<?> type = baseTrail.getContreteFieldType(field);
+    return type;
+
   }
 }

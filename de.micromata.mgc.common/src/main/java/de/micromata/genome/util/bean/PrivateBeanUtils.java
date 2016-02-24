@@ -28,6 +28,7 @@ import org.apache.commons.beanutils.Converter;
 
 import de.micromata.genome.util.matcher.EveryMatcher;
 import de.micromata.genome.util.matcher.Matcher;
+import de.micromata.genome.util.runtime.GenericsUtils;
 import de.micromata.genome.util.types.Pair;
 
 /**
@@ -423,7 +424,7 @@ public class PrivateBeanUtils
     if (f == null) {
       return null;
     }
-    return f.getType();
+    return GenericsUtils.getConcreteFieldType(bean.getClass(), f);
   }
 
   /**
