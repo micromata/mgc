@@ -27,6 +27,18 @@ public class CombinedLogging extends BaseLogging
    */
   protected Logging secondary;
 
+  public CombinedLogging()
+  {
+
+  }
+
+  public CombinedLogging(Logging primary, Logging secondary)
+  {
+    this.primary = primary;
+    this.secondary = secondary;
+
+  }
+
   /**
    * {@inheritDoc}
    *
