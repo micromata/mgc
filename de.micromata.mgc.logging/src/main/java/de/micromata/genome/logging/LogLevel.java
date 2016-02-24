@@ -95,6 +95,16 @@ public enum LogLevel
     }
   }
 
+  public static LogLevel fromString(String str, LogLevel defaultValue)
+  {
+    for (LogLevel ll : values()) {
+      if (ll.name().equals(str) == true) {
+        return ll;
+      }
+    }
+    return defaultValue;
+  }
+
   public boolean isWarnOrWorse()
   {
     return level >= Warn.level;

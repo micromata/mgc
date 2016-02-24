@@ -147,6 +147,11 @@ public class LogEntry
     return timestamp;
   }
 
+  public Date getTimestampDate()
+  {
+    return new Date(timestamp);
+  }
+
   public String getTimestampString()
   {
     return Converter.formatByIsoTimestampFormat(new Date(timestamp));
