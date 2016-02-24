@@ -37,5 +37,8 @@ public interface ModelController<M>
    * 
    * @param ctx the validation context.
    */
-  public void mapValidationMessagesToGui(ValContext ctx);
+  public default void mapValidationMessagesToGui(ValContext ctx)
+  {
+
+  }
 }

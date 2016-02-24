@@ -27,6 +27,8 @@ public class JdbcLocalSettingsConfigModel extends AbstractLocalSettingsConfigMod
 
   @ALocalSettingsPath(key = "url", comment = "JDBC url to connect to DB")
   private String url;
+
+  private boolean needDatabase = false;
   /**
    * Has to be set outside.
    */
@@ -177,4 +179,15 @@ public class JdbcLocalSettingsConfigModel extends AbstractLocalSettingsConfigMod
   {
     this.jndiName = jndiName;
   }
+
+  public boolean isNeedDatabase()
+  {
+    return needDatabase;
+  }
+
+  public void setNeedDatabase(boolean needDatabase)
+  {
+    this.needDatabase = needDatabase;
+  }
+
 }

@@ -5,6 +5,7 @@ import java.util.List;
 
 import de.micromata.genome.util.runtime.config.CastableLocalSettingsConfigModel;
 import de.micromata.genome.util.runtime.config.HibernateSchemaConfigModel;
+import de.micromata.genome.util.runtime.config.JdbcLocalSettingsConfigModel;
 import de.micromata.genome.util.runtime.config.MailSessionLocalSettingsConfigModel;
 import de.micromata.mgc.javafx.launcher.gui.TabConfig;
 import de.micromata.mgc.javafx.launcher.gui.jetty.JettyConfigTabController;
@@ -22,21 +23,27 @@ public class StandardConfigurationTabLoaderService implements ConfigurationTabLo
   public List<TabConfig> getTabsByConfiguration(CastableLocalSettingsConfigModel configModel)
   {
     List<TabConfig> ret = new ArrayList<>();
-    JettyConfigModel jettyConfig = configModel.castTo(JettyConfigModel.class);
+    JettyConfigModel jettyConfig = configModel.castToForConfigDialog(JettyConfigModel.class);
     if (jettyConfig != null) {
       ret.add(new TabConfig(JettyConfigTabController.class, jettyConfig));
     }
 
-    LauncherLocalSettingsConfigModel launcherConfig = configModel.castTo(LauncherLocalSettingsConfigModel.class);
+    LauncherLocalSettingsConfigModel launcherConfig = configModel
+        .castToForConfigDialog(LauncherLocalSettingsConfigModel.class);
     if (launcherConfig != null) {
       ret.add(new TabConfig(LauncherConfigTabController.class, launcherConfig));
     }
 
-    MailSessionLocalSettingsConfigModel emailConfig = configModel.castTo(MailSessionLocalSettingsConfigModel.class);
+    MailSessionLocalSettingsConfigModel emailConfig = configModel
+        .castToForConfigDialog(MailSessionLocalSettingsConfigModel.class);
     if (emailConfig != null) {
       ret.add(new TabConfig(MailSessionConfigTabController.class, emailConfig));
     }
-    HibernateSchemaConfigModel hibernateConfig = configModel.castTo(HibernateSchemaConfigModel.class);
+    JdbcLocalSettingsConfigModel jdbc = configModel.castToForConfigDialog(JdbcLocalSettingsConfigModel.class);
+    if (jdbc != null) {
+      ret.add(new TabConfig(JdbcConfigTabController.class, jdbc));
+    }
+    HibernateSchemaConfigModel hibernateConfig = configModel.castToForConfigDialog(HibernateSchemaConfigModel.class);
     if (hibernateConfig != null) {
       ret.add(new TabConfig(HibernateSchemaConfigTabController.class, hibernateConfig));
     }

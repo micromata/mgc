@@ -53,7 +53,7 @@ import javafx.scene.web.WebView;
 public class LoggingController implements Initializable
 {
   private static LoggingController INSTANCE = null;
-  private static final int PADDING = 10;
+
   @FXML
   private ChoiceBox<String> logLevel;
   @FXML
@@ -119,13 +119,20 @@ public class LoggingController implements Initializable
     wrappGenomeLogging();
   }
 
-  private void wrappGenomeLogging()
+  public static void wrappGenomeLogging()
   {
     Logging logging = LoggingServiceManager.get().getLogging();
+    if (logging instanceof CombinedLogging) {
+      CombinedLogging cmbl = (CombinedLogging) logging;
+      if (cmbl.getSecondary() instanceof LauncherLogging) {
+        return;
+      }
+    }
     CombinedLogging cb = new CombinedLogging();
     cb.setPrimary(logging);
     cb.setSecondary(new LauncherLogging());
-    LoggingServiceManager.get().setLogging(cb);
+    LoggingServiceManager lsm = LoggingServiceManager.get();
+    lsm.setLogging(cb);
   }
 
   protected String getHtmlHeader()

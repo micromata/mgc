@@ -1,6 +1,5 @@
 package de.micromata.mgc.javafx.launcher.gui.generic;
 
-import de.micromata.genome.util.validation.ValContext;
 import de.micromata.mgc.javafx.launcher.gui.AbstractConfigTabController;
 import de.micromata.mgc.javafx.launcher.gui.generic.LauncherLocalSettingsConfigModel.WindowSettings;
 import javafx.fxml.FXML;
@@ -60,13 +59,6 @@ public class LauncherConfigTabController extends AbstractConfigTabController<Lau
       normal.setSelected(true);
     }
     startServerAtStartup.setSelected(modelObject.isStartServerOnStartup());
-  }
-
-  @Override
-  public void mapValidationMessagesToGui(ValContext ctx)
-  {
-    // TODO Auto-generated method stub
-
   }
 
   @Override

@@ -47,13 +47,6 @@ public abstract class JettyServer
 
   }
 
-  public JettyServer(JettyConfigModel config)
-  {
-    this.configModel = config;
-    initJetty(config);
-
-  }
-
   public Server getServer()
   {
     return server;

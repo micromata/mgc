@@ -16,7 +16,6 @@ public class SampleLauncherApplication extends MgcApplicationWithJettyApplicatio
   @Override
   public void reInit()
   {
-    // TODO Auto-generated method stub
 
   }
 
@@ -29,7 +28,9 @@ public class SampleLauncherApplication extends MgcApplicationWithJettyApplicatio
   @Override
   protected JettyServer newJettyServer(JettyConfigModel cfg)
   {
-    return new SampleJettyServer(cfg);
+    SampleJettyServer ret = new SampleJettyServer();
+    ret.initJetty(cfg);
+    return ret;
   }
 
 }

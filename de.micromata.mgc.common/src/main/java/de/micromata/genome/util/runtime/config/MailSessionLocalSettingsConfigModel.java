@@ -58,6 +58,12 @@ public class MailSessionLocalSettingsConfigModel extends AbstractLocalSettingsCo
     this.name = name;
   }
 
+  public MailSessionLocalSettingsConfigModel(String name, String jndiName)
+  {
+    this.name = name;
+    this.jndiName = jndiName;
+  }
+
   @Override
   public LocalSettingsWriter toProperties(LocalSettingsWriter writer)
   {

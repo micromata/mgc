@@ -2,7 +2,6 @@ package de.micromata.mgc.javafx.launcher.gui.jetty;
 
 import org.apache.commons.lang.StringUtils;
 
-import de.micromata.genome.util.validation.ValContext;
 import de.micromata.mgc.javafx.launcher.gui.AbstractConfigTabController;
 import de.micromata.mgc.jettystarter.JettyConfigModel;
 import javafx.fxml.FXML;
@@ -53,13 +52,6 @@ public class JettyConfigTabController extends AbstractConfigTabController<JettyC
     serverPort.setText(config.getServerPort());
     serverContextPath.setText(config.getServerContextPath());
     publicUrl.setText(config.getPublicUrl());
-
-  }
-
-  @Override
-  public void mapValidationMessagesToGui(ValContext ctx)
-  {
-    // TODO Auto-generated method stub
 
   }
 

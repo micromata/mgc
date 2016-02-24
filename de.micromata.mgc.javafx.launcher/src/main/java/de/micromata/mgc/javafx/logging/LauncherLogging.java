@@ -9,6 +9,12 @@ import de.micromata.genome.logging.LogEntryCallback;
 import de.micromata.genome.logging.LogWriteEntry;
 import de.micromata.genome.util.types.Pair;
 
+/**
+ * Logging into launcher window.
+ * 
+ * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
+ *
+ */
 public class LauncherLogging extends BaseLogging
 {
   @Override

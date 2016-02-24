@@ -1,5 +1,7 @@
 package de.micromata.mgc.jettystarter;
 
+import org.apache.log4j.Logger;
+
 import de.micromata.genome.util.i18n.ChainedResourceBundleTranslationResolver;
 import de.micromata.genome.util.i18n.DefaultWarnI18NTranslationProvider;
 import de.micromata.genome.util.i18n.I18NTranslationProvider;
@@ -19,7 +21,7 @@ public abstract class MgcApplicationWithJettyApplication<M extends LocalSettings
     extends AbstractMgcApplication<M>
 
 {
-
+  private static final Logger LOG = Logger.getLogger(MgcApplicationWithJettyApplication.class);
   protected JettyServer jettyServer;
 
   protected abstract JettyServer newJettyServer(JettyConfigModel cfg);
@@ -70,6 +72,7 @@ public abstract class MgcApplicationWithJettyApplication<M extends LocalSettings
           new ValMessage(ValState.Info, "mgc.jetty.msg.jettystarted"));
       return MgcApplicationStartStopStatus.StartSuccess;
     } catch (Exception ex) {
+      LOG.error("MgcApp start failed: " + ex.getMessage(), ex);
       listener.listen(this, MgcApplicationStartStopStatus.StartError,
           new ValMessage(ValState.Error, "mgc.jetty.msg.jettystartedfailed", ex, new Object[] { ex.getMessage() }));
       return MgcApplicationStartStopStatus.StartError;

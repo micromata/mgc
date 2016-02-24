@@ -1,7 +1,6 @@
 package de.micromata.mgc.javafx.launcher.gui.generic;
 
 import de.micromata.genome.util.runtime.config.MailSessionLocalSettingsConfigModel;
-import de.micromata.genome.util.validation.ValContext;
 import de.micromata.mgc.javafx.launcher.gui.AbstractConfigTabController;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
@@ -70,13 +69,6 @@ public class MailSessionConfigTabController extends AbstractConfigTabController<
     model.setEmailAuthEnabled(emailAuthEnabled.isSelected());
     model.setEmailAuthUser(emailAuthUser.getText());
     model.setEmailAuthPass(emailAuthPass.getText());
-  }
-
-  @Override
-  public void mapValidationMessagesToGui(ValContext ctx)
-  {
-    // TODO Auto-generated method stub
-
   }
 
   @Override

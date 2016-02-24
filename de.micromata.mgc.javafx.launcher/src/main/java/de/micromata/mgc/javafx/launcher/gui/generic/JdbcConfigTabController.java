@@ -6,7 +6,6 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 
 import de.micromata.genome.util.runtime.config.JdbcLocalSettingsConfigModel;
-import de.micromata.genome.util.validation.ValContext;
 import de.micromata.mgc.javafx.JdbcDriverDescription;
 import de.micromata.mgc.javafx.SystemService;
 import de.micromata.mgc.javafx.launcher.gui.AbstractConfigTabController;
@@ -94,17 +93,9 @@ public class JdbcConfigTabController extends AbstractConfigTabController<JdbcLoc
   }
 
   @Override
-  public void mapValidationMessagesToGui(ValContext ctx)
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
   public String getTabTitle()
   {
-    // TODO Auto-generated method stub
-    return null;
+    return "JDBC";
   }
 
 }

@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import de.micromata.genome.util.runtime.config.HibernateSchemaConfigModel;
-import de.micromata.genome.util.validation.ValContext;
 import de.micromata.mgc.javafx.launcher.gui.AbstractConfigTabController;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -48,13 +47,6 @@ public class HibernateSchemaConfigTabController extends AbstractConfigTabControl
     modelObject.setSchemaUpdate(schemaUpdate.getValue());
     modelObject.setShowSql(showSql.isSelected());
     modelObject.setFormatSql(formatSql.isSelected());
-
-  }
-
-  @Override
-  public void mapValidationMessagesToGui(ValContext ctx)
-  {
-    // TODO Auto-generated method stub
 
   }
 

@@ -13,9 +13,9 @@ import de.micromata.mgc.jettystarter.JettyServer;
 public class SampleJettyServer extends JettyServer
 {
 
-  public SampleJettyServer(JettyConfigModel config)
+  public SampleJettyServer()
   {
-    super(config);
+    super();
   }
 
   @Override
