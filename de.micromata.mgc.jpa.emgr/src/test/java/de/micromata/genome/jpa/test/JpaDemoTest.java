@@ -24,7 +24,9 @@ public class JpaDemoTest extends MgcTestCase
   @Test
   public void testSelectComplex()
   {
-    emfac.getJpaSchemaService().clearDatabase();
+    emfac.tx().go(emgr -> {
+      return emgr.createQuery("delete from " + GenomeJpaTestTableDO.class.getName() + " e").executeUpdate();
+    });
     GenomeJpaTestTableDO table = new GenomeJpaTestTableDO();
     table.setFirstName("Roger");
     // insert the entity. 
@@ -46,9 +48,12 @@ public class JpaDemoTest extends MgcTestCase
     Assert.assertEquals(1, list.size());
   }
 
+  @Test
   public void testSelectComplexWithDetached()
   {
-    emfac.getJpaSchemaService().clearDatabase();
+    emfac.tx().go(emgr -> {
+      return emgr.createQuery("delete  from " + GenomeJpaTestTableDO.class.getName() + " e").executeUpdate();
+    });
     List<GenomeJpaTestTableDO> list;
     list = emfac.runWoTrans((emgr) -> {
       TypedQuery<GenomeJpaTestTableDO> query = emgr.createQueryDetached(GenomeJpaTestTableDO.class,
