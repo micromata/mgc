@@ -314,7 +314,9 @@ public class SearchEmgrFactoryRegistryUtils
     for (HibernateSearchInfo ci : cil) {
       HibernateSearchFieldInfoProvider fip = PrivateBeanUtils.createInstance(ci.fieldInfoProvider());
       Map<String, SearchColumnMetadata> sm = fip.getAdditionallySearchFields(entm, ci.param());
-      ret.putAll(sm);
+      if (sm != null) {
+        ret.putAll(sm);
+      }
     }
   }
 
