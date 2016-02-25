@@ -4,15 +4,14 @@ import java.util.List;
 
 import javax.persistence.PersistenceException;
 
+import org.apache.log4j.Logger;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import de.micromata.genome.GenomeTestCase;
 import de.micromata.genome.db.jpa.history.api.HistoryEntry;
 import de.micromata.genome.db.jpa.history.api.HistoryService;
 import de.micromata.genome.db.jpa.history.api.HistoryServiceManager;
-import de.micromata.genome.db.jpa.history.api.JpaHistoryEntityManagerFactory;
 import de.micromata.genome.db.jpa.history.test.DummyHistEntityDO;
 import de.micromata.genome.db.jpa.history.test.HistoryTestEmgrFactory;
 
@@ -24,14 +23,15 @@ import de.micromata.genome.db.jpa.history.test.HistoryTestEmgrFactory;
  */
 public class ReadWriteWithHistTest extends GenomeTestCase
 {
-  @Before
+  private static final Logger LOG = Logger.getLogger(ReadWriteWithHistTest.class);
+
   public void cleanupTestTable()
   {
     HistoryTestEmgrFactory.get().runInTrans((emgr) -> {
       emgr.deleteFromQuery(DummyHistEntityDO.class, "select e from " + DummyHistEntityDO.class.getName() + " e");
       return null;
     });
-    JpaHistoryEntityManagerFactory.get().runInTrans((emgr) -> {
+    HistoryTestEmgrFactory.get().runInTrans((emgr) -> {
       HistoryServiceManager.get().getHistoryService().clearHistoryForEntityClass(emgr, DummyHistEntityDO.class);
       return null;
     });
@@ -40,7 +40,7 @@ public class ReadWriteWithHistTest extends GenomeTestCase
   @Test
   public void testReadWrite()
   {
-    //    GenomeDaoManager.get().getUserDAO().setCurrentUser(new InternalSysAdminUser("tst_hist_create"));
+    cleanupTestTable();
     DummyHistEntityDO ne = new DummyHistEntityDO();
     ne.setStringValue("The Created");
 
@@ -59,7 +59,7 @@ public class ReadWriteWithHistTest extends GenomeTestCase
     });
 
     HistoryService histservice = HistoryServiceManager.get().getHistoryService();
-    List<? extends HistoryEntry> entries = JpaHistoryEntityManagerFactory.get().runInTrans((emgr) -> {
+    List<? extends HistoryEntry> entries = HistoryTestEmgrFactory.get().runInTrans((emgr) -> {
       return histservice.getHistoryEntries(emgr, se);
     });
     // created no hist for second update.
@@ -72,7 +72,7 @@ public class ReadWriteWithHistTest extends GenomeTestCase
   @Test
   public void testReadTransactionalInsert()
   {
-    //    GenomeDaoManager.get().getUserDAO().setCurrentUser(new InternalSysAdminUser("tst_hist_create"));
+    cleanupTestTable();
     DummyHistEntityDO ne = new DummyHistEntityDO();
     ne.setStringValue("The Created");
     ne.setLongValue(111);
@@ -93,7 +93,7 @@ public class ReadWriteWithHistTest extends GenomeTestCase
     } catch (PersistenceException ex) {
       // expected ex.printStackTrace();
     }
-    List<? extends HistoryEntry> histent = JpaHistoryEntityManagerFactory.get().runInTrans((emgr) -> {
+    List<? extends HistoryEntry> histent = HistoryTestEmgrFactory.get().runInTrans((emgr) -> {
       return HistoryServiceManager.get().getHistoryService()
           .getHistoryEntriesForEntityClass(emgr, DummyHistEntityDO.class);
     });
@@ -104,7 +104,7 @@ public class ReadWriteWithHistTest extends GenomeTestCase
   @Test
   public void testReadTransactionalUpdate()
   {
-    //    GenomeDaoManager.get().getUserDAO().setCurrentUser(new InternalSysAdminUser("tst_hist_create"));
+    cleanupTestTable();
     DummyHistEntityDO ne = new DummyHistEntityDO();
     ne.setStringValue("The Created");
     ne.setLongValue(111);
@@ -129,9 +129,9 @@ public class ReadWriteWithHistTest extends GenomeTestCase
       });
       Assert.fail("Expected ex");
     } catch (PersistenceException ex) {
-      ex.printStackTrace();
+      LOG.info("Expected exception: " + ex.getMessage(), ex);
     }
-    List<? extends HistoryEntry> histent = JpaHistoryEntityManagerFactory.get().runInTrans((emgr) -> {
+    List<? extends HistoryEntry> histent = HistoryTestEmgrFactory.get().runInTrans((emgr) -> {
       return HistoryServiceManager.get().getHistoryService()
           .getHistoryEntriesForEntityClass(emgr, DummyHistEntityDO.class);
     });

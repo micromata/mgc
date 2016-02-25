@@ -9,9 +9,9 @@ import de.micromata.genome.GenomeTestCase;
 import de.micromata.genome.db.jpa.history.api.HistoryEntry;
 import de.micromata.genome.db.jpa.history.api.HistoryService;
 import de.micromata.genome.db.jpa.history.api.HistoryServiceManager;
-import de.micromata.genome.db.jpa.history.api.JpaHistoryEntityManagerFactory;
 import de.micromata.genome.db.jpa.history.api.WithHistory;
 import de.micromata.genome.db.jpa.history.test.DummyHistEntityDO;
+import de.micromata.genome.db.jpa.history.test.HistoryTestEmgrFactory;
 
 /**
  * 
@@ -33,7 +33,7 @@ public class HistoryBasePersistTest extends GenomeTestCase
     List<WithHistory> anotl = new ArrayList<>();
     anotl.add(anot);
     HistoryService histservice = HistoryServiceManager.get().getHistoryService();
-    JpaHistoryEntityManagerFactory.get().runInTrans((emgr) -> {
+    HistoryTestEmgrFactory.get().runInTrans((emgr) -> {
       histservice.internalOnInsert(emgr, anotl, DummyHistEntityDO.class.getName(), 1L, dummy1);
 
       List<? extends HistoryEntry> entries = histservice.getHistoryEntries(emgr, dummy1);
