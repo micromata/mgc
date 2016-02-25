@@ -20,6 +20,7 @@ import org.apache.commons.collections.map.AbstractReferenceMap;
 import org.apache.commons.collections15.map.ReferenceMap;
 import org.apache.commons.lang.StringUtils;
 
+import de.micromata.genome.logging.events.LogWriteEntryEvent;
 import de.micromata.genome.stats.Stats;
 import de.micromata.genome.util.types.Pair;
 
@@ -489,7 +490,6 @@ public abstract class BaseLogging implements Logging
   @SuppressWarnings("unchecked")
   public List<LogWriteFilter> getWriteFilters()
   {
-
     return writeFilters;
   }
 
@@ -654,7 +654,10 @@ public abstract class BaseLogging implements Logging
     }
     ensureUniqueAttributes(lwe.getAttributes());
     shortenLogAttributes(lwe);
-    doLogImpl(lwe);
+    LoggingServiceManager.get().getLoggingEventListenerRegistryService().filterEvent(
+        new LogWriteEntryEvent(lwe),
+        event -> doLogImpl(event.getResult()));
+
   }
 
   /*
@@ -664,19 +667,6 @@ public abstract class BaseLogging implements Logging
    */
   @Override
   public abstract void doLogImpl(final LogWriteEntry lwe);
-
-  // /**
-  // * @param startRow Zeile zum Start
-  // * @param maxRow Anzahl zeilen maximal
-  // *
-  // */
-  // public List<LogEntry> selectLogs(Timestamp start, Timestamp end, Integer loglevel, String category, String msg,
-  // List<Pair<String, String>> logAttributes, int startRow, int maxRow, List<SqlOrderBy> orderBy, boolean masterOnly)
-  // {
-  // CollectLogEntryCallback callback = new CollectLogEntryCallback();
-  // selectLogs(start, end, loglevel, category, msg, logAttributes, startRow, maxRow, orderBy, masterOnly, callback, );
-  // return callback.entries;
-  // }
 
   /*
    * (non-Javadoc)

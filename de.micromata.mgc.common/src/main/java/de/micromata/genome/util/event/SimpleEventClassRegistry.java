@@ -36,9 +36,14 @@ public class SimpleEventClassRegistry extends AbstractMgcEventRegistry implement
    * 
    * @param registryName the registryName
    */
-  protected SimpleEventClassRegistry(String registryName)
+  public SimpleEventClassRegistry(String registryName)
   {
     super(registryName);
+  }
+
+  public SimpleEventClassRegistry()
+  {
+    super(null);
   }
 
   protected void addListener(Class<? extends MgcEvent> event, Class<? extends MgcEventListener<?>> listener)
@@ -69,6 +74,7 @@ public class SimpleEventClassRegistry extends AbstractMgcEventRegistry implement
     addListener(argType, listenerClass);
   }
 
+  @Override
   public <EVENT extends MgcEvent, LISTENER extends MgcEventListener<EVENT>> void removeListener(
       Class<LISTENER> listenerClass)
   {
@@ -155,4 +161,26 @@ public class SimpleEventClassRegistry extends AbstractMgcEventRegistry implement
     invokeListener(listener, event);
   }
 
+  @Override
+  public <R, E extends MgcFilterEvent<R>> R filterEvent(E event, MgcEventListener<E> execute)
+  {
+    List<MgcEventListener> handlerList = collectEventFilter(event);
+    handlerList.add(execute);
+    event.setEventHandlerChain(handlerList);
+    event.nextFilter();
+    return event.getResult();
+  }
+
+  @SuppressWarnings("rawtypes")
+  @Override
+  protected List<MgcEventListener> collectEventFilter(MgcEvent event)
+  {
+
+    List<Class<? extends MgcEventListener<?>>> lstclasses = getListener(event);
+    List<MgcEventListener> ret = new ArrayList<>(lstclasses.size());
+    for (Class<? extends MgcEventListener<?>> cls : lstclasses) {
+      ret.add(PrivateBeanUtils.createInstance(cls));
+    }
+    return ret;
+  }
 }

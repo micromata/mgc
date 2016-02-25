@@ -18,4 +18,16 @@ public interface McEventInstanceRegistry extends MgcEventRegistry
   <EVENT extends MgcEvent, LISTENER extends MgcEventListener<EVENT>> void registerListener(
       LISTENER listenerInstance);
 
+  /**
+   * Use this only, if you are sure, that listener accepts the type event.
+   * 
+   * May be usefull, in cases where lamda expression and you know the type of event.
+   * 
+   * public void addOnEvent(MgcEventListener<TestFilter1Event> handler) { addEventListener(TestFilter1Event.class,
+   * handler); }
+   * 
+   * @param event
+   * @param listener
+   */
+  void addEventListener(Class<? extends MgcEvent> event, MgcEventListener<?> listener);
 }

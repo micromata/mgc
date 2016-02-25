@@ -18,7 +18,6 @@ import de.micromata.genome.util.runtime.ClassUtils;
 public class SimpleEventInstanceRegistry extends AbstractMgcEventRegistry implements McEventInstanceRegistry
 {
   private static final Logger LOG = Logger.getLogger(SimpleEventInstanceRegistry.class);
-  private String registryName;
 
   /**
    * The listener map.
@@ -30,12 +29,17 @@ public class SimpleEventInstanceRegistry extends AbstractMgcEventRegistry implem
    * 
    * @param registryName the registryName
    */
-  protected SimpleEventInstanceRegistry(String registryName)
+  public SimpleEventInstanceRegistry(String registryName)
   {
     super(registryName);
   }
 
-  protected void addEvent(Class<? extends MgcEvent> event, MgcEventListener<?> listener)
+  public SimpleEventInstanceRegistry()
+  {
+    super(null);
+  }
+
+  public void addEventListener(Class<? extends MgcEvent> event, MgcEventListener<?> listener)
   {
     Map<Class<? extends MgcEvent>, List<MgcEventListener<?>>> nmp = new HashMap<>();
     nmp.putAll(listenerMap);
@@ -58,7 +62,7 @@ public class SimpleEventInstanceRegistry extends AbstractMgcEventRegistry implem
       LOG.error("Cannot determine Event type from Listener class: " + listenerInstance.getClass().getName());
       return;
     }
-    addEvent(argType, listenerInstance);
+    addEventListener(argType, listenerInstance);
   }
 
   /**
@@ -67,9 +71,11 @@ public class SimpleEventInstanceRegistry extends AbstractMgcEventRegistry implem
    * @param event the event
    * @return the listener
    */
-  List<MgcEventListener<?>> getListener(MgcEvent event)
+  @SuppressWarnings("rawtypes")
+  @Override
+  protected List<MgcEventListener> collectEventFilter(MgcEvent event)
   {
-    List<MgcEventListener<?>> ret = new ArrayList<>();
+    List<MgcEventListener> ret = new ArrayList<>();
     for (Map.Entry<Class<? extends MgcEvent>, List<MgcEventListener<?>>> me : listenerMap
         .entrySet()) {
       if (me.getKey().isAssignableFrom(event.getClass()) == true) {
@@ -93,12 +99,13 @@ public class SimpleEventInstanceRegistry extends AbstractMgcEventRegistry implem
    * 
    * @param event the event
    */
+  @SuppressWarnings("rawtypes")
   @Override
   public void dispatchEvent(MgcEvent event)
   {
 
-    List<MgcEventListener<?>> listeners = getListener(event);
-    for (MgcEventListener<?> listener : listeners) {
+    List<MgcEventListener> listeners = collectEventFilter(event);
+    for (MgcEventListener listener : listeners) {
       invokeListener(listener, event);
     }
   }

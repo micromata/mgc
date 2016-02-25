@@ -24,5 +24,4 @@ import de.micromata.genome.util.matcher.MatcherBase;
 public abstract class LogWriteFilter extends MatcherBase<LogWriteEntry>
 {
 
-
 }

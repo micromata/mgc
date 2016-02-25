@@ -26,4 +26,13 @@ public interface MgcEventRegistry
    * @param event
    */
   void dispatchEvent(MgcEvent event);
+
+  /**
+   * Invoke events on filter. in nested, call execute.
+   * 
+   * @param event
+   * @param execute
+   * @return
+   */
+  <R, E extends MgcFilterEvent<R>> R filterEvent(E event, MgcEventListener<E> execute);
 }

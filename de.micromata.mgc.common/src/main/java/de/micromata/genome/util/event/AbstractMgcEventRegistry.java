@@ -1,5 +1,7 @@
 package de.micromata.genome.util.event;
 
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -29,9 +31,21 @@ public abstract class AbstractMgcEventRegistry implements MgcEventRegistry
    * @param event the event
    */
   @SuppressWarnings({ "rawtypes", "unchecked" })
-  protected void invokeListener(final MgcEventListener listener, final MgcEvent event)
+  protected void invokeListener(MgcEventListener listener, final MgcEvent event)
   {
     listener.onEvent(event);
+  }
+
+  protected abstract List<MgcEventListener> collectEventFilter(MgcEvent event);
+
+  @Override
+  public <R, E extends MgcFilterEvent<R>> R filterEvent(E event, MgcEventListener<E> execute)
+  {
+    List<MgcEventListener> handlerList = collectEventFilter(event);
+    handlerList.add(execute);
+    event.setEventHandlerChain(handlerList);
+    event.nextFilter();
+    return event.getResult();
   }
 
   @Override
