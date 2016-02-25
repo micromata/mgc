@@ -24,6 +24,7 @@ public class JpaDemoTest extends MgcTestCase
   @Test
   public void testSelectComplex()
   {
+    emfac.getJpaSchemaService().clearDatabase();
     GenomeJpaTestTableDO table = new GenomeJpaTestTableDO();
     table.setFirstName("Roger");
     // insert the entity. 
@@ -47,6 +48,7 @@ public class JpaDemoTest extends MgcTestCase
 
   public void testSelectComplexWithDetached()
   {
+    emfac.getJpaSchemaService().clearDatabase();
     List<GenomeJpaTestTableDO> list;
     list = emfac.runWoTrans((emgr) -> {
       TypedQuery<GenomeJpaTestTableDO> query = emgr.createQueryDetached(GenomeJpaTestTableDO.class,
