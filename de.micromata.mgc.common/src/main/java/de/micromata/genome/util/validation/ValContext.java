@@ -107,6 +107,26 @@ public class ValContext
     add(ValState.Info, property, i18nkey);
   }
 
+  public void directError(String property, String message)
+  {
+    addDirect(ValState.Error, "", message, null);
+  }
+
+  public void directError(String property, String message, Exception ex)
+  {
+    addDirect(ValState.Error, "", message, ex);
+  }
+
+  public void directWarn(String property, String message)
+  {
+    addDirect(ValState.Warning, "", message, null);
+  }
+
+  public void directInfo(String property, String message)
+  {
+    addDirect(ValState.Info, "", message, null);
+  }
+
   public void translateMessages(I18NTranslationProvider transService)
   {
     for (ValMessage message : messages) {
@@ -141,6 +161,16 @@ public class ValContext
     vm.addProperty(property);
     vm.setValState(valState);
     vm.setI18nkey(i18nkey);
+    vm.setException(ex);
+    addMessage(vm);
+  }
+
+  public void addDirect(ValState valState, String property, String message, Exception ex)
+  {
+    ValMessage vm = createValMessage();
+    vm.addProperty(property);
+    vm.setValState(valState);
+    vm.setMessage(message);
     vm.setException(ex);
     addMessage(vm);
   }

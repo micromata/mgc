@@ -4,12 +4,13 @@ import java.awt.Desktop;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.List;
 
 import de.micromata.genome.logging.GLog;
 import de.micromata.genome.logging.GenomeLogCategory;
 import de.micromata.genome.logging.LogExceptionAttribute;
+import de.micromata.genome.util.runtime.config.jdbc.JdbProviderService;
+import de.micromata.genome.util.runtime.config.jdbc.JdbProviderServices;
 
 /**
  * Some system services.
@@ -36,17 +37,9 @@ public class SystemService
     }
   }
 
-  public List<JdbcDriverDescription> getJdbcDrivers()
+  public List<JdbProviderService> getJdbcDrivers()
   {
-    List<JdbcDriverDescription> ret = new ArrayList<>();
-    for (JdbcDriverDescription r : StandardJdbcDriverDescriptions.values()) {
-      String classname = r.getDriverClassName();
-      if (classExists(classname) == true) {
-        ret.add(r);
-      }
-
-    }
-    return ret;
+    return JdbProviderServices.getAvailableJdbcServices();
   }
 
   public void openUrlInBrowser(String url)

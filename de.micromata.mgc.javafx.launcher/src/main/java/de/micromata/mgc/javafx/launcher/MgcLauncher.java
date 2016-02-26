@@ -91,10 +91,7 @@ public class MgcLauncher<M extends LocalSettingsConfigModel>
 
   private void launchCli(String[] args)
   {
-    // TODO this blocks. 
-    // TODO check if kill  gracefully stop the app.
     application.start(args);
-
   }
 
   static LauncherLocalSettingsConfigModel getLauncherConfig()
@@ -117,7 +114,7 @@ public class MgcLauncher<M extends LocalSettingsConfigModel>
     {
       LauncherLocalSettingsConfigModel config = getLauncherConfig();
 
-      stage.setTitle("GWiki");
+      stage.setTitle(sapplication.getApplicationInfo().getName());
       stage.setWidth(1150);
       stage.setHeight(700);
       Pair<Parent, ? extends AbstractMainWindow<?>> lc = ControllerService.get().loadControl(sMainWindowClass,

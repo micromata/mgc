@@ -266,7 +266,6 @@ public class LoggingController implements Initializable
       les.appendChild(liel);
 
     }
-    // TODO enable attributes
     scrollToBottom(engine, lielid);
 
   }

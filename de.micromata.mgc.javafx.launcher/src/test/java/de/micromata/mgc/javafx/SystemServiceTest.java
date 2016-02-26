@@ -5,6 +5,8 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
+import de.micromata.genome.util.runtime.config.jdbc.JdbProviderService;
+
 public class SystemServiceTest
 {
   @Test
@@ -18,7 +20,7 @@ public class SystemServiceTest
   @Test
   public void testListDrivers()
   {
-    List<JdbcDriverDescription> driverlist = SystemService.get().getJdbcDrivers();
+    List<JdbProviderService> driverlist = SystemService.get().getJdbcDrivers();
     driverlist.size();
   }
 }

@@ -6,7 +6,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 
 import de.micromata.genome.util.runtime.config.JdbcLocalSettingsConfigModel;
-import de.micromata.mgc.javafx.JdbcDriverDescription;
+import de.micromata.genome.util.runtime.config.jdbc.JdbProviderService;
 import de.micromata.mgc.javafx.SystemService;
 import de.micromata.mgc.javafx.launcher.gui.AbstractConfigTabController;
 import javafx.collections.FXCollections;
@@ -31,7 +31,7 @@ public class JdbcConfigTabController extends AbstractConfigTabController<JdbcLoc
   private TextField jdbcUser;
   @FXML
   private TextField jdbcPassword;
-  private List<JdbcDriverDescription> availableDrivers;
+  private List<JdbProviderService> availableDrivers;
 
   @Override
   public void initializeWithModel(JdbcLocalSettingsConfigModel model)
@@ -40,14 +40,14 @@ public class JdbcConfigTabController extends AbstractConfigTabController<JdbcLoc
     availableDrivers = SystemService.get().getJdbcDrivers();
     List<String> items = new ArrayList<>();
 
-    for (JdbcDriverDescription sb : availableDrivers) {
-      items.add(sb.getDescription());
+    for (JdbProviderService sb : availableDrivers) {
+      items.add(sb.getName());
     }
     jdbcDriver.setItems(FXCollections.observableArrayList(items));
     jdbcDriver.setOnAction(event -> {
-      JdbcDriverDescription dd = getSelectedDriver();
+      JdbProviderService dd = getSelectedDriver();
       if (dd != null) {
-        jdbcUrl.setText(dd.getSampleUrlForApp(model.getName()));
+        jdbcUrl.setText(dd.getSampleUrl(model.getName()));
       }
     });
     fromModel(model);
@@ -59,21 +59,21 @@ public class JdbcConfigTabController extends AbstractConfigTabController<JdbcLoc
     jdbcUrl.setText(modelObject.getUrl());
     jdbcUser.setText(modelObject.getUsername());
     jdbcPassword.setText(modelObject.getPassword());
-    for (JdbcDriverDescription desc : availableDrivers) {
-      if (StringUtils.equals(modelObject.getDrivername(), desc.getDriverClassName()) == true) {
-        jdbcDriver.setValue(desc.getDescription());
+    for (JdbProviderService desc : availableDrivers) {
+      if (StringUtils.equals(modelObject.getDrivername(), desc.getJdbcDriver()) == true) {
+        jdbcDriver.setValue(desc.getName());
         if (StringUtils.isBlank(modelObject.getUrl()) == true) {
-          jdbcUrl.setText(desc.getSampleUrlForApp(modelObject.getName()));
+          jdbcUrl.setText(desc.getSampleUrl(modelObject.getName()));
         }
       }
     }
 
   }
 
-  JdbcDriverDescription getSelectedDriver()
+  JdbProviderService getSelectedDriver()
   {
-    for (JdbcDriverDescription desc : availableDrivers) {
-      if (desc.getDescription().equals(jdbcDriver.getValue()) == true) {
+    for (JdbProviderService desc : availableDrivers) {
+      if (desc.getName().equals(jdbcDriver.getValue()) == true) {
         return desc;
       }
     }
@@ -83,9 +83,9 @@ public class JdbcConfigTabController extends AbstractConfigTabController<JdbcLoc
   @Override
   public void toModel(JdbcLocalSettingsConfigModel modelObject)
   {
-    JdbcDriverDescription sel = getSelectedDriver();
+    JdbProviderService sel = getSelectedDriver();
     if (sel != null) {
-      modelObject.setDrivername(sel.getDriverClassName());
+      modelObject.setDrivername(sel.getJdbcDriver());
     }
     modelObject.setUrl(jdbcUrl.getText());
     modelObject.setUsername(jdbcUser.getText());

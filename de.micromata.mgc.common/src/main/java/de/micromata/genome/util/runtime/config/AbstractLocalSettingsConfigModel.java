@@ -1,5 +1,7 @@
 package de.micromata.genome.util.runtime.config;
 
+import org.apache.commons.lang.StringUtils;
+
 import de.micromata.genome.util.runtime.LocalSettings;
 
 /**
@@ -67,5 +69,13 @@ public abstract class AbstractLocalSettingsConfigModel implements LocalSettingsC
   public String buildKey(String key)
   {
     return LocalSettingsConfigUtils.join(getKeyPrefix(), key);
+  }
+
+  public static LocalSettings setIfBlank(LocalSettings localSettings, String key, String value)
+  {
+    if (StringUtils.isBlank(localSettings.get(key)) == true) {
+      localSettings.getMap().put(key, value);
+    }
+    return localSettings;
   }
 }

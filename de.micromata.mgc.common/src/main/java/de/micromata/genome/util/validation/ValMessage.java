@@ -1,6 +1,7 @@
 package de.micromata.genome.util.validation;
 
 import java.io.Serializable;
+import java.text.MessageFormat;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -109,7 +110,7 @@ public class ValMessage implements Serializable
     }
     String msg = (String) transprov.getTranslationForKey(getI18nkey());
     if (getArguments() != null && getArguments().length > 0) {
-      msg = String.format(msg, getArguments());
+      msg = MessageFormat.format(msg, getArguments());
     }
     message = msg;
     return message;

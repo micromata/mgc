@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 import de.micromata.genome.util.event.MgcEventRegistries;
 import de.micromata.genome.util.runtime.LocalSettings;
@@ -42,6 +43,7 @@ import javafx.stage.WindowEvent;
 public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>extends AbstractController<M>
     implements Initializable
 {
+  private static final Logger LOG = Logger.getLogger(AbstractMainWindow.class);
   protected Stage stage;
   protected Parent parent;
   private MgcApplication<M> application;
@@ -120,8 +122,7 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>exte
   @Override
   public void addToFeedback(ValMessage msg)
   {
-    // TODO RK Auto-generated method stub
-
+    LOG.warn("Mainwindow Has no feedbackpanel");
   }
 
   public void startServer()

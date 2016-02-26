@@ -19,7 +19,6 @@ public class MgcApplicationStartStopToEventListener extends AbstractMgcApplicati
   @Override
   public void onEvent(MgcApplicationStartStopEvent event)
   {
-    // TODO Auto-generated method stub
     ValMessage msg = event.getValMessage();
     MgcApplicationStartStopStatus status = event.getStatus();
     msg.getTranslatedMessage(event.getApplication().getTranslateService());

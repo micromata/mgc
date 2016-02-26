@@ -167,7 +167,7 @@ public abstract class AbstractConfigDialog<M extends LocalSettingsConfigModel>ex
   @Override
   public void addToFeedback(ValMessage msg)
   {
-    System.err.println("Not yet implemented");
+    LOG.error("addToFeedback Not implemented");
   }
 
   @Override
