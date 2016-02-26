@@ -2,6 +2,7 @@ package de.micromata.mgc.jettystarter;
 
 import org.apache.log4j.Logger;
 
+import de.micromata.genome.util.event.MgcEventRegistries;
 import de.micromata.genome.util.i18n.ChainedResourceBundleTranslationResolver;
 import de.micromata.genome.util.i18n.DefaultWarnI18NTranslationProvider;
 import de.micromata.genome.util.i18n.I18NTranslationProvider;
@@ -14,7 +15,7 @@ import de.micromata.genome.util.runtime.config.LocalSettingsConfigModel;
 import de.micromata.genome.util.validation.ValMessage;
 import de.micromata.genome.util.validation.ValState;
 import de.micromata.mgc.launcher.AbstractMgcApplication;
-import de.micromata.mgc.launcher.MgcApplicationStartStopListener;
+import de.micromata.mgc.launcher.MgcApplicationStartStopEvent;
 import de.micromata.mgc.launcher.MgcApplicationStartStopStatus;
 
 public abstract class MgcApplicationWithJettyApplication<M extends LocalSettingsConfigModel>
@@ -60,7 +61,7 @@ public abstract class MgcApplicationWithJettyApplication<M extends LocalSettings
   }
 
   @Override
-  public MgcApplicationStartStopStatus start(String[] args, MgcApplicationStartStopListener listener)
+  public MgcApplicationStartStopStatus start(String[] args)
   {
 
     try {
@@ -68,33 +69,39 @@ public abstract class MgcApplicationWithJettyApplication<M extends LocalSettings
       LocalSettingsEnv.get();
       jettyServer.getServer().start();
 
-      listener.listen(this, MgcApplicationStartStopStatus.StartSuccess,
-          new ValMessage(ValState.Info, "mgc.jetty.msg.jettystarted"));
+      MgcEventRegistries.getEventInstanceRegistry()
+          .dispatchEvent(new MgcApplicationStartStopEvent(this, MgcApplicationStartStopStatus.StartSuccess,
+              new ValMessage(ValState.Info, "mgc.jetty.msg.jettystarted")));
       return MgcApplicationStartStopStatus.StartSuccess;
     } catch (Exception ex) {
       LOG.error("MgcApp start failed: " + ex.getMessage(), ex);
-      listener.listen(this, MgcApplicationStartStopStatus.StartError,
-          new ValMessage(ValState.Error, "mgc.jetty.msg.jettystartedfailed", ex, new Object[] { ex.getMessage() }));
+      MgcEventRegistries.getEventInstanceRegistry()
+          .dispatchEvent(new MgcApplicationStartStopEvent(this, MgcApplicationStartStopStatus.StartError,
+              new ValMessage(ValState.Error, "mgc.jetty.msg.jettystartedfailed", ex,
+                  new Object[] { ex.getMessage() })));
       return MgcApplicationStartStopStatus.StartError;
     }
   }
 
   @Override
-  public MgcApplicationStartStopStatus stop(MgcApplicationStartStopListener listener)
+  public MgcApplicationStartStopStatus stop()
   {
     if (jettyServer == null) {
-      listener.listen(this, MgcApplicationStartStopStatus.StopAlreadyStopped,
-          new ValMessage(ValState.Warning, "mgc.jetty.msg.jettyalreadystopped"));
+      MgcEventRegistries.getEventInstanceRegistry()
+          .dispatchEvent(new MgcApplicationStartStopEvent(this, MgcApplicationStartStopStatus.StopAlreadyStopped,
+              new ValMessage(ValState.Warning, "mgc.jetty.msg.jettyalreadystopped")));
       return MgcApplicationStartStopStatus.StopAlreadyStopped;
     }
     try {
       jettyServer.getServer().stop();
-      listener.listen(this, MgcApplicationStartStopStatus.StopSuccess,
-          new ValMessage(ValState.Info, "mgc.jetty.msg.jettystopped"));
+      MgcEventRegistries.getEventInstanceRegistry()
+          .dispatchEvent(new MgcApplicationStartStopEvent(this, MgcApplicationStartStopStatus.StopSuccess,
+              new ValMessage(ValState.Info, "mgc.jetty.msg.jettystopped")));
       return MgcApplicationStartStopStatus.StopSuccess;
     } catch (Exception ex) {
-      listener.listen(this, MgcApplicationStartStopStatus.StopError,
-          new ValMessage(ValState.Error, "mgc.jetty.msg.jettystopFailed", ex, new Object[] { ex.getMessage() }));
+      MgcEventRegistries.getEventInstanceRegistry()
+          .dispatchEvent(new MgcApplicationStartStopEvent(this, MgcApplicationStartStopStatus.StopError,
+              new ValMessage(ValState.Error, "mgc.jetty.msg.jettystopFailed", ex, new Object[] { ex.getMessage() })));
       return MgcApplicationStartStopStatus.StopError;
     }
   }
@@ -102,18 +109,23 @@ public abstract class MgcApplicationWithJettyApplication<M extends LocalSettings
   @Override
   public boolean isRunning()
   {
+    if (jettyServer == null || jettyServer.getServer() == null) {
+      return false;
+    }
+
     return jettyServer.getServer().isRunning();
   }
 
-  public MgcApplicationStartStopStatus stopAndWait(MgcApplicationStartStopListener listener)
+  public MgcApplicationStartStopStatus stopAndWait()
   {
-    MgcApplicationStartStopStatus res = stop(listener);
+    MgcApplicationStartStopStatus res = stop();
     try {
       jettyServer.getServer().join();
       return res;
     } catch (Exception ex) {
-      listener.listen(this, MgcApplicationStartStopStatus.StopError,
-          new ValMessage(ValState.Error, "Jetty join failed", ex));
+      MgcEventRegistries.getEventInstanceRegistry()
+          .dispatchEvent(new MgcApplicationStartStopEvent(this, MgcApplicationStartStopStatus.StopError,
+              new ValMessage(ValState.Error, "Jetty join failed", ex)));
       return MgcApplicationStartStopStatus.StopError;
     }
   }

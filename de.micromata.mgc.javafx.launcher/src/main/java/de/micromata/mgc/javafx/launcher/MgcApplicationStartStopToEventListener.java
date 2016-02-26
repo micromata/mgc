@@ -4,8 +4,8 @@ import de.micromata.genome.logging.GLog;
 import de.micromata.genome.logging.GenomeLogCategory;
 import de.micromata.genome.util.validation.ValMessage;
 import de.micromata.mgc.javafx.FXEvents;
-import de.micromata.mgc.launcher.MgcApplication;
-import de.micromata.mgc.launcher.MgcApplicationStartStopListener;
+import de.micromata.mgc.launcher.AbstractMgcApplicationStartStopListener;
+import de.micromata.mgc.launcher.MgcApplicationStartStopEvent;
 import de.micromata.mgc.launcher.MgcApplicationStartStopStatus;
 
 /**
@@ -13,13 +13,16 @@ import de.micromata.mgc.launcher.MgcApplicationStartStopStatus;
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
  */
-public class MgcApplicationStartStopToEventListener implements MgcApplicationStartStopListener
+public class MgcApplicationStartStopToEventListener extends AbstractMgcApplicationStartStopListener
 {
 
   @Override
-  public void listen(MgcApplication<?> application, MgcApplicationStartStopStatus status, ValMessage msg)
+  public void onEvent(MgcApplicationStartStopEvent event)
   {
-    msg.getTranslatedMessage(application.getTranslateService());
+    // TODO Auto-generated method stub
+    ValMessage msg = event.getValMessage();
+    MgcApplicationStartStopStatus status = event.getStatus();
+    msg.getTranslatedMessage(event.getApplication().getTranslateService());
     GLog.logValMessage(GenomeLogCategory.System, msg);
     switch (status) {
       case StartError:

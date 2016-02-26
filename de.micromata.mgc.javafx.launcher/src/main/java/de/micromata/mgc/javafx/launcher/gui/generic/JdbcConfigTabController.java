@@ -50,6 +50,7 @@ public class JdbcConfigTabController extends AbstractConfigTabController<JdbcLoc
         jdbcUrl.setText(dd.getSampleUrlForApp(model.getName()));
       }
     });
+    fromModel(model);
   }
 
   @Override

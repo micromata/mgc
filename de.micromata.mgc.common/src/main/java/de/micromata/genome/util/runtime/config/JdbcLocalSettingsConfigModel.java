@@ -7,6 +7,7 @@ import java.sql.Statement;
 
 import org.apache.commons.lang.StringUtils;
 
+import de.micromata.genome.util.runtime.LocalSettings;
 import de.micromata.genome.util.validation.ValContext;
 
 /**
@@ -100,10 +101,16 @@ public class JdbcLocalSettingsConfigModel extends AbstractLocalSettingsConfigMod
   }
 
   @Override
+  public void fromLocalSettings(LocalSettings localSettings)
+  {
+    super.fromLocalSettings(localSettings);
+  }
+
+  @Override
   public LocalSettingsWriter toProperties(LocalSettingsWriter writer)
   {
+    writer.put("db.ds." + name + ".name", name, "Name of the Datasource");
     writer = super.toProperties(writer);
-    writer.put("db.ds." + name + ".name", name);
     if (StringUtils.isBlank(jndiName) == true) {
       return writer;
     }

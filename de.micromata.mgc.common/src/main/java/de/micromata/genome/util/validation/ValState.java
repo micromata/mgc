@@ -120,6 +120,11 @@ public enum ValState
     return level >= other.getLevel();
   }
 
+  public boolean isWorse(ValState other)
+  {
+    return level > other.getLevel();
+  }
+
   /**
    * Checks if this level is equal or better.
    *

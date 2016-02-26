@@ -66,18 +66,23 @@ public class FXEvents
     registerListener(controller, node);
     node.addEventHandler(ValMessageEvent.MESSAGE_EVENT_TYPE, event -> {
       ValMessage msg = event.getMessage();
+      if (msg.isConsumed() == true) {
+        return;
+      }
       if (referenceType != null && msg.getReference() != null) {
         if (referenceType.isAssignableFrom(msg.getReference().getClass()) == false) {
           return;
         }
         if (StringUtils.isNotBlank(property) && StringUtils.isNotBlank(msg.getProperty()) == true) {
-          if (property.equals(msg.getProperty()) == false) {
-            return;
+          if (property.equals(msg.getProperty()) == true) {
+            controller.addToFeedback(msg);
+            FXGuiUtils.markErroneousField(controller, node, msg);
+
+            event.consume();
+
           }
         }
         controller.addToFeedback(msg);
-        FXGuiUtils.markErroneousField(controller, node, msg);
-        event.consume();
       }
 
     });

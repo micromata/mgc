@@ -14,17 +14,26 @@ import de.micromata.genome.util.runtime.config.LocalSettingsConfigModel;
 import de.micromata.genome.util.validation.ValMessage;
 import de.micromata.mgc.javafx.FXEvents;
 import de.micromata.mgc.javafx.ModelController;
+import de.micromata.mgc.javafx.ValMessageEvent;
 import de.micromata.mgc.javafx.feedback.FeedbackPanel;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Control;
+import javafx.scene.control.Tab;
 import javafx.scene.layout.Pane;
 
+/**
+ * 
+ * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
+ *
+ * @param <M>
+ */
 public abstract class AbstractConfigTabController<M extends LocalSettingsConfigModel>extends AbstractController<M>
     implements Initializable, ModelController<M>
 {
   protected AbstractConfigDialog<?> configDialog;
+  protected Tab tab;
   protected Pane tabPane;
   /**
    * Feedback messages.
@@ -44,6 +53,7 @@ public abstract class AbstractConfigTabController<M extends LocalSettingsConfigM
   public void addToFeedback(ValMessage msg)
   {
     feedback.addMessage(msg);
+    msg.consume();
   }
 
   protected void registerValMessage(String fieldName)
@@ -62,7 +72,24 @@ public abstract class AbstractConfigTabController<M extends LocalSettingsConfigM
       Control ctl = (Control) PrivateBeanUtils.readField(this, field);
       FXEvents.get().registerValMessageReceiver(this, ctl, type, field.getName());
     }
+    FXEvents.get().addEventHandler(this, tabPane, ValMessageEvent.MESSAGE_EVENT_TYPE, event -> {
+      if (event.getMessage().getReference() != null
+          && type.isAssignableFrom(event.getMessage().getReference().getClass()) == true) {
+        markTabWithError(event.getMessage());
+      }
+    });
+  }
 
+  public void clearTabErros()
+  {
+    tab.setStyle("");
+  }
+
+  public void markTabWithError(ValMessage msg)
+  {
+    if (msg.getValState().isErrorOrWorse() == true) {
+      tab.setStyle("-fx-background-color: red");
+    }
   }
 
   public Pane getTabPane()
@@ -93,6 +120,16 @@ public abstract class AbstractConfigTabController<M extends LocalSettingsConfigM
   public void setFeedback(FeedbackPanel feedback)
   {
     this.feedback = feedback;
+  }
+
+  public Tab getTab()
+  {
+    return tab;
+  }
+
+  public void setTab(Tab tab)
+  {
+    this.tab = tab;
   }
 
 }

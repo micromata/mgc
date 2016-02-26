@@ -54,6 +54,10 @@ public class ValMessage implements Serializable
    * If any exception occours.
    */
   private Exception exception;
+  /**
+   * Internal state if this message is already shown.
+   */
+  private boolean consumed = false;
 
   public ValMessage()
   {
@@ -190,6 +194,21 @@ public class ValMessage implements Serializable
   public void setException(Exception exception)
   {
     this.exception = exception;
+  }
+
+  public void consume()
+  {
+    consumed = true;
+  }
+
+  public boolean isConsumed()
+  {
+    return consumed;
+  }
+
+  public void setConsumed(boolean consumed)
+  {
+    this.consumed = consumed;
   }
 
 }

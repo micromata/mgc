@@ -37,9 +37,7 @@ public class LauncherService
 
   public void shutdown()
   {
-    MgcLauncher.get().getApplication().stop((application, status, msg) -> {
-
-    });
+    MgcLauncher.get().getApplication().stop();
     Platform.exit();
     System.exit(0);
   }

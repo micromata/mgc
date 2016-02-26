@@ -5,6 +5,7 @@ import java.util.ResourceBundle;
 
 import org.apache.commons.lang.StringUtils;
 
+import de.micromata.genome.util.event.MgcEventRegistries;
 import de.micromata.genome.util.runtime.LocalSettings;
 import de.micromata.genome.util.runtime.LocalSettingsEnv;
 import de.micromata.genome.util.runtime.config.LocalSettingsConfigModel;
@@ -75,6 +76,10 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>exte
       stopServer();
     });
     stopServerButton.setDisable(true);
+    boolean runnin = MgcLauncher.get().getApplication().isRunning();
+    startServerButton.setDisable(runnin);
+    stopServerButton.setDisable(runnin == false);
+
     FXEvents.get().addEventHandler(this, stopServerButton, MgcLauncherEvent.APP_STARTED, event -> {
       startServerButton.setDisable(true);
       stopServerButton.setDisable(false);
@@ -104,7 +109,7 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>exte
     });
     loggingController.adjustHeight(loggingPane.getHeight());
     loggingController.adjustWidth(loggingPane.getWidth());
-
+    MgcEventRegistries.getEventInstanceRegistry().registerListener(new MgcApplicationStartStopToEventListener());
   }
 
   protected void addCss()
@@ -121,45 +126,20 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>exte
 
   public void startServer()
   {
-    MgcApplicationStartStopToEventListener listener = new MgcApplicationStartStopToEventListener();
+
     LocalSettings.reset();
     LocalSettingsEnv.reset();
     if (LocalSettings.localSettingsExists() == false) {
       loggingController.warn("GWiki is not configured.");
       return;
     }
-    application.start(MgcLauncher.originalMainArgs, listener);
-    //    application.start(new String[] {}, (application, status, msg) -> {
-    //      {
-    //        switch (status) {
-    //          case StartError:
-    //            if (msg.getException() != null) {
-    //              msg.getException().printStackTrace();
-    //            }
-    //            loggingController.error(msg.getMessage());
-    //            break;
-    //          case StartNoConfiguration:
-    //            loggingController.warn("GWiki is not configured.");
-    //            break;
-    //          case AlreadyRunning:
-    //            loggingController.info("GWiki server already started.");
-    //            break;
-    //          case Success:
-    //            startServerButton.setDisable(true);
-    //            stopServerButton.setDisable(false);
-    //            loggingController.info("GWiki server started.");
-    //            break;
-    //        }
-    //  }
-
-    //    });
+    application.start(MgcLauncher.originalMainArgs);
 
   }
 
   public void stopServer()
   {
-    MgcApplicationStartStopToEventListener listener = new MgcApplicationStartStopToEventListener();
-    application.stop(listener);
+    application.stop();
 
   }
 
@@ -213,8 +193,7 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>exte
   {
 
     if (application != null) {
-      application.stop((application, status, msg) -> {
-      });
+      application.stop();
     }
     Platform.exit();
     System.exit(0); // NOSONAR    System.exit(...) and Runtime.getRuntime().exit(...) should not be called" Main app exit.

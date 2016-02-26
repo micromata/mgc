@@ -12,7 +12,6 @@ import de.micromata.mgc.javafx.launcher.gui.AbstractMainWindow;
 import de.micromata.mgc.javafx.launcher.gui.SystemTrayMenu;
 import de.micromata.mgc.javafx.launcher.gui.generic.LauncherLocalSettingsConfigModel;
 import de.micromata.mgc.launcher.MgcApplication;
-import de.micromata.mgc.launcher.StandardMgcApplicationStartStopListener;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Rectangle2D;
@@ -94,7 +93,7 @@ public class MgcLauncher<M extends LocalSettingsConfigModel>
   {
     // TODO this blocks. 
     // TODO check if kill  gracefully stop the app.
-    application.start(args, new StandardMgcApplicationStartStopListener());
+    application.start(args);
 
   }
 
@@ -148,7 +147,7 @@ public class MgcLauncher<M extends LocalSettingsConfigModel>
       new SystemTrayMenu(stage).createAndShowGUI();
       showDummyWindow();
       if (configOk == true && config.isStartServerOnStartup() == true) {
-        sapplication.start(originalMainArgs, new StandardMgcApplicationStartStopListener());
+        sapplication.start(originalMainArgs);
       }
     }
 

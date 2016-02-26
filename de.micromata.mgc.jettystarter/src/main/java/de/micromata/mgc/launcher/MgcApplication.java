@@ -39,9 +39,9 @@ public interface MgcApplication<M extends LocalSettingsConfigModel>
    */
   void reInit();
 
-  MgcApplicationStartStopStatus start(String[] args, MgcApplicationStartStopListener listener);
+  MgcApplicationStartStopStatus start(String[] args);
 
-  MgcApplicationStartStopStatus stop(MgcApplicationStartStopListener listener);
+  MgcApplicationStartStopStatus stop();
 
   boolean isRunning();
 

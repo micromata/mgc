@@ -5,9 +5,9 @@ import java.io.InputStreamReader;
 
 import org.apache.commons.lang.StringUtils;
 
-import de.micromata.genome.util.validation.ValMessage;
-import de.micromata.mgc.launcher.MgcApplication;
-import de.micromata.mgc.launcher.MgcApplicationStartStopStatus;
+import de.micromata.genome.util.event.MgcEventRegistries;
+import de.micromata.mgc.launcher.AbstractMgcApplicationStartStopListener;
+import de.micromata.mgc.launcher.MgcApplicationStartStopEvent;
 
 public class JettyServerRunner
 {
@@ -21,7 +21,19 @@ public class JettyServerRunner
       //      System.out.println(">>> url: " + publicUrl);
       //      System.out.println(">>> wardir: " + warDir);
       //      System.out.println("type 'stop' on command line for stopping");
-      jettyServer.start(new String[] {}, JettyServerRunner::logServerMessage);
+
+      MgcEventRegistries.getEventInstanceRegistry()
+          .registerListener(new AbstractMgcApplicationStartStopListener()
+          {
+
+            @Override
+            public void onEvent(MgcApplicationStartStopEvent event)
+            {
+              System.out.println(event.getValMessage().getI18nkey());
+            }
+          });
+
+      jettyServer.start(new String[] {});
       BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
       do {
         String rl = in.readLine();
@@ -31,15 +43,11 @@ public class JettyServerRunner
       } while (true);
       System.out.println(">>> STOPPING EMBEDDED JETTY SERVER");
 
-      jettyServer.stopAndWait(JettyServerRunner::logServerMessage);
+      jettyServer.stopAndWait();
     } catch (Exception e) {
       e.printStackTrace();
       System.exit(100);
     }
   }
 
-  public static void logServerMessage(MgcApplication application, MgcApplicationStartStopStatus status, ValMessage msg)
-  {
-    System.out.println(msg.getI18nkey());
-  }
 }

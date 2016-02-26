@@ -19,14 +19,11 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.events.EventTarget;
 
-import de.micromata.genome.logging.CombinedLogging;
 import de.micromata.genome.logging.GLog;
 import de.micromata.genome.logging.LogAttribute;
 import de.micromata.genome.logging.LogExceptionAttribute;
 import de.micromata.genome.logging.LogLevel;
 import de.micromata.genome.logging.LogWriteEntry;
-import de.micromata.genome.logging.Logging;
-import de.micromata.genome.logging.LoggingServiceManager;
 import de.micromata.genome.logging.spi.log4j.RoundList;
 import de.micromata.genome.util.types.DateUtils;
 import de.micromata.genome.util.validation.ValMessage;
@@ -75,10 +72,12 @@ public class LoggingController implements Initializable
   private WebView htmlView;
 
   private long idGenerator = 0L;
+
   /**
    * The queue.
    */
   private RoundList<LogWriteEntry> logWriteEntries = new RoundList<>(1000);
+  private List<LogWriteEntry> guiWriteBuffer = new ArrayList<>();
 
   public static LoggingController getInstance()
   {
@@ -107,32 +106,26 @@ public class LoggingController implements Initializable
     });
 
     WebEngine engine = htmlView.getEngine();
-
+    engine.getLoadWorker().stateProperty().addListener((ov, oldState, newState) -> {
+      if (newState == javafx.concurrent.Worker.State.SUCCEEDED) {
+        Document doc = engine.getDocument();
+        if (guiWriteBuffer.isEmpty() == false) {
+          List<LogWriteEntry> copy = new ArrayList<>(guiWriteBuffer);
+          guiWriteBuffer.clear();
+          addToGuiInGui(copy);
+        }
+      }
+    });
     engine.setJavaScriptEnabled(true);
     String styleheader = getHtmlHeader();
     String content = "<html><head>" /* + getHtmlHeader() */
         + "</head><body><div id='logentries' class='logentries'></div></body></html>";
     String oldContent = styleheader + "<div id='logentries' class='logentries'></div>";
+
     engine.loadContent(oldContent);
 
     INSTANCE = this;
-    wrappGenomeLogging();
-  }
-
-  public static void wrappGenomeLogging()
-  {
-    Logging logging = LoggingServiceManager.get().getLogging();
-    if (logging instanceof CombinedLogging) {
-      CombinedLogging cmbl = (CombinedLogging) logging;
-      if (cmbl.getSecondary() instanceof LauncherLogging) {
-        return;
-      }
-    }
-    CombinedLogging cb = new CombinedLogging();
-    cb.setPrimary(logging);
-    cb.setSecondary(new LauncherLogging());
-    LoggingServiceManager lsm = LoggingServiceManager.get();
-    lsm.setLogging(cb);
+    FxLogconsoleLogWriteEntryEventListener.registerEvent();
   }
 
   protected String getHtmlHeader()
@@ -226,42 +219,56 @@ public class LoggingController implements Initializable
     return true;
   }
 
-  private void addToGui(List<LogWriteEntry> lwes)
+  private void addToGui(List<LogWriteEntry> logentries)
   {
 
     ControllerService.get().runInToolkitThread(() -> {
-
-      WebEngine engine = htmlView.getEngine();
-      Document doc = engine.getDocument();
-      Element les = doc.getElementById("logentries");
-      String lielid = "";
-      for (LogWriteEntry lwe : lwes) {
-        lielid = "logentry" + ++idGenerator;
-
-        Element liel = createElement(doc, "div", "id", lielid, "class", "loge" + getLogClass(lwe));
-
-        ((EventTarget) liel).addEventListener("click", event -> {
-          toggleLogAttribuesGui(doc, liel, lwe);
-        } , false);
-
-        Element logt = createElement(doc, "div", "class", "logt");
-        String date = DateUtils.getStandardDateTimeFormat().format(new Date(lwe.getTimestamp()));
-        logt.appendChild(doc.createTextNode(date));
-        Element logl = createElement(doc, "div", "class", "logl");
-        liel.appendChild(logt);
-        logl.appendChild(doc.createTextNode(lwe.getLevel().name()));
-        liel.appendChild(logl);
-        Element logm = createElement(doc, "div", "class", "logm");
-        logm.appendChild(doc.createTextNode(lwe.getMessage()));
-        liel.appendChild(logm);
-        renderAttrs(lwe, doc, liel);
-
-        les.appendChild(liel);
-
-      }
-      // TODO enable attributes
-      scrollToBottom(engine, lielid);
+      addToGuiInGui(logentries);
     });
+  }
+
+  private void addToGuiInGui(List<LogWriteEntry> logentries)
+  {
+    List<LogWriteEntry> lwes = logentries;
+    WebEngine engine = htmlView.getEngine();
+    Document doc = engine.getDocument();
+    if (doc == null) {
+      guiWriteBuffer.addAll(lwes);
+      return;
+    } else {
+      lwes = new ArrayList<>(logentries);
+      lwes.addAll(guiWriteBuffer);
+      guiWriteBuffer.clear();
+    }
+    Element les = doc.getElementById("logentries");
+    String lielid = "";
+    for (LogWriteEntry lwe : lwes) {
+      lielid = "logentry" + ++idGenerator;
+
+      Element liel = createElement(doc, "div", "id", lielid, "class", "loge" + getLogClass(lwe));
+
+      ((EventTarget) liel).addEventListener("click", event -> {
+        toggleLogAttribuesGui(doc, liel, lwe);
+      } , false);
+
+      Element logt = createElement(doc, "div", "class", "logt");
+      String date = DateUtils.getStandardDateTimeFormat().format(new Date(lwe.getTimestamp()));
+      logt.appendChild(doc.createTextNode(date));
+      Element logl = createElement(doc, "div", "class", "logl");
+      liel.appendChild(logt);
+      logl.appendChild(doc.createTextNode(lwe.getLevel().name()));
+      liel.appendChild(logl);
+      Element logm = createElement(doc, "div", "class", "logm");
+      logm.appendChild(doc.createTextNode(lwe.getMessage()));
+      liel.appendChild(logm);
+      renderAttrs(lwe, doc, liel);
+
+      les.appendChild(liel);
+
+    }
+    // TODO enable attributes
+    scrollToBottom(engine, lielid);
+
   }
 
   private void renderAttrs(LogWriteEntry lwe, Document doc, Element liel)

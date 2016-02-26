@@ -3,6 +3,8 @@ package de.micromata.mgc.javafx.launcher.gui;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import de.micromata.genome.util.runtime.GenericsUtils;
 import de.micromata.genome.util.runtime.config.CastableLocalSettingsConfigModel;
 import de.micromata.genome.util.runtime.config.LocalSettingsConfigModel;
@@ -34,6 +36,7 @@ import javafx.scene.layout.VBox;
 public abstract class AbstractConfigDialog<M extends LocalSettingsConfigModel>extends AbstractController<M>
     implements ModelController<M>
 {
+  private static final Logger LOG = Logger.getLogger(AbstractConfigDialog.class);
   /**
    * Preferred Scene Width.
    */
@@ -68,6 +71,7 @@ public abstract class AbstractConfigDialog<M extends LocalSettingsConfigModel>ex
       contrl.setConfigDialog(this);
       contrl.setTabPane(wc.getFirst());
       Tab tabB = new Tab();
+
       tabB.setText(contrl.getTabTitle());
       VBox vbox = new VBox();
       FeedbackPanel feedback = new FeedbackPanel();
@@ -81,6 +85,7 @@ public abstract class AbstractConfigDialog<M extends LocalSettingsConfigModel>ex
 
       configurationTabs.getTabs().add(tabB);
       tabController.add(contrl);
+      contrl.setTab(tabB);
       contrl.initWithModel(tabc.configModel);
       contrl.registerValMessageReceivers();
     }
@@ -168,12 +173,17 @@ public abstract class AbstractConfigDialog<M extends LocalSettingsConfigModel>ex
   @Override
   public void mapValidationMessagesToGui(ValContext ctx)
   {
+    for (AbstractConfigTabController<?> tc : tabController) {
+      tc.clearTabErros();
+    }
     for (ValMessage msg : ctx.getMessages()) {
       FXEvents.get().fireEvent(new ValMessageEvent(msg));
 
     }
-    for (AbstractConfigTabController<?> ctl : tabController) {
-
+    for (ValMessage msg : ctx.getMessages()) {
+      if (msg.isConsumed() == false) {
+        LOG.error("ValMessage unconsumed: " + msg.getI18nkey());
+      }
     }
   }
 
