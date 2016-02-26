@@ -256,7 +256,7 @@ public class LocalSettings
    * @param value the value
    * @return the string
    */
-  protected String resolve(String value)
+  public String resolve(String value)
   {
     if (value == null) {
       return null;
