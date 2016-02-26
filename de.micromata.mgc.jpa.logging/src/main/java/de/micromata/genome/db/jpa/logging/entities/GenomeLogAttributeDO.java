@@ -14,18 +14,18 @@ import org.hibernate.annotations.Index;
 
 /**
  * A logging Attribute entity.
- * 
+ *
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
- * 
+ *
  */
 @Entity
-@Table(name = "TB_TA_GLOG_ATTRIBUTE")
+@Table(name = "TB_TA_LOG_ATTRIBUTE")
 @org.hibernate.annotations.Table(indexes = { //
-    @Index(name = "IX_TA_BLOGATTR_SVALUE", columnNames = { "BASE_GLOG_ATTRIBUTE", "SHORT_VALUE" }), //
-    @Index(name = "IX_TA_GLOG_ATTRIBUTE_MODAT", columnNames = { "MODIFIEDAT" })
+    @Index(name = "IX_TA_LOGATTR_SVALUE", columnNames = { "BASE_LOG_ATTRIBUTE", "SHORT_VALUE" }), //
+    @Index(name = "IX_TA_LOG_ATTRIBUTE_MODAT", columnNames = { "MODIFIEDAT" })
     //
-}, appliesTo = "TB_TA_GLOG_ATTRIBUTE")
-@SequenceGenerator(name = "SQ_TA_GLOG_ATTRIBUTE", sequenceName = "SQ_TA_GLOG_ATTRIBUTE")
+}, appliesTo = "TB_TA_LOG_ATTRIBUTE")
+@SequenceGenerator(name = "SQ_TA_LOG_ATTRIBUTE", sequenceName = "SQ_TA_LOG_ATTRIBUTE")
 public class GenomeLogAttributeDO extends BaseLogAttributeDO<GenomeLogMasterDO>
 {
 
@@ -41,8 +41,8 @@ public class GenomeLogAttributeDO extends BaseLogAttributeDO<GenomeLogMasterDO>
 
   @Override
   @Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_TA_GLOG_ATTRIBUTE")
-  @Column(name = "TA_GLOG_ATTRIBUTE")
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_TA_LOG_ATTRIBUTE")
+  @Column(name = "BASE_LOG_ATTRIBUTE")
   public Long getPk()
   {
     return pk;
@@ -56,7 +56,7 @@ public class GenomeLogAttributeDO extends BaseLogAttributeDO<GenomeLogMasterDO>
 
   @Override
   @ManyToOne
-  @JoinColumn(name = "TA_GLOG_MASTER", referencedColumnName = "TA_GLOG_MASTER")
+  @JoinColumn(name = "TA_LOG_MASTER", referencedColumnName = "TA_LOG_MASTER")
   public GenomeLogMasterDO getLogMaster()
   {
     return super.getLogMaster();
