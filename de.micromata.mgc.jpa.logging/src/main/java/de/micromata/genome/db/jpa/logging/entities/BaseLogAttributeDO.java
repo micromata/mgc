@@ -87,7 +87,7 @@ public abstract class BaseLogAttributeDO<M extends BaseLogMasterDO<?>>extends St
    *
    * @return the base llog attribute
    */
-  @Column(name = "BASE_GLOG_ATTRIBUTE", length = 30)
+  @Column(name = "BASE_LOG_ATTRIBUTE", length = 30)
   public String getBaseLogAttribute()
   {
     return baseLogAttribute;
@@ -96,11 +96,11 @@ public abstract class BaseLogAttributeDO<M extends BaseLogMasterDO<?>>extends St
   /**
    * Sets the base llog attribute.
    *
-   * @param base_GLOG_attribute the new base llog attribute
+   * @param base_LOG_attribute the new base llog attribute
    */
-  public void setBaseLogAttribute(String base_GLOG_attribute)
+  public void setBaseLogAttribute(String base_LOG_attribute)
   {
-    this.baseLogAttribute = base_GLOG_attribute;
+    this.baseLogAttribute = base_LOG_attribute;
   }
 
   /**
