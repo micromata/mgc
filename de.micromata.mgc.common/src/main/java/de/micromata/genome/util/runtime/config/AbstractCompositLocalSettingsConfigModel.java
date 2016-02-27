@@ -2,6 +2,7 @@ package de.micromata.genome.util.runtime.config;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.List;
 
 import de.micromata.genome.util.bean.FieldMatchers;
@@ -81,5 +82,25 @@ public abstract class AbstractCompositLocalSettingsConfigModel extends AbstractL
       }
     }
     return null;
+  }
+
+  public <T extends LocalSettingsConfigModel> List<T> castToCollect(Class<T> other)
+  {
+    List<T> ret = new ArrayList<>();
+    List<Field> found = PrivateBeanUtils.findAllFields(getClass(),
+        CommonMatchers.and(FieldMatchers.hasNotModifier(Modifier.STATIC),
+            FieldMatchers.assignableTo(other)));
+    if (found.isEmpty() == false) {
+      ret.add((T) PrivateBeanUtils.readField(this, found.get(0)));
+    }
+    found = PrivateBeanUtils.findAllFields(getClass(),
+        CommonMatchers.and(FieldMatchers.hasNotModifier(Modifier.STATIC),
+            FieldMatchers.assignableTo(CastableLocalSettingsConfigModel.class)));
+    for (Field f : found) {
+      CastableLocalSettingsConfigModel ct = (CastableLocalSettingsConfigModel) PrivateBeanUtils.readField(this, f);
+      List<T> sret = (List) ct.castToCollect(other);
+      ret.addAll(sret);
+    }
+    return ret;
   }
 }

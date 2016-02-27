@@ -27,6 +27,11 @@
                      </accelerator></MenuItem>
             </items>
           </Menu>
+            <Menu mnemonicParsing="false" text="Launch">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#openLogLF5" text="LF5" />
+              </items>
+            </Menu>
           <Menu mnemonicParsing="false" text="%mgc.launcher.gui.menu.help">
             <items>
               <MenuItem mnemonicParsing="false" onAction="#showAboutDialog" text="%mgc.launcher.gui.menu.about" />

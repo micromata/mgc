@@ -72,7 +72,6 @@ public abstract class AbstractConfigDialog<M extends LocalSettingsConfigModel>ex
       contrl.setTabPane(wc.getFirst());
       Tab tabB = new Tab();
 
-      tabB.setText(contrl.getTabTitle());
       VBox vbox = new VBox();
       FeedbackPanel feedback = new FeedbackPanel();
       FXEvents.get().addEventHandler(this, feedback, FeedbackPanelEvents.CLEAR, event -> {
@@ -87,6 +86,7 @@ public abstract class AbstractConfigDialog<M extends LocalSettingsConfigModel>ex
       tabController.add(contrl);
       contrl.setTab(tabB);
       contrl.initWithModel(tabc.configModel);
+      tabB.setText(contrl.getTabTitle());
       contrl.registerValMessageReceivers();
     }
   }

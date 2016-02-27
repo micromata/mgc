@@ -3,6 +3,7 @@ package de.micromata.mgc.javafx.launcher.gui.generic;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.micromata.genome.util.runtime.config.AbstractTextConfigFileConfigModel;
 import de.micromata.genome.util.runtime.config.CastableLocalSettingsConfigModel;
 import de.micromata.genome.util.runtime.config.HibernateSchemaConfigModel;
 import de.micromata.genome.util.runtime.config.JdbcLocalSettingsConfigModel;
@@ -47,7 +48,11 @@ public class StandardConfigurationTabLoaderService implements ConfigurationTabLo
     if (hibernateConfig != null) {
       ret.add(new TabConfig(HibernateSchemaConfigTabController.class, hibernateConfig));
     }
-
+    List<AbstractTextConfigFileConfigModel> textConfigs = configModel
+        .castToForConfigDialogCollect(AbstractTextConfigFileConfigModel.class);
+    for (AbstractTextConfigFileConfigModel textConfig : textConfigs) {
+      ret.add(new TabConfig(TextConfigTabController.class, textConfig));
+    }
     return ret;
   }
 

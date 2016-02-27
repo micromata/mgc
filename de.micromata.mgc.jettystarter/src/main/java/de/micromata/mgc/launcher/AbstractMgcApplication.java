@@ -5,6 +5,7 @@ import java.io.File;
 import de.micromata.genome.util.i18n.I18NTranslationProvider;
 import de.micromata.genome.util.i18n.I18NTranslations;
 import de.micromata.genome.util.runtime.LocalSettings;
+import de.micromata.genome.util.runtime.Log4JInitializer;
 import de.micromata.genome.util.runtime.config.LocalSettingsConfigModel;
 import de.micromata.genome.util.runtime.config.LocalSettingsWriter;
 import de.micromata.genome.util.validation.ValContext;
@@ -69,6 +70,13 @@ public abstract class AbstractMgcApplication<M extends LocalSettingsConfigModel>
     model.toProperties(writer);
     File file = new File(LocalSettings.get().getLocalSettingsFile());
     writer.store(file);
+  }
+
+  @Override
+  public void reInit()
+  {
+    Log4JInitializer.reinit();
+
   }
 
   @Override

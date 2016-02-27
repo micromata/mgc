@@ -1,5 +1,7 @@
 package de.micromata.genome.util.runtime.config;
 
+import java.util.List;
+
 /**
  * Cast one model to another.
  * 
@@ -18,6 +20,8 @@ public interface CastableLocalSettingsConfigModel extends LocalSettingsConfigMod
    */
   <T extends LocalSettingsConfigModel> T castTo(Class<T> other);
 
+  <T extends LocalSettingsConfigModel> List<T> castToCollect(Class<T> other);
+
   /**
    * Should a configuration dialog tag created
    * 
@@ -29,4 +33,14 @@ public interface CastableLocalSettingsConfigModel extends LocalSettingsConfigMod
     return castTo(other);
   }
 
+  /**
+   * Should a configuration dialog tag created
+   * 
+   * @param other
+   * @return
+   */
+  default <T extends LocalSettingsConfigModel> List<T> castToForConfigDialogCollect(Class<T> other)
+  {
+    return castToCollect(other);
+  }
 }

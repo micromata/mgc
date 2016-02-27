@@ -8,6 +8,7 @@ import java.util.ResourceBundle;
 
 import de.micromata.genome.util.bean.FieldMatchers;
 import de.micromata.genome.util.bean.PrivateBeanUtils;
+import de.micromata.genome.util.i18n.OptionalTranslationProvider;
 import de.micromata.genome.util.matcher.CommonMatchers;
 import de.micromata.genome.util.runtime.GenericsUtils;
 import de.micromata.genome.util.runtime.config.LocalSettingsConfigModel;
@@ -16,6 +17,7 @@ import de.micromata.mgc.javafx.FXEvents;
 import de.micromata.mgc.javafx.ModelController;
 import de.micromata.mgc.javafx.ValMessageEvent;
 import de.micromata.mgc.javafx.feedback.FeedbackPanel;
+import de.micromata.mgc.javafx.launcher.MgcLauncher;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -78,6 +80,13 @@ public abstract class AbstractConfigTabController<M extends LocalSettingsConfigM
         markTabWithError(event.getMessage());
       }
     });
+  }
+
+  protected DialogBuilder dialogBuilder()
+  {
+    DialogBuilder builder = new DialogBuilder(tabPane);
+    builder.setTranslation(new OptionalTranslationProvider(MgcLauncher.get().getApplication().getTranslateService()));
+    return builder;
   }
 
   public void clearTabErros()

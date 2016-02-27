@@ -28,12 +28,6 @@ public class SampleLauncherApplication extends MgcApplicationWithJettyApplicatio
   }
 
   @Override
-  public void reInit()
-  {
-
-  }
-
-  @Override
   protected SampleLocalSettingsConfigModel newModel()
   {
     return new SampleLocalSettingsConfigModel();

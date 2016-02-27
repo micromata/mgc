@@ -36,13 +36,6 @@ public class SampleJettyMain
     {
 
       @Override
-      public void reInit()
-      {
-        // TODO Auto-generated method stub
-
-      }
-
-      @Override
       protected JettyServer newJettyServer(JettyConfigModel cfg)
       {
         SampleJettyServer ret = new SampleJettyServer();

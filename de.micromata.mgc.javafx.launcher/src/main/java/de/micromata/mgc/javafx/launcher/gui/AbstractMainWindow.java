@@ -5,6 +5,8 @@ import java.util.ResourceBundle;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.log4j.lf5.LogLevel;
+import org.apache.log4j.lf5.viewer.LogBrokerMonitor;
 
 import de.micromata.genome.util.event.MgcEventRegistries;
 import de.micromata.genome.util.runtime.LocalSettings;
@@ -205,6 +207,16 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>exte
   {
     stage.hide();
 
+  }
+
+  @FXML
+  private void openLogLF5(ActionEvent event)
+  {
+    LogBrokerMonitor monitor = new LogBrokerMonitor(LogLevel.getLog4JLevels());
+
+    monitor.setFrameSize(800, 600);
+    monitor.setFontSize(12);
+    monitor.show();
   }
 
   private void launchBrowser()

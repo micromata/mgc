@@ -35,7 +35,7 @@ public interface MgcApplication<M extends LocalSettingsConfigModel>
   /**
    * realod config intialize application.
    * 
-   * TODO RK not yet implemented
+   * 
    */
   void reInit();
 

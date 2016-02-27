@@ -2,6 +2,7 @@ package de.micromata.mgc.javafx.launcher;
 
 import de.micromata.genome.logging.GLog;
 import de.micromata.genome.logging.GenomeLogCategory;
+import de.micromata.genome.util.runtime.Log4JInitializer;
 import de.micromata.genome.util.runtime.config.CastableLocalSettingsConfigModel;
 import de.micromata.genome.util.runtime.config.LocalSettingsConfigModel;
 import de.micromata.genome.util.types.Pair;
@@ -68,7 +69,7 @@ public class MgcLauncher<M extends LocalSettingsConfigModel>
     originalMainArgs = args;
     sMainWindowClass = mainWindowClass;
     sapplication = application;
-
+    Log4JInitializer.initializeLog4J();
     if (noWindow(args) == true) {
       checkConfiguration();
       launchCli(args);

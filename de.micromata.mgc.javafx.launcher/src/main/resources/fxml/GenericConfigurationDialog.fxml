@@ -13,9 +13,9 @@
             <TabPane fx:id="configurationTabs" tabClosingPolicy="UNAVAILABLE" />
             <HBox alignment="CENTER_RIGHT" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="54.0" prefWidth="700.0">
                <children>
-                  <Button mnemonicParsing="false" onAction="#onSave" text="Save" />
+                  <Button defaultButton="true" mnemonicParsing="false" onAction="#onSave" text="Save" />
             
-                        <Button mnemonicParsing="false" onAction="#onCancel" text="Cancel" />
+                        <Button cancelButton="true" mnemonicParsing="false" onAction="#onCancel" text="Cancel" />
                </children>
             </HBox>
          </children>
