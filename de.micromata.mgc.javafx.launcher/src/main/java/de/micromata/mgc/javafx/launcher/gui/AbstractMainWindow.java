@@ -5,8 +5,6 @@ import java.util.ResourceBundle;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.log4j.lf5.LogLevel;
-import org.apache.log4j.lf5.viewer.LogBrokerMonitor;
 
 import de.micromata.genome.util.event.MgcEventRegistries;
 import de.micromata.genome.util.runtime.LocalSettings;
@@ -21,6 +19,7 @@ import de.micromata.mgc.javafx.SystemService;
 import de.micromata.mgc.javafx.launcher.MgcApplicationStartStopToEventListener;
 import de.micromata.mgc.javafx.launcher.MgcLauncher;
 import de.micromata.mgc.javafx.launcher.MgcLauncherEvent;
+import de.micromata.mgc.javafx.launcher.gui.lf5.Lf5MainWindowController;
 import de.micromata.mgc.javafx.logging.LoggingController;
 import de.micromata.mgc.launcher.MgcApplication;
 import javafx.application.Platform;
@@ -212,11 +211,14 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>exte
   @FXML
   private void openLogLF5(ActionEvent event)
   {
-    LogBrokerMonitor monitor = new LogBrokerMonitor(LogLevel.getLog4JLevels());
-
-    monitor.setFrameSize(800, 600);
-    monitor.setFontSize(12);
-    monitor.show();
+    if (Lf5MainWindowController.CONTROLERINSTANCE != null) {
+      Lf5MainWindowController.CONTROLERINSTANCE.show();
+      return;
+    }
+    Lf5MainWindowController controller = ControllerService.get()
+        .loadAsWindow(this, Lf5MainWindowController.class, "About");
+    controller.initWithApplication(application);
+    controller.getStage().show();
   }
 
   private void launchBrowser()

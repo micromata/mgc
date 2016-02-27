@@ -139,4 +139,25 @@ public class ControllerService
     return controller;
   }
 
+  public <M, C extends AbstractController<M>> C loadAsWindow(AbstractMainWindow<?> mainWindow, Class<C> controllerClass,
+      String dialogTitle)
+  {
+    Pair<Pane, C> pair = loadControl(controllerClass, Pane.class);
+    Stage stage = new Stage();
+    stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> {
+      stage.hide();
+      e.consume();
+    });
+    Pane root = pair.getFirst();
+    C controller = pair.getSecond();
+    Scene s = new Scene(root);//, AbstractConfigDialog.PREF_WIDTH, AbstractConfigDialog.PREF_HEIGHT
+    controller.setParent(root);
+    controller.setScene(s);
+    controller.setStage(stage);
+    stage.setScene(s);
+    //stage.setResizable(false);
+    stage.setTitle(dialogTitle);
+    return controller;
+  }
+
 }

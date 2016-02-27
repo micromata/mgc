@@ -1,5 +1,7 @@
 package de.micromata.mgc.javafx.launcher.gui;
 
+import org.apache.log4j.Logger;
+
 import de.micromata.genome.util.validation.ValMessage;
 import de.micromata.mgc.javafx.FXEvents;
 import de.micromata.mgc.javafx.feedback.FeedbackPanel;
@@ -15,6 +17,7 @@ import javafx.stage.Stage;
  */
 public abstract class AbstractController<M>
 {
+  private static final Logger LOG = Logger.getLogger(AbstractController.class);
   protected Parent parent;
   protected Scene scene;
   protected Stage stage;
@@ -24,7 +27,10 @@ public abstract class AbstractController<M>
     FXEvents.get().registerValMessageReceiver(this, node, referenceType, property);
   }
 
-  public abstract void addToFeedback(ValMessage msg);
+  public void addToFeedback(ValMessage msg)
+  {
+    LOG.warn("No feedbackPanel defined in " + getClass().getSimpleName() + "; " + msg.getI18nkey());
+  }
 
   public Parent getParent()
   {
