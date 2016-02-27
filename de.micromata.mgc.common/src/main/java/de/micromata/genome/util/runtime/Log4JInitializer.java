@@ -9,8 +9,10 @@ import java.io.OutputStream;
 import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
+import org.apache.log4j.helpers.FileWatchdog;
 
 /**
  * Initializes with LocalSettings the log4j.
@@ -23,8 +25,16 @@ public class Log4JInitializer
   private static Logger LOG = Logger.getLogger(Log4JInitializer.class);
 
   public static final String LOG4J_PROPERTY_FILE = "log4j.properties";
+  public static long log4jMonitorTimeInMs = 60000;
+  public static long log4jDevMonitorTimeInMs = 10000;
 
   private static boolean log4jInitialized = false;
+
+  public static void reinit()
+  {
+    log4jInitialized = false;
+    initializeLog4J();
+  }
 
   /**
    * If not already intialized log4j, try to read log4j-dev.properties, log4j.properties or log43
@@ -84,14 +94,39 @@ public class Log4JInitializer
 
   }
 
+  public static class PropertyWatchdog extends FileWatchdog
+  {
+
+    public PropertyWatchdog(String filename, long delay)
+    {
+      super(filename);
+      setDelay(delay);
+    }
+
+    /**
+     * Call {@link PropertyConfigurator#configure(String)} with the <code>filename</code> to reconfigure log4j.
+     */
+    @Override
+    public void doOnChange()
+    {
+      new PropertyConfigurator().doConfigure(filename,
+          LogManager.getLoggerRepository());
+    }
+  }
+
+  static PropertyWatchdog propWatchDoc = null;
+  static PropertyWatchdog propDevWatchDoc = null;
+
   private static boolean initViaFile(File log4jfile)
   {
+    File devFile = findDevFile(log4jfile);
+
     Properties props = new Properties();
     try {
       try (InputStream is = new FileInputStream(log4jfile)) {
         props.load(is);
       }
-      File devFile = findDevFile(log4jfile);
+
       if (devFile != null) {
         try (InputStream is = new FileInputStream(devFile)) {
           props.load(is);
@@ -101,7 +136,17 @@ public class Log4JInitializer
       LOG.error("Cannot read log4jfiles: " + ex.getMessage(), ex);
       return false;
     }
-    PropertyConfigurator.configure(props);
+    new PropertyConfigurator().doConfigure(props,
+        LogManager.getLoggerRepository());
+
+    if ((propWatchDoc == null || propWatchDoc.isAlive() == false)) {
+      propWatchDoc = new PropertyWatchdog(log4jfile.getAbsolutePath(), log4jMonitorTimeInMs);
+      propWatchDoc.start();
+    }
+    if (devFile != null && (propDevWatchDoc == null || propDevWatchDoc.isAlive() == false)) {
+      propDevWatchDoc = new PropertyWatchdog(log4jfile.getAbsolutePath(), log4jMonitorTimeInMs);
+      propDevWatchDoc.start();
+    }
     return true;
   }
 
