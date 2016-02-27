@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -34,10 +36,8 @@ public class JdbcLocalSettingsConfigModel extends AbstractLocalSettingsConfigMod
    * Has to be set outside.
    */
   private String name;
-  /**
-   * If set, the datasource will be registered as jndi name.
-   */
-  private String jndiName;
+
+  private List<JndiLocalSettingsConfigModel> associatedJndi = new ArrayList<>();
 
   public JdbcLocalSettingsConfigModel(String name, String comment)
   {
@@ -45,11 +45,14 @@ public class JdbcLocalSettingsConfigModel extends AbstractLocalSettingsConfigMod
     this.name = name;
   }
 
-  public JdbcLocalSettingsConfigModel(String name, String comment, String jndiName)
+  public JdbcLocalSettingsConfigModel(String name, String comment, JndiLocalSettingsConfigModel... jnddis)
   {
     super(comment);
     this.name = name;
-    this.jndiName = jndiName;
+
+    for (JndiLocalSettingsConfigModel jdni : jnddis) {
+      this.associatedJndi.add(jdni);
+    }
   }
 
   @Override
@@ -111,13 +114,14 @@ public class JdbcLocalSettingsConfigModel extends AbstractLocalSettingsConfigMod
   {
     writer.put("db.ds." + name + ".name", name, "Name of the Datasource");
     writer = super.toProperties(writer);
-    if (StringUtils.isBlank(jndiName) == true) {
-      return writer;
-    }
+
     LocalSettingsWriter sw = writer.newSection("JNDI for Datasource " + name);
-    sw.put("jndi.bind." + name + ".target", jndiName);
-    sw.put("jndi.bind." + name + ".type", "DataSource");
-    sw.put("jndi.bind." + name + ".source", name);
+    for (JndiLocalSettingsConfigModel jndi : associatedJndi) {
+      jndi.toProperties(sw);
+    }
+    //    sw.put("jndi.bind." + name + ".target", jndiName);
+    //    sw.put("jndi.bind." + name + ".type", "DataSource");
+    //    sw.put("jndi.bind." + name + ".source", name);
     return writer;
   }
 
@@ -177,16 +181,6 @@ public class JdbcLocalSettingsConfigModel extends AbstractLocalSettingsConfigMod
     this.name = name;
   }
 
-  public String getJndiName()
-  {
-    return jndiName;
-  }
-
-  public void setJndiName(String jndiName)
-  {
-    this.jndiName = jndiName;
-  }
-
   public boolean isNeedDatabase()
   {
     return needDatabase;
@@ -195,6 +189,11 @@ public class JdbcLocalSettingsConfigModel extends AbstractLocalSettingsConfigMod
   public void setNeedDatabase(boolean needDatabase)
   {
     this.needDatabase = needDatabase;
+  }
+
+  public List<JndiLocalSettingsConfigModel> getAssociatedJndi()
+  {
+    return associatedJndi;
   }
 
 }

@@ -33,6 +33,11 @@ public abstract class AbstractLocalSettingsConfigModel implements LocalSettingsC
     return comment;
   }
 
+  public void setSectionComment(String comment)
+  {
+    this.comment = comment;
+  }
+
   /**
    * store the configuration into local settings.
    * 
