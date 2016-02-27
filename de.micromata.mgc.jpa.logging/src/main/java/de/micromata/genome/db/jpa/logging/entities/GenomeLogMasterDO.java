@@ -22,16 +22,16 @@ import org.hibernate.annotations.Index;
  *
  */
 @Entity
-@Table(name = "TB_TA_GLOG_MASTER")
+@Table(name = "TB_TA_LOG_MASTER")
 @org.hibernate.annotations.Table(indexes = { //
-    @Index(name = "IX_TA_GLOG_MASTER_CAT_PK", columnNames = { "CATEGORY", "TA_GLOG_MASTER" }), //
-    @Index(name = "IX_TA_GLOG_MASTER_USERNAME", columnNames = "USERNAME"), //
-    @Index(name = "IX_TA_GLOG_MASTER_MODAT", columnNames = { "MODIFIEDAT" }), //
-    @Index(name = "IX_TA_GLOG_MASTER_CRTAT", columnNames = { "CREATEDAT" }), //
-    @Index(name = "IX_TA_GLOG_MASTER_SHORTMSG", columnNames = "SHORTMESSAGE"), //
-    @Index(name = "IX_TA_GLOG_MASTER_SESSID", columnNames = "HTTPSESSIONID")//
-}, appliesTo = "TB_TA_GLOG_MASTER")
-@SequenceGenerator(name = "SQ_TA_GLOG_MASTER", sequenceName = "SQ_TA_GLOG_MASTER")
+    @Index(name = "IX_TA_LOG_MASTER_CAT_PK", columnNames = { "CATEGORY", "TA_LOG_MASTER" }), //
+    @Index(name = "IX_TA_LOG_MASTER_USERNAME", columnNames = "USERNAME"), //
+    @Index(name = "IX_TA_LOG_MASTER_MODAT", columnNames = { "MODIFIEDAT" }), //
+    @Index(name = "IX_TA_LOG_MASTER_CRTAT", columnNames = { "CREATEDAT" }), //
+    @Index(name = "IX_TA_LOG_MASTER_SHORTMSG", columnNames = "SHORTMESSAGE"), //
+    @Index(name = "IX_TA_LOG_MASTER_SESSID", columnNames = "HTTPSESSIONID")//
+}, appliesTo = "TB_TA_LOG_MASTER")
+@SequenceGenerator(name = "SQ_TA_LOG_MASTER", sequenceName = "SQ_TA_LOG_MASTER")
 public class GenomeLogMasterDO extends BaseLogMasterDO<GenomeLogMasterDO>
 {
 
@@ -46,8 +46,8 @@ public class GenomeLogMasterDO extends BaseLogMasterDO<GenomeLogMasterDO>
    */
 
   @Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_TA_GLOG_MASTER")
-  @Column(name = "TA_GLOG_MASTER")
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_TA_LOG_MASTER")
+  @Column(name = "TA_LOG_MASTER")
   @Override
   public Long getPk()
   {
