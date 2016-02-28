@@ -42,7 +42,7 @@ public class GenomeLogAttributeDO extends BaseLogAttributeDO<GenomeLogMasterDO>
   @Override
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_TA_LOG_ATTRIBUTE")
-  @Column(name = "BASE_LOG_ATTRIBUTE")
+  @Column(name = "TA_LOG_ATTRIBUTE")
   public Long getPk()
   {
     return pk;
