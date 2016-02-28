@@ -45,30 +45,6 @@ public class MgcLogBrokerMonitor extends LogBrokerMonitor
     return (menuBar);
   }
 
-  /**
-   * jfx
-   * 
-   * @param with
-   */
-  public void setWidth(double width)
-  {
-    //    swingNode.resize(width, swingNode.getLayoutY());
-    //    JFrame frame = getMainFrame();
-    //    int nwith = (int) width;
-    //    int nheight = frame.getHeight();
-    //    getMainFrame().setSize(nwith, nheight);
-  }
-
-  /**
-   * jfc
-   * 
-   * @param heigth
-   */
-  public void setHeight(double heigth)
-  {
-
-  }
-
   @Override
   protected JMenu createFileMenu()
   {

@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import de.micromata.genome.util.event.MgcEventRegistries;
 import de.micromata.genome.util.runtime.LocalSettings;
 import de.micromata.genome.util.runtime.LocalSettingsEnv;
+import de.micromata.genome.util.runtime.LocalSettingsService;
 import de.micromata.genome.util.runtime.config.LocalSettingsConfigModel;
 import de.micromata.genome.util.types.Pair;
 import de.micromata.genome.util.validation.ValMessage;
@@ -129,7 +130,7 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>exte
   public void startServer()
   {
 
-    LocalSettings.reset();
+    LocalSettingsService.reset();
     LocalSettingsEnv.reset();
     if (LocalSettings.localSettingsExists() == false) {
       loggingController.warn("GWiki is not configured.");

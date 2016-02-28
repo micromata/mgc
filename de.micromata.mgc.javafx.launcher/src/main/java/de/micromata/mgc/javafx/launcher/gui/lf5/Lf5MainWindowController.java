@@ -38,17 +38,23 @@ public class Lf5MainWindowController extends AbstractController<Object>
   {
     swingNode = new SwingNode()
     {
+      @Override
+      public boolean isResizable()
+      {
+        return true;
+      }
 
       @Override
       public void resize(double width, double height)
       {
-        System.out.println("SwingNode.resize(" + width + "," + height + ")");
+        //        System.out.println("SwingNode.resize(" + width + "," + height + ")");
         super.resize(width, height);
       }
 
     };
+
     createSwingContent(swingNode);
-    stage.setTitle("Swing in JavaFX");
+    stage.setTitle("L4J Viewer");
     contentPane.setMinHeight(getStage().getHeight() - 50);
     contentPane.setMinHeight(getStage().getWidth() - 50);
     //    contentPane.setPrefWidth(Double.MAX_VALUE);
@@ -57,18 +63,20 @@ public class Lf5MainWindowController extends AbstractController<Object>
     //    closeButton.setOnAction(event -> hide());
     CONTROLERINSTANCE = this;
     scene.widthProperty().addListener((owner, oldValue, newValue) -> {
-      System.out.println("Stage With changed: " + newValue);
+      //      System.out.println("Stage With changed: " + newValue);
       //      swingNode.minWidth(newValue.doubleValue());
       //      //      swingNode.prefHeight(width)
-      //      if (MONITORINSTANCE != null) {
-      //        MONITORINSTANCE.setWidth(newValue.doubleValue());
-      //      }
+      //      swingNode.autosize();
+      if (MONITORINSTANCE != null) {
+        //        MONITORINSTANCE.setWidth(newValue.doubleValue());
+      }
     });
     contentPane.prefWidthProperty().bind(scene.widthProperty());
     contentPane.prefHeightProperty().bind(scene.heightProperty());
 
     contentPane.widthProperty().addListener((owner, oldValue, newValue) -> {
-      System.out.println("With changed: " + newValue);
+      // swingNode.autosize();
+      //      System.out.println("With changed: " + newValue);
       //      contentPane.setMinWidth(newValue.doubleValue());
       //      if (MONITORINSTANCE != null) {
       //        MONITORINSTANCE.setWidth(newValue.doubleValue());
