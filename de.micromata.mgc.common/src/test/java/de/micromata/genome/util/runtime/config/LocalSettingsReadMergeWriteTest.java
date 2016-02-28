@@ -4,37 +4,20 @@ import java.io.File;
 
 import org.junit.Test;
 
-import de.micromata.genome.util.collections.OrderedProperties;
 import de.micromata.genome.util.runtime.LocalSettings;
-import de.micromata.genome.util.runtime.StdLocalSettingsLoader;
 
+/**
+ * 
+ * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
+ *
+ */
 public class LocalSettingsReadMergeWriteTest
 {
-  static class ExtLocalSettingsLoader extends StdLocalSettingsLoader
-  {
-    OrderedPropertiesWithComments origProps = new OrderedPropertiesWithComments();
-
-    public ExtLocalSettingsLoader(String localSettingsFile)
-    {
-      super(localSettingsFile, null, null);
-    }
-
-    @Override
-    protected OrderedProperties newProperties(boolean originalLocalSettingsFile)
-    {
-      if (originalLocalSettingsFile == true) {
-        return origProps;
-      }
-      return new OrderedPropertiesWithComments();
-    }
-
-  }
-
   @Test
   public void testIt()
   {
-    ExtLocalSettingsLoader loader = new ExtLocalSettingsLoader(
-        "./dev/extrc/test/properties/ls_with_comments1.properties");
+    ExtLocalSettingsLoader loader = new ExtLocalSettingsLoader();
+    loader.setLocalSettingsFileName("./dev/extrc/test/properties/ls_with_comments1.properties");
     LocalSettings localSettings = loader.loadSettings();
 
     MergingLocalSettingsWriter lswout = new MergingLocalSettingsWriter(loader.origProps);
@@ -42,6 +25,7 @@ public class LocalSettingsReadMergeWriteTest
     sec.put("a", "c");
     sec.put("c", "3", "New Comment");
     lswout.store(new File("./target/merged.properties"));
+    // check manual written file.
 
   }
 }
