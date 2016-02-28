@@ -37,7 +37,10 @@ public class StdLocalSettingsLoader implements LocalSettingsLoader
   private List<File> loadedFiles = new ArrayList<>();
 
   protected String localSettingsPrefixName = "local-settings";
-  protected String localSettingsFile;
+  protected String localSettingsFileName;
+
+  protected File workingDirectory = new File(".");
+
   Function<LocalSettingsLoader, LocalSettings> localSettingsFactory;
 
   public StdLocalSettingsLoader()
@@ -45,10 +48,10 @@ public class StdLocalSettingsLoader implements LocalSettingsLoader
 
   }
 
-  public StdLocalSettingsLoader(String localSettingsFile,
+  public StdLocalSettingsLoader(String localSettingsFileName,
       Function<LocalSettingsLoader, LocalSettings> localSettingsFactory, String prefix)
   {
-    this.localSettingsFile = localSettingsFile;
+    this.localSettingsFileName = localSettingsFileName;
     this.localSettingsFactory = localSettingsFactory;
     if (prefix != null) {
       this.localSettingsPrefixName = prefix;
@@ -56,33 +59,30 @@ public class StdLocalSettingsLoader implements LocalSettingsLoader
   }
 
   @Override
-  public String getLocalSettingsFile()
+  public String getLocalSettingsFileName()
   {
-    if (StringUtils.isEmpty(localSettingsFile) == false) {
-      return localSettingsFile;
+    if (StringUtils.isEmpty(localSettingsFileName) == false) {
+      return localSettingsFileName;
     }
-    localSettingsFile = System.getProperty("localsettings");
-    if (StringUtils.isEmpty(localSettingsFile) == true) {
-      localSettingsFile = localSettingsPrefixName + ".properties";
+    localSettingsFileName = System.getProperty("localsettings");
+    if (StringUtils.isEmpty(localSettingsFileName) == true) {
+      localSettingsFileName = getLocalSettingsPrefixName() + ".properties";
     }
-    return localSettingsFile;
+    return localSettingsFileName;
   }
 
   @Override
   public boolean localSettingsExists()
   {
-    String localSettingsFile = System.getProperty("localsettings");
-    if (StringUtils.isEmpty(localSettingsFile) == true) {
-      localSettingsFile = localSettingsPrefixName + ".properties";
-    }
-    return new File(localSettingsFile).exists();
+    File lsFile = new File(getLocalSettingsFileName());
+    return lsFile.exists();
   }
 
   @Override
   public LocalSettings loadSettings()
   {
     LocalSettings ls = newLocalSettings();
-    getLocalSettingsFile();
+    getLocalSettingsFileName();
     loadSettingsImpl(ls);
     return ls;
   }
@@ -98,7 +98,7 @@ public class StdLocalSettingsLoader implements LocalSettingsLoader
   public void loadSettingsImpl(LocalSettings ls)
   {
     //log.info("Loading localSettingsfile: " + new File(localSettingsFile).getAbsolutePath());
-    loadSettings(ls, localSettingsFile, true, true);
+    loadSettings(ls, getLocalSettingsFile(), ls.getMap(), true, true);
     loadOptionalDev(ls);
     loadSystemEnv(ls);
     loadSystemProperties(ls);
@@ -106,7 +106,8 @@ public class StdLocalSettingsLoader implements LocalSettingsLoader
 
   protected void loadOptionalDev(LocalSettings ls)
   {
-    loadSettings(ls, localSettingsPrefixName + "-dev.properties", false, false);
+    loadSettings(ls, new File(getWorkingDirectory(), localSettingsPrefixName + "-dev.properties"), ls.getMap(), false,
+        false);
   }
 
   protected void loadSystemEnv(LocalSettings ls)
@@ -128,39 +129,50 @@ public class StdLocalSettingsLoader implements LocalSettingsLoader
   }
 
   @Override
-  public boolean loadSettings(LocalSettings ls, String localSettingsFile, boolean originalLocalSettingsFile,
+  public boolean loadSettings(LocalSettings ls, File localSettingsFile, Map<String, String> target,
+      boolean originalLocalSettingsFile,
       boolean warn)
   {
-    File f = new File(localSettingsFile);
-    if (f.exists() == false) {
+    if (localSettingsFile.exists() == false) {
       if (warn == true) {
-        warns.add("Cannot find localsettings file: " + f.getAbsolutePath());
+        warns.add("Cannot find localsettings file: " + localSettingsFile.getAbsolutePath());
       }
       return false;
     }
     if (LOG.isDebugEnabled() == true) {
-      LOG.debug("Load localsettings: " + f.getAbsolutePath());
+      LOG.debug("Load localsettings: " + localSettingsFile.getAbsolutePath());
     }
     FileInputStream fin = null;
     try {
       OrderedProperties props = newProperties(originalLocalSettingsFile);
-      fin = new FileInputStream(f);
-      props.load(fin, new LocalSettingsIncludeReplacer(ls, f.getAbsoluteFile().getParentFile()));
+      fin = new FileInputStream(localSettingsFile);
+      props.load(fin, new LocalSettingsIncludeReplacer(ls, localSettingsFile.getAbsoluteFile().getParentFile()));
       for (String k : props.keySet()) {
-        ls.getMap().put(k, props.get(k));
+        target.put(k, props.get(k));
       }
     } catch (IOException ex) {
       throw new RuntimeIOException(ex);
     } finally {
       IOUtils.closeQuietly(fin);
     }
-    loadedFiles.add(f);
+    loadedFiles.add(localSettingsFile);
     return true;
   }
 
   protected OrderedProperties newProperties(boolean originalLocalSettingsFile)
   {
     return new OrderedProperties();
+  }
+
+  @Override
+  public File getWorkingDirectory()
+  {
+    return workingDirectory;
+  }
+
+  public void setWorkingDirectory(File woringDirectory)
+  {
+    this.workingDirectory = woringDirectory;
   }
 
   @Override
@@ -178,6 +190,16 @@ public class StdLocalSettingsLoader implements LocalSettingsLoader
   public String getLocalSettingsPrefixName()
   {
     return localSettingsPrefixName;
+  }
+
+  public void setLocalSettingsPrefixName(String localSettingsPrefixName)
+  {
+    this.localSettingsPrefixName = localSettingsPrefixName;
+  }
+
+  public void setLocalSettingsFileName(String localSettingsFileName)
+  {
+    this.localSettingsFileName = localSettingsFileName;
   }
 
 }

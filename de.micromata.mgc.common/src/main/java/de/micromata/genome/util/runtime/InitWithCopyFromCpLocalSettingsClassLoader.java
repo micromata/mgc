@@ -33,8 +33,7 @@ public class InitWithCopyFromCpLocalSettingsClassLoader implements Supplier<Loca
     if (loader.localSettingsExists() == true) {
       return loader;
     }
-    String file = loader.getLocalSettingsFile();
-    File f = new File(file);
+    File f = loader.getLocalSettingsFile();
     try {
       InputStream is = getClass().getClassLoader().getResourceAsStream(f.getName());
       if (is != null) {
@@ -43,7 +42,7 @@ public class InitWithCopyFromCpLocalSettingsClassLoader implements Supplier<Loca
       }
 
     } catch (IOException ex) {
-      LOG.error("Failure to write local settings file: " + file + ": " + ex.getMessage(), ex);
+      LOG.error("Failure to write local settings file: " + f.getAbsolutePath() + ": " + ex.getMessage(), ex);
     }
 
     return loader;

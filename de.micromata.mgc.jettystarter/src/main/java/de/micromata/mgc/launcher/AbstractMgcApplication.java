@@ -68,7 +68,7 @@ public abstract class AbstractMgcApplication<M extends LocalSettingsConfigModel>
   {
     LocalSettingsWriter writer = new LocalSettingsWriter();
     model.toProperties(writer);
-    File file = new File(LocalSettings.get().getLocalSettingsLoader().getLocalSettingsFile());
+    File file = new File(LocalSettings.get().getLocalSettingsLoader().getLocalSettingsFileName());
     writer.store(file);
   }
 

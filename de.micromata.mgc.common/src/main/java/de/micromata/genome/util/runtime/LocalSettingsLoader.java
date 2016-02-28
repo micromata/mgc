@@ -2,6 +2,7 @@ package de.micromata.genome.util.runtime;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A loader for loading one instance of a LocalSettings.
@@ -28,7 +29,8 @@ public interface LocalSettingsLoader
    * @param warn
    * @return
    */
-  boolean loadSettings(LocalSettings ls, String localSettingsFile, boolean originalLocalSettingsFile,
+  boolean loadSettings(LocalSettings ls, File localSettingsFile, Map<String, String> target,
+      boolean originalLocalSettingsFile,
       boolean warn);
 
   /**
@@ -38,7 +40,11 @@ public interface LocalSettingsLoader
    */
   boolean localSettingsExists();
 
-  String getLocalSettingsFile();
+  /**
+   * 
+   * @return
+   */
+  String getLocalSettingsFileName();
 
   /**
    * After loadSettings() filled with warnings
@@ -53,5 +59,17 @@ public interface LocalSettingsLoader
    * @return
    */
   List<File> getLoadedFiles();
+
+  /**
+   * Must return a valid directory used to find local settings files.
+   * 
+   * @return
+   */
+  File getWorkingDirectory();
+
+  default File getLocalSettingsFile()
+  {
+    return new File(getWorkingDirectory(), getLocalSettingsFileName());
+  }
 
 }

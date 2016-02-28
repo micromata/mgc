@@ -46,7 +46,7 @@ public class OrderedProperties extends ListOrderedMap<String, String>
      * @param properties the properties
      * @return if null, will not transfer to file/map.
      */
-    Pair<String, String> replace(Pair<String, String> keyValue, OrderedProperties properties);
+    Pair<String, String> replace(Pair<String, String> keyValue, Map<String, String> target);
   }
 
   /**
