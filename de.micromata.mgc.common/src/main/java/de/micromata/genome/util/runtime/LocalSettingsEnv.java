@@ -6,6 +6,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import javax.mail.Authenticator;
@@ -48,6 +49,14 @@ public class LocalSettingsEnv
    */
   private static final Logger log = Logger.getLogger(LocalSettingsEnv.class);
 
+  public static Supplier<LocalSettingsEnv> localSettingsEnvCreateor = () -> {
+    return LocalSettingsEnv.createJndiLocalSettingsEnv();
+  };
+  /**
+   * Factory method to create new local settings evn.
+   */
+  public static Function<Context, LocalSettingsEnv> localSettingsEnvSupplier = (context) -> new LocalSettingsEnv(
+      context);
   public static Supplier<BasicDataSource> dataSourceSuplier = () -> new BasicDataSource();
   /**
    * The local settings.
@@ -96,7 +105,7 @@ public class LocalSettingsEnv
     if (INSTANCE != null) {
       return INSTANCE;
     }
-    INSTANCE = createJndiLocalSettingsEnv();
+    INSTANCE = localSettingsEnvCreateor.get();
     return INSTANCE;
   }
 
@@ -120,7 +129,7 @@ public class LocalSettingsEnv
         initialContext = initialContextFactory.getInitialContext(env);
         contextBuilder.activate();
       }
-      LocalSettingsEnv localSettingsEnv = new LocalSettingsEnv(initialContext);
+      LocalSettingsEnv localSettingsEnv = localSettingsEnvSupplier.apply(initialContext);
       return localSettingsEnv;
     } catch (NamingException ex) {
       throw new RuntimeException(ex);

@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,8 +27,6 @@ import de.micromata.genome.util.runtime.RuntimeIOException;
  */
 public class LocalSettingsWriter
 {
-  String headerComment;
-  Map<String, String> allEntries = new HashMap<>();
 
   public static class LocalSetingsEntry
   {
@@ -54,7 +53,11 @@ public class LocalSettingsWriter
     }
   }
 
-  List<LocalSettingsSection> sections = new ArrayList<>();
+  protected Charset charset = Charsets.ISO_8859_1;
+  protected String headerComment;
+  protected Map<String, String> allEntries = new HashMap<>();
+
+  protected List<LocalSettingsSection> sections = new ArrayList<>();
 
   private LocalSettingsSection currentSection()
   {
@@ -120,21 +123,41 @@ public class LocalSettingsWriter
 
   public void store(OutputStream out) throws RuntimeIOException
   {
-    try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out, Charsets.ISO_8859_1))) {
-      if (StringUtils.isNotBlank(headerComment) == true) {
-        PropertiesReadWriter.writeComments(writer, headerComment);
-        writer.newLine();
-        writer.newLine();
-      }
-      for (LocalSettingsSection section : sections) {
-        storeSection(writer, section);
-      }
+    try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out, charset))) {
+      store(writer);
     } catch (IOException ex) {
       throw new RuntimeIOException(ex);
     }
   }
 
-  private void storeSection(BufferedWriter writer, LocalSettingsSection section) throws IOException
+  public void store(BufferedWriter writer) throws RuntimeIOException
+  {
+    try {
+      storeFileComments(writer);
+      storeFileSections(writer);
+    } catch (IOException ex) {
+      throw new RuntimeIOException(ex);
+    }
+
+  }
+
+  protected void storeFileComments(BufferedWriter writer) throws IOException
+  {
+    if (StringUtils.isNotBlank(headerComment) == true) {
+      PropertiesReadWriter.writeComments(writer, headerComment);
+      writer.newLine();
+      writer.newLine();
+    }
+  }
+
+  protected void storeFileSections(BufferedWriter writer) throws IOException
+  {
+    for (LocalSettingsSection section : sections) {
+      storeSection(writer, section);
+    }
+  }
+
+  protected void storeSection(BufferedWriter writer, LocalSettingsSection section) throws IOException
   {
     if (StringUtils.isNotBlank(section.comment) == true) {
       writer.newLine();
@@ -142,14 +165,25 @@ public class LocalSettingsWriter
       PropertiesReadWriter.writeComments(writer, section.comment);
     }
     for (LocalSetingsEntry entry : section.entries) {
-      if (StringUtils.isNotBlank(entry.comment) == true) {
-        writer.newLine();
-        PropertiesReadWriter.writeComments(writer, entry.comment);
-      }
-      String enkey = PropertiesReadWriter.saveConvert(entry.key, true, true, true);
-      String envalue = PropertiesReadWriter.saveConvert(entry.value, false, true, false);
-      writer.write(enkey + "=" + envalue);
-      writer.newLine();
+      storeLocalSettingsEntry(writer, entry);
     }
   }
+
+  protected void storeLocalSettingsEntry(BufferedWriter writer, LocalSetingsEntry entry) throws IOException
+  {
+    if (StringUtils.isNotBlank(entry.comment) == true) {
+      writer.newLine();
+      PropertiesReadWriter.writeComments(writer, entry.comment);
+    }
+    writeEntryKeyValue(writer, entry.key, entry.value);
+  }
+
+  protected void writeEntryKeyValue(BufferedWriter writer, String key, String value) throws IOException
+  {
+    String enkey = PropertiesReadWriter.saveConvert(key, true, true, true);
+    String envalue = PropertiesReadWriter.saveConvert(value, false, true, false);
+    writer.write(enkey + "=" + envalue);
+    writer.newLine();
+  }
+
 }

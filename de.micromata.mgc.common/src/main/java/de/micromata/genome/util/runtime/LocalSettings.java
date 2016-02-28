@@ -1,19 +1,14 @@
 package de.micromata.genome.util.runtime;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.function.Supplier;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 
-import de.micromata.genome.util.collections.OrderedProperties;
 import de.micromata.genome.util.text.PlaceHolderReplacer;
 import de.micromata.genome.util.types.Pair;
 
@@ -25,15 +20,14 @@ import de.micromata.genome.util.types.Pair;
  * @author roger
  * 
  */
-public class LocalSettings
+public class LocalSettings implements LocalSettingsService
 {
 
-  /**
-   * The Constant log.
-   */
-  private static final Logger log = Logger.getLogger(LocalSettings.class);
-
   public static String localSettingsPrefixName = "local-settings";
+  /**
+   * Factory to load LocalSettings
+   */
+  public static Supplier<LocalSettingsLoader> localSettingsLoaderFactory = () -> new StdLocalSettingsLoader();
 
   /**
    * The instance.
@@ -44,30 +38,41 @@ public class LocalSettings
    * Gets the.
    * 
    * @return the local settings
+   * @deprecated use LocalSettingsService.get()
    */
+
+  @Deprecated
   static public LocalSettings get()
+  {
+    return getImpl();
+  }
+
+  static protected LocalSettings getImpl()
   {
     if (INSTANCE != null) {
       return INSTANCE;
     }
-    INSTANCE = new LocalSettings();
-    INSTANCE.init();
+    INSTANCE = localSettingsLoaderFactory.get().loadSettings();
     return INSTANCE;
   }
 
-  public static void reset()
+  protected static void resetImpl()
   {
     INSTANCE = null;
   }
 
   /**
-   * The local settings file.
+   * Check if local settings file exists.;
+   * 
+   * @return
    */
-  private String localSettingsFile;
+  public static boolean localSettingsExists()
+  {
+    return localSettingsLoaderFactory.get().localSettingsExists();
+  }
 
-  private List<File> loadedFiles = new ArrayList<>();
+  protected LocalSettingsLoader localSettingsLoader;
 
-  private List<String> warns = new ArrayList<>();
   /**
    * The map.
    */
@@ -78,6 +83,18 @@ public class LocalSettings
    */
   private static Map<String, String> defaultValues = new HashMap<String, String>();
 
+  public LocalSettings(LocalSettingsLoader localSettingsLoader)
+  {
+    this.localSettingsLoader = localSettingsLoader;
+  }
+
+  @Override
+  public LocalSettingsLoader getLocalSettingsLoader()
+  {
+    return localSettingsLoader;
+  }
+
+  // TODO RK do somewhere
   static {
     defaultValues.put("env.ApplicationEnvironment", "SERVER");
     defaultValues.put("env.ApplicationDevelopmentModus", "DEV");
@@ -91,42 +108,12 @@ public class LocalSettings
   }
 
   /**
-   * Instantiates a new local settings.
-   */
-  public LocalSettings()
-  {
-
-  }
-
-  /**
-   * alias to get().
-   * 
-   * @param key the key
-   * @return the property
-   */
-  public String getProperty(String key)
-  {
-    return get(key);
-  }
-
-  /**
-   * Alias to get(...)
-   * 
-   * @param key the key
-   * @param defaultValue the default value
-   * @return the property
-   */
-  public String getProperty(String key, String defaultValue)
-  {
-    return get(key, defaultValue);
-  }
-
-  /**
    * Gets the.
    * 
    * @param key the key
    * @return null if not in map
    */
+  @Override
   public String get(String key)
   {
     String val = map.get(key);
@@ -146,9 +133,10 @@ public class LocalSettings
    * @param defaultValue the default value
    * @return the string
    */
+  @Override
   public String get(String key, String defaultValue)
   {
-    if (map.containsKey(key) == false) {
+    if (containsKey(key) == false) {
       return defaultValue;
     }
     return get(key);
@@ -161,9 +149,10 @@ public class LocalSettings
    * @param defaultValue the default value
    * @return the int value
    */
+  @Override
   public int getIntValue(String key, int defaultValue)
   {
-    if (map.containsKey(key) == false) {
+    if (containsKey(key) == false) {
       return defaultValue;
     }
     String v = get(key);
@@ -177,9 +166,10 @@ public class LocalSettings
    * @param defaultValue the default value
    * @return the long value
    */
+  @Override
   public long getLongValue(String key, long defaultValue)
   {
-    if (map.containsKey(key) == false) {
+    if (containsKey(key) == false) {
       return defaultValue;
     }
     String v = get(key);
@@ -193,9 +183,10 @@ public class LocalSettings
    * @param defaultValue the default value
    * @return the boolean value
    */
+  @Override
   public boolean getBooleanValue(String key, boolean defaultValue)
   {
-    if (map.containsKey(key) == false) {
+    if (containsKey(key) == false) {
       return defaultValue;
     }
     String v = get(key);
@@ -208,6 +199,7 @@ public class LocalSettings
    * @param key the key
    * @return true, if successful
    */
+  @Override
   public boolean containsKey(String key)
   {
     return map.containsKey(key);
@@ -219,6 +211,7 @@ public class LocalSettings
    * @param prefix the prefix
    * @return rest of key -> value
    */
+  @Override
   public List<Pair<String, String>> getEntriesWithPrefix(String prefix)
   {
     List<Pair<String, String>> ret = new ArrayList<Pair<String, String>>();
@@ -237,6 +230,7 @@ public class LocalSettings
    * @param end c
    * @return finds a.b.x when a.b.x.c exists
    */
+  @Override
   public List<String> getKeysPrefixWithInfix(String start, String end)
   {
     List<String> ret = new ArrayList<String>();
@@ -256,6 +250,7 @@ public class LocalSettings
    * @param value the value
    * @return the string
    */
+  @Override
   public String resolve(String value)
   {
     if (value == null) {
@@ -264,186 +259,17 @@ public class LocalSettings
     return PlaceHolderReplacer.resolveRecursiveReplaceDollarVars(value, map);
   }
 
-  public String getGenomeHome()
-  {
-    return get("genome.home");
-  }
-
-  public String getApplicationEnvironment()
-  {
-    return get("env.ApplicationEnvironment");
-  }
-
-  public String getApplicationDevelopmentModus()
-  {
-    return get("env.ApplicationDevelopmentModus");
-  }
-
-  public String getShortApplicationName()
-  {
-    return get("env.ShortApplicationName");
-  }
-
-  public String getDatabaseProvider()
-  {
-    return get("database.databaseProvider");
-  }
-
-  public String getPublicUrl()
-  {
-    return get("cfg.public.url");
-
-  }
-
-  public String getTestApplicationContextXml()
-  {
-    return get("test.TestApplicationContextXml");
-  }
-
-  public String getTestLog4JProperties()
-  {
-    return get("test.log4jproperties");
-  }
-
-  /**
-   * Inits the.
-   */
-  public void init()
-  {
-    localSettingsFile = System.getProperty("localsettings");
-    if (StringUtils.isEmpty(localSettingsFile) == true) {
-      localSettingsFile = localSettingsPrefixName + ".properties";
-    }
-    loadSettings();
-  }
-
-  /**
-   * Load settings.
-   */
-  public void loadSettings()
-  {
-    //log.info("Loading localSettingsfile: " + new File(localSettingsFile).getAbsolutePath());
-    loadSettings(localSettingsFile, true);
-
-    loadSettings(localSettingsPrefixName + "-dev.properties", false);
-    Map<String, String> envmap = System.getenv();
-
-    for (Map.Entry<String, String> me : envmap.entrySet()) {
-      map.put(me.getKey(), me.getValue());
-    }
-    Properties props = System.getProperties();
-    for (Object k : props.keySet()) {
-      String key = (String) k;
-      map.put(key, props.getProperty(key));
-      //      if (log.isDebugEnabled() == true) {
-      //        log.debug("LC set from env: " + key + "=" + props.getProperty(key));
-      //      }
-    }
-  }
-
-  /**
-   * Check if local settings file exists.;
-   * 
-   * @return
-   */
-  public static boolean localSettingsExists()
-  {
-    String localSettingsFile = System.getProperty("localsettings");
-    if (StringUtils.isEmpty(localSettingsFile) == true) {
-      localSettingsFile = localSettingsPrefixName + ".properties";
-    }
-    return new File(localSettingsFile).exists();
-  }
-
-  /**
-   * Load settings.
-   *
-   * @param localSettingsFile the local settings file
-   * @param warn the warn
-   * @return true, if successful
-   */
-  protected boolean loadSettings(String localSettingsFile, boolean warn)
-  {
-    File f = new File(localSettingsFile);
-    if (f.exists() == false) {
-      if (warn == true) {
-        warns.add("Cannot find localsettings file: " + f.getAbsolutePath());
-      }
-      return false;
-    }
-    if (log.isDebugEnabled() == true) {
-      log.debug("Load localsettings: " + f.getAbsolutePath());
-    }
-    FileInputStream fin = null;
-    try {
-      OrderedProperties props = new OrderedProperties();
-      fin = new FileInputStream(f);
-      props.load(fin, new IncludeReplacer(f.getAbsoluteFile().getParentFile()));
-      for (String k : props.keySet()) {
-        map.put(k, props.get(k));
-      }
-    } catch (IOException ex) {
-      throw new RuntimeIOException(ex);
-    } finally {
-      IOUtils.closeQuietly(fin);
-    }
-    loadedFiles.add(f);
-    return true;
-  }
-
   /**
    * Dump into map.
    *
    * @param map the map
    */
-  public void dumpIntoMap(Map<String, String> map)
+  @Override
+  public void copyInto(Map<String, String> map)
   {
     for (String key : getMap().keySet()) {
       map.put(key, get(key));
     }
-  }
-
-  /**
-   * The Class IncludeReplacer.
-   */
-  private class IncludeReplacer implements OrderedProperties.KeyValueReplacer
-  {
-
-    /**
-     * The load dir.
-     */
-    File loadDir;
-
-    /**
-     * Instantiates a new include replacer.
-     * 
-     * @param loadDir the load dir
-     */
-    public IncludeReplacer(File loadDir)
-    {
-      this.loadDir = loadDir;
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     */
-
-    @Override
-    public Pair<String, String> replace(Pair<String, String> keyValue, OrderedProperties properties)
-    {
-      if (keyValue.getKey().equals("include") == true) {
-        File tf = new File(loadDir, keyValue.getSecond());
-        loadSettings(tf.getAbsolutePath(), true);
-        return null;
-      }
-      if (keyValue.getValue().contains("${LOCALSETTINGSDIR}") == true) {
-        String value = StringUtils.replace(keyValue.getValue(), "${LOCALSETTINGSDIR}", loadDir.getAbsolutePath());
-        keyValue.setValue(value);
-      }
-      return keyValue;
-    }
-
   }
 
   /**
@@ -460,36 +286,7 @@ public class LocalSettings
     return ret;
   }
 
-  /**
-   * Call this after loading local settings and initialized logging.
-   */
-  public void logloadedFiles()
-  {
-    for (String warn : warns) {
-      log.warn(warn);
-    }
-    if (log.isInfoEnabled() == false) {
-      return;
-    }
-    StringBuilder sb = new StringBuilder();
-    sb.append("Loaded localsettings: ");
-    for (File lf : loadedFiles) {
-      sb.append(lf.getAbsolutePath()).append(", ");
-    }
-    log.info(sb.toString());
-
-  }
-
-  public String getLocalSettingsFile()
-  {
-    return localSettingsFile;
-  }
-
-  public void setLocalSettingsFile(String localSettingsFile)
-  {
-    this.localSettingsFile = localSettingsFile;
-  }
-
+  @Override
   public Map<String, String> getMap()
   {
     return map;
@@ -498,6 +295,55 @@ public class LocalSettings
   public void setMap(Map<String, String> map)
   {
     this.map = map;
+  }
+
+  @Deprecated
+  public String getGenomeHome()
+  {
+    return get("genome.home");
+  }
+
+  @Deprecated
+  public String getApplicationEnvironment()
+  {
+    return get("env.ApplicationEnvironment");
+  }
+
+  @Deprecated
+  public String getApplicationDevelopmentModus()
+  {
+    return get("env.ApplicationDevelopmentModus");
+  }
+
+  @Deprecated
+  public String getShortApplicationName()
+  {
+    return get("env.ShortApplicationName");
+  }
+
+  @Deprecated
+  public String getDatabaseProvider()
+  {
+    return get("database.databaseProvider");
+  }
+
+  @Deprecated
+  public String getPublicUrl()
+  {
+    return get("cfg.public.url");
+
+  }
+
+  @Deprecated
+  public String getTestApplicationContextXml()
+  {
+    return get("test.TestApplicationContextXml");
+  }
+
+  @Deprecated
+  public String getTestLog4JProperties()
+  {
+    return get("test.log4jproperties");
   }
 
 }

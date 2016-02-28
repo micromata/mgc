@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.Reader;
 import java.io.Writer;
 import java.util.Date;
 import java.util.Map;
@@ -74,7 +73,7 @@ public class OrderedProperties extends ListOrderedMap<String, String>
    */
   public void load(InputStream inStream) throws RuntimeIOException
   {
-    load0(new LineReader(inStream), null);
+    load0(new OldPropertiesLineReader(inStream), null);
   }
 
   /**
@@ -86,7 +85,7 @@ public class OrderedProperties extends ListOrderedMap<String, String>
    */
   public void load(InputStream inStream, KeyValueReplacer replacer) throws RuntimeIOException
   {
-    load0(new LineReader(inStream), replacer);
+    load0(new OldPropertiesLineReader(inStream), replacer);
   }
 
   /**
@@ -96,7 +95,7 @@ public class OrderedProperties extends ListOrderedMap<String, String>
    * @param replacer the replacer
    * @throws RuntimeIOException the runtime io exception
    */
-  private void load0(LineReader lr, KeyValueReplacer replacer) throws RuntimeIOException
+  private void load0(OldPropertiesLineReader lr, KeyValueReplacer replacer) throws RuntimeIOException
   {
     char[] convtBuf = new char[1024];
     int limit;
@@ -112,7 +111,6 @@ public class OrderedProperties extends ListOrderedMap<String, String>
         valueStart = limit;
         hasSep = false;
 
-        //System.out.println("line=<" + new String(lineBuf, 0, limit) + ">");
         precedingBackslash = false;
         while (keyLen < limit) {
           c = lr.lineBuf[keyLen];
@@ -143,16 +141,11 @@ public class OrderedProperties extends ListOrderedMap<String, String>
           }
           valueStart++;
         }
-        String key = PropertiesReadWriter.loadConvert(lr.lineBuf, 0, keyLen, convtBuf);
-        String value = PropertiesReadWriter.loadConvert(lr.lineBuf, valueStart, limit - valueStart, convtBuf);
+        String key = loadConvert(lr.lineBuf, 0, keyLen, convtBuf);
+        String value = loadConvert(lr.lineBuf, valueStart, limit - valueStart, convtBuf);
 
         Pair<String, String> p = Pair.make(key, value);
-        if (replacer != null) {
-          p = replacer.replace(p, this);
-        }
-        if (p != null) {
-          put(p.getKey(), p.getValue());
-        }
+        addKeyValue(p, replacer);
 
       }
     } catch (IOException ex) {
@@ -160,185 +153,27 @@ public class OrderedProperties extends ListOrderedMap<String, String>
     }
   }
 
-  /**
-   * The Class LineReader.
-   */
-  /*
-   * Read in a "logical line" from an InputStream/Reader, skip all comment and blank lines and filter out those leading
-   * whitespace characters ( , and ) from the beginning of a "natural line". Method returns the char length of the
-   * "logical line" and stores the line in "lineBuf".
-   */
-  class LineReader
+  protected void addKeyValue(Pair<String, String> keyValue, KeyValueReplacer replacer)
   {
-
-    /**
-     * Instantiates a new line reader.
-     *
-     * @param inStream the in stream
-     */
-    public LineReader(InputStream inStream)
-    {
-      this.inStream = inStream;
-      inByteBuf = new byte[8192];
+    if (replacer != null) {
+      keyValue = replacer.replace(keyValue, this);
     }
-
-    /**
-     * Instantiates a new line reader.
-     *
-     * @param reader the reader
-     */
-    public LineReader(Reader reader)
-    {
-      this.reader = reader;
-      inCharBuf = new char[8192];
+    if (keyValue != null) {
+      addKeyValue(keyValue.getKey(), keyValue.getValue());
     }
+  }
 
-    /**
-     * The in byte buf.
-     */
-    byte[] inByteBuf;
+  protected void addKeyValue(String key, String value)
+  {
+    put(key, value);
+  }
 
-    /**
-     * The in char buf.
-     */
-    char[] inCharBuf;
-
-    /**
-     * The line buf.
-     */
-    char[] lineBuf = new char[1024];
-
-    /**
-     * The in limit.
-     */
-    int inLimit = 0;
-
-    /**
-     * The in off.
-     */
-    int inOff = 0;
-
-    /**
-     * The in stream.
-     */
-    InputStream inStream;
-
-    /**
-     * The reader.
-     */
-    Reader reader;
-
-    /**
-     * Read line.
-     *
-     * @return the int
-     * @throws IOException Signals that an I/O exception has occurred.
-     */
-    int readLine() throws IOException
-    {
-      int len = 0;
-      char c = 0;
-
-      boolean skipWhiteSpace = true;
-      boolean isCommentLine = false;
-      boolean isNewLine = true;
-      boolean appendedLineBegin = false;
-      boolean precedingBackslash = false;
-      boolean skipLF = false;
-
-      while (true) {
-        if (inOff >= inLimit) {
-          inLimit = (inStream == null) ? reader.read(inCharBuf)
-              : inStream.read(inByteBuf);
-          inOff = 0;
-          if (inLimit <= 0) {
-            if (len == 0 || isCommentLine) {
-              return -1;
-            }
-            return len;
-          }
-        }
-        if (inStream != null) {
-          //The line below is equivalent to calling a
-          //ISO8859-1 decoder.
-          c = (char) (0xff & inByteBuf[inOff++]);
-        } else {
-          c = inCharBuf[inOff++];
-        }
-        if (skipLF) {
-          skipLF = false;
-          if (c == '\n') {
-            continue;
-          }
-        }
-        if (skipWhiteSpace) {
-          if (c == ' ' || c == '\t' || c == '\f') {
-            continue;
-          }
-          if (!appendedLineBegin && (c == '\r' || c == '\n')) {
-            continue;
-          }
-          skipWhiteSpace = false;
-          appendedLineBegin = false;
-        }
-        if (isNewLine) {
-          isNewLine = false;
-          if (c == '#' || c == '!') {
-            isCommentLine = true;
-            continue;
-          }
-        }
-
-        if (c != '\n' && c != '\r') {
-          lineBuf[len++] = c;
-          if (len == lineBuf.length) {
-            int newLength = lineBuf.length * 2;
-            if (newLength < 0) {
-              newLength = Integer.MAX_VALUE;
-            }
-            char[] buf = new char[newLength];
-            System.arraycopy(lineBuf, 0, buf, 0, lineBuf.length);
-            lineBuf = buf;
-          }
-          //flip the preceding backslash flag
-          if (c == '\\') {
-            precedingBackslash = !precedingBackslash;
-          } else {
-            precedingBackslash = false;
-          }
-        } else {
-          // reached EOL
-          if (isCommentLine || len == 0) {
-            isCommentLine = false;
-            isNewLine = true;
-            skipWhiteSpace = true;
-            len = 0;
-            continue;
-          }
-          if (inOff >= inLimit) {
-            inLimit = (inStream == null)
-                ? reader.read(inCharBuf)
-                : inStream.read(inByteBuf);
-            inOff = 0;
-            if (inLimit <= 0) {
-              return len;
-            }
-          }
-          if (precedingBackslash) {
-            len -= 1;
-            //skip the leading whitespace characters in following line
-            skipWhiteSpace = true;
-            appendedLineBegin = true;
-            precedingBackslash = false;
-            if (c == '\r') {
-              skipLF = true;
-            }
-          } else {
-            return len;
-          }
-        }
-      }
-    }
+  /*
+   * Converts encoded &#92;uxxxx to unicode chars and changes special saved chars to their original forms
+   */
+  protected String loadConvert(char[] in, int off, int len, char[] convtBuf)
+  {
+    return PropertiesReadWriter.loadConvert(in, off, len, convtBuf);
   }
 
   /**
