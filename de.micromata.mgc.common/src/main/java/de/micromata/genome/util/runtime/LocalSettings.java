@@ -1,5 +1,6 @@
 package de.micromata.genome.util.runtime;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.Properties;
 import java.util.function.Supplier;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 import de.micromata.genome.util.text.PlaceHolderReplacer;
 import de.micromata.genome.util.types.Pair;
@@ -23,7 +25,8 @@ import de.micromata.genome.util.types.Pair;
 public class LocalSettings implements LocalSettingsService
 {
 
-  public static String localSettingsPrefixName = "local-settings";
+  private static final Logger LOG = Logger.getLogger(LocalSettings.class);
+
   /**
    * Factory to load LocalSettings
    */
@@ -295,6 +298,26 @@ public class LocalSettings implements LocalSettingsService
   public void setMap(Map<String, String> map)
   {
     this.map = map;
+  }
+
+  /**
+   * Call this after loading local settings and initialized logging.
+   */
+  public void logloadedFiles()
+  {
+    for (String warn : localSettingsLoader.getWarns()) {
+      LOG.warn(warn);
+    }
+    if (LOG.isInfoEnabled() == false) {
+      return;
+    }
+    StringBuilder sb = new StringBuilder();
+    sb.append("Loaded localsettings: ");
+    for (File lf : localSettingsLoader.getLoadedFiles()) {
+      sb.append(lf.getAbsolutePath()).append(", ");
+    }
+    LOG.info(sb.toString());
+
   }
 
   @Deprecated
