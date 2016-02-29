@@ -3,6 +3,11 @@ package de.micromata.genome.logging.spi.ifiles;
 import java.io.IOException;
 import java.io.OutputStream;
 
+/**
+ * 
+ * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
+ *
+ */
 public class PosTrackingOutputStream extends OutputStream
 {
   long position = 0L;
