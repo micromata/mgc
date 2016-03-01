@@ -17,9 +17,12 @@ import org.apache.commons.lang.StringUtils;
 import groovy.json.internal.Charsets;
 
 /**
+ * 
+ * Keep track of all indexed log files.
+ * 
  * Format:
  * 
- * fileType, fileVersion, writeoffset, counter, [counter,filename]*
+ * fileType, fileVersion, writeoffset, counter, [counter,mindate, maxdate, filename]*
  * 
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
