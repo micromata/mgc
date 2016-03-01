@@ -3,12 +3,8 @@ package de.micromata.genome.logging.spi.ifiles;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
@@ -34,6 +30,7 @@ public class IndexFileLoggingImpl extends BaseLogging
   private String baseFileName;
   private long sizeLimit = 50 * 1024 * 1024;
   private IndexedWriter currentWriter;
+  protected IndexDirectory indexDirectory;
 
   public IndexFileLoggingImpl()
   {
@@ -59,7 +56,9 @@ public class IndexFileLoggingImpl extends BaseLogging
   public void initialize()
   {
     try {
+      indexDirectory = IndexDirectory.open(logDir, baseFileName);
       currentWriter = IndexedWriter.openWriter(this);
+
     } catch (IOException ex) {
       throw new RuntimeIOException(ex);
     }
@@ -69,6 +68,7 @@ public class IndexFileLoggingImpl extends BaseLogging
       public void run()
       {
         try {
+          indexDirectory.close();
           currentWriter.close();
         } catch (Exception ex) {
           ex.printStackTrace();
@@ -113,17 +113,19 @@ public class IndexFileLoggingImpl extends BaseLogging
     if (candiates.isEmpty() == true) {
       return;
     }
-    List<Pair<String, String>> normAttributes = new ArrayList<>(logAttributes);
-    for (Pair<String, String> pa : logAttributes) {
-      normAttributes.add(Pair.make(IndexHeader.getNormalizedHeaderName(pa.getFirst()), pa.getSecond()));
+    List<Pair<String, String>> normAttributes = new ArrayList<>();
+
+    if (logAttributes != null) {
+      for (Pair<String, String> pa : logAttributes) {
+        normAttributes.add(Pair.make(IndexHeader.getNormalizedHeaderName(pa.getFirst()), pa.getSecond()));
+      }
     }
     for (Pair<File, File> idxLog : candiates) {
-      try {
-        IndexedReader idxreader = new IndexedReader(this, idxLog.getSecond(), idxLog.getFirst());
+      try (IndexedReader idxreader = new IndexedReader(this, idxLog.getSecond(), idxLog.getFirst())) {
         idxreader.selectLogsImpl(start, end, loglevel, category, msg, normAttributes, startRow, maxRow, orderBy,
             masterOnly, callback);
       } catch (IOException ex) {
-
+        // TODO RK ex
       }
 
     }
@@ -139,53 +141,21 @@ public class IndexFileLoggingImpl extends BaseLogging
 
   private List<Pair<File, File>> getCandiates(Timestamp start, Timestamp end)
   {
-    File[] result = getLogDir().listFiles((dir, file) -> {
-      if (file.startsWith(getBaseFileName()) == true
-          && (file.endsWith(".log") == true || file.endsWith(".idx") == true)) {
-        return true;
-      }
-      return false;
-    });
     List<Pair<File, File>> ret = new ArrayList<>();
-    TreeMap<Long, Pair<File, File>> byDate = new TreeMap<>();
-    for (File f : result) {
-      long date = getDateFromFileName(f);
-
-      byDate.putIfAbsent(date, new Pair<File, File>());
-      if (f.getName().endsWith(".idx") == true) {
-        byDate.get(date).setFirst(f);
-      } else {
-        byDate.get(date).setSecond(f);
-      }
-    }
-
-    for (Map.Entry<Long, Pair<File, File>> me : byDate.entrySet()) {
-      if (start != null && start.getTime() < me.getKey()) {
+    List<String> names = indexDirectory.getLogFileCandiates(start, end);
+    for (String name : names) {
+      File idx = new File(logDir, name + ".idx");
+      if (idx.exists() == false) {
         continue;
       }
-      if (end != null && end.getTime() > me.getKey()) {
-        break;
+      File log = new File(logDir, name + ".log");
+      if (log.exists() == false) {
+        continue;
       }
-      ret.add(me.getValue());
+      ret.add(Pair.make(idx, log));
     }
     return ret;
 
-  }
-
-  private long getDateFromFileName(File f)
-  {
-    String name = f.getName();
-    name = name.substring(0, name.length() - 4); // suffix 
-    name = name.substring(getBaseFileName().length());
-    if (name.length() < IndexedWriter.logFileDateFormatString.length()) {
-      return 0;
-    }
-    try {
-      Date date = IndexedWriter.logFileDateFormat.get().parse(name);
-      return date.getTime();
-    } catch (ParseException ex) {
-      return 0;
-    }
   }
 
   @Override

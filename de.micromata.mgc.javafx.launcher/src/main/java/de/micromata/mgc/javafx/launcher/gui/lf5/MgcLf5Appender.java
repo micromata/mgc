@@ -7,13 +7,24 @@ import org.apache.log4j.lf5.LogLevelFormatException;
 import org.apache.log4j.spi.LocationInfo;
 import org.apache.log4j.spi.LoggingEvent;
 
+/**
+ * 
+ * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
+ *
+ */
 public class MgcLf5Appender extends AppenderSkeleton
 {
+  public static boolean initialized = false;
+
+  public MgcLf5Appender()
+  {
+    initialized = true;
+  }
 
   @Override
   public void close()
   {
-
+    initialized = false;
   }
 
   @Override

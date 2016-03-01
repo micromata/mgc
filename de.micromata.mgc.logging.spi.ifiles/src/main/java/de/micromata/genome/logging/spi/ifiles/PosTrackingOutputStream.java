@@ -10,7 +10,7 @@ import java.io.OutputStream;
  */
 public class PosTrackingOutputStream extends OutputStream
 {
-  long position = 0L;
+  int position = 0;
   private OutputStream nested;
 
   public PosTrackingOutputStream(OutputStream other)
@@ -45,18 +45,23 @@ public class PosTrackingOutputStream extends OutputStream
     nested.flush();
   }
 
+  public void flushToBackend() throws IOException
+  {
+    nested.flush();
+  }
+
   @Override
   public void close() throws IOException
   {
     nested.close();
   }
 
-  public long getPosition()
+  public int getPosition()
   {
     return position;
   }
 
-  public void setPosition(long position)
+  public void setPosition(int position)
   {
     this.position = position;
   }

@@ -21,6 +21,7 @@ import de.micromata.mgc.javafx.launcher.MgcApplicationStartStopToEventListener;
 import de.micromata.mgc.javafx.launcher.MgcLauncher;
 import de.micromata.mgc.javafx.launcher.MgcLauncherEvent;
 import de.micromata.mgc.javafx.launcher.gui.lf5.Lf5MainWindowController;
+import de.micromata.mgc.javafx.launcher.gui.lf5.MgcLf5Appender;
 import de.micromata.mgc.javafx.logging.LoggingController;
 import de.micromata.mgc.launcher.MgcApplication;
 import javafx.application.Platform;
@@ -31,6 +32,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
@@ -212,6 +215,21 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>exte
   @FXML
   private void openLogLF5(ActionEvent event)
   {
+
+    if (MgcLf5Appender.initialized == false) {
+      Alert alert = new Alert(AlertType.WARNING);
+      alert.setTitle("Log4J Viewer");
+      alert.setHeaderText("No MgcLf5Appender found");
+      alert.setContentText(
+          "To activate Logs to shown in the LF5 window, you have to register the Appender in the log4j.properties configuration:\n"
+              + "\n"
+              + "Sample:\n"
+              + "log4j.rootCategory=DEBUG, A1, F1, LF5\n"
+              + "...\n"
+              + "log4j.appeender.LF5.Threshold=INFO\r\n"
+              + "log4j.appender.LF5=de.micromata.mgc.javafx.launcher.gui.lf5.MgcLf5Appender");
+      alert.showAndWait();
+    }
     if (Lf5MainWindowController.CONTROLERINSTANCE != null) {
       Lf5MainWindowController.CONTROLERINSTANCE.show();
       return;

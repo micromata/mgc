@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -18,22 +18,28 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Locale;
 
+import org.apache.commons.io.Charsets;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 
 import de.micromata.genome.logging.LogAttribute;
 import de.micromata.genome.logging.LogAttributeType;
 import de.micromata.genome.logging.LogWriteEntry;
-import de.micromata.genome.logging.spi.ifiles.IndexHeader.StdSearchFields;
 import de.micromata.genome.util.runtime.RuntimeIOException;
 import de.micromata.genome.util.types.Pair;
 
 /**
+ * TODO enable reaattach into existant base name, if limit is not reached or searchkeys are not different.
  * 
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
  */
 public class IndexedWriter implements Closeable
 {
+  /**
+   * if change this to utf-8 makes it a little bit more complicate.
+   */
+  public static final Charset logCharset = Charsets.ISO_8859_1;
   public static final String logFileDateFormatString = "yyyy-MM-dd'T'HH_mm_ss_SSS";
   /**
    * Standard date format according to ISO 8601.
@@ -57,12 +63,27 @@ public class IndexedWriter implements Closeable
   private OutputStream idxOut;
   private Collection<LogAttributeType> searchAttributes;
   private IndexHeader indexHeader;
+  private IndexDirectory indexDirectory;
 
-  public IndexedWriter(IndexFileLoggingImpl logger, File logFile, File indexFile, long maxSize) throws IOException
+  public IndexedWriter(IndexFileLoggingImpl logger, File logFile, File indexFile, long maxSize)
   {
     this.logFile = logFile;
     this.indexFile = indexFile;
     this.maxSize = maxSize;
+    this.indexDirectory = logger.indexDirectory;
+
+  }
+
+  public boolean isOpen()
+  {
+    return idxOut != null;
+  }
+
+  public void open(IndexFileLoggingImpl logger) throws IOException
+  {
+    if (idxOut != null) {
+      return;
+    }
     searchAttributes = logger.getSearchAttributes();
     checkDirExists();
     moveExistantLogFiles(logger);
@@ -76,7 +97,7 @@ public class IndexedWriter implements Closeable
       out = new BufferedOutputStream(out, bufferSize);
     }
     logOut = new PosTrackingOutputStream(out);
-    logWriter = new OutputStreamWriter(logOut);
+    logWriter = new OutputStreamWriter(logOut, logCharset);
     idxOut = createIndexFile(logger);
 
   }
@@ -86,7 +107,7 @@ public class IndexedWriter implements Closeable
     indexHeader = IndexHeader.getIndexHeader(searchAttributes);
 
     FileOutputStream fout = new FileOutputStream(indexFile, true);
-    indexHeader.writeFileHeader(fout);
+    indexHeader.writeFileHeader(fout, indexFile, logger.indexDirectory);
     return fout;
   }
 
@@ -107,7 +128,6 @@ public class IndexedWriter implements Closeable
 
   static IndexedWriter openWriter(IndexFileLoggingImpl logger) throws IOException
   {
-
     String newFileName = logger.getBaseFileName();
     IndexedWriter writer = new IndexedWriter(logger, new File(logger.getLogDir(), newFileName + ".log"),
         new File(logger.getLogDir(), newFileName + ".idx"), logger.getSizeLimit());
@@ -136,21 +156,27 @@ public class IndexedWriter implements Closeable
     }
     if (indexFile.exists() == true) {
       File nf = new File(indexFile.getParentFile(), logger.getBaseFileName() + suffix + ".idx");
-      success &= indexFile.renameTo(nf);
+      boolean ixren = indexFile.renameTo(nf);
+      if (ixren == true) {
+        logger.indexDirectory.renameFile(indexFile, nf);
+      }
+      success &= ixren;
     }
 
     return true;
   }
 
   public IndexedWriter write(IndexFileLoggingImpl logger, LogWriteEntry lwe) throws IOException
-
   {
-    if (searchAttributes != logger.getSearchAttributes()) {
-      // TODO rk wrapp around.
-    }
     IndexedWriter writer = this;
-    if (logOut.getPosition() > maxSize) {
-      writer = overflow(logger);
+    if (isOpen() == true) {
+      if (searchAttributes != logger.getSearchAttributes()) {
+        writer = overflow(logger);
+      }
+
+      if (writer.logOut.getPosition() > maxSize) {
+        writer = writer.overflow(logger);
+      }
     }
     writer.writeImpl(logger, lwe);
     return writer;
@@ -165,9 +191,12 @@ public class IndexedWriter implements Closeable
   protected void writeImpl(IndexFileLoggingImpl logger, LogWriteEntry lwe)
   {
     try {
+      open(logger);
       writeCurrentPosition(lwe);
       writeLogHeader(lwe);
       writeAttributes(lwe);
+      // had to flush, so PosTrackingOuputStream have no position
+      logWriter.flush();
     } catch (IOException ex) {
       throw new RuntimeIOException(ex);
     }
@@ -201,7 +230,9 @@ public class IndexedWriter implements Closeable
       logWriter.write(s);
       logWriter.write("|");
     }
-    for (Pair<String, Integer> headerp : indexHeader.headerOrder) {
+    // write attributes, but standard fields are already written.
+    for (int i = StdSearchFields.values().length; i < indexHeader.headerOrder.size(); ++i) {
+      Pair<String, Integer> headerp = indexHeader.headerOrder.get(i);
       String value = getAttributeValue(lwe, headerp.getFirst());
       value = trimFixSize(value, headerp.getSecond());
       logWriter.write(value);
@@ -213,7 +244,8 @@ public class IndexedWriter implements Closeable
   private void writeAttributes(LogWriteEntry lwe) throws IOException
   {
     // TODO rk lange nachricht schreiben
-    logWriter.write("\n");
+    logWriter.write("\n@message: ");
+    writeLongValue(lwe.getMessage());
     for (LogAttribute la : lwe.getAttributes()) {
       if (la.isSearchKey() == true) {
         continue;
@@ -222,29 +254,59 @@ public class IndexedWriter implements Closeable
     }
   }
 
+  private void writeLongValue(String value) throws IOException
+  {
+
+    String rest = StringUtils.replace(value, "\r", "");
+    int nlidx = rest.indexOf('\n');
+    if (nlidx == -1) {
+      logWriter.write(value);
+      logWriter.write("\n");
+      return;
+    }
+    boolean firstLine = true;
+    while (nlidx != -1) {
+      String left = rest.substring(0, nlidx + 1);
+      if (firstLine == false) {
+        logWriter.write('\t');
+      }
+      logWriter.write(left);
+      rest = rest.substring(nlidx + 1);
+      nlidx = rest.indexOf('\n');
+      firstLine = false;
+    }
+    if (rest.length() > 0) {
+      logWriter.write('\t');
+      logWriter.write(rest);
+      logWriter.write('\n');
+    }
+  }
+
   private void writeLongAttribute(LogWriteEntry lwe, LogAttribute la) throws IOException
   {
+    logWriter.write("@");
     logWriter.write(la.getTypeName());
-    logWriter.write("=");
-    logWriter.write(la.getValueToWrite(lwe));
-    logWriter.write("\n");
+    logWriter.write(": ");
+    writeLongValue(la.getValueToWrite(lwe));
+    //    logWriter.write("\n");
 
   }
 
   private void writeCurrentPosition(LogWriteEntry lwe) throws IOException
   {
-    ByteBuffer bb = ByteBuffer.wrap(new byte[Long.BYTES]);
-    bb.putLong(logOut.getPosition());
-    idxOut.write(bb.array());
-    bb.putLong(lwe.getTimestamp());
+    indexHeader.writLogEntryPosition(lwe, logOut.getPosition(), idxOut);
+    indexDirectory.updateDate(indexHeader.indexDirectoryIdx, lwe.getTimestamp());
+
   }
 
   @Override
   public void close() throws IOException
   {
-    logWriter.flush();
-    logOut.close();
-    idxOut.close();
+    if (logWriter != null) {
+      logWriter.flush();
+    }
+    IOUtils.closeQuietly(logOut);
+    IOUtils.closeQuietly(idxOut);
   }
 
 }
