@@ -2,6 +2,7 @@ package de.micromata.genome.logging.spi.ifiles;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Assert;
@@ -12,6 +13,7 @@ import de.micromata.genome.logging.GLog;
 import de.micromata.genome.logging.GenomeAttributeType;
 import de.micromata.genome.logging.GenomeLogCategory;
 import de.micromata.genome.logging.LogAttribute;
+import de.micromata.genome.logging.LogEntry;
 import de.micromata.genome.logging.LogExceptionAttribute;
 import de.micromata.genome.logging.LogLevel;
 import de.micromata.genome.logging.LoggingContext;
@@ -85,5 +87,23 @@ public class WriteLogsTest extends IFileTestBase
         callback);
     selected = callback.getEntries().size();
     Assert.assertEquals(10, selected);
+
+    callback = new CollectLogEntryCallback();
+    logger.selectLogs(new Timestamp(startMs), new Timestamp(endMs + 1000),
+        LogLevel.Info.getLevel(), GenomeLogCategory.UnitTest.name(), "Hallo nachricht mit attr 36", null, 1, 100,
+        null, true, callback);
+    selected = callback.getEntries().size();
+    Assert.assertTrue(selected >= 1);
+    LogEntry le = callback.getEntries().get(0);
+    callback = new CollectLogEntryCallback();
+    logger.selectLogs(Arrays.asList(le.getLogEntryIndex()), false, callback);
+    selected = callback.getEntries().size();
+    Assert.assertEquals(1, selected);
+    le = callback.getEntries().get(0);
+    LogAttribute attr = le.getAttributeByType(GenomeAttributeType.Miscellaneous);
+    Assert.assertEquals("Eintrag ohne newline", attr.getValue());
+    attr = le.getAttributeByType(GenomeAttributeType.Miscellaneous2);
+    Assert.assertEquals("Eintrag mit newline\nHiergehts weiter\nund da ist ende", attr.getValue());
+
   }
 }

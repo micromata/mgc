@@ -160,12 +160,12 @@ public class IndexHeader
    * @param filesize
    * @return startoffset, endidx
    */
-  public List<Pair<Integer, Integer>> getCandiates(Timestamp start, Timestamp end, MappedByteBuffer mem, long filesize)
+  public List<Pair<Integer, Integer>> getCandiates(Timestamp start, Timestamp end, MappedByteBuffer mem, int filesize)
   {
     List<Pair<Integer, Integer>> ret = new ArrayList<>();
 
-    int pos = startIndex;
-    while (pos + ROW_LENGTH <= filesize) {
+    int pos = filesize - ROW_LENGTH;
+    while (pos >= 0) {
       long logt = mem.getLong(pos);
       if (start != null && start.getTime() > logt) {
         continue;
@@ -183,7 +183,7 @@ public class IndexHeader
         System.out.println("Oops");
       }
       ret.add(Pair.make(offset, endOfset));
-      pos += ROW_LENGTH;
+      pos -= ROW_LENGTH;
     }
     return ret;
   }

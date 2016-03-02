@@ -179,20 +179,22 @@ public class IndexDirectory implements Closeable
   {
     TreeMap<Long, String> files = new TreeMap<>();
 
-    int offset = HEADER_SIZE;
-    int max = getWritePos();
-    while (offset + ROW_SIZE <= max) {
+    //    int offset = HEADER_SIZE;
+    int max = getWritePos() - ROW_SIZE;
+    int offset = max;
+
+    while (offset >= HEADER_SIZE) {
       long st = indexByteBuffer.getLong(offset);
       if (start != null) {
         if (st < start.getTime()) {
-          offset += ROW_SIZE;
+          offset -= ROW_SIZE;
           continue;
         }
       }
       if (end != null) {
         long et = indexByteBuffer.getLong(offset + Long.BYTES);
         if (et > end.getTime()) {
-          offset += ROW_SIZE;
+          offset -= ROW_SIZE;
           continue;
         }
       }
@@ -201,9 +203,32 @@ public class IndexDirectory implements Closeable
       indexByteBuffer.get(nameBuffer);
       String trimmed = new String(nameBuffer).trim();
       files.put(st, trimmed);
-      offset = indexByteBuffer.position();
+      offset -= ROW_SIZE;
     }
     List<String> ret = new ArrayList<>(files.values());
     return ret;
+  }
+
+  public static long buildLogIdByIndexDirectoryAndOffset(int indexDir, int offset)
+  {
+    long pk = ((long) indexDir) << 32;
+    pk += offset;
+    return pk;
+  }
+
+  public String findLogFileNameByLogId(long logId)
+  {
+    int indexdir = (int) (logId >>> 32);
+    int offset = indexdir + 2 * Long.BYTES;
+    byte[] nameBuffer = new byte[LOG_FILE_NAME_SIZE];
+    indexByteBuffer.position(offset);
+    indexByteBuffer.get(nameBuffer);
+    String trimmed = new String(nameBuffer).trim();
+    return trimmed;
+  }
+
+  public int getLogIndexOffsetFromLogId(long logid)
+  {
+    return (int) logid;
   }
 }

@@ -63,7 +63,7 @@ public class IndexedReader implements Closeable
   {
     int skipRows = startRow;
     int rowsSelected = 0;
-    long indexMaxSize = indexChannel.size();
+    int indexMaxSize = (int) indexChannel.size();
     List<Pair<Integer, Integer>> offsets = indexHeader.getCandiates(start, end, indexByteBuffer, indexMaxSize);
     if (offsets.isEmpty() == true) {
       return;
@@ -85,7 +85,7 @@ public class IndexedReader implements Closeable
         --skipRows;
         continue;
       }
-      callback.onRow(select(offset, masterOnly));
+      callback.onRow(select(offset.getFirst(), masterOnly));
       ++rowsSelected;
     }
   }
@@ -142,10 +142,7 @@ public class IndexedReader implements Closeable
 
   private long buildLogPk(int offset)
   {
-
-    long pk = ((long) indexHeader.indexDirectoryIdx) << 32;
-    pk += offset;
-    return pk;
+    return IndexDirectory.buildLogIdByIndexDirectoryAndOffset(indexHeader.indexDirectoryIdx, offset);
   }
 
   private boolean seekNextLine(int fromPos) throws IOException
@@ -170,10 +167,15 @@ public class IndexedReader implements Closeable
     return false;
   }
 
-  private LogEntry select(Pair<Integer, Integer> startEndOffset, boolean masterOnly) throws IOException
+  public LogEntry select(int startOffset, boolean masterOnly) throws IOException
   {
+    if (logRandomAccessFile == null) {
+      logRandomAccessFile = new RandomAccessFile(logFile, "r");
+      logChannel = logRandomAccessFile.getChannel();
+      logByteBuffer = logChannel.map(FileChannel.MapMode.READ_ONLY, 0, logChannel.size());
+    }
+
     LogEntry le = new LogEntry();
-    int startOffset = startEndOffset.getFirst();
     le.setLogEntryIndex(buildLogPk(startOffset));
     logChannel.position(startOffset);
     for (Pair<String, Integer> pair : indexHeader.headerOrder) {
@@ -267,6 +269,9 @@ public class IndexedReader implements Closeable
     String svalue = value.toString();
     if (skey.startsWith(" ") == true) {
       skey = skey.substring(1);
+    }
+    if (svalue.startsWith(" ") == true) {
+      svalue = svalue.substring(1);
     }
     return createLogAttribute(skey, svalue);
   }

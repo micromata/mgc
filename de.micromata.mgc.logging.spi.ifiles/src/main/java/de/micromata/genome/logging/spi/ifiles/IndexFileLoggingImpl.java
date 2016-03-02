@@ -11,6 +11,7 @@ import org.apache.commons.lang.StringUtils;
 
 import de.micromata.genome.logging.BaseLogging;
 import de.micromata.genome.logging.EndOfSearch;
+import de.micromata.genome.logging.LogEntry;
 import de.micromata.genome.logging.LogEntryCallback;
 import de.micromata.genome.logging.LogWriteEntry;
 import de.micromata.genome.util.runtime.LocalSettings;
@@ -120,23 +121,53 @@ public class IndexFileLoggingImpl extends BaseLogging
         normAttributes.add(Pair.make(IndexHeader.getNormalizedHeaderName(pa.getFirst()), pa.getSecond()));
       }
     }
+
     for (Pair<File, File> idxLog : candiates) {
       try (IndexedReader idxreader = new IndexedReader(this, idxLog.getSecond(), idxLog.getFirst())) {
+
         idxreader.selectLogsImpl(start, end, loglevel, category, msg, normAttributes, startRow, maxRow, orderBy,
             masterOnly, callback);
       } catch (IOException ex) {
         // TODO RK ex
       }
-
     }
 
   }
 
   @Override
-  protected void selectLogsImpl(List<Object> logId, boolean masterOnly, LogEntryCallback callback) throws EndOfSearch
+  protected void selectLogsImpl(List<Object> logIds, boolean masterOnly, LogEntryCallback callback) throws EndOfSearch
   {
-    // TODO Auto-generated method stub
+    for (Object logId : logIds) {
+      Long id = (Long) logId;
+      try {
+        LogEntry le = selectByLogId(id, masterOnly);
+        if (le != null) {
+          callback.onRow(le);
+        }
+      } catch (IOException ex) {
 
+      }
+    }
+  }
+
+  private LogEntry selectByLogId(long logid, boolean masterOnly) throws IOException
+  {
+    String name = indexDirectory.findLogFileNameByLogId(logid);
+    if (StringUtils.isBlank(name) == true) {
+      return null;
+    }
+    File idxLog = new File(logDir, name + ".idx");
+    if (idxLog.exists() == false) {
+      return null;
+    }
+    File log = new File(logDir, name + ".log");
+    if (log.exists() == false) {
+      return null;
+    }
+    int startOffset = indexDirectory.getLogIndexOffsetFromLogId(logid);
+    try (IndexedReader idxreader = new IndexedReader(this, log, idxLog)) {
+      return idxreader.select(startOffset, masterOnly);
+    }
   }
 
   private List<Pair<File, File>> getCandiates(Timestamp start, Timestamp end)
