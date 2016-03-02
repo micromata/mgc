@@ -69,7 +69,7 @@ public interface LocalSettingsLoader
 
   default File getLocalSettingsFile()
   {
-    return new File(getWorkingDirectory(), getLocalSettingsFileName());
+    return new File(getLocalSettingsFileName());
   }
 
 }
