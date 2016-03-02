@@ -59,6 +59,16 @@ public class StdLocalSettingsLoader implements LocalSettingsLoader
   }
 
   @Override
+  public File getLocalSettingsFile()
+  {
+    String fileName = getLocalSettingsFileName();
+    if (fileName.contains("/") == true || fileName.contains("\\") == true) {
+      return new File(fileName);
+    }
+    return new File(getWorkingDirectory(), fileName);
+  }
+
+  @Override
   public String getLocalSettingsFileName()
   {
     if (StringUtils.isEmpty(localSettingsFileName) == false) {

@@ -67,9 +67,11 @@ public interface LocalSettingsLoader
    */
   File getWorkingDirectory();
 
-  default File getLocalSettingsFile()
-  {
-    return new File(getLocalSettingsFileName());
-  }
+  /**
+   * Get local settings file.
+   * 
+   * @return
+   */
+  File getLocalSettingsFile();
 
 }
