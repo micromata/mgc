@@ -165,6 +165,7 @@ public class NewPropertiesLineReader
           consumeNl();
           return value.toString();
         case '\\':
+          ++curPos;
           continue;
         default:
           value.append(c);
