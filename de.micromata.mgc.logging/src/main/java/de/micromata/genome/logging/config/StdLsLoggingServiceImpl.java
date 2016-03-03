@@ -1,11 +1,11 @@
-package de.micromata.genome.logging.spi;
+package de.micromata.genome.logging.config;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.micromata.genome.logging.Logging;
+import de.micromata.genome.logging.spi.BaseLoggingLocalSettingsConfigModel;
 import de.micromata.genome.logging.spi.log4j.Log4JLogging;
-import de.micromata.genome.util.runtime.config.LocalSettingsConfigModel;
 
 /**
  * Loader service for base logging implementations.
@@ -30,7 +30,7 @@ public class StdLsLoggingServiceImpl implements LsLoggingService
     {
 
       @Override
-      public String id()
+      public String typeId()
       {
         return "log4j";
       }
@@ -48,15 +48,18 @@ public class StdLsLoggingServiceImpl implements LsLoggingService
       }
 
       @Override
-      public Logging createLogging()
+      public BaseLoggingLocalSettingsConfigModel getConfigModel()
       {
-        return new Log4JLogging();
-      }
+        return new BaseLoggingLocalSettingsConfigModel()
+        {
 
-      @Override
-      public LocalSettingsConfigModel getConfigModel()
-      {
-        return new BaseLoggingLocalSettingsConfigModel();
+          @Override
+          public Logging createLogging()
+          {
+            return new Log4JLogging();
+          }
+
+        };
       }
 
     };

@@ -3,9 +3,8 @@ package de.micromata.genome.logging.spi.ifiles;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.micromata.genome.logging.Logging;
-import de.micromata.genome.logging.spi.LsLoggingService;
-import de.micromata.genome.util.runtime.config.LocalSettingsConfigModel;
+import de.micromata.genome.logging.config.LsLoggingService;
+import de.micromata.genome.logging.spi.BaseLoggingLocalSettingsConfigModel;
 
 /**
  * Loader service for base logging implementations.
@@ -30,7 +29,7 @@ public class IFileLsLoggingServiceImpl implements LsLoggingService
     {
 
       @Override
-      public String id()
+      public String typeId()
       {
         return "ifile";
       }
@@ -48,13 +47,7 @@ public class IFileLsLoggingServiceImpl implements LsLoggingService
       }
 
       @Override
-      public Logging createLogging()
-      {
-        return new IndexFileLoggingImpl();
-      }
-
-      @Override
-      public LocalSettingsConfigModel getConfigModel()
+      public BaseLoggingLocalSettingsConfigModel getConfigModel()
       {
         return new IFileLoggingLocalSettingsConfigModel();
       }

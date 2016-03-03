@@ -17,7 +17,7 @@ import de.micromata.genome.util.types.TimeInMillis;
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
  */
-public abstract class FallbackLogging extends BaseLogging
+public abstract class FallbackLogging extends BaseLogging implements LoggingWithFallback
 {
 
   /**
@@ -206,6 +206,7 @@ public abstract class FallbackLogging extends BaseLogging
    *
    * @return the secondary
    */
+  @Override
   public Logging getSecondary()
   {
     return secondary;
@@ -216,6 +217,7 @@ public abstract class FallbackLogging extends BaseLogging
    *
    * @param secondary the new secondary
    */
+  @Override
   public void setSecondary(Logging secondary)
   {
     this.secondary = secondary;

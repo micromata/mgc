@@ -41,10 +41,8 @@ public class LocalSettings implements LocalSettingsService
    * Gets the.
    * 
    * @return the local settings
-   * @deprecated use LocalSettingsService.get()
    */
 
-  @Deprecated
   static public LocalSettings get()
   {
     return getImpl();

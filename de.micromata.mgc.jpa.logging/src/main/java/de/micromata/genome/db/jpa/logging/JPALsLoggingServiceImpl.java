@@ -3,10 +3,9 @@ package de.micromata.genome.db.jpa.logging;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.micromata.genome.logging.Logging;
-import de.micromata.genome.logging.spi.BaseLoggingLocalSettingsConfigModel;
-import de.micromata.genome.logging.spi.LsLoggingService;
-import de.micromata.genome.util.runtime.config.LocalSettingsConfigModel;
+import de.micromata.genome.logging.FallbackLogging;
+import de.micromata.genome.logging.config.LoggingWithFallbackLocalSettingsConfigModel;
+import de.micromata.genome.logging.config.LsLoggingService;
 
 /**
  * Loader service for base logging implementations.
@@ -31,7 +30,7 @@ public class JPALsLoggingServiceImpl implements LsLoggingService
     {
 
       @Override
-      public String id()
+      public String typeId()
       {
         return "jpa";
       }
@@ -49,16 +48,18 @@ public class JPALsLoggingServiceImpl implements LsLoggingService
       }
 
       @Override
-      public Logging createLogging()
+      public LoggingWithFallbackLocalSettingsConfigModel getConfigModel()
       {
-        return new GenomeJpaLoggingImpl();
-      }
+        return new LoggingWithFallbackLocalSettingsConfigModel()
+        {
 
-      @Override
-      public LocalSettingsConfigModel getConfigModel()
-      {
-        // TODO RK later hier datasource oder wanders?
-        return new BaseLoggingLocalSettingsConfigModel();
+          @Override
+          protected FallbackLogging createFallbackLogging()
+          {
+            return new GenomeJpaLoggingImpl();
+          }
+
+        };
       }
 
     };

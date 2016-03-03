@@ -1,9 +1,8 @@
-package de.micromata.genome.logging.spi;
+package de.micromata.genome.logging.config;
 
 import java.util.List;
 
-import de.micromata.genome.logging.Logging;
-import de.micromata.genome.util.runtime.config.LocalSettingsConfigModel;
+import de.micromata.genome.logging.spi.BaseLoggingLocalSettingsConfigModel;
 
 /**
  * Service has to registered by the JRE ServiceLoader infrastructure.
@@ -17,15 +16,13 @@ public interface LsLoggingService
 {
   static public interface LsLoggingDescription
   {
-    String id();
+    String typeId();
 
     String name();
 
     String description();
 
-    Logging createLogging();
-
-    LocalSettingsConfigModel getConfigModel();
+    BaseLoggingLocalSettingsConfigModel getConfigModel();
 
   }
 
