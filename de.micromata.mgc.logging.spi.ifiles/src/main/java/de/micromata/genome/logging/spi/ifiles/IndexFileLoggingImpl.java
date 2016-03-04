@@ -54,8 +54,18 @@ public class IndexFileLoggingImpl extends BaseLogging
     initialize();
   }
 
+  private void ensureLogDir()
+  {
+    if (logDir.exists() == true) {
+      return;
+    }
+    logDir.mkdirs();
+
+  }
+
   public void initialize()
   {
+    ensureLogDir();
     try {
       indexDirectory = IndexDirectory.open(logDir, baseFileName);
       currentWriter = IndexedWriter.openWriter(this);
@@ -134,11 +144,23 @@ public class IndexFileLoggingImpl extends BaseLogging
 
   }
 
+  private static Long toPk(Object logId)
+  {
+    if (logId instanceof Number) {
+      return ((Number) logId).longValue();
+    } else if (logId instanceof String) {
+      return Long.parseLong((String) logId);
+    } else {
+      throw new IllegalArgumentException("Cannot parse LogId: " + logId);
+
+    }
+  }
+
   @Override
   protected void selectLogsImpl(List<Object> logIds, boolean masterOnly, LogEntryCallback callback) throws EndOfSearch
   {
     for (Object logId : logIds) {
-      Long id = (Long) logId;
+      Long id = toPk(logId);
       try {
         LogEntry le = selectByLogId(id, masterOnly);
         if (le != null) {

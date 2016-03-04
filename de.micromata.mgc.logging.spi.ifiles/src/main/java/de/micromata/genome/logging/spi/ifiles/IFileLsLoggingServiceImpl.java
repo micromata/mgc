@@ -35,7 +35,7 @@ public class IFileLsLoggingServiceImpl implements LsLoggingService
       }
 
       @Override
-      public String name()
+      public String toString()
       {
         return "Indexed File Logging";
       }

@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.sql.Timestamp;
@@ -188,15 +189,15 @@ public class IndexHeader
     return ret;
   }
 
-  public String readSearchFromLog(Integer offset, MappedByteBuffer logByteBuffer, String name)
+  public String readSearchFromLog(Integer offset, RandomAccessFile file, String name) throws IOException
   {
     Integer fieldoffset = searchFieldsOffsets.get(name);
     if (fieldoffset == null) {
       return null;
     }
-    logByteBuffer.position(offset.intValue() + fieldoffset.intValue());
+    file.seek(offset.intValue() + fieldoffset.intValue());
     byte[] fieldBuffer = new byte[searchFieldsLength.get(name)];
-    logByteBuffer.get(fieldBuffer);
+    file.readFully(fieldBuffer);
     String ret = new String(fieldBuffer);
     ret = ret.trim();
     return ret;

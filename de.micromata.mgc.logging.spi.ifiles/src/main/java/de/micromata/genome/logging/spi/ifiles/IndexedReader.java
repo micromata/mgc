@@ -41,8 +41,8 @@ public class IndexedReader implements Closeable
   MappedByteBuffer indexByteBuffer;
 
   RandomAccessFile logRandomAccessFile;
-  FileChannel logChannel;;
-  MappedByteBuffer logByteBuffer;
+  //  FileChannel logChannel;;
+  //  MappedByteBuffer logByteBuffer;
   IndexHeader indexHeader;
 
   public IndexedReader(IndexFileLoggingImpl logger, File logFile, File indexFile) throws IOException
@@ -69,8 +69,8 @@ public class IndexedReader implements Closeable
       return;
     }
     logRandomAccessFile = new RandomAccessFile(logFile, "r");
-    logChannel = logRandomAccessFile.getChannel();
-    logByteBuffer = logChannel.map(FileChannel.MapMode.READ_ONLY, 0, logChannel.size());
+    //    logChannel = logRandomAccessFile.getChannel();
+    //    logByteBuffer = logChannel.map(FileChannel.MapMode.READ_ONLY, 0, logChannel.size());
     if (orderBy != null && orderBy.isEmpty() == false) {
 
     }
@@ -91,38 +91,41 @@ public class IndexedReader implements Closeable
   }
 
   boolean apply(Integer offset, Integer loglevel, String category, String msg, List<Pair<String, String>> logAttributes)
+      throws IOException
   {
-
+    String s;
     if (loglevel != null) {
-      String s = indexHeader.readSearchFromLog(offset, logByteBuffer, StdSearchFields.Level.name());
+      s = indexHeader.readSearchFromLog(offset, logRandomAccessFile, StdSearchFields.Level.name());
       if (s != null) {
         LogLevel ll = LogLevel.fromString(s, LogLevel.Fatal);
         if (ll.getLevel() < loglevel) {
           return false;
         }
       }
-      if (category != null) {
-        s = indexHeader.readSearchFromLog(offset, logByteBuffer, StdSearchFields.Category.name());
-        if (s != null) {
-          if (StringUtils.containsIgnoreCase(s, category) == false) {
-            return false;
-          }
-        }
-      }
-      if (msg != null) {
-        s = indexHeader.readSearchFromLog(offset, logByteBuffer, StdSearchFields.ShortMessage.name());
-        if (s != null) {
-          if (StringUtils.containsIgnoreCase(s, msg) == false) {
-            return false;
-          }
+    }
+
+    if (category != null) {
+      s = indexHeader.readSearchFromLog(offset, logRandomAccessFile, StdSearchFields.Category.name());
+      if (s != null) {
+        if (StringUtils.containsIgnoreCase(s, category) == false) {
+          return false;
         }
       }
     }
+    if (msg != null) {
+      s = indexHeader.readSearchFromLog(offset, logRandomAccessFile, StdSearchFields.ShortMessage.name());
+      if (s != null) {
+        if (StringUtils.containsIgnoreCase(s, msg) == false) {
+          return false;
+        }
+      }
+    }
+
     if (logAttributes == null || logAttributes.isEmpty() == true) {
       return true;
     }
     for (Pair<String, String> attr : logAttributes) {
-      String s = indexHeader.readSearchFromLog(offset, logByteBuffer, attr.getFirst());
+      s = indexHeader.readSearchFromLog(offset, logRandomAccessFile, attr.getFirst());
       if (StringUtils.containsIgnoreCase(s, attr.getSecond()) == false) {
         return false;
       }
@@ -171,13 +174,13 @@ public class IndexedReader implements Closeable
   {
     if (logRandomAccessFile == null) {
       logRandomAccessFile = new RandomAccessFile(logFile, "r");
-      logChannel = logRandomAccessFile.getChannel();
-      logByteBuffer = logChannel.map(FileChannel.MapMode.READ_ONLY, 0, logChannel.size());
+      //      logChannel = logRandomAccessFile.getChannel();
+      //      logByteBuffer = logChannel.map(FileChannel.MapMode.READ_ONLY, 0, logChannel.size());
     }
 
     LogEntry le = new LogEntry();
     le.setLogEntryIndex(buildLogPk(startOffset));
-    logChannel.position(startOffset);
+    logRandomAccessFile.seek(startOffset);
     for (Pair<String, Integer> pair : indexHeader.headerOrder) {
       String name = pair.getFirst();
       Integer length = pair.getSecond();
@@ -280,10 +283,10 @@ public class IndexedReader implements Closeable
   public void close() throws IOException
   {
     NIOUtils.unmap(indexChannel, indexByteBuffer);
-    NIOUtils.unmap(logChannel, logByteBuffer);
+    //    NIOUtils.unmap(logChannel, logByteBuffer);
     IOUtils.closeQuietly(indexChannel);
     IOUtils.closeQuietly(idxRandomAccessFile);
-    IOUtils.closeQuietly(logChannel);
+    //    IOUtils.closeQuietly(logChannel);
     IOUtils.closeQuietly(logRandomAccessFile);
 
   }
