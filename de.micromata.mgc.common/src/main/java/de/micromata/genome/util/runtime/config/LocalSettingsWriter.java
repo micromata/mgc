@@ -181,7 +181,12 @@ public class LocalSettingsWriter
   protected void writeEntryKeyValue(BufferedWriter writer, String key, String value) throws IOException
   {
     String enkey = PropertiesReadWriter.saveConvert(key, true, true, true);
-    String envalue = PropertiesReadWriter.saveConvert(value, false, true, false);
+    String envalue;
+    if (value == null) {
+      envalue = "";
+    } else {
+      envalue = PropertiesReadWriter.saveConvert(value, false, true, false);
+    }
     writer.write(enkey + "=" + envalue);
     writer.newLine();
   }

@@ -140,6 +140,7 @@ public class NewPropertiesLineReader
           consumeNl();
           return null;
         case '\\':
+          ++curPos;
           continue;
         case '=':
           ++curPos;
@@ -165,6 +166,25 @@ public class NewPropertiesLineReader
           consumeNl();
           return value.toString();
         case '\\':
+          if (curPos + 1 < data.length) {
+            ++curPos;
+            char nc = data[curPos];
+            switch (nc) {
+              case 't':
+                value.append('\t');
+                break;
+              case 'n':
+                value.append('\n');
+                break;
+              case 'r':
+                value.append('\r');
+                break;
+              default:
+                value.append('\\');
+                value.append(nc);
+                break;
+            }
+          }
           ++curPos;
           continue;
         default:
