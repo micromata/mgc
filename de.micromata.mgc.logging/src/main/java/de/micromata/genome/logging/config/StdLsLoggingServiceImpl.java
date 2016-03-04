@@ -36,7 +36,7 @@ public class StdLsLoggingServiceImpl implements LsLoggingService
       }
 
       @Override
-      public String name()
+      public String toString()
       {
         return "Log4J Logging";
       }

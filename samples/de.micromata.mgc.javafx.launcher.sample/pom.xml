@@ -40,6 +40,11 @@
       <artifactId>de.micromata.mgc.jpa.logging</artifactId>
       <version>${mgc.version}</version>
     </dependency>
+      <dependency>
+      <groupId>org.apache.derby</groupId>
+      <artifactId>derby</artifactId>
+      <version>${org.apache.derby.version}</version>
+    </dependency>
   </dependencies>
 
   <build>

@@ -18,7 +18,8 @@ public interface LsLoggingService
   {
     String typeId();
 
-    String name();
+    @Override
+    String toString();
 
     String description();
 

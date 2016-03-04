@@ -2,7 +2,6 @@ package de.micromata.genome.logging.config;
 
 import org.apache.commons.lang.StringUtils;
 
-import de.micromata.genome.logging.FallbackLogging;
 import de.micromata.genome.logging.Logging;
 import de.micromata.genome.logging.LoggingWithFallback;
 import de.micromata.genome.logging.spi.BaseLoggingLocalSettingsConfigModel;
@@ -27,7 +26,7 @@ public abstract class LoggingWithFallbackLocalSettingsConfigModel extends BaseLo
   public void fromLocalSettings(LocalSettings localSettings)
   {
     super.fromLocalSettings(localSettings);
-    String fallbackId = localSettings.get(buildKey(".fallback.typeId"));
+    String fallbackId = localSettings.get(buildKey("fallback.typeId"));
     if (StringUtils.isNotBlank(fallbackId) == true) {
       fallbackConfig = new LsLoggingLocalSettingsConfigModel(getKeyPrefix() + "fallback.");
       fallbackConfig.fromLocalSettings(localSettings);
@@ -40,9 +39,10 @@ public abstract class LoggingWithFallbackLocalSettingsConfigModel extends BaseLo
   public Logging createLogging()
   {
     LoggingWithFallback fallbackLogging = createFallbackLogging();
-    Logging fallback = fallbackConfig.createLogging();
-    fallbackLogging.setSecondary(fallback);
-
+    if (fallbackConfig != null) {
+      Logging fallback = fallbackConfig.createLogging();
+      fallbackLogging.setSecondary(fallback);
+    }
     return fallbackLogging;
   }
 

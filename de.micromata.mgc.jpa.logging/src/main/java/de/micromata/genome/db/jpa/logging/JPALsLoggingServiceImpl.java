@@ -3,7 +3,6 @@ package de.micromata.genome.db.jpa.logging;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.micromata.genome.logging.FallbackLogging;
 import de.micromata.genome.logging.config.LoggingWithFallbackLocalSettingsConfigModel;
 import de.micromata.genome.logging.config.LsLoggingService;
 
@@ -36,7 +35,7 @@ public class JPALsLoggingServiceImpl implements LsLoggingService
       }
 
       @Override
-      public String name()
+      public String toString()
       {
         return "Genome Database Logging via JPA";
       }
@@ -50,16 +49,9 @@ public class JPALsLoggingServiceImpl implements LsLoggingService
       @Override
       public LoggingWithFallbackLocalSettingsConfigModel getConfigModel()
       {
-        return new LoggingWithFallbackLocalSettingsConfigModel()
-        {
-
-          @Override
-          protected FallbackLogging createFallbackLogging()
-          {
-            return new GenomeJpaLoggingImpl();
-          }
-
-        };
+        LoggingWithFallbackLocalSettingsConfigModel ret = new JpaLoggingLocalSettingsConfigModel();
+        ret.setTypeId(typeId());
+        return ret;
       }
 
     };

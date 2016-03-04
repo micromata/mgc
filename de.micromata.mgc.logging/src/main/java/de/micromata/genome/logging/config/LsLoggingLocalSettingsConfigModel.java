@@ -9,8 +9,7 @@ import de.micromata.genome.logging.Logging;
 import de.micromata.genome.logging.config.LsLoggingService.LsLoggingDescription;
 import de.micromata.genome.logging.spi.BaseLoggingLocalSettingsConfigModel;
 import de.micromata.genome.util.runtime.LocalSettings;
-import de.micromata.genome.util.runtime.config.ALocalSettingsPath;
-import de.micromata.genome.util.runtime.config.LocalSettingsConfigModel;
+import de.micromata.genome.util.runtime.config.LocalSettingsWriter;
 import de.micromata.genome.util.validation.ValContext;
 
 /**
@@ -20,12 +19,11 @@ import de.micromata.genome.util.validation.ValContext;
  */
 public class LsLoggingLocalSettingsConfigModel extends BaseLoggingLocalSettingsConfigModel
 {
-  @ALocalSettingsPath(defaultValue = "log4j", comment = "Type of the used logging")
-  private String typeId;
+
   /**
    * Created logging
    */
-  private LocalSettingsConfigModel nested;
+  private BaseLoggingLocalSettingsConfigModel nested;
 
   public LsLoggingLocalSettingsConfigModel()
   {
@@ -38,19 +36,28 @@ public class LsLoggingLocalSettingsConfigModel extends BaseLoggingLocalSettingsC
   }
 
   @Override
-  public void fromLocalSettings(LocalSettings localSettings)
-  {
-    super.fromLocalSettings(localSettings);
-    LsLoggingDescription desc = findByTypeId(typeId);
-    nested = desc.getConfigModel();
-    nested.fromLocalSettings(localSettings);
-
-  }
-
-  @Override
   public void validate(ValContext ctx)
   {
     nested.validate(ctx);
+  }
+
+  @Override
+  public void fromLocalSettings(LocalSettings localSettings)
+  {
+    super.fromLocalSettings(localSettings);
+    LsLoggingDescription desc = findByTypeId(getTypeId());
+    nested = desc.getConfigModel();
+    nested.fromLocalSettings(localSettings);
+  }
+
+  @Override
+  public LocalSettingsWriter toProperties(LocalSettingsWriter writer)
+  {
+    //    LocalSettingsWriter sw = super.toProperties(writer);
+    if (nested != null) {
+      return nested.toProperties(writer);
+    }
+    return writer;
   }
 
   public static LsLoggingDescription findByTypeId(String typeId)
@@ -67,7 +74,7 @@ public class LsLoggingLocalSettingsConfigModel extends BaseLoggingLocalSettingsC
   @Override
   public Logging createLogging()
   {
-    return ((BaseLoggingLocalSettingsConfigModel) nested).createLogging();
+    return nested.createLogging();
   }
 
   public static List<LsLoggingDescription> getAvailableServices()
@@ -79,4 +86,15 @@ public class LsLoggingLocalSettingsConfigModel extends BaseLoggingLocalSettingsC
     }
     return ret;
   }
+
+  public BaseLoggingLocalSettingsConfigModel getNested()
+  {
+    return nested;
+  }
+
+  public void setNested(BaseLoggingLocalSettingsConfigModel nested)
+  {
+    this.nested = nested;
+  }
+
 }
