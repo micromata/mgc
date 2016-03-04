@@ -30,6 +30,7 @@ public class GroovyMatcherTest extends MatcherTestBase
     }
   }
 
+  @Override
   protected MatcherFactory<String> createMatcherFactory()
   {
     BooleanListRulesFactory<String> ret = new BooleanListRulesFactory<String>();
@@ -55,4 +56,5 @@ public class GroovyMatcherTest extends MatcherTestBase
     checkMatches("a || ${arg.length() == 3 or arg.length() == 2}", "bc");
     checkMatches("a || ${arg.length() == 3 or arg.length() == 2}", "cbc");
   }
+
 }

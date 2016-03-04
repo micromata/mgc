@@ -65,12 +65,6 @@ public class JdbcLocalSettingsConfigModel extends AbstractLocalSettingsConfigMod
     if (StringUtils.isBlank(url) == true) {
       ctx.error("url", "Please select url for JDBC");
     }
-    // TODO RK sowas umsetzen?
-    //    String url = jdbcUrl;
-    //    if (StandaloneDatabases.LOCAL_DERBY.getDriver().equals(jdbcDriver) == true) {
-    //      url = jdbcUrl + ";create=true";
-    //    }
-
     if (ctx.hasLocalError() == true) {
       return;
     }
@@ -119,9 +113,6 @@ public class JdbcLocalSettingsConfigModel extends AbstractLocalSettingsConfigMod
     for (JndiLocalSettingsConfigModel jndi : associatedJndi) {
       jndi.toProperties(sw);
     }
-    //    sw.put("jndi.bind." + name + ".target", jndiName);
-    //    sw.put("jndi.bind." + name + ".type", "DataSource");
-    //    sw.put("jndi.bind." + name + ".source", name);
     return writer;
   }
 
