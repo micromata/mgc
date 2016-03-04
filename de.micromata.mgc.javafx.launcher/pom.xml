@@ -20,7 +20,14 @@
       <artifactId>de.micromata.mgc.logging</artifactId>
       <version>${mgc.version}</version>
     </dependency>
-     <dependency>
+    <!--  not stable enough
+    <dependency>
+      <groupId>de.micromata.mgc</groupId>
+      <artifactId>de.micromata.mgc.logging.spi.ifiles</artifactId>
+      <version>${mgc.version}</version>
+    </dependency>
+     -->
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>${junit.version}</version>

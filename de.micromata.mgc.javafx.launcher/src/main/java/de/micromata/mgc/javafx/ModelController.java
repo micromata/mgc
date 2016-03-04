@@ -1,7 +1,7 @@
 package de.micromata.mgc.javafx;
 
-import de.micromata.genome.util.runtime.config.LocalSettingsConfigModel;
 import de.micromata.genome.util.validation.ValContext;
+import de.micromata.mgc.javafx.launcher.gui.Controller;
 
 /**
  * Controller for handling Models.
@@ -9,28 +9,28 @@ import de.micromata.genome.util.validation.ValContext;
  * @author Daniel (d.ludwig@micromata.de)
  * 
  */
-public interface ModelController<M>
+public interface ModelController<M>extends Controller
 {
-  default void initWithModel(LocalSettingsConfigModel model)
-  {
-    initializeWithModel((M) model);
-  }
 
-  void initializeWithModel(M model);
+  void setModel(M model);
+
+  M getModel();
+
+  void initializeWithModel();
 
   /**
    * Grab the values from the model object and put them into the form.
    * 
    * @param modelObject the model object, normally a pojo.
    */
-  void fromModel(M modelObject);
+  void fromModel();
 
   /**
    * Push all form data to the model object.
    * 
    * @param modelObject the model object, normally a pojo.
    */
-  void toModel(final M modelObject);
+  void toModel();
 
   /**
    * Reads the validation context and tries to tell the result to components where validation errors happened.
@@ -41,4 +41,9 @@ public interface ModelController<M>
   {
 
   }
+
+  /**
+   * Add input control with message receivers for validation messages.
+   */
+  void registerValMessageReceivers();
 }

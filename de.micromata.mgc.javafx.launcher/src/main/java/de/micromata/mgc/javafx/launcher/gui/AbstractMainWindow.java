@@ -30,14 +30,11 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
-import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 /**
@@ -45,13 +42,12 @@ import javafx.stage.WindowEvent;
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
  */
-public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>extends AbstractController<M>
+public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>
+    extends AbstractModelController<MgcApplication<M>>
     implements Initializable
 {
   private static final Logger LOG = Logger.getLogger(AbstractMainWindow.class);
-  protected Stage stage;
-  protected Parent parent;
-  private MgcApplication<M> application;
+
   @FXML
   private Button startServerButton;
   @FXML
@@ -72,9 +68,9 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>exte
 
   }
 
-  public void initialize(MgcApplication<M> application)
+  @Override
+  public void initializeWithModel()
   {
-    this.application = application;
     addCss();
     startServerButton.setOnAction(e -> {
       startServer();
@@ -119,6 +115,18 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>exte
     MgcEventRegistries.getEventInstanceRegistry().registerListener(new MgcApplicationStartStopToEventListener());
   }
 
+  @Override
+  public void fromModel()
+  {
+
+  }
+
+  @Override
+  public void toModel()
+  {
+
+  }
+
   protected void addCss()
   {
     stage.getScene().getStylesheets().add(FXCssUtil.CSS);
@@ -139,19 +147,19 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>exte
       loggingController.warn("GWiki is not configured.");
       return;
     }
-    application.start(MgcLauncher.originalMainArgs);
+    model.start(MgcLauncher.originalMainArgs);
 
   }
 
   public void stopServer()
   {
-    application.stop();
+    model.stop();
 
   }
 
   public boolean isServerRunning()
   {
-    return application.isRunning();
+    return model.isRunning();
   }
 
   protected abstract Class<? extends AbstractConfigDialog<M>> getConfigurationDialogControlerClass();
@@ -160,8 +168,8 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>exte
   {
     Class<? extends AbstractConfigDialog<M>> controlToLoad = getConfigurationDialogControlerClass();
 
-    Pair<Pane, ? extends AbstractConfigDialog<M>> ret = ControllerService.get().loadControl(controlToLoad,
-        Pane.class);
+    Pair<Pane, ? extends AbstractConfigDialog<M>> ret = ControllerService.get().loadControlWithModelNewScene(
+        controlToLoad, Pane.class, model.getConfigModel(), this);
     return ret;
   }
 
@@ -173,24 +181,19 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>exte
     AbstractConfigDialog<M> controller = load.getValue();
     controller.mainWindow = this;
 
-    Stage stage = new Stage();
-    stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> {
+    controller.getStage().addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> {
       controller.closeDialog();
       e.consume();
     });
 
     //    controller.setOwningStage(stage);
-    Scene s = new Scene(root, AbstractConfigDialog.PREF_WIDTH, AbstractConfigDialog.PREF_HEIGHT);
+    //    controller.getScene().s
+    //    Scene s = new Scene(root, AbstractConfigDialog.PREF_WIDTH, AbstractConfigDialog.PREF_HEIGHT);
 
-    controller.setParent(root);
-    controller.setScene(s);
-    controller.setStage(stage);
-    stage.setScene(s);
-    stage.initModality(Modality.APPLICATION_MODAL);
+    controller.getStage().initModality(Modality.APPLICATION_MODAL);
     //stage.setResizable(false);
-    stage.setTitle("Configuration");
-    controller.initializeWithModel(application.getConfigModel());
-    stage.show();
+    controller.getStage().setTitle("Configuration");
+    controller.getStage().show();
 
   }
 
@@ -198,8 +201,8 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>exte
   private void closeApplication(ActionEvent event)
   {
 
-    if (application != null) {
-      application.stop();
+    if (model != null) {
+      model.stop();
     }
     Platform.exit();
     System.exit(0); // NOSONAR    System.exit(...) and Runtime.getRuntime().exit(...) should not be called" Main app exit.
@@ -235,8 +238,8 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>exte
       return;
     }
     Lf5MainWindowController controller = ControllerService.get()
-        .loadAsWindow(this, Lf5MainWindowController.class, "About");
-    controller.initWithApplication(application);
+        .loadAsWindow(this, Lf5MainWindowController.class, model, "About");
+    controller.initializeWithModel();
     controller.getStage().show();
   }
 
@@ -260,42 +263,19 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>exte
   {
     AboutDialogController controller = ControllerService.get()
         .loadAsDialog(this, getAboutDialogControllerClass(), "About");
-    controller.initWithApplication(application);
+    controller.setModel(model);
+    controller.initializeWithModel();
     controller.getStage().show();
   }
 
   public MgcApplication<M> getApplication()
   {
-    return application;
+    return model;
   }
 
   public LoggingController getLoggingController()
   {
     return loggingController;
-  }
-
-  @Override
-  public void setStage(Stage stage)
-  {
-    this.stage = stage;
-  }
-
-  @Override
-  public Stage getStage()
-  {
-    return stage;
-  }
-
-  @Override
-  public Parent getParent()
-  {
-    return parent;
-  }
-
-  @Override
-  public void setParent(Parent parent)
-  {
-    this.parent = parent;
   }
 
 }

@@ -10,7 +10,7 @@ import de.micromata.genome.util.bean.FieldMatchers;
 import de.micromata.genome.util.bean.PrivateBeanUtils;
 import de.micromata.genome.util.matcher.CommonMatchers;
 import de.micromata.genome.util.validation.ValMessage;
-import de.micromata.mgc.javafx.launcher.gui.AbstractController;
+import de.micromata.mgc.javafx.launcher.gui.AbstractModelController;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.text.Font;
@@ -82,18 +82,21 @@ public class FXGuiUtils
    */
   private static final String CSS_CLASS_ERROR = "formControlERROR";
 
-  public static void resetErroneousFields(AbstractController<?> controller)
+  public static void resetErroneousFields(AbstractModelController<?> controller)
   {
     List<Field> fields = PrivateBeanUtils.findAllFields(controller.getClass(),
         CommonMatchers.and(FieldMatchers.hasNotModifier(Modifier.STATIC), FieldMatchers.assignableTo(Node.class)));
     for (Field field : fields) {
+      if (field.getName().equals("thisNode") == true) {
+        continue;
+      }
       Node node = (Node) PrivateBeanUtils.readField(controller, field);
       FXCssUtil.replaceStyleClass(CSS_CLASS_ERROR, CSS_CLASS_VALID, node);
     }
 
   }
 
-  public static void markErroneousField(AbstractController<?> controller, Node node, ValMessage msg)
+  public static void markErroneousField(AbstractModelController<?> controller, Node node, ValMessage msg)
   {
     FXCssUtil.replaceStyleClass(CSS_CLASS_VALID, CSS_CLASS_ERROR, node);
   }

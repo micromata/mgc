@@ -25,7 +25,7 @@ public class TextConfigTabController extends AbstractConfigTabController<Abstrac
   }
 
   @Override
-  public void initializeWithModel(AbstractTextConfigFileConfigModel model)
+  public void initializeWithModel()
   {
     title = model.getTitle();
     DialogBuilder builder = dialogBuilder();
@@ -38,17 +38,17 @@ public class TextConfigTabController extends AbstractConfigTabController<Abstrac
   }
 
   @Override
-  public void fromModel(AbstractTextConfigFileConfigModel modelObject)
+  public void fromModel()
   {
     DialogBuilder builder = dialogBuilder();
-    builder.getTextInputControlById("content").setText(modelObject.getContent());
+    builder.getTextInputControlById("content").setText(model.getContent());
   }
 
   @Override
-  public void toModel(AbstractTextConfigFileConfigModel modelObject)
+  public void toModel()
   {
     DialogBuilder builder = dialogBuilder();
-    modelObject.setContent(builder.getTextInputControlById("content").getText());
+    model.setContent(builder.getTextInputControlById("content").getText());
 
   }
 

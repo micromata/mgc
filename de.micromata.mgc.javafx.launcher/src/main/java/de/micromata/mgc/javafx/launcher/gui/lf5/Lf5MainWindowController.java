@@ -8,13 +8,13 @@ import javax.swing.SwingUtilities;
 
 import org.apache.log4j.lf5.LogLevel;
 
-import de.micromata.mgc.javafx.launcher.gui.AbstractController;
+import de.micromata.mgc.javafx.launcher.gui.AbstractModelController;
 import de.micromata.mgc.launcher.MgcApplication;
 import javafx.embed.swing.SwingNode;
 import javafx.fxml.FXML;
 import javafx.scene.layout.Pane;
 
-public class Lf5MainWindowController extends AbstractController<Object>
+public class Lf5MainWindowController extends AbstractModelController<MgcApplication<?>>
 {
   public static Lf5MainWindowController CONTROLERINSTANCE;
   static MgcLogBrokerMonitor MONITORINSTANCE;
@@ -34,7 +34,8 @@ public class Lf5MainWindowController extends AbstractController<Object>
 
   private SwingNode swingNode;
 
-  public void initWithApplication(MgcApplication<?> application)
+  @Override
+  public void initializeWithModel()
   {
     swingNode = new SwingNode()
     {

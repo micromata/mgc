@@ -30,10 +30,10 @@ public class MailSessionConfigTabController extends AbstractConfigTabController<
   private TextField emailAuthPass;
 
   @Override
-  public void initializeWithModel(MailSessionLocalSettingsConfigModel model)
+  public void initializeWithModel()
   {
     emailEnabled.setOnAction(event -> setEmailEnabled(emailEnabled.isSelected()));
-    fromModel(model);
+    fromModel();
     setEmailEnabled(emailEnabled.isSelected());
 
   }
@@ -48,7 +48,7 @@ public class MailSessionConfigTabController extends AbstractConfigTabController<
   }
 
   @Override
-  public void fromModel(MailSessionLocalSettingsConfigModel model)
+  public void fromModel()
   {
     standardEmailSender.setText(model.getStandardEmailSender());
     emailEnabled.setSelected(model.isEmailEnabled());
@@ -60,7 +60,7 @@ public class MailSessionConfigTabController extends AbstractConfigTabController<
   }
 
   @Override
-  public void toModel(MailSessionLocalSettingsConfigModel model)
+  public void toModel()
   {
     model.setStandardEmailSender(standardEmailSender.getText());
     model.setEmailEnabled(emailEnabled.isSelected());

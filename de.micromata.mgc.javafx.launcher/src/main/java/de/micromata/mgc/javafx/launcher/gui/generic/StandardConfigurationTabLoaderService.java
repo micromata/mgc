@@ -3,11 +3,14 @@ package de.micromata.mgc.javafx.launcher.gui.generic;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.micromata.genome.logging.config.LsLoggingLocalSettingsConfigModel;
 import de.micromata.genome.util.runtime.config.AbstractTextConfigFileConfigModel;
 import de.micromata.genome.util.runtime.config.CastableLocalSettingsConfigModel;
 import de.micromata.genome.util.runtime.config.HibernateSchemaConfigModel;
 import de.micromata.genome.util.runtime.config.JdbcLocalSettingsConfigModel;
+import de.micromata.genome.util.runtime.config.LocalSettingsConfigModel;
 import de.micromata.genome.util.runtime.config.MailSessionLocalSettingsConfigModel;
+import de.micromata.mgc.javafx.ModelController;
 import de.micromata.mgc.javafx.launcher.gui.TabConfig;
 import de.micromata.mgc.javafx.launcher.gui.jetty.JettyConfigTabController;
 import de.micromata.mgc.jettystarter.JettyConfigModel;
@@ -53,7 +56,21 @@ public class StandardConfigurationTabLoaderService implements ConfigurationTabLo
     for (AbstractTextConfigFileConfigModel textConfig : textConfigs) {
       ret.add(new TabConfig(TextConfigTabController.class, textConfig));
     }
+    LsLoggingLocalSettingsConfigModel logging = configModel
+        .castToForConfigDialog(LsLoggingLocalSettingsConfigModel.class);
+    if (logging != null) {
+      ret.add(new TabConfig(LoggingConfigTabController.class, logging));
+    }
     return ret;
+  }
+
+  @Override
+  public <T extends LocalSettingsConfigModel> Class<? extends ModelController<T>> findTabForConfig(T model)
+  {
+    //    if (model instanceof IFileLoggingLocalSettingsConfigModel) {
+    //      return (Class) IFileLoggingConfigTabController.class;
+    //    }
+    return null;
   }
 
 }

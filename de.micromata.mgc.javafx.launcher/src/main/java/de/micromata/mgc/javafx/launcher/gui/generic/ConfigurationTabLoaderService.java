@@ -3,6 +3,8 @@ package de.micromata.mgc.javafx.launcher.gui.generic;
 import java.util.List;
 
 import de.micromata.genome.util.runtime.config.CastableLocalSettingsConfigModel;
+import de.micromata.genome.util.runtime.config.LocalSettingsConfigModel;
+import de.micromata.mgc.javafx.ModelController;
 import de.micromata.mgc.javafx.launcher.gui.TabConfig;
 
 /**
@@ -14,4 +16,9 @@ import de.micromata.mgc.javafx.launcher.gui.TabConfig;
 public interface ConfigurationTabLoaderService
 {
   List<TabConfig> getTabsByConfiguration(CastableLocalSettingsConfigModel configModel);
+
+  default <T extends LocalSettingsConfigModel> Class<? extends ModelController<T>> findTabForConfig(T model)
+  {
+    return null;
+  }
 }

@@ -12,10 +12,10 @@
    <children>
       <GridPane layoutX="10.0" layoutY="15.0" prefHeight="258.0" prefWidth="585.0">
          <children>
-            <ComboBox fx:id="jdbcDriver" prefWidth="150.0" GridPane.columnIndex="1" />
-            <TextField fx:id="jdbcUrl" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <TextField fx:id="jdbcUser" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <TextField fx:id="jdbcPassword" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <ComboBox fx:id="drivername" prefWidth="150.0" GridPane.columnIndex="1" />
+            <TextField fx:id="url" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="username" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <TextField fx:id="password" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <Label text="Jdbc Driver" />
             <Label text="JDBC Url" GridPane.rowIndex="1" />
             <Label text="Database user" GridPane.rowIndex="2" />

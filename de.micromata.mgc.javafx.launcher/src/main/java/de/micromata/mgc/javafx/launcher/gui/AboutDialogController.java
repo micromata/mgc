@@ -17,7 +17,12 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
-public class AboutDialogController extends AbstractController<Object>
+/**
+ * 
+ * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
+ *
+ */
+public class AboutDialogController extends AbstractModelController<MgcApplication<?>>
 {
   @FXML
   private ImageView logo;
@@ -28,9 +33,10 @@ public class AboutDialogController extends AbstractController<Object>
   @FXML
   private Button okButton;
 
-  public void initWithApplication(MgcApplication<?> application)
+  @Override
+  public void initializeWithModel()
   {
-    MgcApplicationInfo ai = application.getApplicationInfo();
+    MgcApplicationInfo ai = model.getApplicationInfo();
     okButton.setOnAction(event -> getStage().close());
 
     String name = ai.getName() + " " + ai.getVersion();
@@ -58,6 +64,18 @@ public class AboutDialogController extends AbstractController<Object>
       detailText.getChildren().add(hlink);
     }
     appDetails.getChildren().add(detailText);
+
+  }
+
+  @Override
+  public void fromModel()
+  {
+
+  }
+
+  @Override
+  public void toModel()
+  {
 
   }
 

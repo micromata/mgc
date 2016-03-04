@@ -8,7 +8,8 @@ import java.util.WeakHashMap;
 import org.apache.commons.lang.StringUtils;
 
 import de.micromata.genome.util.validation.ValMessage;
-import de.micromata.mgc.javafx.launcher.gui.AbstractController;
+import de.micromata.genome.util.validation.ValState;
+import de.micromata.mgc.javafx.launcher.gui.AbstractModelController;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
@@ -22,14 +23,14 @@ import javafx.scene.Node;
 public class FXEvents
 {
   private static FXEvents INSTANCE = new FXEvents();
-  private final WeakHashMap<AbstractController<?>, List<Node>> listeners = new WeakHashMap<>();
+  private final WeakHashMap<AbstractModelController<?>, List<Node>> listeners = new WeakHashMap<>();
 
   public static FXEvents get()
   {
     return INSTANCE;
   }
 
-  public void registerListener(AbstractController<?> controller, Node node)
+  public void registerListener(AbstractModelController<?> controller, Node node)
   {
     listeners.putIfAbsent(controller, new ArrayList<Node>());
     listeners.get(controller).add(node);
@@ -44,7 +45,7 @@ public class FXEvents
    * @param controller the controller
    * @return list of controller nodes that want to be notified in case of an event fired by fireEvent.
    */
-  public <E extends Event> void addEventHandler(AbstractController<?> controller, Node node, EventType<E> type,
+  public <E extends Event> void addEventHandler(AbstractModelController<?> controller, Node node, EventType<E> type,
       EventHandler<E> handler)
   {
     node.addEventHandler(type, handler);
@@ -60,7 +61,7 @@ public class FXEvents
     }
   }
 
-  public void registerValMessageReceiver(AbstractController<?> controller, Node node,
+  public void registerValMessageReceiver(AbstractModelController<?> controller, Node node,
       Class<?> referenceType, String property)
   {
     registerListener(controller, node);
@@ -81,6 +82,33 @@ public class FXEvents
             event.consume();
 
           }
+        }
+        controller.addToFeedback(msg);
+      }
+
+    });
+  }
+
+  public void registerValMessageReceiver(AbstractModelController<?> controller, Node node,
+      Object model, String property)
+  {
+    registerListener(controller, node);
+    node.addEventHandler(ValMessageEvent.MESSAGE_EVENT_TYPE, event -> {
+      ValMessage msg = event.getMessage();
+      if (msg.isConsumed() == true) {
+        return;
+      }
+      Object themod = model;
+      String theprop = property;
+      if (msg.getValState() == ValState.Error && StringUtils.equals(property, "jdbcUrl") == true) {
+        System.out.println("url");
+      }
+      if (StringUtils.isNotBlank(property) && StringUtils.isNotBlank(msg.getProperty()) == true
+          && property.equals(msg.getProperty()) == true) {
+        if (themod == msg.getReference()) {
+          controller.addToFeedback(msg);
+          FXGuiUtils.markErroneousField(controller, node, msg);
+          event.consume();
         }
         controller.addToFeedback(msg);
       }

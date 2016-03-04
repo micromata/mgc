@@ -25,28 +25,28 @@ public class HibernateSchemaConfigTabController extends AbstractConfigTabControl
   private CheckBox formatSql;
 
   @Override
-  public void initializeWithModel(HibernateSchemaConfigModel model)
+  public void initializeWithModel()
   {
-    fromModel(model);
+    fromModel();
     List<String> values = Arrays.asList("update", "validate", "create", "create-drop");
     schemaUpdate.setItems(FXCollections.observableArrayList(values));
   }
 
   @Override
-  public void fromModel(HibernateSchemaConfigModel modelObject)
+  public void fromModel()
   {
-    schemaUpdate.setValue(modelObject.getSchemaUpdate());
-    showSql.setSelected(modelObject.isShowSql());
-    formatSql.setSelected(modelObject.isFormatSql());
+    schemaUpdate.setValue(model.getSchemaUpdate());
+    showSql.setSelected(model.isShowSql());
+    formatSql.setSelected(model.isFormatSql());
 
   }
 
   @Override
-  public void toModel(HibernateSchemaConfigModel modelObject)
+  public void toModel()
   {
-    modelObject.setSchemaUpdate(schemaUpdate.getValue());
-    modelObject.setShowSql(showSql.isSelected());
-    modelObject.setFormatSql(formatSql.isSelected());
+    model.setSchemaUpdate(schemaUpdate.getValue());
+    model.setShowSql(showSql.isSelected());
+    model.setFormatSql(formatSql.isSelected());
 
   }
 

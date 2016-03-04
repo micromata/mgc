@@ -122,12 +122,15 @@ public class MgcLauncher<M extends LocalSettingsConfigModel>
           Parent.class);
       mainWindow = lc.getSecond();
       Parent parent = lc.getFirst();
+      mainWindow.setThisNode(parent);
       mainWindow.setStage(stage);
       Scene scene = new Scene(parent);
+      mainWindow.setScene(scene);
       stage.setScene(scene);
-      mainWindow.setParent(parent);
+      mainWindow.setModel(sapplication);
+      //      mainWindow.setParent(null);
 
-      mainWindow.initialize(sapplication);
+      mainWindow.initializeWithModel();
 
       switch (config.getWindowSettingsType()) {
         case Minimized:

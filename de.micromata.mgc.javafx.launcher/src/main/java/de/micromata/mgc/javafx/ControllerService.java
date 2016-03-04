@@ -11,11 +11,14 @@ import de.micromata.genome.util.i18n.I18NTranslations;
 import de.micromata.genome.util.runtime.RuntimeIOException;
 import de.micromata.genome.util.types.Pair;
 import de.micromata.mgc.javafx.launcher.MgcLauncher;
-import de.micromata.mgc.javafx.launcher.gui.AbstractController;
+import de.micromata.mgc.javafx.launcher.gui.AbstractConfigDialog;
 import de.micromata.mgc.javafx.launcher.gui.AbstractMainWindow;
+import de.micromata.mgc.javafx.launcher.gui.AbstractModelController;
+import de.micromata.mgc.javafx.launcher.gui.Controller;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
@@ -82,14 +85,47 @@ public class ControllerService
 
     }
     Pair<W, C> load = loadScene(file, widget, controlToLoad);
+
     return load;
   }
 
-  public <M, W extends Node, C extends ModelController<M>> Pair<W, C> loadControlWithModel(Class<C> controlToLoad,
-      Class<W> widget, M model)
+  public <W extends Node, C extends Controller> Pair<W, C> loadControllerControl(Class<C> controlToLoad,
+      Class<W> widget, Controller parentController)
   {
     Pair<W, C> ret = loadControl(controlToLoad, widget);
-    ret.getSecond().initializeWithModel(model);
+    C controller = ret.getSecond();
+    controller.setThisNode(ret.getFirst());
+    controller.setParent((Parent) parentController.getThisNode());
+    ret.getSecond().setScene(parentController.getScene());
+    ret.getSecond().setStage(parentController.getStage());
+    return ret;
+  }
+
+  public <M, W extends Parent, C extends ModelController<M>> Pair<W, C> loadControlWithModelNewScene(
+      Class<C> controlToLoad,
+      Class<W> widget, M model, Controller parentController)
+  {
+    Pair<W, C> ret = loadControlWithModel(controlToLoad, widget, model, parentController);
+    C controller = ret.getSecond();
+    W wig = ret.getFirst();
+    Stage stage = new Stage();
+    //    controller.setOwningStage(stage);
+    Scene s = new Scene(wig, AbstractConfigDialog.PREF_WIDTH, AbstractConfigDialog.PREF_HEIGHT);
+    controller.setScene(s);
+    controller.setStage(stage);
+    stage.setScene(s);
+    s.getStylesheets().add(FXCssUtil.CSS);
+    return ret;
+  }
+
+  public <M, W extends Node, C extends ModelController<M>> Pair<W, C> loadControlWithModel(Class<C> controlToLoad,
+      Class<W> widget, M model, Controller parentController)
+  {
+    Pair<W, C> ret = loadControllerControl(controlToLoad, widget, parentController);
+    C controller = ret.getSecond();
+    controller.setModel(model);
+    controller.initializeWithModel();
+    controller.registerValMessageReceivers();
     return ret;
   }
 
@@ -117,10 +153,11 @@ public class ControllerService
     }
   }
 
-  public <M, C extends AbstractController<M>> C loadAsDialog(AbstractMainWindow<?> mainWindow, Class<C> controllerClass,
+  public <M, C extends AbstractModelController<M>> C loadAsDialog(AbstractMainWindow<?> mainWindow,
+      Class<C> controllerClass,
       String dialogTitle)
   {
-    Pair<Pane, C> pair = loadControl(controllerClass, Pane.class);
+    Pair<Pane, C> pair = loadControllerControl(controllerClass, Pane.class, mainWindow);
     Stage stage = new Stage();
     stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> {
       stage.hide();
@@ -139,10 +176,10 @@ public class ControllerService
     return controller;
   }
 
-  public <M, C extends AbstractController<M>> C loadAsWindow(AbstractMainWindow<?> mainWindow, Class<C> controllerClass,
-      String dialogTitle)
+  public <M, C extends AbstractModelController<M>> C loadAsWindow(AbstractMainWindow<?> mainWindow,
+      Class<C> controllerClass, M model, String dialogTitle)
   {
-    Pair<Pane, C> pair = loadControl(controllerClass, Pane.class);
+    Pair<Pane, C> pair = loadControlWithModel(controllerClass, Pane.class, model, mainWindow);
     Stage stage = new Stage();
     stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> {
       stage.hide();

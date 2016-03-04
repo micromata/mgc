@@ -1,16 +1,9 @@
 package de.micromata.mgc.javafx.launcher.gui;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 
-import de.micromata.genome.util.bean.FieldMatchers;
-import de.micromata.genome.util.bean.PrivateBeanUtils;
 import de.micromata.genome.util.i18n.OptionalTranslationProvider;
-import de.micromata.genome.util.matcher.CommonMatchers;
-import de.micromata.genome.util.runtime.GenericsUtils;
 import de.micromata.genome.util.runtime.config.LocalSettingsConfigModel;
 import de.micromata.genome.util.validation.ValMessage;
 import de.micromata.mgc.javafx.FXEvents;
@@ -20,8 +13,6 @@ import de.micromata.mgc.javafx.feedback.FeedbackPanel;
 import de.micromata.mgc.javafx.launcher.MgcLauncher;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.control.Control;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.Pane;
 
@@ -31,9 +22,10 @@ import javafx.scene.layout.Pane;
  *
  * @param <M>
  */
-public abstract class AbstractConfigTabController<M extends LocalSettingsConfigModel>extends AbstractController<M>
+public abstract class AbstractConfigTabController<M extends LocalSettingsConfigModel>extends AbstractModelController<M>
     implements Initializable, ModelController<M>
 {
+
   protected AbstractConfigDialog<?> configDialog;
   protected Tab tab;
   protected Pane tabPane;
@@ -58,46 +50,40 @@ public abstract class AbstractConfigTabController<M extends LocalSettingsConfigM
     msg.consume();
   }
 
-  protected void registerValMessage(String fieldName)
+  @Override
+  public void registerValMessageReceivers()
   {
-    Class<?> type = GenericsUtils.getClassGenericTypeFromSuperClass(getClass(), 0, LocalSettingsConfigModel.class);
-    Node node = (Node) PrivateBeanUtils.readField(this, fieldName);
-    FXEvents.get().registerValMessageReceiver(this, node, type, fieldName);
-  }
-
-  protected void registerValMessageReceivers()
-  {
-    Class<?> type = GenericsUtils.getClassGenericTypeFromSuperClass(getClass(), 0, LocalSettingsConfigModel.class);
-    List<Field> fields = PrivateBeanUtils.findAllFields(getClass(),
-        CommonMatchers.and(FieldMatchers.hasNotModifier(Modifier.STATIC), FieldMatchers.assignableTo(Control.class)));
-    for (Field field : fields) {
-      Control ctl = (Control) PrivateBeanUtils.readField(this, field);
-      FXEvents.get().registerValMessageReceiver(this, ctl, type, field.getName());
-    }
-    FXEvents.get().addEventHandler(this, tabPane, ValMessageEvent.MESSAGE_EVENT_TYPE, event -> {
-      if (event.getMessage().getReference() != null
-          && type.isAssignableFrom(event.getMessage().getReference().getClass()) == true) {
+    super.registerValMessageReceivers();
+    FXEvents.get().addEventHandler(this, getThisNode(), ValMessageEvent.MESSAGE_EVENT_TYPE, event -> {
+      //      if (event.getMessage().getReference() != null
+      //          && type.isAssignableFrom(event.getMessage().getReference().getClass()) == true) {
+      if (isMessageReceiver(event.getMessage()) == true) {
         markTabWithError(event.getMessage());
       }
     });
   }
 
+  protected boolean isMessageReceiver(ValMessage msg)
+  {
+    return msg.getReference() == getModel();
+  }
+
   protected DialogBuilder dialogBuilder()
   {
-    DialogBuilder builder = new DialogBuilder(tabPane);
+    DialogBuilder builder = new DialogBuilder((Pane) getThisNode());
     builder.setTranslation(new OptionalTranslationProvider(MgcLauncher.get().getApplication().getTranslateService()));
     return builder;
   }
 
   public void clearTabErros()
   {
-    tab.setStyle("");
+    getTab().setStyle("");
   }
 
   public void markTabWithError(ValMessage msg)
   {
     if (msg.getValState().isErrorOrWorse() == true) {
-      tab.setStyle("-fx-background-color: red");
+      getTab().setStyle("-fx-background-color: red");
     }
   }
 

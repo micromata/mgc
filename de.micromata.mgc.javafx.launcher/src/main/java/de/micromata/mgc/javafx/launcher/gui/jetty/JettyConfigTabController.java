@@ -23,9 +23,9 @@ public class JettyConfigTabController extends AbstractConfigTabController<JettyC
   private TextField publicUrl;
 
   @Override
-  public void initializeWithModel(JettyConfigModel model)
+  public void initializeWithModel()
   {
-    fromModel(model);
+    fromModel();
     serverPort.textProperty().addListener((tc, oldVal, newVal) -> {
       String oldUrl = publicUrl.getText();
       String sc = serverContextPath.getText();
@@ -38,20 +38,20 @@ public class JettyConfigTabController extends AbstractConfigTabController<JettyC
   }
 
   @Override
-  public void toModel(JettyConfigModel config)
+  public void toModel()
   {
-    config.setServerPort(serverPort.getText());
-    config.setServerContextPath(serverContextPath.getText());
-    config.setPublicUrl(publicUrl.getText());
+    model.setServerPort(serverPort.getText());
+    model.setServerContextPath(serverContextPath.getText());
+    model.setPublicUrl(publicUrl.getText());
 
   }
 
   @Override
-  public void fromModel(JettyConfigModel config)
+  public void fromModel()
   {
-    serverPort.setText(config.getServerPort());
-    serverContextPath.setText(config.getServerContextPath());
-    publicUrl.setText(config.getPublicUrl());
+    serverPort.setText(model.getServerPort());
+    serverContextPath.setText(model.getServerContextPath());
+    publicUrl.setText(model.getPublicUrl());
 
   }
 

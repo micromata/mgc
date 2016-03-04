@@ -29,8 +29,11 @@ public class FXCssUtil
   {
     final ObservableList<String> styleClass = node.getStyleClass();
     int indexOf = styleClass.indexOf(oldClass);
-    if (indexOf < 0) {
-      styleClass.add(newClass);
+    if (indexOf == -1) {
+      indexOf = styleClass.indexOf(newClass);
+      if (indexOf == -1) {
+        styleClass.add(newClass);
+      }
     } else {
       styleClass.remove(indexOf);
       styleClass.add(indexOf, newClass);

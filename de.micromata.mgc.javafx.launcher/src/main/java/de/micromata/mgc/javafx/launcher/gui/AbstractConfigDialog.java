@@ -20,6 +20,7 @@ import de.micromata.mgc.javafx.ValMessageEvent;
 import de.micromata.mgc.javafx.feedback.FeedbackPanel;
 import de.micromata.mgc.javafx.feedback.FeedbackPanelEvents;
 import de.micromata.mgc.javafx.launcher.MgcLauncher;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Tab;
@@ -33,8 +34,7 @@ import javafx.scene.layout.VBox;
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
  */
-public abstract class AbstractConfigDialog<M extends LocalSettingsConfigModel>extends AbstractController<M>
-    implements ModelController<M>
+public abstract class AbstractConfigDialog<M extends LocalSettingsConfigModel>extends AbstractModelController<M>
 {
   private static final Logger LOG = Logger.getLogger(AbstractConfigDialog.class);
   /**
@@ -58,7 +58,7 @@ public abstract class AbstractConfigDialog<M extends LocalSettingsConfigModel>ex
   protected abstract List<TabConfig> getConfigurationTabs();
 
   @Override
-  public void initializeWithModel(M model)
+  public void initializeWithModel()
   {
     configModel = model;
     addCss();
@@ -66,9 +66,11 @@ public abstract class AbstractConfigDialog<M extends LocalSettingsConfigModel>ex
     List<TabConfig> tabs = getConfigurationTabs();
     tabs.sort((e1, e2) -> Integer.compare(e1.prio, e2.prio));
     for (TabConfig tabc : tabs) {
-      Pair<Pane, ? extends AbstractConfigTabController<?>> wc = cv.loadControl(tabc.tabControlerClass, Pane.class);
+      Pair<Pane, ? extends AbstractConfigTabController<?>> wc = cv.loadControllerControl(tabc.tabControlerClass,
+          Pane.class, this);
       AbstractConfigTabController<?> contrl = wc.getSecond();
       contrl.setConfigDialog(this);
+
       contrl.setTabPane(wc.getFirst());
       Tab tabB = new Tab();
 
@@ -85,15 +87,25 @@ public abstract class AbstractConfigDialog<M extends LocalSettingsConfigModel>ex
       configurationTabs.getTabs().add(tabB);
       tabController.add(contrl);
       contrl.setTab(tabB);
-      contrl.initWithModel(tabc.configModel);
+      ((ModelController) contrl).setModel(tabc.configModel);
+      contrl.initializeWithModel();
+
       tabB.setText(contrl.getTabTitle());
       contrl.registerValMessageReceivers();
     }
+    //    configurationTabs.getTabs();
   }
 
   protected void addCss()
   {
-    stage.getScene().getStylesheets().add(FXCssUtil.CSS);
+    ObservableList<String> list = getParent().getScene().getStylesheets();
+    if (list.indexOf(FXCssUtil.CSS) == -1) {
+      list.add(FXCssUtil.CSS);
+    }
+    list = getScene().getStylesheets();
+    if (list.indexOf(FXCssUtil.CSS) == -1) {
+      list.add(FXCssUtil.CSS);
+    }
   }
 
   public void closeDialog()
@@ -110,7 +122,7 @@ public abstract class AbstractConfigDialog<M extends LocalSettingsConfigModel>ex
   @FXML
   private void onSave(ActionEvent event)
   {
-    toModel(configModel);
+    toModel();
     FXGuiUtils.resetErroneousFields(this);
     ValContext ctx = new ValContext();
     FXEvents.get().fireEvent(new FeedbackPanelEvents(FeedbackPanelEvents.CLEAR));
@@ -131,16 +143,16 @@ public abstract class AbstractConfigDialog<M extends LocalSettingsConfigModel>ex
   }
 
   @Override
-  public void toModel(M modelObject)
+  public void toModel()
   {
-    if (modelObject instanceof CastableLocalSettingsConfigModel) {
-      CastableLocalSettingsConfigModel cmc = (CastableLocalSettingsConfigModel) modelObject;
+    if (model instanceof CastableLocalSettingsConfigModel) {
+      CastableLocalSettingsConfigModel cmc = (CastableLocalSettingsConfigModel) model;
       for (AbstractConfigTabController ctl : tabController) {
         Class<? extends CastableLocalSettingsConfigModel> cf = (Class<? extends CastableLocalSettingsConfigModel>) GenericsUtils
             .getClassGenericTypeFromSuperClass(
                 ctl.getClass(), 0, CastableLocalSettingsConfigModel.class);
         LocalSettingsConfigModel res = cmc.castTo(cf);
-        ctl.toModel(res);
+        ctl.toModel();
       }
     } else {
       throw new IllegalArgumentException(getClass().getName() + ".toModel() has to be implemented");
@@ -148,16 +160,17 @@ public abstract class AbstractConfigDialog<M extends LocalSettingsConfigModel>ex
   }
 
   @Override
-  public void fromModel(M modelObject)
+  public void fromModel()
   {
-    if (modelObject instanceof CastableLocalSettingsConfigModel) {
-      CastableLocalSettingsConfigModel cmc = (CastableLocalSettingsConfigModel) modelObject;
+    if (model instanceof CastableLocalSettingsConfigModel) {
+      CastableLocalSettingsConfigModel cmc = (CastableLocalSettingsConfigModel) model;
       for (AbstractConfigTabController ctl : tabController) {
         Class<? extends LocalSettingsConfigModel> cf = (Class<? extends LocalSettingsConfigModel>) GenericsUtils
             .getClassGenericTypeFromSuperClass(
                 ctl.getClass(), 0, LocalSettingsConfigModel.class);
         LocalSettingsConfigModel res = cmc.castTo(cf);
-        ctl.fromModel(res);
+        ctl.setModel(res);
+        ctl.fromModel();
       }
     } else {
       throw new IllegalArgumentException(getClass().getName() + ".fromModel() has to be implemented");

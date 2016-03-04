@@ -25,9 +25,9 @@ public class LauncherConfigTabController extends AbstractConfigTabController<Lau
   private CheckBox startServerAtStartup;
 
   @Override
-  public void initializeWithModel(LauncherLocalSettingsConfigModel model)
+  public void initializeWithModel()
   {
-    fromModel(model);
+    fromModel();
     normal.setToggleGroup(windowGroup);
     minimized.setToggleGroup(windowGroup);
     systemTray.setToggleGroup(windowGroup);
@@ -35,30 +35,30 @@ public class LauncherConfigTabController extends AbstractConfigTabController<Lau
   }
 
   @Override
-  public void toModel(LauncherLocalSettingsConfigModel modelObject)
+  public void toModel()
   {
     if (systemTray.isSelected()) {
-      modelObject.setWindowSettings(WindowSettings.SystemTrayOnly.name());
+      model.setWindowSettings(WindowSettings.SystemTrayOnly.name());
     } else if (minimized.isSelected()) {
-      modelObject.setWindowSettings(WindowSettings.Minimized.name());
+      model.setWindowSettings(WindowSettings.Minimized.name());
     } else {
-      modelObject.setWindowSettings(WindowSettings.Normal.name());
+      model.setWindowSettings(WindowSettings.Normal.name());
     }
-    modelObject.setStartServerOnStartup(Boolean.toString(startServerAtStartup.isSelected()));
+    model.setStartServerOnStartup(Boolean.toString(startServerAtStartup.isSelected()));
 
   }
 
   @Override
-  public void fromModel(LauncherLocalSettingsConfigModel modelObject)
+  public void fromModel()
   {
-    if (WindowSettings.SystemTrayOnly.name().equals(modelObject.getWindowSettings()) == true) {
+    if (WindowSettings.SystemTrayOnly.name().equals(model.getWindowSettings()) == true) {
       systemTray.setSelected(true);
-    } else if (WindowSettings.Minimized.name().equals(modelObject.getWindowSettings()) == true) {
+    } else if (WindowSettings.Minimized.name().equals(model.getWindowSettings()) == true) {
       minimized.setSelected(true);
     } else {
       normal.setSelected(true);
     }
-    startServerAtStartup.setSelected(modelObject.isStartServerOnStartup());
+    startServerAtStartup.setSelected(model.isStartServerOnStartup());
   }
 
   @Override

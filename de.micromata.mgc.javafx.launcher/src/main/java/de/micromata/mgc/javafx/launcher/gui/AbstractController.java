@@ -1,65 +1,68 @@
 package de.micromata.mgc.javafx.launcher.gui;
 
-import org.apache.log4j.Logger;
-
-import de.micromata.genome.util.validation.ValMessage;
-import de.micromata.mgc.javafx.FXEvents;
-import de.micromata.mgc.javafx.feedback.FeedbackPanel;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
+ * Abstract JavaFX controller
  * 
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
  */
-public abstract class AbstractController<M>
+public class AbstractController implements Controller
 {
-  private static final Logger LOG = Logger.getLogger(AbstractController.class);
+  protected Node thisNode;
   protected Parent parent;
   protected Scene scene;
   protected Stage stage;
 
-  protected void registerValMessageReceiver(Node node, FeedbackPanel feedback, Class<?> referenceType, String property)
+  @Override
+  public Node getThisNode()
   {
-    FXEvents.get().registerValMessageReceiver(this, node, referenceType, property);
+    return thisNode;
   }
 
-  public void addToFeedback(ValMessage msg)
+  @Override
+  public void setThisNode(Node thisNode)
   {
-    LOG.warn("No feedbackPanel defined in " + getClass().getSimpleName() + "; " + msg.getI18nkey());
+    this.thisNode = thisNode;
   }
 
+  @Override
   public Parent getParent()
   {
     return parent;
   }
 
+  @Override
   public void setParent(Parent parent)
   {
     this.parent = parent;
   }
 
+  @Override
   public Scene getScene()
   {
     return scene;
   }
 
+  @Override
   public void setScene(Scene scene)
   {
     this.scene = scene;
   }
 
+  @Override
   public Stage getStage()
   {
     return stage;
   }
 
+  @Override
   public void setStage(Stage stage)
   {
     this.stage = stage;
   }
-
 }
