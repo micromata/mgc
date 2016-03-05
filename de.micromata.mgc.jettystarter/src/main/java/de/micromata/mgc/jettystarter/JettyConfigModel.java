@@ -1,5 +1,7 @@
 package de.micromata.mgc.jettystarter;
 
+import java.io.File;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 
@@ -43,8 +45,10 @@ public class JettyConfigModel extends AbstractCompositLocalSettingsConfigModel
   @ALocalSettingsPath(defaultValue = "false", comment = "Use server with HTTPS")
   private String sslEnabled;
 
-  @ALocalSettingsPath()
+  @ALocalSettingsPath(comment = "Port number for HTTPS")
   private String sslPort;
+  @ALocalSettingsPath(comment = "Use only HTTPS (no HTTP)")
+  private String sslOnly;
 
   @ALocalSettingsPath(comment = "Location of your SSL Keystore")
   private String sslKeystorePath;
@@ -88,7 +92,32 @@ public class JettyConfigModel extends AbstractCompositLocalSettingsConfigModel
         ctx.error("serverPort", "Please provid numeric port number");
       }
     }
-
+    if (isSslEnabled() == false) {
+      return;
+    }
+    if (StringUtils.isBlank(sslPort) == true) {
+      ctx.error("sslPort", "Please provide a server port");
+    } else {
+      if (NumberUtils.isDigits(port) == false) {
+        ctx.error("sslPort", "Please provid numeric port number");
+      }
+    }
+    if (StringUtils.isBlank(sslKeystorePath) == true) {
+      ctx.error("sslKeystorePath", "Please provide a keystore file");
+    } else {
+      File keystorefile = new File(sslKeystorePath);
+      if (keystorefile.exists() == false) {
+        ctx.error("sslKeystorePath", "Cannot find keystore: " + keystorefile.getAbsolutePath());
+      }
+    }
+    if (StringUtils.isBlank(trustStorePath) == true) {
+      ctx.error("trustStorePath", "Please provide a trust store file");
+    } else {
+      File keystorefile = new File(trustStorePath);
+      if (keystorefile.exists() == false) {
+        ctx.error("trustStorePath", "Cannot find trust store: " + keystorefile.getAbsolutePath());
+      }
+    }
   }
 
   @Override
@@ -289,6 +318,26 @@ public class JettyConfigModel extends AbstractCompositLocalSettingsConfigModel
   public void setTrustStorePassword(String trustStorePassword)
   {
     this.trustStorePassword = trustStorePassword;
+  }
+
+  public String getSslOnly()
+  {
+    return sslOnly;
+  }
+
+  public boolean isSslOnly()
+  {
+    return "true".equals(sslOnly);
+  }
+
+  public void setSslOnly(String sslOnly)
+  {
+    this.sslOnly = sslOnly;
+  }
+
+  public void setSslOnly(boolean sslOnly)
+  {
+    this.sslOnly = Boolean.toString(sslOnly);
   }
 
 }

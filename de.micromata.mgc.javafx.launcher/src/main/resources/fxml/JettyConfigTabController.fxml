@@ -81,6 +81,11 @@
                                        </HBox.margin>
                                     </Label>
                                     <TextField fx:id="sslPort" prefHeight="25.0" prefWidth="72.0" />
+                                    <CheckBox fx:id="sslOnly" mnemonicParsing="false" text="HTTPS only">
+                                       <HBox.margin>
+                                          <Insets left="30.0" />
+                                       </HBox.margin>
+                                    </CheckBox>
                                  </children>
                                  <VBox.margin>
                                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

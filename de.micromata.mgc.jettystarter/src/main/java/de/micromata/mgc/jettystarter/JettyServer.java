@@ -60,9 +60,15 @@ public abstract class JettyServer
     HttpConfiguration http_config = new HttpConfiguration();
     ServerConnector connector = initHttpConnector(config, server, http_config);
     ServerConnector sslConnector = initSslConnector(config, server, http_config);
+
     Connector[] connectors = new Connector[] { connector };
     if (sslConnector != null) {
-      connectors = (Connector[]) ArrayUtils.add(connectors, sslConnector);
+      if (config.isSslOnly() == true) {
+        connectors = new Connector[] { sslConnector };
+      } else {
+        connectors = (Connector[]) ArrayUtils.add(connectors, sslConnector);
+      }
+
     }
     server.setConnectors(connectors);
     contextHandler = createContextHandler(config);

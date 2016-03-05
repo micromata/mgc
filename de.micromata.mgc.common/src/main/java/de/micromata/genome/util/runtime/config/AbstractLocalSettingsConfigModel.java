@@ -3,6 +3,7 @@ package de.micromata.genome.util.runtime.config;
 import java.lang.reflect.Field;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.Validate;
 
 import de.micromata.genome.util.bean.PrivateBeanUtils;
 import de.micromata.genome.util.runtime.LocalSettings;
@@ -99,5 +100,13 @@ public abstract class AbstractLocalSettingsConfigModel implements LocalSettingsC
       localSettings.getMap().put(key, value);
     }
     return localSettings;
+  }
+
+  protected void resetFielToDefault(String fieldName)
+  {
+    Field f = PrivateBeanUtils.findField(getClass(), fieldName);
+    Validate.notNull(f);
+    ALocalSettingsPath ap = f.getAnnotation(ALocalSettingsPath.class);
+    PrivateBeanUtils.writeField(this, f, ap.defaultValue());
   }
 }

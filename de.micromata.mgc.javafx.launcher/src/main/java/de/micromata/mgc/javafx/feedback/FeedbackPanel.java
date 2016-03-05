@@ -242,6 +242,9 @@ public class FeedbackPanel extends GridPane implements Initializable
    */
   private void messageToRow(final ValMessage message)
   {
+    if (message.isConsumed() == true) {
+      return;
+    }
     RowConstraints row = RowConstraintsBuilder.create().minHeight(10).prefHeight(USE_COMPUTED_SIZE).fillHeight(false)
         .vgrow(Priority.NEVER).build();
     getRowConstraints().add(row);

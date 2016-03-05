@@ -109,22 +109,22 @@ public class ValContext
 
   public void directError(String property, String message)
   {
-    addDirect(ValState.Error, "", message, null);
+    addDirect(ValState.Error, property, message, null);
   }
 
   public void directError(String property, String message, Exception ex)
   {
-    addDirect(ValState.Error, "", message, ex);
+    addDirect(ValState.Error, property, message, ex);
   }
 
   public void directWarn(String property, String message)
   {
-    addDirect(ValState.Warning, "", message, null);
+    addDirect(ValState.Warning, property, message, null);
   }
 
   public void directInfo(String property, String message)
   {
-    addDirect(ValState.Info, "", message, null);
+    addDirect(ValState.Info, property, message, null);
   }
 
   public void translateMessages(I18NTranslationProvider transService)

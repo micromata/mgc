@@ -233,7 +233,7 @@ public abstract class AbstractConfigDialog<M extends LocalSettingsConfigModel>ex
     }
     for (ValMessage msg : ctx.getMessages()) {
       if (msg.isConsumed() == false) {
-        LOG.error("ValMessage unconsumed: " + msg.getI18nkey());
+        LOG.error("ValMessage unconsumed: " + (msg.getI18nkey() != null ? msg.getI18nkey() : msg.getMessage()));
       }
     }
   }

@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
+import de.micromata.genome.util.bean.PrivateBeanUtils;
 import de.micromata.genome.util.runtime.LocalSettings;
 import de.micromata.genome.util.validation.ValContext;
 
@@ -31,6 +32,37 @@ public class JdbcLocalSettingsConfigModel extends AbstractLocalSettingsConfigMod
   @ALocalSettingsPath(key = "url", comment = "JDBC url to connect to DB")
   private String url;
 
+  @ALocalSettingsPath()
+  private String extendedSettings;
+  @ALocalSettingsPath(defaultValue = "8",
+      comment = "Sets the maximum number of active connections that can be allocated at the same time.\n"
+          + "Use a negative value for no limit.")
+  private String maxActive;
+  @ALocalSettingsPath(defaultValue = "8",
+      comment = "Sets the maximum number of connections that can remain idle in the pool.")
+  private String maxIdle;
+  @ALocalSettingsPath(defaultValue = "0", comment = " Sets the minimum number of idle connections in the pool.")
+  private String minIdle;
+  @ALocalSettingsPath(defaultValue = "-1",
+      comment = "Max waiting while obtaining connection. Use -1 to make the pool wait indefinitely.")
+  private String maxWait;
+
+  @ALocalSettingsPath(defaultValue = "0", comment = "Sets the initial size of the connection pool.")
+  private String intialSize;
+  @ALocalSettingsPath(comment = "Sets the default catalog.")
+  private String defaultCatalog;
+  @ALocalSettingsPath(comment = "Sets default auto-commit state of connections returned by this datasource.")
+  private String defaultAutoCommit;
+  @ALocalSettingsPath(comment = "Validation query to test if connection is valid.")
+  private String validationQuery;
+  @ALocalSettingsPath(defaultValue = "-1",
+      comment = "Sets the validation query timeout, the amount of time, in seconds, that" +
+          " connection validation will wait for a response from the database when" +
+          "  executing a validation query.  \nUse a value less than or equal to 0 for  no timeout.")
+  private String validationQueryTimeout;
+  /**
+   * Internal flag, if datasource is not optional.
+   */
   private boolean needDatabase = false;
   /**
    * Has to be set outside.
@@ -68,8 +100,50 @@ public class JdbcLocalSettingsConfigModel extends AbstractLocalSettingsConfigMod
     if (ctx.hasLocalError() == true) {
       return;
     }
-
+    if (isExtendedSettings() == true) {
+      validateExtended(ctx);
+    } else {
+      resetExtendedSettings();
+    }
     checkDbUrl(ctx, drivername, url, username, password);
+  }
+
+  private void validateExtended(ValContext ctx)
+  {
+    checkInteger("maxActive", ctx);
+    checkInteger("maxIdle", ctx);
+    checkInteger("minIdle", ctx);
+    checkInteger("maxWait", ctx);
+    checkInteger("intialSize", ctx);
+    checkInteger("validationQueryTimeout", ctx);
+  }
+
+  private void checkInteger(String field, ValContext ctx)
+  {
+    String text = (String) PrivateBeanUtils.readField(this, field);
+    if (StringUtils.isBlank(text) == true) {
+      ctx.directError(field, "Please provide a number for field " + field);
+      return;
+    }
+    try {
+      Integer.parseInt(text);
+    } catch (NumberFormatException ex) {
+      ctx.directError(field, "Please provide a number for field " + field);
+    }
+
+  }
+
+  private void resetExtendedSettings()
+  {
+    resetFielToDefault("maxActive");
+    resetFielToDefault("maxIdle");
+    resetFielToDefault("minIdle");
+    resetFielToDefault("maxWait");
+    resetFielToDefault("intialSize");
+    resetFielToDefault("defaultCatalog");
+    resetFielToDefault("defaultAutoCommit");
+    resetFielToDefault("validationQuery");
+    resetFielToDefault("validationQueryTimeout");
   }
 
   private boolean checkDbUrl(ValContext ctx, String driver, String url, String user, String pass)
@@ -185,6 +259,131 @@ public class JdbcLocalSettingsConfigModel extends AbstractLocalSettingsConfigMod
   public List<JndiLocalSettingsConfigModel> getAssociatedJndi()
   {
     return associatedJndi;
+  }
+
+  public String getExtendedSettings()
+  {
+    return extendedSettings;
+  }
+
+  public boolean isExtendedSettings()
+  {
+    return "true".equals(extendedSettings);
+  }
+
+  public void setExtendedSettings(String extendedSettings)
+  {
+    this.extendedSettings = extendedSettings;
+  }
+
+  public void setExtendedSettings(boolean extendedSettings)
+  {
+    this.extendedSettings = Boolean.toString(extendedSettings);
+  }
+
+  public String getMaxActive()
+  {
+    return maxActive;
+  }
+
+  public void setMaxActive(String maxActive)
+  {
+    this.maxActive = maxActive;
+  }
+
+  public String getMaxIdle()
+  {
+    return maxIdle;
+  }
+
+  public void setMaxIdle(String maxIdle)
+  {
+    this.maxIdle = maxIdle;
+  }
+
+  public String getMinIdle()
+  {
+    return minIdle;
+  }
+
+  public void setMinIdle(String minIdle)
+  {
+    this.minIdle = minIdle;
+  }
+
+  public String getMaxWait()
+  {
+    return maxWait;
+  }
+
+  public void setMaxWait(String maxWait)
+  {
+    this.maxWait = maxWait;
+  }
+
+  public String getIntialSize()
+  {
+    return intialSize;
+  }
+
+  public void setIntialSize(String intialSize)
+  {
+    this.intialSize = intialSize;
+  }
+
+  public String getDefaultCatalog()
+  {
+    return defaultCatalog;
+  }
+
+  public void setDefaultCatalog(String defaultCatalog)
+  {
+    this.defaultCatalog = defaultCatalog;
+  }
+
+  public String getDefaultAutoCommit()
+  {
+    return defaultAutoCommit;
+  }
+
+  public boolean isDefaultAutoCommit()
+  {
+    return "true".equals(defaultAutoCommit);
+  }
+
+  public void setDefaultAutoCommit(String defaultAutoCommit)
+  {
+    this.defaultAutoCommit = defaultAutoCommit;
+  }
+
+  public void setDefaultAutoCommit(boolean defaultAutoCommit)
+  {
+    this.defaultAutoCommit = Boolean.toString(defaultAutoCommit);
+  }
+
+  public String getValidationQuery()
+  {
+    return validationQuery;
+  }
+
+  public void setValidationQuery(String validationQuery)
+  {
+    this.validationQuery = validationQuery;
+  }
+
+  public String getValidationQueryTimeout()
+  {
+    return validationQueryTimeout;
+  }
+
+  public void setValidationQueryTimeout(String validationQueryTimeout)
+  {
+    this.validationQueryTimeout = validationQueryTimeout;
+  }
+
+  public void setAssociatedJndi(List<JndiLocalSettingsConfigModel> associatedJndi)
+  {
+    this.associatedJndi = associatedJndi;
   }
 
 }

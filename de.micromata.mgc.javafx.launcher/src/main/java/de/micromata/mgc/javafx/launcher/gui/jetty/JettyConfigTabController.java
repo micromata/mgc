@@ -5,6 +5,7 @@ import org.apache.commons.lang.StringUtils;
 import de.micromata.mgc.javafx.launcher.gui.AbstractConfigTabController;
 import de.micromata.mgc.jettystarter.JettyConfigModel;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
@@ -35,9 +36,12 @@ public class JettyConfigTabController extends AbstractConfigTabController<JettyC
 
   @FXML
   private Pane sslPane;
-
+  private Node sslChildPane;
   @FXML
   private TextField sslPort;
+
+  @FXML
+  private CheckBox sslOnly;
 
   @FXML
   private TextField sslKeystorePath;
@@ -55,6 +59,7 @@ public class JettyConfigTabController extends AbstractConfigTabController<JettyC
   @Override
   public void initializeWithModel()
   {
+    sslChildPane = sslPane.getChildren().get(0);
     fromModel();
     port.textProperty().addListener((tc, oldVal, newVal) -> {
       String oldUrl = publicUrl.getText();
@@ -75,6 +80,16 @@ public class JettyConfigTabController extends AbstractConfigTabController<JettyC
   private void onSslEnabled(boolean enabled)
   {
     sslPane.setVisible(enabled);
+    if (enabled == true) {
+      if (sslPane.getChildren().isEmpty() == true) {
+        sslPane.getChildren().add(sslChildPane);
+      }
+    } else {
+      if (sslPane.getChildren().isEmpty() == false) {
+        sslPane.getChildren().remove(0);
+      }
+    }
+
   }
 
   @Override
@@ -88,6 +103,7 @@ public class JettyConfigTabController extends AbstractConfigTabController<JettyC
 
     model.setSslEnabled(sslEnabled.isSelected());
     model.setSslPort(sslPort.getText());
+    model.setSslOnly(sslOnly.isSelected());
     model.setSslKeystorePath(sslKeystorePath.getText());
     model.setSslKeystorePassword(sslKeystorePassword.getText());
     model.setSslKeyManagerPassword(sslKeyManagerPassword.getText());
@@ -107,6 +123,7 @@ public class JettyConfigTabController extends AbstractConfigTabController<JettyC
 
     sslEnabled.setSelected(model.isSslEnabled());
     sslPort.setText(model.getSslPort());
+    sslOnly.setSelected(model.isSslOnly());
     sslKeystorePath.setText(model.getSslKeystorePath());
     sslKeystorePassword.setText(model.getSslKeystorePassword());
     sslKeyManagerPassword.setText(model.getSslKeyManagerPassword());
