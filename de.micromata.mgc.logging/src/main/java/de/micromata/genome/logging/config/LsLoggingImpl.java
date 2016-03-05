@@ -5,6 +5,7 @@ import de.micromata.genome.logging.spi.LoggingWrapper;
 import de.micromata.genome.util.runtime.LocalSettings;
 
 /**
+ * Initialize from local settings.
  * 
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
@@ -39,7 +40,6 @@ public class LsLoggingImpl extends LoggingWrapper
     LsLoggingLocalSettingsConfigModel cfgModel = new LsLoggingLocalSettingsConfigModel();
     cfgModel.fromLocalSettings(ls);
     Logging logging = cfgModel.createLogging();
-    // TODO RK NPE
     setTarget(logging);
   }
 }

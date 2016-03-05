@@ -50,6 +50,9 @@ public abstract class LoggingWithFallbackLocalSettingsConfigModel extends BaseLo
     LoggingWithFallback fallbackLogging = createFallbackLogging();
     if (fallbackConfig != null) {
       Logging fallback = fallbackConfig.createLogging();
+      if (fallback instanceof LsLoggingImpl) {
+        fallback = ((LsLoggingImpl) fallback).getTarget();
+      }
       fallbackLogging.setSecondary(fallback);
     }
     return fallbackLogging;
