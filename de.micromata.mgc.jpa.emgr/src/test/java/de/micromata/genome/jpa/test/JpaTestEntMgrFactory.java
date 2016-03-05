@@ -13,9 +13,10 @@ import de.micromata.genome.jpa.EmgrTx;
  */
 public class JpaTestEntMgrFactory extends EmgrFactory<JpaTestEntMgr>
 {
-
+  // An EmgrFactory has to be singlton
   static JpaTestEntMgrFactory INSTANCE;
 
+  // because this method is synchronized hold the factory in you service
   public static synchronized JpaTestEntMgrFactory get()
   {
     if (INSTANCE != null) {
@@ -27,13 +28,17 @@ public class JpaTestEntMgrFactory extends EmgrFactory<JpaTestEntMgr>
 
   protected JpaTestEntMgrFactory()
   {
+    // the name of the persistence context
     super("de.micromata.genome.jpa.test");
   }
 
+  /**
+   * Create an IEmgr instance. If you don't want to create your own type, you can also use DefaultEmgr {@inheritDoc}
+   *
+   */
   @Override
   protected JpaTestEntMgr createEmgr(EntityManager entitManager, EmgrTx<JpaTestEntMgr> emgrTx)
   {
     return new JpaTestEntMgr(entitManager, this, emgrTx);
   }
-
 }
