@@ -10,6 +10,7 @@ import de.micromata.genome.util.i18n.I18NTranslationProviderImpl;
 import de.micromata.genome.util.i18n.I18NTranslations;
 import de.micromata.genome.util.i18n.PlaceholderTranslationProvider;
 import de.micromata.genome.util.runtime.LocalSettingsEnv;
+import de.micromata.genome.util.runtime.config.AbstractCompositLocalSettingsConfigModel;
 import de.micromata.genome.util.runtime.config.CastableLocalSettingsConfigModel;
 import de.micromata.genome.util.runtime.config.LocalSettingsConfigModel;
 import de.micromata.genome.util.validation.ValMessage;
@@ -33,6 +34,17 @@ public abstract class MgcApplicationWithJettyApplication<M extends LocalSettings
         new I18NTranslationProviderImpl(I18NTranslations.systemDefaultLocaleProvider(),
             new ChainedResourceBundleTranslationResolver("mgcapp", "mgcjetty"))));
     setTranslateService(provider);
+  }
+
+  @Override
+  public String getPublicUrl()
+  {
+    JettyConfigModel jettyConfig = AbstractCompositLocalSettingsConfigModel.castTo(getConfigModel(),
+        JettyConfigModel.class);
+    if (jettyConfig == null) {
+      return super.getPublicUrl();
+    }
+    return jettyConfig.getPublicUrl();
   }
 
   protected void getCreateJettyServer()

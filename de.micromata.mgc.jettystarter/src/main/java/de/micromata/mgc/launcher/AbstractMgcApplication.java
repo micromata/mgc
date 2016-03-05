@@ -49,6 +49,7 @@ public abstract class AbstractMgcApplication<M extends LocalSettingsConfigModel>
   {
     M nmodel = newModel();
     loadFromLocalSettings(nmodel, LocalSettings.get());
+    model = nmodel;
     return nmodel;
   }
 
@@ -70,6 +71,13 @@ public abstract class AbstractMgcApplication<M extends LocalSettingsConfigModel>
     model.toProperties(writer);
     File file = new File(LocalSettings.get().getLocalSettingsLoader().getLocalSettingsFileName());
     writer.store(file);
+  }
+
+  @Override
+  public String getPublicUrl()
+  {
+    return LocalSettings.get().get("cfg.public.url");
+
   }
 
   @Override

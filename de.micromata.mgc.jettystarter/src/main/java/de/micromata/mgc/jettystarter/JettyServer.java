@@ -5,7 +5,6 @@ import java.lang.management.ManagementFactory;
 import javax.management.MBeanServer;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.http.HttpVersion;
 import org.eclipse.jetty.jmx.MBeanContainer;
 import org.eclipse.jetty.server.Connector;
@@ -123,7 +122,7 @@ public abstract class JettyServer
 
   private ServerConnector initHttpConnector(JettyConfigModel config, Server server, HttpConfiguration http_config)
   {
-    int port = config.getServerPortAsInt();
+    int port = config.getPortAsInt();
     ServerConnector http = new ServerConnector(server,
         new HttpConnectionFactory(http_config));
     http.setPort(port);
@@ -133,26 +132,30 @@ public abstract class JettyServer
 
   private ServerConnector initSslConnector(JettyConfigModel config, Server server, HttpConfiguration http_config)
   {
-    JettySslConfigModel sslconfig = config.getSslConfigModel();
-    if (sslconfig.isSslEnabled() == false) {
+
+    if (config.isSslEnabled() == false) {
       return null;
     }
 
     SslContextFactory sslContextFactory = new SslContextFactory();
-    String keystorePath = sslconfig.getSslKeystorePath();
-    if (StringUtils.isBlank(keystorePath) == false) {
-      sslContextFactory.setKeyStorePath(keystorePath);
-    }
+    String keystorePath = config.getSslKeystorePath();
+    sslContextFactory.setKeyStorePath(keystorePath);
     // no null check required, because if password is null, setPassword will prompt user to provide a password
-    sslContextFactory.setKeyStorePassword(sslconfig.getSslKeystorePath());
-    sslContextFactory.setKeyManagerPassword(sslconfig.getSslKeyManagerPassword());
+    sslContextFactory.setKeyStorePassword(config.getSslKeystorePassword());
+    sslContextFactory.setKeyManagerPassword(config.getSslKeyManagerPassword());
+
+    sslContextFactory.setTrustStorePath(config.getTrustStorePath());
+    sslContextFactory.setTrustStorePassword(config.getTrustStorePassword());
+
+    sslContextFactory.setCertAlias(config.getSslCertAlias());
+    sslContextFactory.setTrustAll(true);
     HttpConfiguration https_config = new HttpConfiguration(http_config);
     https_config.addCustomizer(new SecureRequestCustomizer());
     ServerConnector https = new ServerConnector(server,
         new SslConnectionFactory(sslContextFactory, HttpVersion.HTTP_1_1.asString()),
         new HttpConnectionFactory(https_config));
 
-    int port = sslconfig.getPortAsInt();
+    int port = config.getSslPortAsInt();
     https.setPort(port);
     // TODO RK as config
     https.setIdleTimeout(500000);

@@ -46,4 +46,11 @@ public interface MgcApplication<M extends LocalSettingsConfigModel>
   boolean isRunning();
 
   I18NTranslationProvider getTranslateService();
+
+  /**
+   * The official url.
+   * 
+   * @return may be null or empty.
+   */
+  String getPublicUrl();
 }

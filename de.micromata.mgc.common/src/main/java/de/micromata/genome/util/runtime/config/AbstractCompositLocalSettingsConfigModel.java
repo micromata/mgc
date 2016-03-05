@@ -20,6 +20,18 @@ import de.micromata.genome.util.validation.ValContext;
 public abstract class AbstractCompositLocalSettingsConfigModel extends AbstractLocalSettingsConfigModel
     implements CastableLocalSettingsConfigModel
 {
+
+  public static <M extends LocalSettingsConfigModel> M castTo(LocalSettingsConfigModel orig, Class<M> targetClass)
+  {
+    if (targetClass.isAssignableFrom(orig.getClass()) == true) {
+      return (M) orig;
+    }
+    if (orig instanceof CastableLocalSettingsConfigModel) {
+      return ((CastableLocalSettingsConfigModel) orig).castTo(targetClass);
+    }
+    return null;
+  }
+
   @Override
   public void fromLocalSettings(LocalSettings localSettings)
   {
@@ -84,6 +96,7 @@ public abstract class AbstractCompositLocalSettingsConfigModel extends AbstractL
     return null;
   }
 
+  @Override
   public <T extends LocalSettingsConfigModel> List<T> castToCollect(Class<T> other)
   {
     List<T> ret = new ArrayList<>();
@@ -98,7 +111,7 @@ public abstract class AbstractCompositLocalSettingsConfigModel extends AbstractL
             FieldMatchers.assignableTo(CastableLocalSettingsConfigModel.class)));
     for (Field f : found) {
       CastableLocalSettingsConfigModel ct = (CastableLocalSettingsConfigModel) PrivateBeanUtils.readField(this, f);
-      List<T> sret = (List) ct.castToCollect(other);
+      List<T> sret = ct.castToCollect(other);
       ret.addAll(sret);
     }
     return ret;

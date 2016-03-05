@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.WeakHashMap;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 import de.micromata.genome.util.validation.ValMessage;
 import de.micromata.genome.util.validation.ValState;
@@ -22,6 +23,7 @@ import javafx.scene.Node;
  */
 public class FXEvents
 {
+  private static final Logger LOG = Logger.getLogger(FXEvents.class);
   private static FXEvents INSTANCE = new FXEvents();
   private final WeakHashMap<AbstractModelController<?>, List<Node>> listeners = new WeakHashMap<>();
 
@@ -92,6 +94,9 @@ public class FXEvents
   public void registerValMessageReceiver(AbstractModelController<?> controller, Node node,
       Object model, String property)
   {
+    if (node == null) {
+      LOG.error("Node is null on property: " + model.getClass().getSimpleName() + "." + property);
+    }
     registerListener(controller, node);
     node.addEventHandler(ValMessageEvent.MESSAGE_EVENT_TYPE, event -> {
       ValMessage msg = event.getMessage();

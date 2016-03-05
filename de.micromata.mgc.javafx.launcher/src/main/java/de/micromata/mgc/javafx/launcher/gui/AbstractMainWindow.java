@@ -12,6 +12,7 @@ import de.micromata.genome.util.runtime.LocalSettingsEnv;
 import de.micromata.genome.util.runtime.LocalSettingsService;
 import de.micromata.genome.util.runtime.config.LocalSettingsConfigModel;
 import de.micromata.genome.util.types.Pair;
+import de.micromata.genome.util.validation.ValContext;
 import de.micromata.genome.util.validation.ValMessage;
 import de.micromata.mgc.javafx.ControllerService;
 import de.micromata.mgc.javafx.FXCssUtil;
@@ -155,6 +156,14 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>
       loggingController.warn("GWiki is not configured.");
       return;
     }
+    M configModel = getApplication().getConfigModel();
+    configModel.fromLocalSettings(LocalSettings.get());
+    ValContext ctx = new ValContext();
+    configModel.validate(ctx);
+    if (ctx.hasErrors() == true) {
+      getLoggingController().error("Cannot start server, because configuration is not valid");
+      return;
+    }
     model.start(MgcLauncher.originalMainArgs);
 
   }
@@ -199,7 +208,9 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>
     //    Scene s = new Scene(root, AbstractConfigDialog.PREF_WIDTH, AbstractConfigDialog.PREF_HEIGHT);
 
     controller.getStage().initModality(Modality.APPLICATION_MODAL);
-    //stage.setResizable(false);
+    controller.getStage().setWidth(800);
+    controller.getStage().setHeight(600);
+
     controller.getStage().setTitle("Configuration");
     controller.getStage().show();
 
@@ -253,7 +264,7 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>
 
   private void launchBrowser()
   {
-    String puburl = LocalSettings.get().get("gwiki.public.url");
+    String puburl = getApplication().getPublicUrl();
     if (StringUtils.isBlank(puburl) == true) {
       loggingController.error("No public url configured");
       return;
@@ -284,6 +295,12 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>
   public LoggingController getLoggingController()
   {
     return loggingController;
+  }
+
+  public void reloadConfig()
+  {
+    getApplication().loadConfigModel();
+
   }
 
 }

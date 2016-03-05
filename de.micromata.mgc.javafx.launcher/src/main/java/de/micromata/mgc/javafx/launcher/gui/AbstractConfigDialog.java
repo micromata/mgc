@@ -79,16 +79,22 @@ public abstract class AbstractConfigDialog<M extends LocalSettingsConfigModel>ex
     AbstractConfigTabController<?> contrl = wc.getSecond();
     contrl.setConfigDialog(this);
 
-    contrl.setTabPane(wc.getFirst());
+    Pane tabPane = wc.getFirst();
+    tabPane.setPrefHeight(400);
+    tabPane.setMinHeight(400);
+    tabPane.setMaxHeight(400);
+    tabPane.setPrefWidth(800);
+    contrl.setTabPane(tabPane);
     Tab tabB = new Tab();
 
     VBox vbox = new VBox();
     FeedbackPanel feedback = new FeedbackPanel();
+    feedback.setPrefHeight(100);
     FXEvents.get().addEventHandler(this, feedback, FeedbackPanelEvents.CLEAR, event -> {
       feedback.clearMessages();
     });
     contrl.setFeedback(feedback);
-    vbox.getChildren().add(wc.getFirst());
+    vbox.getChildren().add(tabPane);
     vbox.getChildren().add(feedback);
     tabB.setContent(vbox);
 
@@ -147,6 +153,7 @@ public abstract class AbstractConfigDialog<M extends LocalSettingsConfigModel>ex
   @FXML
   private void onCancel(ActionEvent event)
   {
+    mainWindow.reloadConfig();
     closeDialog();
   }
 
