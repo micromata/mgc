@@ -95,7 +95,7 @@ public class MgcLauncher<M extends LocalSettingsConfigModel>
     application.start(args);
   }
 
-  static LauncherLocalSettingsConfigModel getLauncherConfig()
+  public static LauncherLocalSettingsConfigModel getLauncherConfig()
   {
     LauncherLocalSettingsConfigModel ret = null;
     LocalSettingsConfigModel cf = sapplication.getConfigModel();

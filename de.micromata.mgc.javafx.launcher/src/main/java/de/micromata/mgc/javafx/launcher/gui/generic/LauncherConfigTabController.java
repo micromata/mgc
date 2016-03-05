@@ -24,6 +24,9 @@ public class LauncherConfigTabController extends AbstractConfigTabController<Lau
   @FXML
   private CheckBox startServerAtStartup;
 
+  @FXML
+  private CheckBox startBrowserOnStartup;
+
   @Override
   public void initializeWithModel()
   {
@@ -45,6 +48,7 @@ public class LauncherConfigTabController extends AbstractConfigTabController<Lau
       model.setWindowSettings(WindowSettings.Normal.name());
     }
     model.setStartServerOnStartup(Boolean.toString(startServerAtStartup.isSelected()));
+    model.setStartBrowserOnStartup(Boolean.toString(startBrowserOnStartup.isSelected()));
 
   }
 
@@ -59,6 +63,7 @@ public class LauncherConfigTabController extends AbstractConfigTabController<Lau
       normal.setSelected(true);
     }
     startServerAtStartup.setSelected(model.isStartServerOnStartup());
+    startBrowserOnStartup.setSelected(model.isStartBrowserOnStartup());
   }
 
   @Override

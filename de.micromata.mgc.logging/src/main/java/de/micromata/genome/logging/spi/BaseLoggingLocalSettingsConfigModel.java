@@ -36,6 +36,16 @@ public abstract class BaseLoggingLocalSettingsConfigModel extends AbstractLocalS
     return prefix;
   }
 
+  public String getPrefix()
+  {
+    return prefix;
+  }
+
+  public void setPrefix(String prefix)
+  {
+    this.prefix = prefix;
+  }
+
   @Override
   public void validate(ValContext ctx)
   {
@@ -50,4 +60,5 @@ public abstract class BaseLoggingLocalSettingsConfigModel extends AbstractLocalS
   {
     this.typeId = typeId;
   }
+
 }

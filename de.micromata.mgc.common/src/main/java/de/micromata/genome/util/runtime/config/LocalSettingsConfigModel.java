@@ -48,4 +48,12 @@ public interface LocalSettingsConfigModel
    */
   String buildKey(String key);
 
+  /**
+   * get the commented giben by a @ALocalSettingsPath annotion.
+   * 
+   * @param localProperty/field name
+   * @return
+   */
+  String findCommentForProperty(String localProperty);
+
 }

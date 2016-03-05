@@ -1,7 +1,10 @@
 package de.micromata.genome.util.runtime.config;
 
+import java.lang.reflect.Field;
+
 import org.apache.commons.lang.StringUtils;
 
+import de.micromata.genome.util.bean.PrivateBeanUtils;
 import de.micromata.genome.util.runtime.LocalSettings;
 
 /**
@@ -74,6 +77,20 @@ public abstract class AbstractLocalSettingsConfigModel implements LocalSettingsC
   public String buildKey(String key)
   {
     return LocalSettingsConfigUtils.join(getKeyPrefix(), key);
+  }
+
+  @Override
+  public String findCommentForProperty(String localProperty)
+  {
+    Field field = PrivateBeanUtils.findField(getClass(), localProperty);
+    if (field == null) {
+      return null;
+    }
+    ALocalSettingsPath asp = field.getAnnotation(ALocalSettingsPath.class);
+    if (asp == null) {
+      return null;
+    }
+    return asp.comment();
   }
 
   public static LocalSettings setIfBlank(LocalSettings localSettings, String key, String value)

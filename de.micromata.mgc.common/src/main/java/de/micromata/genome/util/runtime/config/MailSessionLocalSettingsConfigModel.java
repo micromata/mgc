@@ -22,26 +22,26 @@ public class MailSessionLocalSettingsConfigModel extends AbstractLocalSettingsCo
   private String emailEnabled;
 
   private String defaultEmailSender;
-  @ALocalSettingsPath()
+  @ALocalSettingsPath(comment = "A standard sender email address. The application may use another one")
   private String standardEmailSender;
 
-  @ALocalSettingsPath(key = "smtp.host", defaultValue = "localhost")
+  @ALocalSettingsPath(key = "smtp.host", defaultValue = "localhost", comment = "Hostname of the email server")
   private String emailHost;
-  @ALocalSettingsPath(key = "smtp.port", defaultValue = "25")
+  @ALocalSettingsPath(key = "smtp.port", defaultValue = "25", comment = "Port number of the email server")
   private String emailPort;
 
-  @ALocalSettingsPath(key = "smtp.auth", defaultValue = "false")
+  @ALocalSettingsPath(key = "smtp.auth", defaultValue = "false", comment = "The email server needs authentification")
   private String emailAuthEnabled;
 
-  @ALocalSettingsPath(key = "smtp.user")
+  @ALocalSettingsPath(key = "smtp.user", comment = "Authentification by user name")
   private String emailAuthUser;
 
-  @ALocalSettingsPath(key = "smtp.password")
+  @ALocalSettingsPath(key = "smtp.password", comment = "Users password")
   private String emailAuthPass;
 
-  @ALocalSettingsPath(key = "smtp.starttls.enable", defaultValue = "false")
+  @ALocalSettingsPath(key = "smtp.starttls.enable", defaultValue = "false", comment = "Use STARTTLS as encryption")
   private String emailAuthEnableStartTls;
-  @ALocalSettingsPath(key = "smtp.ssl.enable", defaultValue = "false")
+  @ALocalSettingsPath(key = "smtp.ssl.enable", defaultValue = "false", comment = "Use SSL encryption")
   private String emailAuthEnableStartSsl;
   /**
    * If set, the datasource will be registered as jndi name.

@@ -50,6 +50,7 @@ public class JdbcConfigTabController extends AbstractConfigTabController<JdbcLoc
         url.setText(dd.getSampleUrl(model.getName()));
       }
     });
+
     fromModel();
   }
 
@@ -57,6 +58,7 @@ public class JdbcConfigTabController extends AbstractConfigTabController<JdbcLoc
   public void fromModel()
   {
     url.setText(model.getUrl());
+
     username.setText(model.getUsername());
     password.setText(model.getPassword());
     for (JdbProviderService desc : availableDrivers) {

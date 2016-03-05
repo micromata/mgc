@@ -20,6 +20,7 @@ import de.micromata.mgc.javafx.SystemService;
 import de.micromata.mgc.javafx.launcher.MgcApplicationStartStopToEventListener;
 import de.micromata.mgc.javafx.launcher.MgcLauncher;
 import de.micromata.mgc.javafx.launcher.MgcLauncherEvent;
+import de.micromata.mgc.javafx.launcher.gui.generic.LauncherLocalSettingsConfigModel;
 import de.micromata.mgc.javafx.launcher.gui.lf5.Lf5MainWindowController;
 import de.micromata.mgc.javafx.launcher.gui.lf5.MgcLf5Appender;
 import de.micromata.mgc.javafx.logging.LoggingController;
@@ -113,6 +114,13 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>
     loggingController.adjustHeight(loggingPane.getHeight());
     loggingController.adjustWidth(loggingPane.getWidth());
     MgcEventRegistries.getEventInstanceRegistry().registerListener(new MgcApplicationStartStopToEventListener());
+
+    FXEvents.get().addEventHandler(this, stopServerButton, MgcLauncherEvent.APP_STARTED, event -> {
+      LauncherLocalSettingsConfigModel config = MgcLauncher.getLauncherConfig();
+      if (config.isStartBrowserOnStartup() == true) {
+        launchBrowser();
+      }
+    });
   }
 
   @Override

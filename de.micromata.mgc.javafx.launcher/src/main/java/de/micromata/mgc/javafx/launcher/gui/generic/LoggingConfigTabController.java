@@ -3,6 +3,9 @@ package de.micromata.mgc.javafx.launcher.gui.generic;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang.StringUtils;
+
+import de.micromata.genome.logging.config.LoggingWithFallbackLocalSettingsConfigModel;
 import de.micromata.genome.logging.config.LsLoggingLocalSettingsConfigModel;
 import de.micromata.genome.logging.config.LsLoggingService.LsLoggingDescription;
 import de.micromata.genome.logging.spi.BaseLoggingLocalSettingsConfigModel;
@@ -38,6 +41,11 @@ public class LoggingConfigTabController extends AbstractConfigTabController<LsLo
   private List<LsLoggingDescription> loggingDescriptions;
   private ModelController<BaseLoggingLocalSettingsConfigModel> detailController;
   private JdbcConfigTabController jdbcController;
+
+  public boolean isFallback()
+  {
+    return StringUtils.equals(getTab().getId(), "fallbacklogtab");
+  }
 
   @Override
   public void initializeWithModel()
@@ -91,6 +99,10 @@ public class LoggingConfigTabController extends AbstractConfigTabController<LsLo
       }
 
       detailController.initializeWithModel();
+      if (detailController instanceof AbstractConfigTabController) {
+        AbstractConfigTabController actl = (AbstractConfigTabController) detailController;
+        actl.addToolTips();
+      }
       logContentPanel.getChildren().add(wc.getFirst());
     }
 
@@ -104,6 +116,33 @@ public class LoggingConfigTabController extends AbstractConfigTabController<LsLo
 
       logContentPanel.getChildren().add(pjdbc.getFirst());
     }
+    if (model.getNested() instanceof LoggingWithFallbackLocalSettingsConfigModel) {
+      LoggingWithFallbackLocalSettingsConfigModel lfcm = (LoggingWithFallbackLocalSettingsConfigModel) model
+          .getNested();
+      if (lfcm.getFallbackConfig() == null) {
+        lfcm.setFallbackConfig(new LsLoggingLocalSettingsConfigModel("genome.logging.fallback"));
+      }
+      addFallbackLogging(lfcm.getFallbackConfig());
+    } else {
+      removeFallbackLogging();
+    }
+  }
+
+  protected void removeFallbackLogging()
+  {
+    if (isFallback() == true) {
+      return;
+    }
+    configDialog.removeTab("fallbacklogtab");
+  }
+
+  protected void addFallbackLogging(LsLoggingLocalSettingsConfigModel model)
+  {
+    if (isFallback() == true) {
+      return;
+    }
+
+    configDialog.addTab(LoggingConfigTabController.class, model, "fallbacklogtab", "Fallbacklog");
   }
 
   @Override
@@ -125,9 +164,11 @@ public class LoggingConfigTabController extends AbstractConfigTabController<LsLo
       return;
     }
     model.setTypeId(cd.typeId());
+    model.getNested().setTypeId(cd.typeId());
     //    modelObject.setNested(cd.getConfigModel());
     if (detailController != null) {
       model.setNested(detailController.getModel());
+      model.getNested().setTypeId(cd.typeId());
       detailController.toModel();
     }
     if (jdbcController != null) {

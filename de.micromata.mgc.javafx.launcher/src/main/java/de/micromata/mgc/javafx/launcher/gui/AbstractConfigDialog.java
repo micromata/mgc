@@ -3,6 +3,7 @@ package de.micromata.mgc.javafx.launcher.gui;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import de.micromata.genome.util.runtime.GenericsUtils;
@@ -68,32 +69,62 @@ public abstract class AbstractConfigDialog<M extends LocalSettingsConfigModel>ex
     for (TabConfig tabc : tabs) {
       Pair<Pane, ? extends AbstractConfigTabController<?>> wc = cv.loadControllerControl(tabc.tabControlerClass,
           Pane.class, this);
-      AbstractConfigTabController<?> contrl = wc.getSecond();
-      contrl.setConfigDialog(this);
-
-      contrl.setTabPane(wc.getFirst());
-      Tab tabB = new Tab();
-
-      VBox vbox = new VBox();
-      FeedbackPanel feedback = new FeedbackPanel();
-      FXEvents.get().addEventHandler(this, feedback, FeedbackPanelEvents.CLEAR, event -> {
-        feedback.clearMessages();
-      });
-      contrl.setFeedback(feedback);
-      vbox.getChildren().add(wc.getFirst());
-      vbox.getChildren().add(feedback);
-      tabB.setContent(vbox);
-
-      configurationTabs.getTabs().add(tabB);
-      tabController.add(contrl);
-      contrl.setTab(tabB);
-      ((ModelController) contrl).setModel(tabc.configModel);
-      contrl.initializeWithModel();
-
-      tabB.setText(contrl.getTabTitle());
-      contrl.registerValMessageReceivers();
+      createTab(tabc.configModel, wc);
     }
     //    configurationTabs.getTabs();
+  }
+
+  private Tab createTab(LocalSettingsConfigModel configModel, Pair<Pane, ? extends AbstractConfigTabController<?>> wc)
+  {
+    AbstractConfigTabController<?> contrl = wc.getSecond();
+    contrl.setConfigDialog(this);
+
+    contrl.setTabPane(wc.getFirst());
+    Tab tabB = new Tab();
+
+    VBox vbox = new VBox();
+    FeedbackPanel feedback = new FeedbackPanel();
+    FXEvents.get().addEventHandler(this, feedback, FeedbackPanelEvents.CLEAR, event -> {
+      feedback.clearMessages();
+    });
+    contrl.setFeedback(feedback);
+    vbox.getChildren().add(wc.getFirst());
+    vbox.getChildren().add(feedback);
+    tabB.setContent(vbox);
+
+    configurationTabs.getTabs().add(tabB);
+    tabController.add(contrl);
+    contrl.setTab(tabB);
+    ((ModelController) contrl).setModel(configModel);
+    contrl.initializeWithModel();
+    contrl.addToolTips();
+    tabB.setText(contrl.getTabTitle());
+    contrl.registerValMessageReceivers();
+    return tabB;
+  }
+
+  public boolean removeTab(String id)
+  {
+    for (Tab tab : configurationTabs.getTabs()) {
+      if (StringUtils.equals(tab.getId(), id) == true) {
+        configurationTabs.getTabs().remove(tab);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public <M extends LocalSettingsConfigModel> boolean addTab(Class<? extends AbstractConfigTabController<M>> controller,
+      M model,
+      String id, String title)
+  {
+    ControllerService cv = ControllerService.get();
+
+    Pair<Pane, ? extends AbstractConfigTabController<M>> wc = cv.loadControllerControl(controller, Pane.class, this);
+    Tab tab = createTab(model, wc);
+    tab.setId(id);
+    tab.setText(title);
+    return true;
   }
 
   protected void addCss()

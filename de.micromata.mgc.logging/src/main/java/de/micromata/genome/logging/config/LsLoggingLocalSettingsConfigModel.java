@@ -38,6 +38,10 @@ public class LsLoggingLocalSettingsConfigModel extends BaseLoggingLocalSettingsC
   @Override
   public void validate(ValContext ctx)
   {
+    if (nested == null) {
+      ctx.directError("typeId", "No logging selected");
+      return;
+    }
     nested.validate(ctx);
   }
 
@@ -46,6 +50,9 @@ public class LsLoggingLocalSettingsConfigModel extends BaseLoggingLocalSettingsC
   {
     super.fromLocalSettings(localSettings);
     LsLoggingDescription desc = findByTypeId(getTypeId());
+    if (desc == null) {
+      return;
+    }
     nested = desc.getConfigModel();
     nested.fromLocalSettings(localSettings);
   }
@@ -55,6 +62,7 @@ public class LsLoggingLocalSettingsConfigModel extends BaseLoggingLocalSettingsC
   {
     //    LocalSettingsWriter sw = super.toProperties(writer);
     if (nested != null) {
+      nested.setPrefix(getKeyPrefix());
       return nested.toProperties(writer);
     }
     return writer;

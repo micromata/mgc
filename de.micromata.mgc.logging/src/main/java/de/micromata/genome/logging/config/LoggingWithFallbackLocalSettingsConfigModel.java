@@ -6,7 +6,7 @@ import de.micromata.genome.logging.Logging;
 import de.micromata.genome.logging.LoggingWithFallback;
 import de.micromata.genome.logging.spi.BaseLoggingLocalSettingsConfigModel;
 import de.micromata.genome.util.runtime.LocalSettings;
-import de.micromata.genome.util.runtime.config.ALocalSettingsPath;
+import de.micromata.genome.util.runtime.config.LocalSettingsWriter;
 
 /**
  * configure FallbackLogging
@@ -17,10 +17,11 @@ import de.micromata.genome.util.runtime.config.ALocalSettingsPath;
 public abstract class LoggingWithFallbackLocalSettingsConfigModel extends BaseLoggingLocalSettingsConfigModel
 {
 
-  @ALocalSettingsPath
   private String fallbackTypeId;
 
   private LsLoggingLocalSettingsConfigModel fallbackConfig;
+
+  protected abstract LoggingWithFallback createFallbackLogging();
 
   @Override
   public void fromLocalSettings(LocalSettings localSettings)
@@ -33,7 +34,15 @@ public abstract class LoggingWithFallbackLocalSettingsConfigModel extends BaseLo
     }
   }
 
-  protected abstract LoggingWithFallback createFallbackLogging();
+  @Override
+  public LocalSettingsWriter toProperties(LocalSettingsWriter writer)
+  {
+    LocalSettingsWriter ret = super.toProperties(writer);
+    if (fallbackConfig != null) {
+      fallbackConfig.toProperties(ret);
+    }
+    return ret;
+  }
 
   @Override
   public Logging createLogging()
@@ -44,6 +53,26 @@ public abstract class LoggingWithFallbackLocalSettingsConfigModel extends BaseLo
       fallbackLogging.setSecondary(fallback);
     }
     return fallbackLogging;
+  }
+
+  public String getFallbackTypeId()
+  {
+    return fallbackTypeId;
+  }
+
+  public void setFallbackTypeId(String fallbackTypeId)
+  {
+    this.fallbackTypeId = fallbackTypeId;
+  }
+
+  public LsLoggingLocalSettingsConfigModel getFallbackConfig()
+  {
+    return fallbackConfig;
+  }
+
+  public void setFallbackConfig(LsLoggingLocalSettingsConfigModel fallbackConfig)
+  {
+    this.fallbackConfig = fallbackConfig;
   }
 
 }

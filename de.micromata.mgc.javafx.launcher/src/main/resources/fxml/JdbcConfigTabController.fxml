@@ -1,36 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.micromata.mgc.javafx.launcher.gui.generic.JdbcConfigTabController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.micromata.mgc.javafx.launcher.gui.generic.JdbcConfigTabController">
    <children>
-      <GridPane layoutX="10.0" layoutY="15.0" prefHeight="258.0" prefWidth="585.0">
+      <VBox>
          <children>
-            <ComboBox fx:id="drivername" prefWidth="150.0" GridPane.columnIndex="1" />
-            <TextField fx:id="url" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <TextField fx:id="username" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <TextField fx:id="password" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <Label text="Jdbc Driver" />
-            <Label text="JDBC Url" GridPane.rowIndex="1" />
-            <Label text="Database user" GridPane.rowIndex="2" />
-            <Label text="Database password" GridPane.rowIndex="3" />
+            <HBox>
+               <children>
+                  <Label minWidth="150.0" prefWidth="100.0" text="Jdbc Driver" />
+                  <ComboBox fx:id="drivername" prefWidth="150.0" />
+               </children>
+               <VBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox>
+               <children>
+                  <Label maxWidth="100.0" minWidth="150.0" text="JDBC Url" />
+                  <TextField fx:id="url" prefHeight="25.0" prefWidth="400.0" />
+               </children>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+            </HBox>
+            <HBox>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+               <children>
+                  <Label minWidth="150.0" text="Database user" />
+                  <TextField fx:id="username" prefHeight="25.0" prefWidth="400.0" />
+               </children>
+            </HBox>
+            <HBox>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+               <children>
+                  <Label minWidth="150.0" text="Database password" />
+                  <TextField fx:id="password" prefHeight="25.0" prefWidth="400.0" />
+               </children>
+            </HBox>
          </children>
-         <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="288.0" minWidth="10.0" prefWidth="172.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="479.0" minWidth="10.0" prefWidth="413.0" />
-         </columnConstraints>
-         <rowConstraints>
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-         </rowConstraints>
-      </GridPane>
+      </VBox>
    </children>
 </AnchorPane>

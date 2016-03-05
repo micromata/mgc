@@ -17,12 +17,14 @@ public class JettyConfigModel extends AbstractCompositLocalSettingsConfigModel
 {
   private JettySslConfigModel sslConfigModel = new JettySslConfigModel();
 
-  @ALocalSettingsPath(key = "gwiki.jetty.port", defaultValue = "8081")
+  @ALocalSettingsPath(key = "gwiki.jetty.port", defaultValue = "8081", comment = "Port the server listened")
   private String serverPort;
-  @ALocalSettingsPath(key = "gwiki.jetty.contextpath", defaultValue = "/")
+  @ALocalSettingsPath(key = "gwiki.jetty.contextpath", defaultValue = "/",
+      comment = "subpath the application will running (part of the url)")
   private String serverContextPath;
 
-  @ALocalSettingsPath(key = "gwiki.public.url", defaultValue = "http://localhost:8081/")
+  @ALocalSettingsPath(key = "gwiki.public.url", defaultValue = "http://localhost:8081/",
+      comment = "Url the application is reachable")
   private String publicUrl;
 
   @ALocalSettingsPath(key = "genome.jetty.jmx.enabled", defaultValue = "false")

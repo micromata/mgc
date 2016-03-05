@@ -1,8 +1,14 @@
 package de.micromata.mgc.javafx.launcher.gui;
 
+import java.lang.reflect.Field;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
+import org.apache.commons.lang.StringUtils;
+
+import de.micromata.genome.util.bean.FieldMatchers;
+import de.micromata.genome.util.bean.PrivateBeanUtils;
 import de.micromata.genome.util.i18n.OptionalTranslationProvider;
 import de.micromata.genome.util.runtime.config.LocalSettingsConfigModel;
 import de.micromata.genome.util.validation.ValMessage;
@@ -13,7 +19,9 @@ import de.micromata.mgc.javafx.feedback.FeedbackPanel;
 import de.micromata.mgc.javafx.launcher.MgcLauncher;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Control;
 import javafx.scene.control.Tab;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Pane;
 
 /**
@@ -84,6 +92,40 @@ public abstract class AbstractConfigTabController<M extends LocalSettingsConfigM
   {
     if (msg.getValState().isErrorOrWorse() == true) {
       getTab().setStyle("-fx-background-color: red");
+    }
+  }
+
+  protected void addTooltip(String field)
+  {
+    Field nodeField = PrivateBeanUtils.findField(getClass(), field);
+    if (Control.class.isAssignableFrom(nodeField.getType()) == false) {
+      return;
+    }
+    Control node = (Control) PrivateBeanUtils.readField(this, nodeField);
+    if (node == null) {
+      return;
+    }
+    addTooltip(node, field);
+  }
+
+  protected void addTooltip(Control node, String field)
+  {
+    String cmd = getModel().findCommentForProperty(field);
+    if (StringUtils.isBlank(cmd) == true) {
+      return;
+    }
+    node.setTooltip(new Tooltip(cmd));
+  }
+
+  public void addToolTips()
+  {
+    List<Field> fields = PrivateBeanUtils.findAllFields(getClass(), FieldMatchers.assignableTo(Control.class));
+    for (Field field : fields) {
+      Control control = (Control) PrivateBeanUtils.readField(this, field);
+      if (control == null) {
+        continue;
+      }
+      addTooltip(control, field.getName());
     }
   }
 
