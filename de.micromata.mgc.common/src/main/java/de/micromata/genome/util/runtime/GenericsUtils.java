@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 /**
  * Utils to retrieve Generic Type information
  * 
@@ -21,6 +23,8 @@ import java.util.Map;
  */
 public class GenericsUtils
 {
+  private static final Logger LOG = Logger.getLogger(GenericsUtils.class);
+
   public static Class<?> getClass(Type type)
   {
     if (type instanceof Class) {
@@ -73,52 +77,6 @@ public class GenericsUtils
     }
     return defaultClass;
   }
-
-  /**
-   * TODO RK implement or delete
-   * 
-   * @param cls
-   * @param typeName
-   * @param defaultClass
-   * @return
-   */
-  public static Class<?> getClassGenericTypeFromSuperClass(Class<?> cls, String typeName, Class<?> defaultClass)
-  {
-    Type t = cls.getGenericSuperclass();
-    if (t instanceof ParameterizedType) {
-      ParameterizedType ptt = (ParameterizedType) t;
-      Type optt = ptt.getOwnerType();
-
-      Type[] pts = ptt.getActualTypeArguments();
-      Class<?> rt = (Class<?>) ptt.getRawType();
-      Type rtsc = rt.getGenericSuperclass();
-      // if (pts.length <= typePosition)
-      // return defaultClass;
-      // Type pt = pts[typePosition];
-      // Class< ? > fcls = getClass(pt);
-      // if (pt instanceof Class< ? >)
-      // return (Class< ? >) pt;
-
-    }
-    return defaultClass;
-  }
-
-  // public static Class< ? > getClassGenericTypeFromSuperClass(Class< ? > cls, String typePosition, Class< ? > defaultClass)
-  // {
-  // Type t = cls.getGenericSuperclass();
-  //    
-  // if (t instanceof ParameterizedType) {
-  // ParameterizedType ptt = (ParameterizedType) t;
-  // Type[] pts = ptt.getActualTypeArguments();
-  // if (pts.length <= typePosition)
-  // return defaultClass;
-  // Type pt = pts[typePosition];
-  //      
-  // if (pt instanceof Class< ? >)
-  // return (Class< ? >) pt;
-  // }
-  // return defaultClass;
-  // }
 
   public static Class<?> getClassGenericTypeFromInterface(Class<?> cls, int interfacePosition, int typePosition,
       Class<?> defaultClass)
@@ -506,7 +464,7 @@ public class GenericsUtils
     Map<Class<?>, GenericTypeTrail> typetrails = GenericTypeTrail.buildTypeTransMap(clazz);
     GenericTypeTrail baseTrail = typetrails.get(field.getDeclaringClass());
     if (baseTrail == null) {
-      // TODO RK log
+      LOG.info("Cannot determine field type: " + clazz.getName() + "." + field.getName());
       return field.getType();
     }
     Class<?> type = baseTrail.getContreteFieldType(field);
