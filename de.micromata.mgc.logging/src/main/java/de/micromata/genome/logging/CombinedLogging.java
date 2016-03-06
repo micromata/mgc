@@ -124,14 +124,12 @@ public class CombinedLogging extends BaseLogging
       List<Pair<String, String>> logAttributes, int startRow, int maxRow, List<OrderBy> orderBy, boolean masterOnly,
       LogEntryCallback callback) throws EndOfSearch
   {
-    // TODO Auto-generated method stub
-
+    // nothing
   }
 
   @Override
   protected void selectLogsImpl(List<Object> logId, boolean masterOnly, LogEntryCallback callback) throws EndOfSearch
   {
-    // TODO Auto-generated method stub
-
+    // nothing
   }
 }
