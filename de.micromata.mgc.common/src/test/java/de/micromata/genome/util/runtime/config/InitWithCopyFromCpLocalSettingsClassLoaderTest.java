@@ -2,6 +2,7 @@ package de.micromata.genome.util.runtime.config;
 
 import java.io.File;
 
+import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -17,6 +18,8 @@ import de.micromata.genome.util.runtime.StdLocalSettingsLoader;
  */
 public class InitWithCopyFromCpLocalSettingsClassLoaderTest
 {
+  private static final Logger LOG = Logger.getLogger(InitWithCopyFromCpLocalSettingsClassLoaderTest.class);
+
   @Test
   public void testCopy()
   {
@@ -33,7 +36,10 @@ public class InitWithCopyFromCpLocalSettingsClassLoaderTest
         });
     LocalSettingsLoader loader = ncp.get();
     LocalSettings ls = loader.loadSettings();
-    Assert.assertTrue(new File("target/test_fromcp.properties").exists());
+
+    if (file.exists() == false) {
+      LOG.warn("File doesn't exists: " + file.getAbsolutePath());
+    }
     Assert.assertEquals("hello", ls.get("test_fromcp"));
   }
 }
