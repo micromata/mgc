@@ -153,7 +153,7 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>
     LocalSettingsService.reset();
     LocalSettingsEnv.reset();
     if (LocalSettings.localSettingsExists() == false) {
-      loggingController.warn("GWiki is not configured.");
+      loggingController.warn("Application is not configured.");
       return;
     }
     M configModel = getApplication().getConfigModel();

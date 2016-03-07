@@ -24,13 +24,13 @@ public class JettyConfigModel extends AbstractCompositLocalSettingsConfigModel
    */
   private String prefix;
 
-  @ALocalSettingsPath(defaultValue = "8081", comment = "Port the server listened")
+  @ALocalSettingsPath(defaultValue = "8080", comment = "Port the server listened")
   private String port;
-  @ALocalSettingsPath(defaultValue = "/",
+  @ALocalSettingsPath(defaultValue = "/genome",
       comment = "subpath the application will running (part of the url)")
   private String contextpath;
 
-  @ALocalSettingsPath(defaultValue = "http://localhost:8081/",
+  @ALocalSettingsPath(defaultValue = "http://localhost:8080/genome",
       comment = "Url the application is reachable")
   private String publicUrl;
 

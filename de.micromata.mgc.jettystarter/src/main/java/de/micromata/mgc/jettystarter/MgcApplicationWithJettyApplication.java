@@ -19,15 +19,39 @@ import de.micromata.mgc.launcher.AbstractMgcApplication;
 import de.micromata.mgc.launcher.MgcApplicationStartStopEvent;
 import de.micromata.mgc.launcher.MgcApplicationStartStopStatus;
 
+/**
+ * Application, which will be started by an embedded jetty server.
+ * 
+ * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
+ *
+ * @param <M> configuration model of the application.
+ */
 public abstract class MgcApplicationWithJettyApplication<M extends LocalSettingsConfigModel>
     extends AbstractMgcApplication<M>
 
 {
+
+  /**
+   * The Constant LOG.
+   */
   private static final Logger LOG = Logger.getLogger(MgcApplicationWithJettyApplication.class);
+
+  /**
+   * The jetty server.
+   */
   protected JettyServer jettyServer;
 
+  /**
+   * New jetty server.
+   *
+   * @param cfg the cfg
+   * @return the jetty server
+   */
   protected abstract JettyServer newJettyServer(JettyConfigModel cfg);
 
+  /**
+   * Instantiates a new mgc application with jetty application.
+   */
   public MgcApplicationWithJettyApplication()
   {
     I18NTranslationProvider provider = new DefaultWarnI18NTranslationProvider(new PlaceholderTranslationProvider(
@@ -47,6 +71,11 @@ public abstract class MgcApplicationWithJettyApplication<M extends LocalSettings
     return jettyConfig.getPublicUrl();
   }
 
+  /**
+   * Gets the creates the jetty server.
+   *
+   * @return the creates the jetty server
+   */
   protected void getCreateJettyServer()
   {
     if (jettyServer != null) {
@@ -128,6 +157,11 @@ public abstract class MgcApplicationWithJettyApplication<M extends LocalSettings
     return jettyServer.getServer().isRunning();
   }
 
+  /**
+   * Stop and wait.
+   *
+   * @return the mgc application start stop status
+   */
   public MgcApplicationStartStopStatus stopAndWait()
   {
     MgcApplicationStartStopStatus res = stop();

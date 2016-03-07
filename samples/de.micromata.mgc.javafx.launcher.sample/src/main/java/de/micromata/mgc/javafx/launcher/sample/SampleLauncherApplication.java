@@ -12,6 +12,7 @@ import de.micromata.mgc.jettystarter.MgcApplicationWithJettyApplication;
 import de.micromata.mgc.jettystarter.sample.SampleJettyServer;
 
 /**
+ * Application with a embedded jetty
  * 
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
@@ -21,18 +22,31 @@ public class SampleLauncherApplication extends MgcApplicationWithJettyApplicatio
   public SampleLauncherApplication()
   {
     super();
+    // configure the translation 
     I18NTranslationProvider provider = new DefaultWarnI18NTranslationProvider(new PlaceholderTranslationProvider(
         new I18NTranslationProviderImpl(I18NTranslations.systemDefaultLocaleProvider(),
             new ChainedResourceBundleTranslationResolver("mgclauncher", "mgcapp", "mgcjetty"))));
     setTranslateService(provider);
   }
 
+  /**
+   * Provides the configuration model.
+   * 
+   * {@inheritDoc}
+   *
+   */
   @Override
   protected SampleLocalSettingsConfigModel newModel()
   {
     return new SampleLocalSettingsConfigModel();
   }
 
+  /**
+   * Create a jetty with deployed war or exlicite servlets.
+   * 
+   * {@inheritDoc}
+   *
+   */
   @Override
   protected JettyServer newJettyServer(JettyConfigModel cfg)
   {
@@ -40,5 +54,4 @@ public class SampleLauncherApplication extends MgcApplicationWithJettyApplicatio
     ret.initJetty(cfg);
     return ret;
   }
-
 }

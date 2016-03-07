@@ -6,6 +6,7 @@ import de.micromata.mgc.jettystarter.JettyConfigModel;
 import de.micromata.mgc.jettystarter.JettyServer;
 
 /**
+ * Minimal Jetty Server sample.
  * 
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
@@ -22,6 +23,7 @@ public class SampleJettyServer extends JettyServer
   protected ServletContextHandler createContextHandler(JettyConfigModel config)
   {
     ServletContextHandler sch = new ServletContextHandler();
+    // just one hello world servlet.
     sch.addServlet(SampleServlet.class.getName(), "/");
     return sch;
   }

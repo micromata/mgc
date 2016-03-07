@@ -13,6 +13,7 @@ import de.micromata.mgc.jettystarter.JettyServerRunner;
 import de.micromata.mgc.jettystarter.MgcApplicationWithJettyApplication;
 
 /**
+ * Runn a jetty on a console.
  * 
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *

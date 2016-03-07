@@ -5,6 +5,7 @@ import de.micromata.genome.util.runtime.config.LocalSettingsConfigModel;
 import de.micromata.genome.util.validation.ValContext;
 
 /**
+ * An application with configuration.
  * 
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
@@ -39,16 +40,37 @@ public interface MgcApplication<M extends LocalSettingsConfigModel>
    */
   void reInit();
 
+  /**
+   * Starting the application.
+   *
+   * @param args the args
+   * @return the mgc application start stop status
+   */
   MgcApplicationStartStopStatus start(String[] args);
 
+  /**
+   * Stop the application.
+   *
+   * @return the mgc application start stop status
+   */
   MgcApplicationStartStopStatus stop();
 
+  /**
+   * checks if application is running. Preventing to start application twice.
+   *
+   * @return true, if is running
+   */
   boolean isRunning();
 
+  /**
+   * Use to translate gui and validation.
+   *
+   * @return the translate service
+   */
   I18NTranslationProvider getTranslateService();
 
   /**
-   * The official url.
+   * The official url. Use to launch an browser.
    * 
    * @return may be null or empty.
    */
