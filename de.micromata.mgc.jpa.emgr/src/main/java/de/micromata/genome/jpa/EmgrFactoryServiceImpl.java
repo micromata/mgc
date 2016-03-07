@@ -1,9 +1,13 @@
 package de.micromata.genome.jpa;
 
-import java.util.Map;
-import java.util.WeakHashMap;
+import java.lang.ref.Reference;
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
-// TODO: Auto-generated Javadoc
+import org.apache.commons.collections15.list.SynchronizedList;
+
 /**
  * The Class EmgrFactoryServiceImpl.
  */
@@ -11,26 +15,40 @@ public class EmgrFactoryServiceImpl implements EmgrFactoryService
 {
 
   /** The factories. */
-  private Map<String, EmgrFactory<?>> factories = new WeakHashMap<>();
+  private List<Reference<EmgrFactory<?>>> factories = SynchronizedList.decorate(new ArrayList<>());
 
   /**
    * Gets the factories.
    *
    * @return the factories
    */
-  public Map<String, EmgrFactory<?>> getFactories()
+  public List<EmgrFactory<?>> getFactories()
   {
-    return factories;
+
+    Iterator<Reference<EmgrFactory<?>>> iterator = factories.iterator();
+
+    List<EmgrFactory<?>> list = new ArrayList<>();
+    while (iterator.hasNext() == true) {
+      Reference<EmgrFactory<?>> next = iterator.next();
+      EmgrFactory<?> emgrFactory = next.get();
+      if (emgrFactory == null) {
+        iterator.remove();
+      } else {
+        list.add(emgrFactory);
+      }
+    }
+
+    return list;
   }
 
   /**
    * {@inheritDoc}
    *
-  */
+   */
 
   @Override
   public void register(EmgrFactory<?> emgrFac)
   {
-    factories.put(emgrFac.getUnitName(), emgrFac);
+    factories.add(new WeakReference<>(emgrFac));
   }
 }
