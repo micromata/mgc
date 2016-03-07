@@ -25,9 +25,12 @@ public class InitWithCopyFromCpLocalSettingsClassLoaderTest
   public void testCopy()
   {
     Log4JInitializer.copyLogConfigFileFromCp();
+
     File file = new File("target/test_fromcp.properties");
+    LOG.info("Try to copy from cp: " + file.getAbsolutePath());
     if (file.exists() == true) {
       file.delete();
+
     }
     InitWithCopyFromCpLocalSettingsClassLoader ncp = new InitWithCopyFromCpLocalSettingsClassLoader(
         () -> {
