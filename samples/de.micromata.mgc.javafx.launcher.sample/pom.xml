@@ -23,24 +23,34 @@
   </properties>
 
 
-
   <dependencies>
+    <!-- The Launcher itself -->
     <dependency>
       <groupId>de.micromata.mgc</groupId>
       <artifactId>de.micromata.mgc.javafx.launcher</artifactId>
       <version>${mgc.version}</version>
     </dependency>
+    <!-- we want to have the jetty sample as application.
+         Replace this with your own application or delete it, if
+         you implement the application in this project. -->
     <dependency>
       <groupId>de.micromata.mgc</groupId>
       <artifactId>de.micromata.mgc.jettystarter.sample</artifactId>
       <version>${mgc.version}</version>
     </dependency>
+    <!-- We want mgc loging.
+         Delete this, if you don't want mgc logging
+     -->
     <dependency>
       <groupId>de.micromata.mgc</groupId>
       <artifactId>de.micromata.mgc.jpa.logging</artifactId>
       <version>${mgc.version}</version>
     </dependency>
-      <dependency>
+    <!--  A small database.
+          Delete this, if you want another or none databases.
+          Databases can also put into the lib directory of the final fat jar. 
+    -->
+    <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derby</artifactId>
       <version>${org.apache.derby.version}</version>
@@ -94,7 +104,7 @@
           <mainClass>${start-class}</mainClass>
         </configuration>
       </plugin>
-      
+
     </plugins>
   </build>
 </project>
