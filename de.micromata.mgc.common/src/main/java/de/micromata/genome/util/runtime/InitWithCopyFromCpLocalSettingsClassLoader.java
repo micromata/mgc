@@ -39,6 +39,9 @@ public class InitWithCopyFromCpLocalSettingsClassLoader implements Supplier<Loca
       if (is != null) {
         FileUtils.copyInputStreamToFile(is, f);
         IOUtils.closeQuietly(is);
+        LOG.info("Copied from CP: " + f.getName() + " to " + f.getAbsolutePath());
+      } else {
+        LOG.warn("Cannot find localsettings in CP: " + f.getName());
       }
 
     } catch (IOException ex) {
