@@ -84,7 +84,7 @@ public class StdLocalSettingsLoader implements LocalSettingsLoader
   @Override
   public boolean localSettingsExists()
   {
-    File lsFile = new File(getLocalSettingsFileName());
+    File lsFile = getLocalSettingsFile();
     return lsFile.exists();
   }
 
