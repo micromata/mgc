@@ -9,6 +9,7 @@ import org.junit.Test;
 import de.micromata.genome.util.runtime.InitWithCopyFromCpLocalSettingsClassLoader;
 import de.micromata.genome.util.runtime.LocalSettings;
 import de.micromata.genome.util.runtime.LocalSettingsLoader;
+import de.micromata.genome.util.runtime.Log4JInitializer;
 import de.micromata.genome.util.runtime.StdLocalSettingsLoader;
 
 /**
@@ -23,6 +24,7 @@ public class InitWithCopyFromCpLocalSettingsClassLoaderTest
   @Test
   public void testCopy()
   {
+    Log4JInitializer.copyLogConfigFileFromCp();
     File file = new File("target/test_fromcp.properties");
     if (file.exists() == true) {
       file.delete();
