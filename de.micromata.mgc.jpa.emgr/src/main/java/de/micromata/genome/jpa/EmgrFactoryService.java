@@ -1,6 +1,6 @@
 package de.micromata.genome.jpa;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  * The Interface EmgrFactoryService. GENOME-1689
@@ -8,19 +8,18 @@ import java.util.Map;
 public interface EmgrFactoryService
 {
 
-  void register(EmgrFactory<?> emgrFactory);
-
   /**
    * Register.
    *
    * @param emgrFac the emgr fac
    */
-  //void register(EmgrFactory<Emgr<?>> emgrFac);
+
+  void register(EmgrFactory<?> emFac);
 
   /**
    * Gets the factories.
    *
    * @return the factories
    */
-  public Map<String, EmgrFactory<?>> getFactories();
+  public List<EmgrFactory<?>> getFactories();
 }
