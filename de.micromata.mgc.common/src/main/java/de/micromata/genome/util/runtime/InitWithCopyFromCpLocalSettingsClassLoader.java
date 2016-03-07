@@ -31,6 +31,7 @@ public class InitWithCopyFromCpLocalSettingsClassLoader implements Supplier<Loca
   {
     LocalSettingsLoader loader = localSettingsLoaderSupplier.get();
     if (loader.localSettingsExists() == true) {
+      LOG.info("LocalSetting already exists: " + loader.getLocalSettingsFile().getAbsolutePath());
       return loader;
     }
     File f = loader.getLocalSettingsFile();
