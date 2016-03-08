@@ -96,17 +96,17 @@ public class LocalSettings implements LocalSettingsService
   }
 
   // TODO RK do somewhere
-  static {
-    defaultValues.put("env.ApplicationEnvironment", "SERVER");
-    defaultValues.put("env.ApplicationDevelopmentModus", "DEV");
-    defaultValues.put("env.ShortApplicationName", "GNM");
-    defaultValues.put("database.databaseProvider", "NONE");
-    defaultValues.put("cfg.public.url", "http://localhost:8080/genome");
-    defaultValues.put("test.TestApplicationContextXml", "src/test/resources/testApplicationContext.xml");
-    defaultValues.put("test.log4jproperties", "src/test/resources/log4j.properties");
-    defaultValues.put("test.email", "devnull@micromata.de");
-    defaultValues.put("ProjectRoot", "${cfg.projectroot.path}");
-  }
+  //  static {
+  //    defaultValues.put("env.ApplicationEnvironment", "SERVER");
+  //    defaultValues.put("env.ApplicationDevelopmentModus", "DEV");
+  //    defaultValues.put("env.ShortApplicationName", "GNM");
+  //    defaultValues.put("database.databaseProvider", "NONE");
+  //    defaultValues.put("cfg.public.url", "http://localhost:8080/genome");
+  //    defaultValues.put("test.TestApplicationContextXml", "src/test/resources/testApplicationContext.xml");
+  //    defaultValues.put("test.log4jproperties", "src/test/resources/log4j.properties");
+  //    defaultValues.put("test.email", "devnull@micromata.de");
+  //    defaultValues.put("ProjectRoot", "${cfg.projectroot.path}");
+  //  }
 
   /**
    * Gets the.

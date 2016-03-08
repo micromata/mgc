@@ -21,6 +21,12 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+/**
+ * Simple implementation for the naming context.
+ * 
+ * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
+ *
+ */
 public class SimpleNamingContext implements Context
 {
 
@@ -175,6 +181,9 @@ public class SimpleNamingContext implements Context
     if (logger.isInfoEnabled()) {
       logger.info("Static JNDI binding: [" + this.root + name + "] = ["
           + SimpleNamingContextBuilder.jndiObjectToString(obj) + "]");
+    }
+    if (obj == null) {
+      throw new IllegalArgumentException("Cannot bind null object to JNDI: " + this.root + name);
     }
     this.boundObjects.put(this.root + name, obj);
   }

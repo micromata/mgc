@@ -41,7 +41,7 @@ public class LocalSettingsEnv
   /**
    * if true, binds old legacy jndi genome specifc values.
    */
-  private static boolean bindDefaultGenomeEnvs = true;
+  private static boolean bindDefaultGenomeEnvs = false;
 
   private static LocalSettingsEnv INSTANCE;
   /**
