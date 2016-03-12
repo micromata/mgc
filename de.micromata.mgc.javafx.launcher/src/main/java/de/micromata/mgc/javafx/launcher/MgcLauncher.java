@@ -26,6 +26,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 /**
+ * Launching applications.
  * 
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
@@ -52,6 +53,7 @@ public class MgcLauncher<M extends LocalSettingsConfigModel>
     this.application = application;
     this.mainWindowClass = mainWindowClass;
     INSTANCE = this;
+    application.initializeAfterConstruction();
   }
 
   private boolean noWindow(String[] args)

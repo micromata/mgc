@@ -17,6 +17,11 @@ public interface MgcApplication<M extends LocalSettingsConfigModel>
   MgcApplicationInfo getApplicationInfo();
 
   /**
+   * Initialize after creating instance.
+   */
+  void initializeAfterConstruction();
+
+  /**
    * get the current configuration model
    * 
    * @return

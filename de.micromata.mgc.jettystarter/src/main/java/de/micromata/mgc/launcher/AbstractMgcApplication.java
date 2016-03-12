@@ -48,6 +48,22 @@ public abstract class AbstractMgcApplication<M extends LocalSettingsConfigModel>
     return model;
   }
 
+  /**
+   * 
+   */
+  @Override
+  public void initializeAfterConstruction()
+  {
+    configureLogging();
+  }
+
+  protected static void configureLogging()
+  {
+    Log4JInitializer.copyLogConfigFileFromCp();
+    Log4JInitializer.initializeLog4J();
+
+  }
+
   @Override
   public M loadConfigModel()
   {
