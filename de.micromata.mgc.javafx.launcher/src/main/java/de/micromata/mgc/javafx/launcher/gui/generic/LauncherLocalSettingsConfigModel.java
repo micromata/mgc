@@ -19,7 +19,7 @@ public class LauncherLocalSettingsConfigModel extends AbstractCompositLocalSetti
   @ALocalSettingsPath(defaultValue = "Normal")
   private String windowSettings;
   @ALocalSettingsPath(defaultValue = "false", comment = "Starting application also starts server")
-  private String startServerOnStartup;
+  private String startServerAtStartup;
 
   @ALocalSettingsPath(defaultValue = "false", comment = "Starting the server will open a browser window")
   private String startBrowserOnStartup;
@@ -52,17 +52,17 @@ public class LauncherLocalSettingsConfigModel extends AbstractCompositLocalSetti
 
   public boolean isStartServerOnStartup()
   {
-    return "true".equals(startServerOnStartup);
+    return "true".equals(startServerAtStartup);
   }
 
   public String getStartServerOnStartup()
   {
-    return startServerOnStartup;
+    return startServerAtStartup;
   }
 
   public void setStartServerOnStartup(String startServerOnStartup)
   {
-    this.startServerOnStartup = startServerOnStartup;
+    this.startServerAtStartup = startServerOnStartup;
   }
 
   public String getStartBrowserOnStartup()

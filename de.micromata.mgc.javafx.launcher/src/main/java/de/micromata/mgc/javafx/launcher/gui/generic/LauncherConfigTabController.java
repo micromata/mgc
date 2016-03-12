@@ -1,5 +1,6 @@
 package de.micromata.mgc.javafx.launcher.gui.generic;
 
+import de.micromata.mgc.javafx.ModelGuiField;
 import de.micromata.mgc.javafx.launcher.gui.AbstractConfigTabController;
 import de.micromata.mgc.javafx.launcher.gui.generic.LauncherLocalSettingsConfigModel.WindowSettings;
 import javafx.fxml.FXML;
@@ -20,11 +21,15 @@ public class LauncherConfigTabController extends AbstractConfigTabController<Lau
   private RadioButton minimized;
   @FXML
   private RadioButton systemTray;
+
   private ToggleGroup windowGroup = new ToggleGroup();
+
   @FXML
+  @ModelGuiField
   private CheckBox startServerAtStartup;
 
   @FXML
+  @ModelGuiField
   private CheckBox startBrowserOnStartup;
 
   @Override
@@ -47,8 +52,7 @@ public class LauncherConfigTabController extends AbstractConfigTabController<Lau
     } else {
       model.setWindowSettings(WindowSettings.Normal.name());
     }
-    model.setStartServerOnStartup(Boolean.toString(startServerAtStartup.isSelected()));
-    model.setStartBrowserOnStartup(Boolean.toString(startBrowserOnStartup.isSelected()));
+    super.toModel();
 
   }
 
@@ -62,8 +66,7 @@ public class LauncherConfigTabController extends AbstractConfigTabController<Lau
     } else {
       normal.setSelected(true);
     }
-    startServerAtStartup.setSelected(model.isStartServerOnStartup());
-    startBrowserOnStartup.setSelected(model.isStartBrowserOnStartup());
+    super.fromModel();
   }
 
   @Override

@@ -7,6 +7,7 @@ import org.apache.commons.lang.StringUtils;
 
 import de.micromata.genome.util.runtime.config.JdbcLocalSettingsConfigModel;
 import de.micromata.genome.util.runtime.config.jdbc.JdbProviderService;
+import de.micromata.mgc.javafx.ModelGuiField;
 import de.micromata.mgc.javafx.SystemService;
 import de.micromata.mgc.javafx.launcher.gui.AbstractConfigTabController;
 import javafx.collections.FXCollections;
@@ -18,6 +19,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 
 /**
+ * Configuration tab for a jdbc connection.
  * 
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
@@ -28,15 +30,20 @@ public class JdbcConfigTabController extends AbstractConfigTabController<JdbcLoc
   private ComboBox<String> drivername;
 
   @FXML
+  @ModelGuiField
   private TextField url;
 
   @FXML
+  @ModelGuiField
   private TextField username;
   @FXML
+  @ModelGuiField
   private TextField password;
+
   private List<JdbProviderService> availableDrivers;
 
   @FXML
+  @ModelGuiField
   private CheckBox extendedSettings;
 
   @FXML
@@ -44,22 +51,31 @@ public class JdbcConfigTabController extends AbstractConfigTabController<JdbcLoc
   private Node extendedChildPane;
 
   @FXML
+  @ModelGuiField
   private TextField maxActive;
   @FXML
+  @ModelGuiField
   private TextField intialSize;
   @FXML
+  @ModelGuiField
   private TextField maxWait;
   @FXML
+  @ModelGuiField
   private TextField maxIdle;
   @FXML
+  @ModelGuiField
   private TextField minIdle;
   @FXML
+  @ModelGuiField
   private CheckBox defaultAutoCommit;
   @FXML
+  @ModelGuiField
   private TextField defaultCatalog;
   @FXML
+  @ModelGuiField
   private TextField validationQuery;
   @FXML
+  @ModelGuiField
   private TextField validationQueryTimeout;
 
   @Override
@@ -105,10 +121,7 @@ public class JdbcConfigTabController extends AbstractConfigTabController<JdbcLoc
   @Override
   public void fromModel()
   {
-    url.setText(model.getUrl());
 
-    username.setText(model.getUsername());
-    password.setText(model.getPassword());
     for (JdbProviderService desc : availableDrivers) {
       if (StringUtils.equals(model.getDrivername(), desc.getJdbcDriver()) == true) {
         drivername.setValue(desc.getName());
@@ -117,16 +130,7 @@ public class JdbcConfigTabController extends AbstractConfigTabController<JdbcLoc
         }
       }
     }
-    extendedSettings.setSelected(model.isExtendedSettings());
-    maxActive.setText(model.getMaxActive());
-    intialSize.setText(model.getIntialSize());
-    maxWait.setText(model.getMaxWait());
-    maxIdle.setText(model.getMaxIdle());
-    minIdle.setText(model.getMinIdle());
-    defaultAutoCommit.setSelected(model.isDefaultAutoCommit());
-    defaultCatalog.setText(model.getDefaultCatalog());
-    validationQuery.setText(model.getValidationQuery());
-    validationQueryTimeout.setText(model.getValidationQueryTimeout());
+    super.fromModel();
   }
 
   JdbProviderService getSelectedDriver()
@@ -146,19 +150,7 @@ public class JdbcConfigTabController extends AbstractConfigTabController<JdbcLoc
     if (sel != null) {
       model.setDrivername(sel.getJdbcDriver());
     }
-    model.setUrl(url.getText());
-    model.setUsername(username.getText());
-    model.setPassword(password.getText());
-    model.setExtendedSettings(extendedSettings.isSelected());
-    model.setMaxActive(maxActive.getText());
-    model.setIntialSize(intialSize.getText());
-    model.setMaxWait(maxWait.getText());
-    model.setMaxIdle(maxIdle.getText());
-    model.setMinIdle(minIdle.getText());
-    model.setDefaultAutoCommit(defaultAutoCommit.isSelected());
-    model.setDefaultCatalog(defaultCatalog.getText());
-    model.setValidationQuery(validationQuery.getText());
-    model.setValidationQueryTimeout(validationQueryTimeout.getText());
+    super.toModel();
   }
 
   @Override
