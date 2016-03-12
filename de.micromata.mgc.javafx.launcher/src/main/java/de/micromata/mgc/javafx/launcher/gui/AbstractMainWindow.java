@@ -73,6 +73,8 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>
   @Override
   public void initializeWithModel()
   {
+    Thread currentThread = Thread.currentThread();
+    currentThread.setUncaughtExceptionHandler(model.getUncaughtExceptionHandler());
     addCss();
     startServerButton.setOnAction(e -> {
       startServer();

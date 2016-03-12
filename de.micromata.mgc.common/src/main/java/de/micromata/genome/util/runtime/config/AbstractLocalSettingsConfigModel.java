@@ -7,6 +7,7 @@ import org.apache.commons.lang.Validate;
 
 import de.micromata.genome.util.bean.PrivateBeanUtils;
 import de.micromata.genome.util.runtime.LocalSettings;
+import de.micromata.genome.util.validation.ValContext;
 
 /**
  * Abstract implementation for a LocalSettingsConfigModel.
@@ -62,6 +63,20 @@ public abstract class AbstractLocalSettingsConfigModel implements LocalSettingsC
   public void fromLocalSettings(LocalSettings localSettings)
   {
     LocalSettingsConfigUtils.initFromLocalSettings(this, localSettings);
+  }
+
+  /**
+   * Ensure the config is correct, otherwise it throws exception.
+   *
+   * @throws LocalSettingsInvalidException the local settings invalid exception
+   */
+  public void ensureValide() throws LocalSettingsInvalidException
+  {
+    ValContext ctx = new ValContext();
+    validate(ctx);
+    if (ctx.hasErrors() == true) {
+      throw new LocalSettingsInvalidException(this, ctx.getMessages());
+    }
   }
 
   /**

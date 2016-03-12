@@ -1,7 +1,11 @@
 package de.micromata.mgc.launcher;
 
 import java.io.File;
+import java.lang.Thread.UncaughtExceptionHandler;
 
+import de.micromata.genome.logging.GLog;
+import de.micromata.genome.logging.GenomeLogCategory;
+import de.micromata.genome.logging.LogExceptionAttribute;
 import de.micromata.genome.util.i18n.I18NTranslationProvider;
 import de.micromata.genome.util.i18n.I18NTranslations;
 import de.micromata.genome.util.runtime.LocalSettings;
@@ -85,6 +89,15 @@ public abstract class AbstractMgcApplication<M extends LocalSettingsConfigModel>
   {
     Log4JInitializer.reinit();
 
+  }
+
+  @Override
+  public UncaughtExceptionHandler getUncaughtExceptionHandler()
+  {
+    return (thread, exception) -> {
+      GLog.error(GenomeLogCategory.Internal, "Uncaught Exception: " + exception.getMessage() + " in thread " + thread,
+          new LogExceptionAttribute(exception));
+    };
   }
 
   @Override

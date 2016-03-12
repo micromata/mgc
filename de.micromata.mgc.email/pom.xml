@@ -18,7 +18,7 @@
   <dependencies>
     <dependency>
       <groupId>de.micromata.mgc</groupId>
-      <artifactId>de.micromata.mgc.common</artifactId>
+      <artifactId>de.micromata.mgc.javafx.launcher</artifactId>
       <version>${mgc.version}</version>
     </dependency>
     <dependency>

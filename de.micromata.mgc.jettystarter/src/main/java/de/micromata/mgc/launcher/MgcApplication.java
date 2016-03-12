@@ -1,5 +1,7 @@
 package de.micromata.mgc.launcher;
 
+import java.lang.Thread.UncaughtExceptionHandler;
+
 import de.micromata.genome.util.i18n.I18NTranslationProvider;
 import de.micromata.genome.util.runtime.config.LocalSettingsConfigModel;
 import de.micromata.genome.util.validation.ValContext;
@@ -75,4 +77,6 @@ public interface MgcApplication<M extends LocalSettingsConfigModel>
    * @return may be null or empty.
    */
   String getPublicUrl();
+
+  UncaughtExceptionHandler getUncaughtExceptionHandler();
 }

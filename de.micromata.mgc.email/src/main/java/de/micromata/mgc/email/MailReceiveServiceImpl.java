@@ -37,6 +37,8 @@ import java.util.function.Supplier;
 import javax.mail.Flags;
 import javax.mail.MessagingException;
 
+import de.micromata.genome.util.runtime.LocalSettings;
+
 /**
  * Gets the messages from a mail account and assigns them to the MEB user's inboxes.
  * 
@@ -50,8 +52,14 @@ public class MailReceiveServiceImpl implements MailReceiveService
 
   static final String DATE_FORMAT = "yyyyMMddHHmmss";
 
+  /**
+   * Default configuration supplier loads from local settings.
+   */
   Supplier<MailReceiverLocalSettingsConfigModel> configModelSuplier = () -> {
-    return new MailReceiverLocalSettingsConfigModel();
+    MailReceiverLocalSettingsConfigModel ret = new MailReceiverLocalSettingsConfigModel();
+    ret.fromLocalSettings(LocalSettings.get());
+    ret.ensureValide();
+    return ret;
   };
 
   /**

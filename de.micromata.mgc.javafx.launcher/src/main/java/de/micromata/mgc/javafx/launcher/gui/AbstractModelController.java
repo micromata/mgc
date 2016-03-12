@@ -18,6 +18,7 @@ import de.micromata.mgc.javafx.ModelGuiField;
 import de.micromata.mgc.javafx.feedback.FeedbackPanel;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Control;
 import javafx.scene.control.TextField;
 
@@ -62,10 +63,16 @@ public abstract class AbstractModelController<M>extends AbstractController imple
 
   }
 
+  /**
+   * Calls fromModel by default
+   * 
+   * {@inheritDoc}
+   *
+   */
   @Override
   public void initializeWithModel()
   {
-
+    fromModel();
   }
 
   @Override
@@ -108,6 +115,8 @@ public abstract class AbstractModelController<M>extends AbstractController imple
       ((TextField) guifield).setText(modelField);
     } else if (guifield instanceof CheckBox) {
       ((CheckBox) guifield).setSelected("true".equals(modelField));
+    } else if (guifield instanceof ChoiceBox) {
+      ((ChoiceBox) guifield).setValue(modelField);
     } else {
       throw new IllegalArgumentException("Cannot convert gui type to model: " + modelField.getClass().getName());
     }
@@ -133,6 +142,8 @@ public abstract class AbstractModelController<M>extends AbstractController imple
     } else if (guifield instanceof CheckBox) {
       boolean selected = ((CheckBox) guifield).isSelected();
       PrivateBeanUtils.writeField(model, modelField, Boolean.toString(selected));
+    } else if (guifield instanceof ChoiceBox) {
+      PrivateBeanUtils.writeField(model, modelField, ((ChoiceBox) guifield).getValue());
     } else {
       throw new IllegalArgumentException("Cannot convert gui type to model: " + modelField.getClass().getName());
     }

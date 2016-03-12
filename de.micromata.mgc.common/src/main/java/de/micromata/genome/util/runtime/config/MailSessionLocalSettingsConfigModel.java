@@ -133,4 +133,14 @@ public class MailSessionLocalSettingsConfigModel extends AbstractLocalSettingsCo
     this.jndiName = jndiName;
   }
 
+  public String getDefaultEmailSender()
+  {
+    return defaultEmailSender;
+  }
+
+  public void setDefaultEmailSender(String defaultEmailSender)
+  {
+    this.defaultEmailSender = defaultEmailSender;
+  }
+
 }
