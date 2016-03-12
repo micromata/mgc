@@ -1,6 +1,7 @@
 package de.micromata.mgc.javafx.launcher.gui.generic;
 
 import de.micromata.genome.util.runtime.config.MailSessionLocalSettingsConfigModel;
+import de.micromata.mgc.javafx.ModelGuiField;
 import de.micromata.mgc.javafx.launcher.gui.AbstractConfigTabController;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
@@ -14,19 +15,26 @@ import javafx.scene.control.TextField;
 public class MailSessionConfigTabController extends AbstractConfigTabController<MailSessionLocalSettingsConfigModel>
 {
   @FXML
+  @ModelGuiField
   private TextField standardEmailSender;
   @FXML
+  @ModelGuiField
   private CheckBox emailEnabled;
   @FXML
+  @ModelGuiField
   private TextField emailHost;
   @FXML
+  @ModelGuiField
   private TextField emailPort;
   @FXML
+  @ModelGuiField
   private CheckBox emailAuthEnabled;
   @FXML
+  @ModelGuiField
   private TextField emailAuthUser;
 
   @FXML
+  @ModelGuiField
   private TextField emailAuthPass;
 
   @Override
@@ -45,30 +53,6 @@ public class MailSessionConfigTabController extends AbstractConfigTabController<
     emailAuthEnabled.setDisable(enabled == false);
     emailAuthUser.setDisable(enabled == false);
     emailAuthPass.setDisable(enabled == false);
-  }
-
-  @Override
-  public void fromModel()
-  {
-    standardEmailSender.setText(model.getStandardEmailSender());
-    emailEnabled.setSelected(model.isEmailEnabled());
-    emailHost.setText(model.getEmailHost());
-    emailPort.setText(model.getEmailPort());
-    emailAuthEnabled.setSelected(model.isEmailAuthEnabled());
-    emailAuthUser.setText(model.getEmailAuthUser());
-    emailAuthPass.setText(model.getEmailAuthPass());
-  }
-
-  @Override
-  public void toModel()
-  {
-    model.setStandardEmailSender(standardEmailSender.getText());
-    model.setEmailEnabled(emailEnabled.isSelected());
-    model.setEmailHost(emailHost.getText());
-    model.setEmailPort(emailPort.getText());
-    model.setEmailAuthEnabled(emailAuthEnabled.isSelected());
-    model.setEmailAuthUser(emailAuthUser.getText());
-    model.setEmailAuthPass(emailAuthPass.getText());
   }
 
   @Override

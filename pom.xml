@@ -134,6 +134,7 @@
         <module>de.micromata.mgc.jpa.logging</module>
         <module>de.micromata.mgc.jettystarter</module>
         <module>de.micromata.mgc.javafx.launcher</module>
+        <module>de.micromata.mgc.email</module>
         <module>samples</module>
       </modules>
     </profile>
