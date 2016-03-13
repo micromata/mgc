@@ -67,6 +67,7 @@ public class EmailReceiverController extends AbstractConfigTabController<MailRec
         .observableList(MailReceiverServiceManager.get().getMailReceiveService().getProviders(Provider.Type.STORE)));
     super.initializeWithModel();
     testButton.setOnAction(event -> testConnection());
+    defaultFolder.setItems(FXCollections.observableArrayList("<Please click test to get folder list>"));
   }
 
   private void testConnection()
