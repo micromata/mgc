@@ -5,6 +5,7 @@ import org.apache.commons.codec.Charsets;
 import de.micromata.genome.logging.config.LsLoggingLocalSettingsConfigModel;
 import de.micromata.genome.util.runtime.config.AbstractCompositLocalSettingsConfigModel;
 import de.micromata.genome.util.runtime.config.AbstractTextConfigFileConfigModel;
+import de.micromata.mgc.email.MailReceiverLocalSettingsConfigModel;
 import de.micromata.mgc.javafx.launcher.gui.generic.LauncherLocalSettingsConfigModel;
 import de.micromata.mgc.jettystarter.JettyConfigModel;
 
@@ -34,4 +35,6 @@ public class SampleLocalSettingsConfigModel extends AbstractCompositLocalSetting
    */
   private AbstractTextConfigFileConfigModel log4jConfig = new AbstractTextConfigFileConfigModel("Log4J",
       "log4j.properties", Charsets.ISO_8859_1);
+
+  private MailReceiverLocalSettingsConfigModel mailReceiverConfig = new MailReceiverLocalSettingsConfigModel();
 }

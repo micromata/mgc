@@ -6,6 +6,8 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import de.micromata.genome.logging.GLog;
+import de.micromata.genome.logging.GenomeLogCategory;
 import de.micromata.genome.util.runtime.GenericsUtils;
 import de.micromata.genome.util.runtime.config.CastableLocalSettingsConfigModel;
 import de.micromata.genome.util.runtime.config.LocalSettingsConfigModel;
@@ -233,7 +235,8 @@ public abstract class AbstractConfigDialog<M extends LocalSettingsConfigModel>ex
     }
     for (ValMessage msg : ctx.getMessages()) {
       if (msg.isConsumed() == false) {
-        LOG.error("ValMessage unconsumed: " + (msg.getI18nkey() != null ? msg.getI18nkey() : msg.getMessage()));
+        GLog.warn(GenomeLogCategory.Configuration,
+            "ValMessage unconsumed: " + (msg.getI18nkey() != null ? msg.getI18nkey() : msg.getMessage()));
       }
     }
   }

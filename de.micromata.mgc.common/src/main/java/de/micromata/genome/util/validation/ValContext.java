@@ -157,8 +157,18 @@ public class ValContext
 
   public void add(ValState valState, String property, String i18nkey, Exception ex)
   {
+    add(valState, null, property, i18nkey, ex);
+  }
+
+  public void add(ValState valState, Object reference, String property, String i18nkey, Exception ex)
+  {
     ValMessage vm = createValMessage();
-    vm.addProperty(property);
+    if (reference != null) {
+      vm.setReference(reference);
+    }
+    if (property != null) {
+      vm.addProperty(property);
+    }
     vm.setValState(valState);
     vm.setI18nkey(i18nkey);
     vm.setException(ex);
@@ -167,8 +177,18 @@ public class ValContext
 
   public void addDirect(ValState valState, String property, String message, Exception ex)
   {
+    addDirect(valState, null, property, message, ex);
+  }
+
+  public void addDirect(ValState valState, Object reference, String property, String message, Exception ex)
+  {
     ValMessage vm = createValMessage();
-    vm.addProperty(property);
+    if (property != null) {
+      vm.addProperty(property);
+    }
+    if (reference != null) {
+      vm.setReference(reference);
+    }
     vm.setValState(valState);
     vm.setMessage(message);
     vm.setException(ex);

@@ -9,7 +9,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import de.micromata.genome.util.validation.ValMessage;
-import de.micromata.genome.util.validation.ValState;
 import de.micromata.mgc.javafx.launcher.gui.AbstractModelController;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -105,9 +104,7 @@ public class FXEvents
       }
       Object themod = model;
       String theprop = property;
-      if (msg.getValState() == ValState.Error && StringUtils.equals(property, "jdbcUrl") == true) {
-        System.out.println("url");
-      }
+
       if (StringUtils.isNotBlank(property) && StringUtils.isNotBlank(msg.getProperty()) == true
           && property.equals(msg.getProperty()) == true) {
         if (themod == msg.getReference()) {
@@ -115,6 +112,8 @@ public class FXEvents
           FXGuiUtils.markErroneousField(controller, node, msg);
           event.consume();
         }
+
+      } else if (msg.isConsumed() == false && themod == msg.getReference()) {
         controller.addToFeedback(msg);
       }
 

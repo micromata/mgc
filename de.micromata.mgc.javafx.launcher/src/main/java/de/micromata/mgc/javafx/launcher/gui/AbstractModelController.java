@@ -19,6 +19,7 @@ import de.micromata.mgc.javafx.feedback.FeedbackPanel;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Control;
 import javafx.scene.control.TextField;
 
@@ -117,6 +118,8 @@ public abstract class AbstractModelController<M>extends AbstractController imple
       ((CheckBox) guifield).setSelected("true".equals(modelField));
     } else if (guifield instanceof ChoiceBox) {
       ((ChoiceBox) guifield).setValue(modelField);
+    } else if (guifield instanceof ComboBox) {
+      ((ComboBox) guifield).setValue(modelField);
     } else {
       throw new IllegalArgumentException("Cannot convert gui type to model: " + modelField.getClass().getName());
     }
@@ -144,6 +147,8 @@ public abstract class AbstractModelController<M>extends AbstractController imple
       PrivateBeanUtils.writeField(model, modelField, Boolean.toString(selected));
     } else if (guifield instanceof ChoiceBox) {
       PrivateBeanUtils.writeField(model, modelField, ((ChoiceBox) guifield).getValue());
+    } else if (guifield instanceof ComboBox) {
+      PrivateBeanUtils.writeField(model, modelField, ((ComboBox) guifield).getValue());
     } else {
       throw new IllegalArgumentException("Cannot convert gui type to model: " + modelField.getClass().getName());
     }

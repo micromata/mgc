@@ -40,18 +40,20 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Part;
+import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Store;
-import javax.mail.search.FlagTerm;
+import javax.mail.search.SearchTerm;
 
-import de.micromata.genome.util.strings.StringUtils;
+import de.micromata.genome.util.runtime.net.EasySSLSocketFactory;
 
 /**
  * Connects to a mail server and receives mails.
  * 
+ * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  * @author Kai Reinhard (k.reinhard@micromata.de)
  */
-public class MailAccount
+public class MailAccount implements AutoCloseable
 {
   private static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(MailAccount.class);
 
@@ -61,11 +63,12 @@ public class MailAccount
 
   private Store store;
 
-  private MailReceiverLocalSettingsConfigModel mailAcccountConfig;
+  private MailReceiverLocalSettingsConfigModel config;
+  private Session session;
 
   public MailAccount(MailReceiverLocalSettingsConfigModel mailAccountConfig)
   {
-    this.mailAcccountConfig = mailAccountConfig;
+    this.config = mailAccountConfig;
   }
 
   /** Gets the stored email of the given user. */
@@ -91,16 +94,16 @@ public class MailAccount
    * 
    * @return ArrayList of all found Email.
    */
-  public List<ReceivedMail> getMails(MailFilter filter)
+  public List<ReceivedMail> getMails(SearchTerm searchTerm)
   {
     List<ReceivedMail> table = new ArrayList<ReceivedMail>();
     if (folder == null || folder.isOpen() == false) {
       log.error("Folder is not opened, can't get mails: "
-          + this.mailAcccountConfig.getUsername()
+          + this.config.getUser()
           + "@"
-          + this.mailAcccountConfig.getHostname()
+          + this.config.getHost()
           + " via "
-          + this.mailAcccountConfig.getProtocol());
+          + this.config.getProtocol());
       return table;
     }
 
@@ -113,10 +116,10 @@ public class MailAccount
       }
       // Attributes & Flags for all messages ..
       Message[] msgs;
-      if (filter.isOnlyRecent() == true) {
-        msgs = folder.search(new FlagTerm(new Flags(Flags.Flag.SEEN), false));
-      } else {
+      if (searchTerm == null) {
         msgs = folder.getMessages();
+      } else {
+        msgs = folder.search(searchTerm);
       }
       // Use a suitable FetchProfile
       FetchProfile fp = new FetchProfile();
@@ -156,6 +159,63 @@ public class MailAccount
     }
   }
 
+  public Session createSession()
+  {
+    // Get a Properties object
+    Properties props = new Properties();
+    // TODO from config
+
+    String protocol = config.getProtocol();
+
+    props.put("mail." + protocol + ".host", config.getHost());
+    props.put("mail." + protocol + ".port", config.getPort());
+    props.put("mail." + protocol + ".user", config.getUser());
+    props.put("mail." + protocol + ".password", config.getPassword());
+    props.put("mail." + protocol + ".auth", config.getAuth());
+
+    props.put("mail." + protocol + ".starttls.enable", config.getEnableTLS());
+
+    props.put("mail.debug", config.getDebug());
+    props.put("mail." + protocol + ".debug", config.getDebug());
+    // hmm, may be not correct
+    boolean self = config.isEnableSelfSignedCerts();
+    if (self == true) {
+      props
+          .put("mail." + protocol + ".socketFactory.class",
+              EasySSLSocketFactory.class.getName());
+      props.setProperty("mail." + protocol + ".socketFactory.port", "993");
+      props.setProperty("mail." + protocol + ".socketFactory.fallback", "false");
+      props.setProperty("mail." + protocol + ".auth.plain.disable", "true");
+
+    }
+    session = Session.getInstance(props,
+        new javax.mail.Authenticator()
+        {
+          @Override
+          protected PasswordAuthentication getPasswordAuthentication()
+          {
+            return new PasswordAuthentication(config.getUser(), config.getPassword());
+          }
+        });
+    return session;
+  }
+
+  List<String> testConnect() throws MessagingException
+  {
+    session = createSession();
+    store = session.getStore(config.getProtocol());
+    store.connect();
+    folder = store.getDefaultFolder();
+    String defaultName = folder.getFullName();
+    List<String> ret = new ArrayList<>();
+    ret.add(defaultName);
+    Folder[] sfl = folder.list("*");
+    for (Folder sf : sfl) {
+      ret.add(sf.getFullName());
+    }
+    return ret;
+  }
+
   /**
    * Opens the connection to the mailserver. Don't forget to call disconnect if this method returns true!
    * 
@@ -166,31 +226,19 @@ public class MailAccount
   public boolean connect(String mbox, boolean readwrite)
   {
     try {
-      // Get a Properties object
-      Properties props = new Properties();
-      if (StringUtils.isNotBlank(mailAcccountConfig.getSslSocketFactory()) == true) {
-        props
-            .put("mail." + mailAcccountConfig.getProtocol() + ".ssl.socketFactory",
-                mailAcccountConfig.getSslSocketFactory());
-      }
-      Session session = Session.getDefaultInstance(props, null);
+
+      session = createSession();
 
       // Get a Store object
       store = null;
       try {
-        store = session.getStore(mailAcccountConfig.getProtocol());
+        store = session.getStore(config.getProtocol());
       } catch (javax.mail.NoSuchProviderException ex) {
         log.error(ex.getMessage(), ex);
         // serverData.setErrorMessageKey("mail.error.noSuchProviderException");
         return false;
       }
-      if (mailAcccountConfig.getPortAsInt() > 0) {
-        store.connect(mailAcccountConfig.getHostname(), mailAcccountConfig.getPortAsInt(),
-            mailAcccountConfig.getUsername(), mailAcccountConfig.getPassword());
-      } else {
-        store.connect(mailAcccountConfig.getHostname(), mailAcccountConfig.getUsername(),
-            mailAcccountConfig.getPassword());
-      }
+      store.connect();
       // Open the Folder
 
       folder = store.getDefaultFolder();
@@ -225,6 +273,12 @@ public class MailAccount
       return false;
     }
     return true;
+  }
+
+  @Override
+  public void close()
+  {
+    disconnect();
   }
 
   /**
@@ -382,4 +436,10 @@ public class MailAccount
       }
     }
   }
+
+  public Session getSession()
+  {
+    return session;
+  }
+
 }

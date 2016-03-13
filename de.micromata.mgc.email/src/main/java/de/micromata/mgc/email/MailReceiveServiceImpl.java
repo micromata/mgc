@@ -30,14 +30,19 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.function.Supplier;
 
 import javax.mail.Flags;
 import javax.mail.MessagingException;
+import javax.mail.Provider;
+import javax.mail.Session;
+import javax.mail.search.SearchTerm;
 
 import de.micromata.genome.util.runtime.LocalSettings;
+import de.micromata.genome.util.validation.ValContext;
 
 /**
  * Gets the messages from a mail account and assigns them to the MEB user's inboxes.
@@ -58,9 +63,27 @@ public class MailReceiveServiceImpl implements MailReceiveService
   Supplier<MailReceiverLocalSettingsConfigModel> configModelSuplier = () -> {
     MailReceiverLocalSettingsConfigModel ret = new MailReceiverLocalSettingsConfigModel();
     ret.fromLocalSettings(LocalSettings.get());
-    ret.ensureValide();
+
     return ret;
   };
+
+  @Override
+  public List<String> getProviders(Provider.Type type)
+  {
+    MailReceiverLocalSettingsConfigModel cfg = configModelSuplier.get();
+    MailAccount mailAccount = new MailAccount(cfg);
+    Session session = mailAccount.createSession();
+    Provider[] providers = mailAccount.getSession().getProviders();
+    List<String> ret = new ArrayList<>();
+    for (int i = 0; i < providers.length; ++i) {
+      Provider pr = providers[i];
+      if (pr.getType() == type) {
+        ret.add(pr.getProtocol());
+      }
+    }
+    return ret;
+
+  }
 
   /**
    * 
@@ -68,23 +91,22 @@ public class MailReceiveServiceImpl implements MailReceiveService
    *          set as seen.
    * @return Number of new imported messages.
    */
-  public synchronized List<ReceivedMail> getNewMessages(boolean onlyRecentMails, boolean markRecentMailsAsSeen)
+  @Override
+  public synchronized List<ReceivedMail> getNewMessages(SearchTerm searchTerm, boolean markRecentMailsAsSeen)
   {
     List<ReceivedMail> mails = new ArrayList<>();
-    MailFilter filter = new MailFilter();
-    if (onlyRecentMails == true) {
-      filter.setOnlyRecent(true);
-    }
+
     MailReceiverLocalSettingsConfigModel cfg = configModelSuplier.get();
-    if (cfg == null || cfg.getHostname() == null) {
+    if (cfg == null || cfg.getHost() == null) {
       // No mail account configured.
       return mails;
     }
     MailAccount mailAccount = new MailAccount(cfg);
+    // TODO RK check valid
     try {
       // If mark messages as seen is set then open mbox read-write.
-      mailAccount.connect("INBOX", markRecentMailsAsSeen);
-      mails = mailAccount.getMails(filter);
+      boolean connected = mailAccount.connect("INBOX", markRecentMailsAsSeen);
+      mails = mailAccount.getMails(searchTerm);
       for (ReceivedMail mail : mails) {
         ReceivedMail entry = new ReceivedMail();
         entry.setDate(mail.getDate());
@@ -182,4 +204,16 @@ public class MailReceiveServiceImpl implements MailReceiveService
     return date;
   }
 
+  @Override
+  public List<String> testConnection(MailReceiverLocalSettingsConfigModel config, ValContext ctx)
+  {
+    MailAccount mailAccount = new MailAccount(config);
+    try {
+      return mailAccount.testConnect();
+
+    } catch (MessagingException e) {
+      ctx.directError("", e.getMessage());
+      return Collections.emptyList();
+    }
+  }
 }

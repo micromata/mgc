@@ -1,5 +1,7 @@
 package de.micromata.mgc.email;
 
+import org.apache.commons.lang.StringUtils;
+
 import de.micromata.genome.util.runtime.config.ALocalSettingsPath;
 import de.micromata.genome.util.runtime.config.AbstractLocalSettingsConfigModel;
 import de.micromata.genome.util.validation.ValContext;
@@ -12,35 +14,89 @@ import de.micromata.genome.util.validation.ValContext;
  */
 public class MailReceiverLocalSettingsConfigModel extends AbstractLocalSettingsConfigModel
 {
-  @ALocalSettingsPath(defaultValue = "localhost")
-  private String hostname;
 
-  @ALocalSettingsPath
+  @ALocalSettingsPath(defaultValue = "localhost", comment = "Hostname of the mail server")
+  private String host;
+  /**
+   * One of available protocols
+   */
+  @ALocalSettingsPath(comment = "Mail protocol")
   private String protocol;
 
-  @ALocalSettingsPath(defaultValue = "25")
+  @ALocalSettingsPath(defaultValue = "993", comment = "Port number of the mail server")
   private String port;
+
   @ALocalSettingsPath
-  private String username;
+  private String user;
+
+  @ALocalSettingsPath
+  private String defaultFolder;
+
   @ALocalSettingsPath
   private String password;
-  @ALocalSettingsPath
-  private String sslSocketFactory;
+  /**
+   * Authentification needed
+   */
+  @ALocalSettingsPath(defaultValue = "true")
+  private String auth;
+
+  @ALocalSettingsPath(key = "starttls.enable", defaultValue = "false")
+  private String enableTLS;
+
+  @ALocalSettingsPath(defaultValue = "false")
+  private String enableSelfSignedCerts;
+
+  @ALocalSettingsPath(key = "socketFactory.port")
+  private String socketFactoryPort;
+
+  @ALocalSettingsPath(key = "socketFactory.class")
+  private String socketFactoryClass;
+
+  @ALocalSettingsPath(key = "auth.plain.disable", defaultValue = "false")
+  private String authPlainDisable;
+
+  @ALocalSettingsPath(defaultValue = "false", comment = "javax.mail debugging enabled. ")
+  private String debug;
+
+  @Override
+  public String getKeyPrefix()
+  {
+    return "genome.email.receive";
+  }
 
   @Override
   public void validate(ValContext ctx)
   {
+    if (StringUtils.isBlank(protocol) == true) {
+      ctx.directError("protocol", "Please select a protocol");
+      return;
+    }
+    if (StringUtils.isBlank(host) == true) {
+      ctx.directError("host", "Please give a host");
+      return;
+    }
+    if (StringUtils.isBlank(port) == true) {
+      ctx.directError("host", "Please give a port number");
+    } else if (isInt(host) == true) {
+      ctx.directError("host", "Please give a port number (only numbers are allowed)");
+    }
+    if (StringUtils.isBlank(user) == true) {
+      ctx.directError("host", "Please give a user name");
+    }
+    if (StringUtils.isBlank(password) == true) {
+      ctx.directError("host", "Please give a password");
+    }
 
   }
 
-  public String getSslSocketFactory()
+  public String getSocketFactoryClass()
   {
-    return sslSocketFactory;
+    return socketFactoryClass;
   }
 
-  public String getHostname()
+  public String getHost()
   {
-    return hostname;
+    return host;
   }
 
   public String getProtocol()
@@ -48,19 +104,64 @@ public class MailReceiverLocalSettingsConfigModel extends AbstractLocalSettingsC
     return protocol;
   }
 
+  public String getPort()
+  {
+    return port;
+  }
+
   public int getPortAsInt()
   {
     return Integer.parseInt(port);
   }
 
-  public String getUsername()
+  public String getUser()
   {
-    return username;
+    return user;
   }
 
   public String getPassword()
   {
     return password;
+  }
+
+  public String getEnableTLS()
+  {
+    return enableTLS;
+  }
+
+  public void setEnableTLS(String enableTLS)
+  {
+    this.enableTLS = enableTLS;
+  }
+
+  public String getAuth()
+  {
+    return auth;
+  }
+
+  public void setAuth(String auth)
+  {
+    this.auth = auth;
+  }
+
+  public String getAuthPlainDisable()
+  {
+    return authPlainDisable;
+  }
+
+  public String getEnableSelfSignedCerts()
+  {
+    return enableSelfSignedCerts;
+  }
+
+  public boolean isEnableSelfSignedCerts()
+  {
+    return isTrue(enableSelfSignedCerts);
+  }
+
+  public String getDebug()
+  {
+    return debug;
   }
 
 }
