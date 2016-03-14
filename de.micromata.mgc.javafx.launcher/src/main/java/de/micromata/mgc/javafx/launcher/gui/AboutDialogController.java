@@ -3,9 +3,9 @@ package de.micromata.mgc.javafx.launcher.gui;
 import org.apache.commons.lang.StringUtils;
 
 import de.micromata.genome.util.validation.ValMessage;
+import de.micromata.mgc.application.MgcApplication;
+import de.micromata.mgc.application.MgcApplicationInfo;
 import de.micromata.mgc.javafx.SystemService;
-import de.micromata.mgc.launcher.MgcApplication;
-import de.micromata.mgc.launcher.MgcApplicationInfo;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;

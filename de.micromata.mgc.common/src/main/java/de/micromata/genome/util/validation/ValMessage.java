@@ -86,7 +86,7 @@ public class ValMessage implements Serializable
     }
   }
 
-  public ValMessage(ValState valState, String i18nkey, Object[] arguments)
+  public ValMessage(ValState valState, String i18nkey, Object... arguments)
   {
     this(valState, i18nkey, null, arguments);
   }
@@ -111,6 +111,9 @@ public class ValMessage implements Serializable
     String msg = (String) transprov.getTranslationForKey(getI18nkey());
     if (getArguments() != null && getArguments().length > 0) {
       msg = MessageFormat.format(msg, getArguments());
+    } else if (exception != null && StringUtils.contains(msg, "{0}") == true) {
+      msg = MessageFormat.format(msg, exception.getMessage());
+
     }
     message = msg;
     return message;

@@ -2,8 +2,8 @@ package de.micromata.mgc.jettystarter.sample;
 
 import org.eclipse.jetty.servlet.ServletContextHandler;
 
-import de.micromata.mgc.jettystarter.JettyConfigModel;
-import de.micromata.mgc.jettystarter.JettyServer;
+import de.micromata.mgc.application.jetty.JettyServer;
+import de.micromata.mgc.application.webserver.config.JettyConfigModel;
 
 /**
  * Minimal Jetty Server sample.

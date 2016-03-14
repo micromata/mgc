@@ -7,10 +7,10 @@ import de.micromata.genome.util.runtime.LocalSettings;
 import de.micromata.genome.util.runtime.config.LocalSettingsConfigModel;
 import de.micromata.genome.util.validation.ValContext;
 import de.micromata.genome.util.validation.ValMessage;
-import de.micromata.mgc.jettystarter.JettyConfigModel;
-import de.micromata.mgc.jettystarter.JettyServer;
-import de.micromata.mgc.jettystarter.JettyServerRunner;
-import de.micromata.mgc.jettystarter.MgcApplicationWithJettyApplication;
+import de.micromata.mgc.application.jetty.JettyServer;
+import de.micromata.mgc.application.jetty.JettyServerRunner;
+import de.micromata.mgc.application.jetty.MgcApplicationWithJettyApplication;
+import de.micromata.mgc.application.webserver.config.JettyConfigModel;
 
 /**
  * Runn a jetty on a console.

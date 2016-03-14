@@ -8,8 +8,8 @@ import javax.swing.SwingUtilities;
 
 import org.apache.log4j.lf5.LogLevel;
 
+import de.micromata.mgc.application.MgcApplication;
 import de.micromata.mgc.javafx.launcher.gui.AbstractModelController;
-import de.micromata.mgc.launcher.MgcApplication;
 import javafx.embed.swing.SwingNode;
 import javafx.fxml.FXML;
 import javafx.scene.layout.Pane;

@@ -133,6 +133,14 @@ public abstract class AbstractLocalSettingsConfigModel implements LocalSettingsC
 
   protected boolean isInt(String value)
   {
+    if (StringUtils.isBlank(value) == true) {
+      return false;
+    }
     return NumberUtils.isDigits(value);
+  }
+
+  protected int asInt(String value)
+  {
+    return Integer.parseInt(value, 10);
   }
 }

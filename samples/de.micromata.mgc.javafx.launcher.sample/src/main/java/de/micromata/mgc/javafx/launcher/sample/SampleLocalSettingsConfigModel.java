@@ -5,9 +5,9 @@ import org.apache.commons.codec.Charsets;
 import de.micromata.genome.logging.config.LsLoggingLocalSettingsConfigModel;
 import de.micromata.genome.util.runtime.config.AbstractCompositLocalSettingsConfigModel;
 import de.micromata.genome.util.runtime.config.AbstractTextConfigFileConfigModel;
+import de.micromata.mgc.application.webserver.config.JettyConfigModel;
 import de.micromata.mgc.email.MailReceiverLocalSettingsConfigModel;
 import de.micromata.mgc.javafx.launcher.gui.generic.LauncherLocalSettingsConfigModel;
-import de.micromata.mgc.jettystarter.JettyConfigModel;
 
 /**
  * The configuration model.

@@ -1,0 +1,62 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>de.micromata.mgc.rootpom</artifactId>
+    <groupId>de.micromata.mgc</groupId>
+    <version>2.1.0-SNAPSHOT</version><!-- MGC -->
+  </parent>
+  <artifactId>de.micromata.mgc.application.springboot</artifactId>
+  <packaging>jar</packaging>
+  <description>Base framework for an application.</description>
+  <dependencies>
+    <dependency>
+      <groupId>de.micromata.mgc</groupId>
+      <artifactId>de.micromata.mgc.application</artifactId>
+      <version>${mgc.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+      <version>${spring-boot.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-tomcat</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.slf4j</groupId>
+          <artifactId>log4j-over-slf4j</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-jetty</artifactId>
+      <version>${spring-boot.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-jmx</artifactId>
+      <version>${spring-boot.jetty.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-core</artifactId>
+      <!-- replace version in pf, because spring boot need 4.2.4 not 4.2.3 -->
+      <version>${spring.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>de.micromata.mgc</groupId>
+      <artifactId>de.micromata.mgc.application.webserver</artifactId>
+      <version>${mgc.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+</project>

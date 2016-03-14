@@ -313,8 +313,10 @@ public enum GenomeAttributeType implements LogAttributeType
    * The State.
    */
   State,
-
-  ;
+  /**
+   * A validation message.
+   */
+  Validation,;
   static {
     BaseLogging.registerLogAttributeType(values());
   }

@@ -9,9 +9,9 @@ import de.micromata.genome.util.i18n.PlaceholderTranslationProvider;
 import de.micromata.genome.util.runtime.InitWithCopyFromCpLocalSettingsClassLoader;
 import de.micromata.genome.util.runtime.LocalSettings;
 import de.micromata.genome.util.runtime.config.ExtLocalSettingsLoader;
-import de.micromata.mgc.jettystarter.JettyConfigModel;
-import de.micromata.mgc.jettystarter.JettyServer;
-import de.micromata.mgc.jettystarter.MgcApplicationWithJettyApplication;
+import de.micromata.mgc.application.jetty.JettyServer;
+import de.micromata.mgc.application.jetty.MgcApplicationWithJettyApplication;
+import de.micromata.mgc.application.webserver.config.JettyConfigModel;
 import de.micromata.mgc.jettystarter.sample.SampleJettyServer;
 
 /**

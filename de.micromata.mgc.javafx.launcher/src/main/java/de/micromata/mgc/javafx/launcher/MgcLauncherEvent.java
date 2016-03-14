@@ -1,7 +1,7 @@
 package de.micromata.mgc.javafx.launcher;
 
 import de.micromata.genome.util.validation.ValMessage;
-import de.micromata.mgc.launcher.MgcApplicationStartStopStatus;
+import de.micromata.mgc.application.MgcApplicationStartStopStatus;
 import javafx.event.Event;
 import javafx.event.EventType;
 

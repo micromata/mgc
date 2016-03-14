@@ -12,7 +12,7 @@
   <dependencies>
     <dependency>
       <groupId>de.micromata.mgc</groupId>
-      <artifactId>de.micromata.mgc.jettystarter</artifactId>
+      <artifactId>de.micromata.mgc.application</artifactId>
       <version>${mgc.version}</version>
     </dependency>
     <dependency>

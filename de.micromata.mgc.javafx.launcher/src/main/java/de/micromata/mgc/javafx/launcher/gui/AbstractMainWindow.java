@@ -12,8 +12,8 @@ import de.micromata.genome.util.runtime.LocalSettingsEnv;
 import de.micromata.genome.util.runtime.LocalSettingsService;
 import de.micromata.genome.util.runtime.config.LocalSettingsConfigModel;
 import de.micromata.genome.util.types.Pair;
-import de.micromata.genome.util.validation.ValContext;
 import de.micromata.genome.util.validation.ValMessage;
+import de.micromata.mgc.application.MgcApplication;
 import de.micromata.mgc.javafx.ControllerService;
 import de.micromata.mgc.javafx.FXCssUtil;
 import de.micromata.mgc.javafx.FXEvents;
@@ -25,7 +25,6 @@ import de.micromata.mgc.javafx.launcher.gui.generic.LauncherLocalSettingsConfigM
 import de.micromata.mgc.javafx.launcher.gui.lf5.Lf5MainWindowController;
 import de.micromata.mgc.javafx.launcher.gui.lf5.MgcLf5Appender;
 import de.micromata.mgc.javafx.logging.LoggingController;
-import de.micromata.mgc.launcher.MgcApplication;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -160,12 +159,7 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>
     }
     M configModel = getApplication().getConfigModel();
     configModel.fromLocalSettings(LocalSettings.get());
-    ValContext ctx = new ValContext();
-    configModel.validate(ctx);
-    if (ctx.hasErrors() == true) {
-      getLoggingController().error("Cannot start server, because configuration is not valid");
-      return;
-    }
+
     model.start(MgcLauncher.originalMainArgs);
 
   }

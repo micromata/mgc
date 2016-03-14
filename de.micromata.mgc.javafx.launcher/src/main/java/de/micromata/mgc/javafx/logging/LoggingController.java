@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.jetty.io.RuntimeIOException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -25,6 +24,7 @@ import de.micromata.genome.logging.LogExceptionAttribute;
 import de.micromata.genome.logging.LogLevel;
 import de.micromata.genome.logging.LogWriteEntry;
 import de.micromata.genome.logging.spi.log4j.RoundList;
+import de.micromata.genome.util.runtime.RuntimeIOException;
 import de.micromata.genome.util.types.DateUtils;
 import de.micromata.genome.util.validation.ValMessage;
 import de.micromata.genome.util.validation.ValState;

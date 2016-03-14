@@ -12,8 +12,6 @@ import de.micromata.genome.util.runtime.config.LocalSettingsConfigModel;
 import de.micromata.genome.util.runtime.config.MailSessionLocalSettingsConfigModel;
 import de.micromata.mgc.javafx.ModelController;
 import de.micromata.mgc.javafx.launcher.gui.TabConfig;
-import de.micromata.mgc.javafx.launcher.gui.jetty.JettyConfigTabController;
-import de.micromata.mgc.jettystarter.JettyConfigModel;
 
 /**
  * 
@@ -27,11 +25,6 @@ public class StandardConfigurationTabLoaderService implements ConfigurationTabLo
   public List<TabConfig> getTabsByConfiguration(CastableLocalSettingsConfigModel configModel)
   {
     List<TabConfig> ret = new ArrayList<>();
-    JettyConfigModel jettyConfig = configModel.castToForConfigDialog(JettyConfigModel.class);
-    if (jettyConfig != null) {
-      ret.add(new TabConfig(JettyConfigTabController.class, jettyConfig));
-    }
-
     LauncherLocalSettingsConfigModel launcherConfig = configModel
         .castToForConfigDialog(LauncherLocalSettingsConfigModel.class);
     if (launcherConfig != null) {
