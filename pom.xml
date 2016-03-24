@@ -228,7 +228,20 @@
     </plugins>
   </build>
 
-
+	<repositories>
+		<repository>
+			<id>de.micromata.nexus.public</id>
+			<name>Micromata Nexus Public</name>
+			<url>http://repo.micromata.priv:8081/nexus/content/groups/public</url>
+		</repository>
+		<repository>
+			<id>de.micromata.nexus.snapshots</id>
+			<name>Micromata Nexus Snapshots</name>
+			<url>http://repo.micromata.priv:8081/nexus/content/groups/public-snapshots</url>
+		</repository>
+	</repositories>
+    
+    <!--
   <repositories>
     <repository>
       <id>Apache Nexus</id>
@@ -240,7 +253,7 @@
         <enabled>true</enabled>
       </snapshots>
     </repository>
-    <!--
+
     <repository>
       <id>genome-deploy</id>
       <name>genome-deploy</name>
@@ -260,7 +273,7 @@
         <enabled>false</enabled>
       </snapshots>
     </repository>
-    -->
+
     <repository>
       <id>mavenorg</id>
       <url>http://repo1.maven.org/maven2</url>
@@ -268,7 +281,7 @@
         <enabled>false</enabled>
       </snapshots>
     </repository>
-    <!--
+
     <repository>
       <id>ulib-release</id>
       <name>Ulib releases repository</name>
@@ -288,11 +301,12 @@
         <updatePolicy>always</updatePolicy>
       </snapshots>
     </repository>
-    -->
+  
   </repositories>
-
+  -->
+     <!-- 
   <pluginRepositories>
-    <!--
+
     <pluginRepository>
       <id>repo.micromata.priv</id>
       <url>http://repo.micromata.priv:8081/nexus/content/groups/public/</url>
@@ -304,7 +318,7 @@
         <enabled>false</enabled>
       </releases>
     </pluginRepository>
-    -->
+
     <pluginRepository>
       <id>mavenorg</id>
       <url>http://repo1.maven.org/maven2</url>
@@ -312,8 +326,9 @@
         <enabled>false</enabled>
       </snapshots>
     </pluginRepository>
+    -->
     <!-- used for genome mvn plugin -->
-    <!--
+    <!-- 
     <pluginRepository>
      	<id>genome-releases</id>
 			<name>genome-releases</name>
@@ -330,8 +345,7 @@
         <enabled>true</enabled>
       </snapshots>
     </pluginRepository>
-    -->
   </pluginRepositories>
-
+    -->
 
 </project>
