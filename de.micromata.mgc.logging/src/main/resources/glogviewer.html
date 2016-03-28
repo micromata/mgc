@@ -1,0 +1,40 @@
+<html>
+<head>
+<script type="text/JavaScript" src="glogviewer.js"></script>
+<script type="text/JavaScript" src="glogform.js"></script>
+<link href="loggingweb.css" rel="stylesheet" type="text/css">
+<script type="text/javascript">
+	var logCounter = 0; 
+	function logProvider() {
+	  var item = {
+	    logTime : '2006-01-01 12:12',
+	    logLevel : 'Note',
+	    logMessage : 'Hello ' + ++logCounter,
+	    logAttributes : [ {
+	      typeName : "AKey",
+	      value : 'A value'
+	    }, {
+	      typeName : "BKey",
+	      value : 'B value'
+	    } ]
+	  };
+	  return [ item ];
+  }
+  var logViewer = new GLogViewer({
+    logListId : 'glogentries',
+    formId : 'glogform',
+    logPollCallback : logProvider,
+    maxItems: 100,
+    logPollTimeout: 1000
+
+  });
+</script>
+</head>
+<body>
+	<div id="glogformdiv" class='glogformdiv' >
+		<form id="glogform"></form>
+	</div>
+	<div id="glogentriesdiv" class="glogentriesdiv">
+		<div id="glogentries" class="glogentries"></div>
+</body>
+</html>
