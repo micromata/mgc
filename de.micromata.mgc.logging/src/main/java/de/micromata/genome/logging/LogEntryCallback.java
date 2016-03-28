@@ -33,5 +33,8 @@ public interface LogEntryCallback
    * @param le the le
    * @return the log entry
    */
-  public LogEntry createLogEntry(LogEntry le);
+  public default LogEntry createLogEntry(LogEntry le)
+  {
+    return le;
+  }
 }

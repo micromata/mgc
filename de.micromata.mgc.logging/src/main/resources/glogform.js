@@ -3,41 +3,36 @@ function GlogForm(gLogViewer) {
 	this.formId = gLogViewer.formId;
 	this.logLevels = [ 'Debug', 'Info', 'Note', 'Warn', 'Error', 'Trace' ];
 	var _this = this;
-	this._buildForm = function() {
+	this._attachForm = function() {
 		var form = document.getElementById(this.formId);
-		if (form == null) {
-			console.warn("Form ID not found: " + this.formId);
-			return;
-		}
-		form.setAttribute('name', 'logform');
-		var clearButton = document.createElement('button');
-		clearButton.appendChild(document.createTextNode('Clear'));
-		clearButton.addEventListener('click', function(event) {
+
+		form.clearLogListButton.addEventListener('click', function(event) {
 			logViewer.clear();
 			event.stopPropagation();
 			event.preventDefault();
 		});
-		form.appendChild(clearButton);
-		var loglevelselect = document.createElement('select');
-		loglevelselect.setAttribute('name', 'logform_loglevel');
-
-		for ( var i in this.logLevels) {
-			var ll = this.logLevels[i];
-			var leveloption = document.createElement('option');
-			leveloption.appendChild(document.createTextNode(ll));
-			loglevelselect.appendChild(leveloption);
-
-		}
-		form.appendChild(loglevelselect);
-		
-		var reloadButton = document.createElement('button');
-		reloadButton.appendChild(document.createTextNode('Reload'));
-		reloadButton.addEventListener('click', function(event) {
-			logViewer.reload();
+		form.liveViewCheckbox.addEventListener('click', function(event) {
+//			logViewer.reset();
+		});
+		form.filterResetButton.addEventListener('click', function(event) {
+			form.filterLogLevel.selectedIndex = 0;
+			form.filterMessage.value = '';
 			event.stopPropagation();
 			event.preventDefault();
 		});
-		form.appendChild(reloadButton);
+		form.filterSearchButton.addEventListener('click', function(event) {
+			event.stopPropagation();
+			event.preventDefault();
+			var formData = _this.getFormData();
+			_this.logViewer.filterItems(formData);
+			
+		});
+	}
+	
+	this.isLiveUpdate = function() {
+		var form = document.getElementById(this.formId);
+		var ret = form.liveViewCheckbox.checked;
+		return ret;
 	}
 	this.filterItems = function(items) {
 		var ret = [];
@@ -53,20 +48,50 @@ function GlogForm(gLogViewer) {
 		if (this.filterLogLevel(item) == false) {
 			return false;
 		}
+		if (this.filterMessage(item) == false) {
+			return false;
+		}
 		return true;
 	}
 	this.filterLogLevel = function(item) {
 		var form = document.getElementById(this.formId);
-		var idx = form.logform_loglevel.selectedIndex;
+		var idx = form.filterLogLevel.selectedIndex;
 		if (idx == -1) {
 			return true;
 		}
-		var value = form.logform_loglevel[form.logform_loglevel.selectedIndex].value;
+		var value = form.filterLogLevel[form.filterLogLevel.selectedIndex].value;
 		var minLevel = this.logLevels.indexOf(value);
 		var entryLevel = this.logLevels.indexOf(item.logLevel);
 		if (minLevel > entryLevel) {
 			return false;
 		}
 		return true;
+	}
+	this.filterMessage = function(item) {
+		var form = document.getElementById(this.formId);
+		if (!form.filterMessage) {
+			return true;
+		}
+		var msg = form.filterMessage.value;
+		if (!msg) {
+			return true;
+		}
+		var fidx = item.logMessage.indexOf(msg);
+		if (fidx == -1) {
+			return false;
+		}
+		return true;
+	}
+	this.getFormData = function()
+	{
+		var ret = new GLogFormData();
+		var form = document.getElementById(this.formId);
+		var idx = form.filterLogLevel.selectedIndex;
+		if (idx != -1) {
+			ret.logLevel = form.filterLogLevel[form.filterLogLevel.selectedIndex].value;
+		}
+		ret.logMessage = form.filterMessage;
+		
+		return ret;
 	}
 }

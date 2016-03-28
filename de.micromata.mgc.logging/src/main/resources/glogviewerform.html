@@ -1,0 +1,24 @@
+<!--  USE same as from glogform.js -->
+  <div id="glogformdiv" class='glogformdiv'>
+    <form id="glogform">
+      <label for='liveview'>Live Update</label><input type='checkbox'
+        name=liveViewCheckbox checked>
+      <button name='clearLogListButton'>Clear</button>
+      <label for='filterLogLevel'>LogLevel</label> <select
+        name='filterLogLevel'>
+        <option value="Debug">Debug</option>
+        <option value="Info">Info</option>
+        <option value="Note">Node</option>
+        <option value="Warn">Warn</option>
+        <option value="Error">Error</option>
+        <option value="Fatal">Fatal</option>
+      </select> <label for='filterMessage'>Message</label><input
+        name='filterMessage' type='text'></input>
+      <button name='filterResetButton'>Reset</button>
+      <button name='filterSearchButton'>Search</button>
+
+    </form>
+  </div>
+  <div id="glogentriesdiv" class="glogentriesdiv">
+    <div id="glogentries" class="glogentries"></div>
+  </div>

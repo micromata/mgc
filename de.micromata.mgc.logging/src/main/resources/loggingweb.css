@@ -16,15 +16,40 @@
 	margin-right: 5px;
 }
 
-.logm {
+.logc {
+	width: 130px;
 	display: inline;
+	margin-left: 5px;
+	margin-right: 5px;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
-.lewarn {
+.logc:hover {
+	text-overflow: inherit;
+	overflow: visible;
+}
+
+.logm {
+	display: inline;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.logm:hover {
+	text-overflow: inherit;
+	overflow: visible;
+}
+
+.logeWarn {
 	background-color: #ffcccc;
 }
 
-.leerror {
+.logeError {
+	background-color: #ff3333;
+}
+
+.logeFatal {
 	background-color: #ff3333;
 }
 
@@ -46,22 +71,4 @@
 
 .hidden {
 	display: none;
-}
-
-.glogformdiv {
-	position: absolute;
-	top: 0px;
-}
-
-.glogentriesdiv {
-	position: absolute;
-	top: 30px;
-	bottom: 0px;
-	width: 100%;
-	height: calc(100% - 30px)
-	
-}
-.glogentriesdiv
-{
-	overflow: auto;
 }

@@ -4,37 +4,72 @@
 <script type="text/JavaScript" src="glogform.js"></script>
 <link href="loggingweb.css" rel="stylesheet" type="text/css">
 <script type="text/javascript">
-	var logCounter = 0; 
-	function logProvider() {
-	  var item = {
-	    logTime : '2006-01-01 12:12',
-	    logLevel : 'Note',
-	    logMessage : 'Hello ' + ++logCounter,
-	    logAttributes : [ {
-	      typeName : "AKey",
-	      value : 'A value'
-	    }, {
-	      typeName : "BKey",
-	      value : 'B value'
-	    } ]
-	  };
-	  return [ item ];
+	var logCounter = 0;
+  function TestLogBackend() {
+  	this.supportsSearch = false;
+  	this.supportsPoll = true;
+  	this.init = function(logViewer)
+    {
+      
+    }
+	  this.logPoll = function(lt, callback) {
+	  	var d = new Date();
+	  	var n = d.getTime(); 
+		  var item = {
+		    logTime : d.toISOString(),
+		    logTimestamp : n,
+		    logLevel : 'Note',
+		    logMessage : 'Hello ' + ++logCounter,
+		    logAttributes : [ {
+		      typeName : "AKey",
+		      value : 'A value'
+		    }, {
+		      typeName : "BKey",
+		      value : 'B value'
+		    } ]
+		  };
+		  callback([ item ]);
+	  }
+	  this.logSelect = function(logFormData, callback) {
+
+	  }
   }
+
   var logViewer = new GLogViewer({
     logListId : 'glogentries',
     formId : 'glogform',
-    logPollCallback : logProvider,
-    maxItems: 100,
-    logPollTimeout: 1000
+    logBackend : new TestLogBackend(),
+    maxItems : 100,
+    logPollTimeout : 1000
 
   });
 </script>
 </head>
 <body>
-	<div id="glogformdiv" class='glogformdiv' >
-		<form id="glogform"></form>
+	<!--  USE same as from glogform.js -->
+	<div id="glogformdiv" class='glogformdiv'>
+		<form id="glogform">
+			<label for='liveview'>Live Update</label><input type='checkbox'
+				name=liveViewCheckbox checked>
+			<button name='clearLogListButton'>Clear</button>
+			<label for='filterLogLevel'>LogLevel</label> <select
+				name='filterLogLevel'>
+				<option value="Debug">Debug</option>
+				<option value="Info">Info</option>
+				<option value="Node">Node</option>
+				<option value="Warn">Warn</option>
+				<option value="Error">Error</option>
+				<option value="Fatal">Fatal</option>
+			</select> <label for='filterMessage'>Message</label><input
+				name='filterMessage' type='text'></input>
+			<button name='filterResetButton'>Reset</button>
+			<button name='filterSearchButton'>Search</button>
+
+		</form>
 	</div>
 	<div id="glogentriesdiv" class="glogentriesdiv">
 		<div id="glogentries" class="glogentries"></div>
+	</div>
+
 </body>
 </html>

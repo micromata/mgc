@@ -1,21 +1,41 @@
-function GLogViewerForm() {
+function GLogFormData() {
 	this.logLevel = null;
 	this.logCategory = null;
+	this.logMessage = null;
+	this.startRow = null;
+	this.maxRow = null;
+	this.masterOnly = false;
+
 }
+
 function GLogViewer(options) {
 	// console.warn("GLogViewer created");
+	this.lastPollTime = 0;
 	this.options = options;
 	this.logListId = options.logListId;
 	this.formId = options.formId;
-	this.logFilterCallback = options.logFilterCallback;
-	this.logPollCallback = options.logPollCallback;
 	this.logPollTimeout = options.logPollTimeout;
-	this.logPollIsRunning = false, this.buffer = null;
-	this.bufferSize = options.bufferSize;
-	this.enableEmbeddedDebugger = options.enableEmbeddedDebugger;
-	if (this.bufferSize) {
-		buffer = new Array();
+	this.logPollIsRunning = false, this.buffer = new Array();
+	this.bufferSize = 2000;
+	this.showInreverseOrder = true;
+	if (options.bufferSize) {
+		this.bufferSize = options.bufferSize;
 	}
+
+	if (options.logBackend) {
+		this.logBackend = options.logBackend;
+		this.logBackend.init(this);
+	} else if (options.backendUrl) {
+		this.backendUrl = options.backendUrl;
+		this.logBackend = new GLogBackend();
+		this.logBackend.init(this);
+	} else {
+		this.logBackend = new LogDummyBackend();
+		this.logBackend.init(this);
+	}
+
+	this.enableEmbeddedDebugger = options.enableEmbeddedDebugger;
+
 	if (!this.logPollTimeout) {
 		this.logPollTimeout = 1000;
 	}
@@ -24,23 +44,27 @@ function GLogViewer(options) {
 	if (!this.maxItems) {
 		this.maxItems = 1000;
 	}
-	this.autoScroll = options.autoScroll;
-	if (options.autoScroll == undefined) {
-		options.autoScroll = true;
+	this.autoScroll = this.showInreverseOrder == false;
+	if (this.showInreverseOrder == false && options.autoScroll) {
+		this.autoScroll = options.autoScroll;
 	}
 	this.searchAttributes = options.searchAttributes;
 
 	if (!this.searchAttributes) {
 		this.searchAttributes = [];
 	}
-	this.logentries = [];
+	this.pageSize = 30;
+	if (options.pageSize) {
+		this.pageSize = options.pageSize;
+	}
 
 	var _this = this;
 	this.logForm = null;
 	runOnLoad(function() {
 		if (_this.formId) {
 			_this.logForm = new GlogForm(_this);
-			_this.logForm._buildForm(_this);
+			_this.logForm._attachForm();
+			// _this.logForm._buildForm();
 		}
 		if (_this.enableEmbeddedDebugger) {
 			if (!document.getElementById('FirebugLite')) {
@@ -55,22 +79,19 @@ function GLogViewer(options) {
 				E['setAttribute']('src', 'https://getfirebug.com/' + '#startOpened');
 			}
 		}
-		if (_this.logPollCallback) {
-			_startPoll(_this);
-		}
+		_startPoll(_this);
 	});
-	this.setPollingCallback = function(callback) {
-		console.debug("New callback set: " + callback);
-		var oldcallback = this.logPollCallback;
-		this.logPollCallback = callback;
+	this.setBackend = function(backend) {
+		this.logBackend = backend;
+		this.logBackend.init(this);
+		console.debug("new logBackend initialized: " + this.logBackend);
 		_startPoll(this);
-
 	}
+
 	this.clear = function() {
 		var ll = document.getElementById(this.logListId);
-		// TODO remove not correct:
-		for (var i = 0; i < ll.childNodes.length; ++i) {
-			ll.removeChild(ll.childNodes[i]);
+		while (ll.hasChildNodes()) {
+			ll.removeChild(ll.lastChild);
 		}
 	}
 	this.reload = function() {
@@ -80,31 +101,81 @@ function GLogViewer(options) {
 
 	this._appendEntries = function(entries) {
 		this._appendToBuffer(entries);
+		this._appendToGui(entries);
+	}
+	this._appendToGui = function(entries) {
+		var liveUpdate = true;
 		if (this.logForm) {
-			entries = this.logForm.filterItems(entries);
+			liveUpdate = this.logForm.isLiveUpdate();
+			if (liveUpdate) {
+				entries = this.logForm.filterItems(entries);
+			}
+		}
+		if (!liveUpdate) {
+			return;
 		}
 		var ll = document.getElementById(this.logListId);
 		var htmitem;
 		for (var i = 0; i < entries.length; ++i) {
 			htmitem = this._buildHtmlItem(entries[i]);
-			ll.appendChild(htmitem);
+			if (this.showInreverseOrder) {
+				if (ll.hasChildNodes()) {
+					ll.insertBefore(htmitem, ll.firstChild);
+				} else {
+					ll.appendChild(htmitem);
+				}
+			} else {
+				ll.appendChild(htmitem);
+			}
 		}
-		if (htmitem) {
+		if (this.showInreverseOrder == false && this.autoScroll) {
 			htmitem.scrollIntoView(true);
 		}
 	}
 	this._appendToBuffer = function(entries) {
 		if (!this.buffer) {
+			console.debug('buffer not set');
 			return;
 		}
+		
 		if (this.buffer.length + entries.length > this.bufferSize) {
 			var rl = this.buffer.length + entries.length - this.bufferSize;
 			for (var i = 0; i < rl; ++i) {
 				this.buffer.shift();
 			}
 		}
+		
+		for ( var i in entries) {
+			var e = entries[i];
+			if (!e.logTimestamp) {
+				console.warn("No logTimestamp given: " + e);
+				continue;
+			}
+			var lt = e.logTimestamp;
+		
+			console.debug('compare: ' + this.logPollTimeout + "; " + lt);
+			if (typeof (lt) === 'string' || lt instanceof String) {
+				lt = parseLong(lt);
+			}
+			if (this.lastPollTime < lt) {
+				this.lastPollTime = lt;
+				console.debug('update polltimestamp: ' + this.lastPollTime);
+			}
+		}
 		this.buffer = this.buffer.concat(entries);
 	}
+	this.filterItems = function(formData) {
+		if (this.logBackend.supportsSearch) {
+			this.logBackend(formData, function(items) {
+				this.clear();
+				this._appendToGui(items);
+			});
+		} else {
+			this.clear();
+			this._appendToGui(this.buffer);
+		}
+	}
+
 	function truncItems(_this, num) {
 		var ll = document.getElementById(_this.logListId);
 		for (var i = 0; i < num; ++i) {
@@ -130,7 +201,12 @@ function GLogViewer(options) {
 		m.setAttribute('class', 'logl');
 		m.appendChild(document.createTextNode(item.logLevel));
 		el.appendChild(m);
-		// TODO cat
+		
+		m = document.createElement('div');
+		m.setAttribute('class', 'logc');
+		m.appendChild(document.createTextNode(item.logCategory));
+		el.appendChild(m);
+
 		m = document.createElement('div');
 		m.setAttribute('class', 'logm');
 		m.appendChild(document.createTextNode(item.logMessage));
@@ -171,9 +247,13 @@ function GLogViewer(options) {
 		return logattrs;
 	}
 	function _startPoll(_this) {
+
 		if (_this.logPollIsRunning == true) {
+			console.debug('logPollIsRunning');
 			return;
 		}
+		console.debug('_startPoll');
+
 		_this.logPollIsRunning = true;
 		setTimeout(function() {
 			_doPoll(_this);
@@ -182,24 +262,30 @@ function GLogViewer(options) {
 	function _doPoll(_this) {
 		console.debug('inpoll');
 		try {
-			if (!_this.logPollCallback) {
+			_this.logBackend.logPoll(_this.lastPollTime, function(entries) {
+				try {
+					console.debug("poll received: " + entries);
+					if (typeof entries == 'string') {
+						entries = JSON.parse(entries);
+					}
+					if (entries && entries.length > 0) {
+						_this._appendEntries(entries);
+					}
+				} catch (e) {
+					console.error('logpoll failed: ' + e);
+				}
 				_this.logPollIsRunning = false;
-				return;
-			}
-			var entries = _this.logPollCallback();
-			console.debug("poll received: " + entries);
-			if (typeof entries == 'string') {
-				entries = JSON.parse(entries);
-			}
-			if (entries && entries.length > 0) {
-				_this._appendEntries(entries);
-			}
+				setTimeout(function() {
+					_doPoll(_this);
+				}, _this.logPollTimeout);
+			});
 		} catch (e) {
-			console.error('logpoll failed: ' + e);
+			console.error("logBackend call for poll failed:  " + e);
+			_this.logPollIsRunning = false;
+			setTimeout(function() {
+				_doPoll(_this);
+			}, _this.logPollTimeout);
 		}
-		setTimeout(function() {
-			_doPoll(_this);
-		}, _this.logPollTimeout);
 	}
 
 	function runOnLoad(func) {
