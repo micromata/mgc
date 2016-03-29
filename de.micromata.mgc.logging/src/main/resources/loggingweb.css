@@ -3,25 +3,37 @@
 }
 
 .logt {
-	width: 100px;
-	display: inline;
+	width: 180px;
+	display: inline-block;
 	margin-left: 5px;
 	margin-right: 5px;
 }
 
 .logl {
-	width: 60px;
-	display: inline;
+	width: 100px;
+	display: inline-block;
 	margin-left: 5px;
+	padding-left: 2px;
 	margin-right: 5px;
+	border-bottom-style: none;
+	border-top-style: none;
+	border-right-style: none;
+	border-left-style: solid;
+	border-left-width: 1px;
+	
 }
 
 .logc {
-	width: 130px;
-	display: inline;
+	width: 200px;
+	display: inline-block  ;
 	margin-left: 5px;
-	margin-right: 5px;
-	overflow: hidden;
+  padding-left: 2px;
+  margin-right: 5px;
+  border-bottom-style: none;
+  border-top-style: none;
+  border-right-style: none;
+  border-left-style: solid;
+  border-left-width: 1px;
 	text-overflow: ellipsis;
 }
 
@@ -32,6 +44,14 @@
 
 .logm {
 	display: inline;
+	margin-left: 5px;
+  padding-left: 2px;
+  margin-right: 5px;
+  border-bottom-style: none;
+  border-top-style: none;
+  border-right-style: none;
+  border-left-style: solid;
+  border-left-width: 1px;
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
@@ -60,15 +80,22 @@
 }
 
 .logattrkey {
-	display: inline;
+	//display: inline;
 	width: 150px;
 	padding-right: 3px;
+	vertical-align: top;
 }
 
 .logattrvalue {
 	display: inline;
+	vertical-align: top;
+	white-space: pre;
 }
 
 .hidden {
 	display: none;
+}
+
+.glogFormAttributes {
+	display: inline;
 }

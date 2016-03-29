@@ -1,19 +1,32 @@
 <!--  USE same as from glogform.js -->
   <div id="glogformdiv" class='glogformdiv'>
     <form id="glogform">
-      <label for='liveview'>Live Update</label><input type='checkbox'
+      <label for='liveview'>Live Update</label> <input type='checkbox'
         name=liveViewCheckbox checked>
       <button name='clearLogListButton'>Clear</button>
+
       <label for='filterLogLevel'>LogLevel</label> <select
         name='filterLogLevel'>
         <option value="Debug">Debug</option>
         <option value="Info">Info</option>
-        <option value="Note">Node</option>
+        <option value="Note" selected="selected">Note</option>
         <option value="Warn">Warn</option>
         <option value="Error">Error</option>
         <option value="Fatal">Fatal</option>
-      </select> <label for='filterMessage'>Message</label><input
+      </select> <label for='filterCategory'>Category</label> <select
+        name='filterCategory'>
+      </select> <label for='filterMessage'>Message</label> <input
         name='filterMessage' type='text'></input>
+      <div id='glogformAttributes' class='glogFormAttributes'>
+        <label for='logAttribute1Type'>LogAttribute 1</label> <select
+          name='logAttribute1Type'></select>
+          <input name='logAttribute1Value'
+          type='text'> 
+          <label for='logAttribute2Type'>LogAttribute
+          2</label> <select name='logAttribute2Type'></select><input
+          name='logAttribute2Value' type='text'>
+      </div>
+
       <button name='filterResetButton'>Reset</button>
       <button name='filterSearchButton'>Search</button>
 
@@ -22,3 +35,4 @@
   <div id="glogentriesdiv" class="glogentriesdiv">
     <div id="glogentries" class="glogentries"></div>
   </div>
+

@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.micromata.mgc.javafx.launcher.gui.generic.LauncherConfigTabController">
+<AnchorPane maxHeight="400.0" prefHeight="400.0" prefWidth="790.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.micromata.mgc.javafx.launcher.gui.generic.LauncherConfigTabController">
    <children>
       <VBox>
          <children>
@@ -18,9 +18,9 @@
                </VBox.margin>
                <children>
                   <Label maxWidth="-Infinity" minWidth="150.0" text="Window Settings" />
-                  <RadioButton fx:id="normal" mnemonicParsing="false" text="Normal" />
-                  <RadioButton fx:id="minimized" mnemonicParsing="false" text="Minimzed" />
-                  <RadioButton fx:id="systemTray" mnemonicParsing="false" text="Hidden" />
+                  <RadioButton fx:id="normal" minWidth="100.0" mnemonicParsing="false" text="Normal" />
+                  <RadioButton fx:id="minimized" minWidth="100.0" mnemonicParsing="false" text="Minimzed" />
+                  <RadioButton fx:id="systemTray" minWidth="100.0" mnemonicParsing="false" text="Hidden" />
                </children>
             </HBox>
             <HBox>

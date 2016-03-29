@@ -4,6 +4,8 @@ import de.micromata.genome.util.runtime.config.AbstractTextConfigFileConfigModel
 import de.micromata.mgc.javafx.launcher.gui.AbstractConfigTabController;
 import de.micromata.mgc.javafx.launcher.gui.DialogBuilder;
 import javafx.fxml.FXML;
+import javafx.scene.control.TextArea;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
 /**
@@ -33,7 +35,16 @@ public class TextConfigTabController extends AbstractConfigTabController<Abstrac
 
     row.addTextField("fileName", model.getFileName());
     row = builder.addRow();
-    row.addTextArea("content", model.getContent());
+    //    row.addTextArea("content", model.getContent());
+    TextArea area = new TextArea();
+    area.setPrefWidth(600);
+    area.setMinWidth(Region.USE_COMPUTED_SIZE);
+    area.setMaxWidth(Double.MAX_VALUE);
+    area.setMinHeight(350);
+    area.setId("content");
+    area.setText(model.getContent());
+
+    row.getParentPane().getChildren().add(area);
 
   }
 

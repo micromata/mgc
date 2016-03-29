@@ -17,12 +17,16 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 
-import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
+import de.micromata.genome.logging.LogAttributeType;
+import de.micromata.genome.logging.LogCategory;
+import de.micromata.genome.logging.LogConfigurationDAO;
 import de.micromata.genome.logging.LogLevel;
 import de.micromata.genome.logging.LogWriteEntry;
+import de.micromata.genome.logging.Logging;
 import de.micromata.genome.logging.Logging.OrderBy;
 import de.micromata.genome.logging.LoggingServiceManager;
 import de.micromata.genome.logging.spi.log4j.RoundList;
@@ -35,11 +39,24 @@ import de.micromata.genome.util.types.Pair;
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
  */
-public class LogHtmlWindowServlet extends HttpServlet
+public abstract class LogHtmlWindowServlet extends HttpServlet
 {
   private static final Logger LOG = Logger.getLogger(LogHtmlWindowServlet.class);
   private RoundList<LogWriteEntry> logWriteEntries = new RoundList<>(2000);
   static LogHtmlWindowServlet INSTANCE;
+
+  /**
+   * Will be called by doPost.
+   * 
+   * If a valid user to show logs, call the execute method.
+   * 
+   * @param req
+   * @param resp
+   * @throws ServletException
+   * @throws IOException
+   */
+  protected abstract void executeWithAuthentifcation(HttpServletRequest req, HttpServletResponse resp)
+      throws ServletException, IOException;
 
   @Override
   public void init()
@@ -58,11 +75,16 @@ public class LogHtmlWindowServlet extends HttpServlet
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
   {
+    executeWithAuthentifcation(req, resp);
+  }
+
+  protected void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
+  {
     String cmd = req.getParameter("cmd");
     if ("poll".equals(cmd) == true) {
       poll(req, resp);
-    } else if ("supportsSearch".equals(cmd) == true) {
-      supportSearch(req, resp);
+    } else if ("getConfiguration".equals(cmd) == true) {
+      getConfiguration(req, resp);
 
     } else if ("search".equals(cmd) == true) {
       filter(req, resp);
@@ -72,9 +94,33 @@ public class LogHtmlWindowServlet extends HttpServlet
 
   }
 
-  protected void supportSearch(HttpServletRequest req, HttpServletResponse resp) throws IOException
+  protected void getConfiguration(HttpServletRequest req, HttpServletResponse resp) throws IOException
   {
-    JsonValue ret = Json.value(LoggingServiceManager.get().getLogging().supportsSearch());
+    JsonObject ret = new JsonObject();
+    Logging logging = LoggingServiceManager.get().getLogging();
+    ret.add("supportsSearch", logging.supportsSearch());
+    ret.add("supportsFulltextSearch", logging.supportsFulltextSearch());
+    JsonArray arr = new JsonArray();
+
+    for (LogCategory lc : logging.getRegisteredCategories()) {
+      arr.add(lc.getFqName());
+    }
+    ret.add("loggingCategories", arr);
+    arr = new JsonArray();
+    for (LogAttributeType at : logging.getRegisteredAttributes()) {
+      arr.add(at.name());
+    }
+    ret.add("attributes", arr);
+    arr = new JsonArray();
+    for (LogAttributeType at : logging.getSearchAttributes()) {
+      arr.add(at.name());
+    }
+    ret.add("searchAttributes", arr);
+
+    LogConfigurationDAO logconfig = LoggingServiceManager.get().getLogConfigurationDAO();
+    LogLevel th = logconfig.getThreshold();
+    ret.add("threshold", th.getName());
+
     sendResponse(resp, ret);
   }
 
@@ -117,6 +163,20 @@ public class LogHtmlWindowServlet extends HttpServlet
     Timestamp start = null;
     Timestamp end = null;
     List<Pair<String, String>> logAttributes = null;
+    String logAttribute1Type = req.getParameter("logAttribute1Type");
+    String logAttribute1Value = req.getParameter("logAttribute1Value");
+    String logAttribute2Type = req.getParameter("logAttribute2Type");
+    String logAttribute2Value = req.getParameter("logAttribute2Value");
+    if (StringUtils.isNotBlank(logAttribute1Type) && StringUtils.isNotBlank(logAttribute1Value)) {
+      logAttributes = new ArrayList<>();
+      logAttributes.add(Pair.make(logAttribute1Type, logAttribute1Value));
+    }
+    if (StringUtils.isNotBlank(logAttribute2Type) && StringUtils.isNotBlank(logAttribute2Value)) {
+      if (logAttributes == null) {
+        logAttributes = new ArrayList<>();
+      }
+      logAttributes.add(Pair.make(logAttribute2Type, logAttribute2Value));
+    }
     List<OrderBy> orderBy = null;
     String startRows = req.getParameter("startRow");
     String maxRows = req.getParameter("maxRow");
@@ -124,7 +184,8 @@ public class LogHtmlWindowServlet extends HttpServlet
     int maxRow = NumberUtils.toInt(maxRows, 30);
     boolean masterOnly = "true".equals(req.getParameter("masterOnly"));
     JsonArray ret = new JsonArray();
-    LoggingServiceManager.get().getLogging().selectLogs(start, end, level, logCategory, logMessage, null, startRow,
+    LoggingServiceManager.get().getLogging().selectLogs(start, end, level, logCategory, logMessage, logAttributes,
+        startRow,
         maxRow, orderBy, masterOnly, (logEntry) -> {
           ret.add(LogJsonUtils.logEntryToJson(logEntry));
         });

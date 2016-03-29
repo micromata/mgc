@@ -12,6 +12,14 @@
     {
       
     }
+  	this.loggingConfiguration = {
+  	    supportSearch: false,
+  	    supportsFulltextSearch: false,
+  	    loggingCategories: ['Test', 'System'],
+  	    attributes: [],
+  	    searchAttributes: ['AKey', 'BKey', 'TechReasonException'],
+  	    threshold: 'Debug'
+  	  };
 	  this.logPoll = function(lt, callback) {
 	  	var d = new Date();
 	  	var n = d.getTime(); 
@@ -28,6 +36,46 @@
 		      value : 'B value'
 		    } ]
 		  };
+		  if ((logCounter % 3) == 0) {
+		  	item.logLevel = 'Error';
+		  	item.logAttributes[item.logAttributes.length] = {
+		  			typeName: "TechReasonException",
+		  			value: `INTERVAL kann nicht geparst werden| TechReasonException; value=de.micromata.genome.chronos.JobRetryException: INTERVAL kann nicht geparst werden
+  at de.micromata.genome.chronos.manager.AbstractCommandLineJob.call(AbstractCommandLineJob.java:105)
+  at de.micromata.genome.chronos.manager.SchedulerBaseDAO$1.call(SchedulerBaseDAO.java:122)
+  at de.micromata.genome.stats.StatsDAOImpl.runLongRunningOp(StatsDAOImpl.java:289)
+  at de.micromata.genome.chronos.manager.SchedulerBaseDAO.invokeJob(SchedulerBaseDAO.java:113)
+  at de.micromata.genome.chronos.manager.JobFilterChain.doFilter(JobFilterChain.java:54)
+  at de.micromata.genome.chronos.manager.SchedulerBaseDAO.filterJobRun(SchedulerBaseDAO.java:105)
+  at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+  at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+  at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+  at java.lang.reflect.Method.invoke(Method.java:497)
+  at de.micromata.genome.web.gwar.ModuleWithThreadContextFactoryBean$ModuleThreadContextInvocationHandler$1.call(ModuleWithThreadContextFactoryBean.java:68)
+  at de.micromata.genome.util.runtime.PluginContext.runInCombinedContext(PluginContext.java:124)
+  at de.micromata.genome.web.gwar.ModuleWithThreadContextFactoryBean$ModuleThreadContextInvocationHandler.invoke(ModuleWithThreadContextFactoryBean.java:62)
+  at com.sun.proxy.$Proxy42.filterJobRun(Unknown Source)
+  at de.micromata.genome.chronos.spi.JobRunner.run(JobRunner.java:158)
+  at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+  at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+  at java.lang.Thread.run(Thread.java:745)
+Caused by: java.lang.RuntimeException: INTERVAL kann nicht geparst werden
+  at de.micromata.genome.chronos.manager.AbstractCommandLineJob.parseInteger(AbstractCommandLineJob.java:266)
+  at de.micromata.genome.logging.genome.SendLogReportFutureJob.callImpl(SendLogReportFutureJob.java:64)
+  at de.micromata.genome.logging.genome.SendLogReportFutureJob$1.call(SendLogReportFutureJob.java:50)
+  at de.micromata.genome.user.UserDAOBase.runAs(UserDAOBase.java:608)
+  at de.micromata.genome.user.UserDAOBase.runAsInternalSysadmin(UserDAOBase.java:640)
+  at de.micromata.genome.user.CombinedAdminUserExtDAO.runAsInternalSysadmin(CombinedAdminUserExtDAO.java:294)
+  at de.micromata.genome.logging.genome.SendLogReportFutureJob.call(SendLogReportFutureJob.java:45)
+  at de.micromata.genome.chronos.manager.AbstractCommandLineJob$1.run(AbstractCommandLineJob.java:89)
+  at de.micromata.genome.web.DynDaoFilterDAOImpl.runJob(DynDaoFilterDAOImpl.java:106)
+  at de.micromata.genome.chronos.manager.AbstractCommandLineJob.call(AbstractCommandLineJob.java:84)
+  ... 17 more
+Caused by: java.lang.RuntimeException: INTERVAL muss angegeben werden
+  at de.micromata.genome.chronos.manager.AbstractCommandLineJob.parseInteger(AbstractCommandLineJob.java:262)
+  ... 26 more`
+		  	}
+		  }
 		  callback([ item ]);
 	  }
 	  this.logSelect = function(logFormData, callback) {
@@ -49,19 +97,32 @@
 	<!--  USE same as from glogform.js -->
 	<div id="glogformdiv" class='glogformdiv'>
 		<form id="glogform">
-			<label for='liveview'>Live Update</label><input type='checkbox'
+			<label for='liveview'>Live Update</label> <input type='checkbox'
 				name=liveViewCheckbox checked>
 			<button name='clearLogListButton'>Clear</button>
+
 			<label for='filterLogLevel'>LogLevel</label> <select
 				name='filterLogLevel'>
 				<option value="Debug">Debug</option>
 				<option value="Info">Info</option>
-				<option value="Node">Node</option>
+				<option value="Note" selected="selected">Note</option>
 				<option value="Warn">Warn</option>
 				<option value="Error">Error</option>
 				<option value="Fatal">Fatal</option>
-			</select> <label for='filterMessage'>Message</label><input
+			</select> <label for='filterCategory'>Category</label> <select
+				name='filterCategory'>
+			</select> <label for='filterMessage'>Message</label> <input
 				name='filterMessage' type='text'></input>
+			<div id='glogformAttributes' class='glogFormAttributes'>
+				<label for='logAttribute1Type'>LogAttribute 1</label> <select
+					name='logAttribute1Type'></select>
+					<input name='logAttribute1Value'
+					type='text'> 
+					<label for='logAttribute2Type'>LogAttribute
+					2</label> <select name='logAttribute2Type'></select><input
+					name='logAttribute2Value' type='text'>
+			</div>
+
 			<button name='filterResetButton'>Reset</button>
 			<button name='filterSearchButton'>Search</button>
 

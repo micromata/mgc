@@ -34,6 +34,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.WindowEvent;
@@ -48,7 +49,8 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>
     implements Initializable
 {
   private static final Logger LOG = Logger.getLogger(AbstractMainWindow.class);
-
+  @FXML
+  private ImageView mainWindowLogo;
   @FXML
   private Button startServerButton;
   @FXML

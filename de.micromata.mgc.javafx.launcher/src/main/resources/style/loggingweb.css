@@ -15,7 +15,12 @@
 	margin-left: 5px;
 	margin-right: 5px;
 }
-
+.logc {
+	width: 100px;
+	display: inline;
+  margin-left: 5px;
+  margin-right: 5px;
+}
 .logm {
 	display: inline;
 }
@@ -29,11 +34,13 @@
 }
 .logattr {
    background-color: #FFFFFF;
-   padding-left: 50px;
+   padding-left: 20px;
    display: block;
 }
 .logattrkey {
   display: inline;
+  width: 150px;
+  padding-right: 3px;
 }
 .logattrvalue {
   display: inline;

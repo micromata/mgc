@@ -5,7 +5,17 @@ function GLogFormData() {
 	this.startRow = null;
 	this.maxRow = null;
 	this.masterOnly = false;
-
+	this.logAttribute1Type = null;
+	this.logAttribute1Value = null;
+	this.logAttribute2Type = null;
+	this.logAttribute2Value = null;
+	
+	this.asMap = function() {
+		var ret = {};
+		if (this.level != null) {
+			ret.level = this.level;
+		}
+	}
 }
 
 function GLogViewer(options) {
@@ -137,14 +147,14 @@ function GLogViewer(options) {
 			console.debug('buffer not set');
 			return;
 		}
-		
+
 		if (this.buffer.length + entries.length > this.bufferSize) {
 			var rl = this.buffer.length + entries.length - this.bufferSize;
 			for (var i = 0; i < rl; ++i) {
 				this.buffer.shift();
 			}
 		}
-		
+
 		for ( var i in entries) {
 			var e = entries[i];
 			if (!e.logTimestamp) {
@@ -152,7 +162,7 @@ function GLogViewer(options) {
 				continue;
 			}
 			var lt = e.logTimestamp;
-		
+
 			console.debug('compare: ' + this.logPollTimeout + "; " + lt);
 			if (typeof (lt) === 'string' || lt instanceof String) {
 				lt = parseLong(lt);
@@ -166,13 +176,13 @@ function GLogViewer(options) {
 	}
 	this.filterItems = function(formData) {
 		if (this.logBackend.supportsSearch) {
-			this.logBackend(formData, function(items) {
-				this.clear();
-				this._appendToGui(items);
+			this.logBackend.logSelect(formData, function(items) {
+				_this.clear();
+				_this._appendToGui(items);
 			});
 		} else {
-			this.clear();
-			this._appendToGui(this.buffer);
+			_this.clear();
+			_this._appendToGui(this.buffer);
 		}
 	}
 
@@ -201,7 +211,7 @@ function GLogViewer(options) {
 		m.setAttribute('class', 'logl');
 		m.appendChild(document.createTextNode(item.logLevel));
 		el.appendChild(m);
-		
+
 		m = document.createElement('div');
 		m.setAttribute('class', 'logc');
 		m.appendChild(document.createTextNode(item.logCategory));
@@ -229,19 +239,23 @@ function GLogViewer(options) {
 		logattrs.setAttribute("class", "logattrs");
 		logattrs.setAttribute("style", "display: none");
 		if (item.logAttributes) {
+			var atable = document.createElement('table');
+			atable.setAttribute("class", "logattr");
+			logattrs.appendChild(atable);
+
 			for (var i = 0; i < item.logAttributes.length; ++i) {
+
 				var la = item.logAttributes[i];
-				var attr = document.createElement("div");
-				attr.setAttribute("class", "logattr");
-				var attrkey = document.createElement("div");
-				attrkey.setAttribute("class", "logattrkey");
-				attrkey.appendChild(document.createTextNode(la.typeName));
-				attr.appendChild(attrkey);
-				var attrvalue = document.createElement("div");
-				attrvalue.setAttribute("class", "logattrvalue");
-				attrvalue.appendChild(document.createTextNode(la.value));
-				attr.appendChild(attrvalue);
-				logattrs.appendChild(attr);
+				var tr = document.createElement('tr');
+				var td = document.createElement('td');
+				td.setAttribute("class", "logattrkey");
+				td.appendChild(document.createTextNode(la.typeName));
+				tr.appendChild(td);
+				td = document.createElement('td');
+				td.setAttribute("class", "logattrvalue");
+				td.appendChild(document.createTextNode(la.value));
+				tr.appendChild(td);
+				atable.appendChild(tr);
 			}
 		}
 		return logattrs;
@@ -249,10 +263,10 @@ function GLogViewer(options) {
 	function _startPoll(_this) {
 
 		if (_this.logPollIsRunning == true) {
-			console.debug('logPollIsRunning');
+			// console.debug('logPollIsRunning');
 			return;
 		}
-		console.debug('_startPoll');
+		// console.debug('_startPoll');
 
 		_this.logPollIsRunning = true;
 		setTimeout(function() {
@@ -260,11 +274,11 @@ function GLogViewer(options) {
 		}, _this.logPollTimeout);
 	}
 	function _doPoll(_this) {
-		console.debug('inpoll');
+		// console.debug('inpoll');
 		try {
 			_this.logBackend.logPoll(_this.lastPollTime, function(entries) {
 				try {
-					console.debug("poll received: " + entries);
+					// console.debug("poll received: " + entries);
 					if (typeof entries == 'string') {
 						entries = JSON.parse(entries);
 					}

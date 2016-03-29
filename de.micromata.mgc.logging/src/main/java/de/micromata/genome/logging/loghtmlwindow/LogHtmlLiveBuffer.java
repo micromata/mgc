@@ -17,6 +17,7 @@ public class LogHtmlLiveBuffer implements MgcEventListener<LogWriteEntryEvent>
     if (LogHtmlWindowServlet.INSTANCE != null) {
       LogHtmlWindowServlet.INSTANCE.addLogEntry(event.getResult());
     }
+    event.nextFilter();
   }
 
 }
