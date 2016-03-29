@@ -37,4 +37,6 @@ public class SampleLocalSettingsConfigModel extends AbstractCompositLocalSetting
       "log4j.properties", Charsets.ISO_8859_1);
 
   private MailReceiverLocalSettingsConfigModel mailReceiverConfig = new MailReceiverLocalSettingsConfigModel();
+
+  private SampleConfigModel sampleConfig = new SampleConfigModel();
 }
