@@ -6,6 +6,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 import de.micromata.genome.logging.GLog;
 import de.micromata.genome.logging.GenomeLogCategory;
 import de.micromata.genome.logging.LogExceptionAttribute;
@@ -21,6 +23,13 @@ import de.micromata.genome.util.runtime.config.jdbc.JdbProviderServices;
 public class SystemService
 {
   protected static SystemService INSTANCE = new SystemService();
+
+  public static enum OsType
+  {
+    Windows, Mac,
+
+    Other
+  }
 
   public static SystemService get()
   {
@@ -61,5 +70,21 @@ public class SystemService
         GLog.error(GenomeLogCategory.System, "Can't launch browser: " + ex.getMessage(), new LogExceptionAttribute(ex));
       }
     }
+  }
+
+  public OsType getOsType()
+  {
+    String osName = System.getProperty("os.name");
+    //    if (true) {
+    //      return OsType.Mac;
+    //    }
+    OsType osType = OsType.Other;
+    if (StringUtils.startsWith(osName, "Windows") == true) {
+      osType = OsType.Windows;
+    } else if (StringUtils.startsWith(osName, "Mac") == true) {
+      osType = OsType.Mac;
+    }
+    return osType;
+
   }
 }

@@ -121,12 +121,16 @@ public abstract class AbstractMgcApplication<M extends LocalSettingsConfigModel>
 
       switch (ret) {
         case StartAlreadyRunning:
-          GLog.warn(GenomeLogCategory.System, "Server already running");
+          MgcEventRegistries.getEventInstanceRegistry()
+              .dispatchEvent(new MgcApplicationStartStopEvent(this, MgcApplicationStartStopStatus.StartAlreadyRunning,
+                  new ValMessage(ValState.Info, "mgc.application.start.alreadyRunning")));
           break;
         case StartError:
-          GLog.error(GenomeLogCategory.System, "Server failed starting");
+          MgcEventRegistries.getEventInstanceRegistry()
+              .dispatchEvent(new MgcApplicationStartStopEvent(this, MgcApplicationStartStopStatus.StartError,
+                  new ValMessage(ValState.Info, "mgc.application.start.failed")));
           break;
-        default:
+        case StartSuccess:
           MgcEventRegistries.getEventInstanceRegistry()
               .dispatchEvent(new MgcApplicationStartStopEvent(this, MgcApplicationStartStopStatus.StartSuccess,
                   new ValMessage(ValState.Info, "mgc.application.start.success")));
@@ -135,7 +139,7 @@ public abstract class AbstractMgcApplication<M extends LocalSettingsConfigModel>
       return ret;
     } catch (Exception ex) {
       MgcEventRegistries.getEventInstanceRegistry()
-          .dispatchEvent(new MgcApplicationStartStopEvent(this, MgcApplicationStartStopStatus.StartSuccess,
+          .dispatchEvent(new MgcApplicationStartStopEvent(this, MgcApplicationStartStopStatus.StartError,
               new ValMessage(ValState.Info, "mgc.application.start.success.failed", ex)));
 
       GLog.error(GenomeLogCategory.System, "Server start failed: " + ex.getMessage(), new LogExceptionAttribute(ex));
@@ -155,10 +159,15 @@ public abstract class AbstractMgcApplication<M extends LocalSettingsConfigModel>
                   new ValMessage(ValState.Info, "mgc.application.stopped.success")));
           break;
         case StopAlreadyStopped:
-          GLog.warn(GenomeLogCategory.System, "Server already stopped");
+          MgcEventRegistries.getEventInstanceRegistry()
+              .dispatchEvent(new MgcApplicationStartStopEvent(this, MgcApplicationStartStopStatus.StopAlreadyStopped,
+                  new ValMessage(ValState.Info, "mgc.application.stopped.alreadyStopped")));
           break;
-        case StartError:
-          GLog.warn(GenomeLogCategory.System, "Server Stop failed");
+        case StopError:
+          MgcEventRegistries.getEventInstanceRegistry()
+              .dispatchEvent(new MgcApplicationStartStopEvent(this, MgcApplicationStartStopStatus.StopError,
+                  new ValMessage(ValState.Info, "mgc.application.stopped.error")));
+
           break;
       }
       return ret;

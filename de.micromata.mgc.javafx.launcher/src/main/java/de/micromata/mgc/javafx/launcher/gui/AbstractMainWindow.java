@@ -1,6 +1,7 @@
 package de.micromata.mgc.javafx.launcher.gui;
 
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import org.apache.commons.lang.StringUtils;
@@ -18,6 +19,7 @@ import de.micromata.mgc.javafx.ControllerService;
 import de.micromata.mgc.javafx.FXCssUtil;
 import de.micromata.mgc.javafx.FXEvents;
 import de.micromata.mgc.javafx.SystemService;
+import de.micromata.mgc.javafx.SystemService.OsType;
 import de.micromata.mgc.javafx.launcher.MgcApplicationStartStopToEventListener;
 import de.micromata.mgc.javafx.launcher.MgcLauncher;
 import de.micromata.mgc.javafx.launcher.MgcLauncherEvent;
@@ -34,6 +36,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
@@ -65,6 +69,9 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>
   @FXML
   private LoggingController loggingController;
 
+  @FXML
+  private MenuItem hideWindowMenu;
+
   @Override
   public void initialize(URL location, ResourceBundle resources)
   {
@@ -77,6 +84,28 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>
     Thread currentThread = Thread.currentThread();
     currentThread.setUncaughtExceptionHandler(model.getUncaughtExceptionHandler());
     addCss();
+    if (SystemService.get().getOsType() != OsType.Windows) {
+      hideWindowMenu.setVisible(false);
+    }
+    stage.setOnCloseRequest(event -> {
+      if (SystemService.get().getOsType() != OsType.Windows) {
+        event.consume();
+
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle(model.getTranslateService().translate("mgc.launcher.gui.quitconfirmation.title"));
+        alert.setHeaderText(model.getTranslateService().translate("mgc.launcher.gui.quitconfirmation.header"));
+        alert.setContentText(model.getTranslateService().translate("mgc.launcher.gui.quitconfirmation.message"));
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+          closeApplication(null);
+        }
+      }
+    });
+    //    .setOnCloseRequest(new EventHandler<WindowEvent>() {
+    //      public void handle(WindowEvent we) {
+    //        System.out.println("Stage is closing");
+    //    }
+
     startServerButton.setOnAction(e -> {
       startServer();
     });
@@ -258,6 +287,7 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>
         .loadAsWindow(this, Lf5MainWindowController.class, model, "About");
     controller.initializeWithModel();
     controller.getStage().show();
+
   }
 
   private void launchBrowser()

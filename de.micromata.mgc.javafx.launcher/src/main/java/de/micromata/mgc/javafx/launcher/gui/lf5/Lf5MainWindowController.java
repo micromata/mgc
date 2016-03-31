@@ -33,6 +33,7 @@ public class Lf5MainWindowController extends AbstractModelController<MgcApplicat
   private Pane contentPane;
 
   private SwingNode swingNode;
+  JRootPane rootLF5Pane;
 
   @Override
   public void initializeWithModel()
@@ -64,6 +65,8 @@ public class Lf5MainWindowController extends AbstractModelController<MgcApplicat
     //    closeButton.setOnAction(event -> hide());
     CONTROLERINSTANCE = this;
     scene.widthProperty().addListener((owner, oldValue, newValue) -> {
+      rootLF5Pane.setMinimumSize(new Dimension((int) getStage().getWidth(), (int) getStage().getHeight()));
+
       //      System.out.println("Stage With changed: " + newValue);
       //      swingNode.minWidth(newValue.doubleValue());
       //      //      swingNode.prefHeight(width)
@@ -72,13 +75,14 @@ public class Lf5MainWindowController extends AbstractModelController<MgcApplicat
         //        MONITORINSTANCE.setWidth(newValue.doubleValue());
       }
     });
+
     contentPane.prefWidthProperty().bind(scene.widthProperty());
     contentPane.prefHeightProperty().bind(scene.heightProperty());
 
     contentPane.widthProperty().addListener((owner, oldValue, newValue) -> {
-      // swingNode.autosize();
-      //      System.out.println("With changed: " + newValue);
-      //      contentPane.setMinWidth(newValue.doubleValue());
+      swingNode.autosize();
+      System.out.println("With changed: " + newValue);
+      contentPane.setMinWidth(newValue.doubleValue());
       //      if (MONITORINSTANCE != null) {
       //        MONITORINSTANCE.setWidth(newValue.doubleValue());
       //      }
@@ -105,10 +109,10 @@ public class Lf5MainWindowController extends AbstractModelController<MgcApplicat
       {
         MgcLogBrokerMonitor monitor = new MgcLogBrokerMonitor(swingNode, LogLevel.getLog4JLevels());
         JFrame frame = monitor.getMainFrame();
-        JRootPane rootPane = frame.getRootPane();
+        rootLF5Pane = frame.getRootPane();
         //        rootPane.setBounds(0, 0, (int) getStage().getWidth(), (int) getStage().getHeight());
-        rootPane.setMinimumSize(new Dimension((int) getStage().getWidth(), (int) getStage().getHeight()));
-        swingNode.setContent(rootPane);
+        rootLF5Pane.setMinimumSize(new Dimension((int) getStage().getWidth(), (int) getStage().getHeight()));
+        swingNode.setContent(rootLF5Pane);
         MONITORINSTANCE = monitor;
       }
     });

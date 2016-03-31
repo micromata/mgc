@@ -20,7 +20,7 @@
             <items>
                   <MenuItem mnemonicParsing="false" onAction="#openConfigDialog" text="%mgc.launcher.gui.menu.configure" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" onAction="#hideWindow" text="%mgc.launcher.gui.menu.hide" />
+                  <MenuItem fx:id="hideWindowMenu" mnemonicParsing="false" onAction="#hideWindow" text="%mgc.launcher.gui.menu.hide" />
               <MenuItem mnemonicParsing="false" onAction="#closeApplication" text="%mgc.launcher.gui.menu.quit">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="F4" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
@@ -41,9 +41,9 @@
       </MenuBar>
       <Pane maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="60.0" prefHeight="98.0" prefWidth="1000.0">
          <children>
-            <Button fx:id="startServerButton" layoutX="724.0" layoutY="29.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" text="%mgc.launcher.gui.button.startServer" />
-            <Button fx:id="stopServerButton" layoutX="813.0" layoutY="29.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" text="%mgc.launcher.gui.button.stopServer" />
-            <Button fx:id="openBrowser" layoutX="475.0" layoutY="29.0" mnemonicParsing="false" text="%mgc.launcher.gui.button.openBrowser" />
+            <Button fx:id="startServerButton" layoutX="645.0" layoutY="29.0" mnemonicParsing="false" text="%mgc.launcher.gui.button.startServer" />
+            <Button fx:id="stopServerButton" layoutX="772.0" layoutY="29.0" mnemonicParsing="false" text="%mgc.launcher.gui.button.stopServer" />
+            <Button fx:id="openBrowser" layoutX="371.0" layoutY="29.0" minWidth="-Infinity" mnemonicParsing="false" text="%mgc.launcher.gui.button.openBrowser" />
             <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="14.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@/style/genome_dashboard.png" />
