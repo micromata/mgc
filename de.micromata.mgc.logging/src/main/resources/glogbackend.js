@@ -1,15 +1,15 @@
-
 function LogDummyBackend(logViewer) {
-	this.supportsPoll = false;
-	this.supportsSearch = false;
 	this.loggingConfiguration = {
-		supportSearch: false,
-		supportsFulltextSearch: false,
-		loggingCategories: [],
-		attributes: [],
-		searchAttributes: [],
-		threshold: 'Debug'
+	  supportSearch : false,
+	  supportsFulltextSearch : false,
+	  loggingCategories : [],
+	  attributes : [],
+	  searchAttributes : [],
+	  threshold : 'Debug'
 	};
+	this.getLoggingConfiguration = function() {
+		return this.loggingConfiguration;
+	}
 	this.init = function(logViewer) {
 
 	}
@@ -23,25 +23,23 @@ function LogDummyBackend(logViewer) {
 
 function GLogBackend() {
 
-	
 	var _this = this;
-	
+
 	this.init = function(logViewer) {
 
 		this.logViewer = logViewer;
 		this.backendUrl = logViewer.options.backendUrl;
-		this.supportsSearch = null;
 		this._initLogConfig();
 	}
 
 	this.logPoll = function(lastPollTime, callback) {
 		this._ajax("poll", 'lt=' + lastPollTime, callback);
 	};
-	
+
 	this.logSelect = function(logFormData, callback) {
 		// is type of GLogFormData
 		var urlp = '';
-		for (var key in logFormData) {
+		for ( var key in logFormData) {
 			var value = logFormData[key];
 			if (!value) {
 				continue;
@@ -56,17 +54,17 @@ function GLogBackend() {
 			callback(res);
 		});
 	};
-	
-	this._initLogConfig = function()
-	{
+	this.getLoggingConfiguration = function() {
+		return this.loggingConfiguration;
+	}
+	this._initLogConfig = function() {
 		this._ajax("getConfiguration", null, function(text) {
 			var res = JSON.parse(text);
-			_this.supportsSearch = res.supportsSearch;
 			_this.loggingConfiguration = res;
 		});
 	}
-	this._ajax = function(cmd, data, callback)
-	{
+
+	this._ajax = function(cmd, data, callback) {
 		var xmlhttp = new XMLHttpRequest();
 		var url = this.backendUrl + "?cmd=" + cmd;
 		if (data) {
@@ -80,5 +78,5 @@ function GLogBackend() {
 		};
 		xmlhttp.send();
 	}
-	
+
 }

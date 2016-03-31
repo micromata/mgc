@@ -9,7 +9,7 @@ function GLogFormData() {
 	this.logAttribute1Value = null;
 	this.logAttribute2Type = null;
 	this.logAttribute2Value = null;
-	
+
 	this.asMap = function() {
 		var ret = {};
 		if (this.level != null) {
@@ -175,17 +175,28 @@ function GLogViewer(options) {
 		this.buffer = this.buffer.concat(entries);
 	}
 	this.filterItems = function(formData) {
-		if (this.logBackend.supportsSearch) {
+		if (this.logBackend.getLoggingConfiguration().supportsSearch) {
 			this.logBackend.logSelect(formData, function(items) {
+				console.debug('got from select: ' + items);
+				try {
+					if (typeof (items) === 'string' || items instanceof String) {
+						items = JSON.parse(items);
+					}
+				} catch (e) {
+					console.error("error while parsing: " + e);
+				}
 				_this.clear();
 				_this._appendToGui(items);
 			});
 		} else {
+			console.debug('backend does not support search');
 			_this.clear();
 			_this._appendToGui(this.buffer);
 		}
 	}
-
+	this.refreshForm = function() {
+		this.logForm._refreshSelects();
+	}
 	function truncItems(_this, num) {
 		var ll = document.getElementById(_this.logListId);
 		for (var i = 0; i < num; ++i) {

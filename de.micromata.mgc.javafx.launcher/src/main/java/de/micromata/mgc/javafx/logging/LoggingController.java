@@ -4,36 +4,26 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
 import org.w3c.dom.Document;
 
 import de.micromata.genome.logging.GLog;
-import de.micromata.genome.logging.GenomeLogCategory;
 import de.micromata.genome.logging.LogExceptionAttribute;
-import de.micromata.genome.logging.LogLevel;
 import de.micromata.genome.logging.LogWriteEntry;
+import de.micromata.genome.logging.LoggingServiceManager;
+import de.micromata.genome.logging.events.LoggingEventListenerRegistryService;
 import de.micromata.genome.logging.loghtmlwindow.LogHtmlWindowServlet;
-import de.micromata.genome.logging.spi.log4j.RoundList;
 import de.micromata.genome.util.runtime.RuntimeIOException;
 import de.micromata.genome.util.validation.ValMessage;
 import de.micromata.genome.util.validation.ValState;
 import de.micromata.mgc.javafx.ControllerService;
 import de.micromata.mgc.javafx.launcher.MgcLauncher;
-import javafx.collections.FXCollections;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import netscape.javascript.JSObject;
@@ -49,33 +39,13 @@ public class LoggingController implements Initializable
   private static LoggingController INSTANCE = null;
 
   @FXML
-  private ChoiceBox<String> logLevel;
-  @FXML
-  private VBox frame;
-
-  @FXML
-  private TextField filterText;
-
-  @FXML
-  private Button filterButton;
-
-  @FXML
-  private Button clearButton;
-
-  @FXML
-  private CheckBox autoScroll;
-
-  @FXML
   private WebView htmlView;
-
-  private long idGenerator = 0L;
 
   /**
    * The queue.
    */
-  private RoundList<LogWriteEntry> logWriteEntries = new RoundList<>(1000);
-  private List<LogWriteEntry> guiWriteBuffer = new ArrayList<>();
-  private LoggingLogViewAdapter loggingAdapter = new LoggingLogViewAdapter();
+
+  LoggingLogViewAdapter loggingAdapter = new LoggingLogViewAdapter();
 
   public static LoggingController getInstance()
   {
@@ -91,32 +61,19 @@ public class LoggingController implements Initializable
   public void initialize(URL location, ResourceBundle resources)
   {
 
-    clearButton.setOnAction(e -> {
-      GLog.warn(GenomeLogCategory.System, "No filter here", new LogExceptionAttribute(new RuntimeException()));
-    });
-    autoScroll.setSelected(true);
-    logLevel.setValue(LogLevel.Note.name());
-    List<String> levels = Arrays.asList(LogLevel.values()).stream().map(e -> e.name())
-        .collect(Collectors.toList());
-    logLevel.setItems(FXCollections.observableArrayList(levels));
-    logLevel.valueProperty().addListener((comp, oldValue, newValue) -> {
-      //      refilterGui();
-    });
-
     WebEngine engine = htmlView.getEngine();
     engine.getLoadWorker().stateProperty().addListener((ov, oldState, newState) -> {
       if (newState == javafx.concurrent.Worker.State.SUCCEEDED) {
         Document doc = engine.getDocument();
-        if (guiWriteBuffer.isEmpty() == false) {
-          List<LogWriteEntry> copy = new ArrayList<>(guiWriteBuffer);
-          guiWriteBuffer.clear();
-          addToGuiInGui(copy);
-        }
+        //        if (guiWriteBuffer.isEmpty() == false) {
+        //          List<LogWriteEntry> copy = new ArrayList<>(guiWriteBuffer);
+        //          guiWriteBuffer.clear();
+        //          addToGuiInGui(copy);
+        //        }
       }
     });
     engine.setJavaScriptEnabled(true);
 
-    String styleheader = getHtmlHeader();
     StringBuilder html = new StringBuilder();
     String init = "  var logCounter = 0; \r\n" +
         "var loggingAdapter;\n" +
@@ -134,8 +91,12 @@ public class LoggingController implements Initializable
         "  this.logPoll = function(lastTime, callback) {\r\n" +
         "    loggingAdapter.logPoll(lastTime, new ALogCallback(callback));\r\n" +
         "  }\r\n" +
+        "  this.getLoggingConfiguration = function() {\n" +
+        "    return loggingAdapter.getLoggingConfiguration();\n" +
+        "  };" +
         "  this.logSelect = function(logFormData, callback) {\r\n" +
-        "\n" +
+        "    console.debug('LogConsoleBackend.logSelect');\n" +
+        "    loggingAdapter.logSelect(logFormData, new ALogCallback(callback));\n" +
         "  }\n" +
         "}" +
         "  function logProvider() {\r\n" +
@@ -188,7 +149,13 @@ public class LoggingController implements Initializable
 
     });
     INSTANCE = this;
-    FxLogconsoleLogWriteEntryEventListener.registerEvent();
+    LoggingEventListenerRegistryService listenerRegisterService = LoggingServiceManager.get()
+        .getLoggingEventListenerRegistryService();
+
+    listenerRegisterService.registerListener(FxLogconsoleLogWriteEntryEventListener.class);
+    listenerRegisterService.registerListener(FxLogconsoleLogRegisteredCategoryChangedEventListener.class);
+    listenerRegisterService.registerListener(FxLogconsoleLogRegisteredLogAttributesChangedEventListener.class);
+
   }
 
   protected String getHtmlHeader()
@@ -263,30 +230,7 @@ public class LoggingController implements Initializable
     if (lwe.getTimestamp() == 0) {
       lwe.setTimestamp(System.currentTimeMillis());
     }
-    synchronized (logWriteEntries) {
-      logWriteEntries.add(lwe);
-    }
-    if (filterLogEntry(lwe) == true) {
-      addToGui(Collections.singletonList(lwe));
-    }
-  }
-
-  private boolean filterLogEntry(LogWriteEntry lwe)
-  {
-    String sval = logLevel.getValue();
-    if (StringUtils.isNotBlank(sval) == true) {
-      LogLevel maxLogLevel = LogLevel.valueOf(sval);
-      if (lwe.getLevel().getLevel() < maxLogLevel.getLevel()) {
-        return false;
-      }
-      String sf = filterText.getText();
-      if (StringUtils.isNotBlank(sf) == true) {
-        if (StringUtils.containsIgnoreCase(lwe.getMessage(), sf) == false) {
-          return false;
-        }
-      }
-    }
-    return true;
+    loggingAdapter.addLogEntry(lwe);
   }
 
   private void addToGui(List<LogWriteEntry> logentries)
@@ -427,13 +371,23 @@ public class LoggingController implements Initializable
 
   public void adjustWidth(double with)
   {
-    double oldWidth = frame.getWidth();
+    double oldWidth = htmlView.getWidth();
 
-    frame.setPrefWidth(with - 5);
+    htmlView.setPrefWidth(with - 5);
   }
 
   public void adjustHeight(double heigth)
   {
-    frame.setPrefHeight(heigth - 5);
+    htmlView.setPrefHeight(heigth - 5);
+  }
+
+  public void refreshLogConfiguration()
+  {
+    loggingAdapter.refreshLogConfiguration();
+    Platform.runLater(() -> {
+      WebEngine engine = htmlView.getEngine();
+      engine.executeScript("logViewer.refreshForm();");
+    });
+
   }
 }

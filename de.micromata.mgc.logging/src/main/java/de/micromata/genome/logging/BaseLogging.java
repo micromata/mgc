@@ -20,6 +20,8 @@ import org.apache.commons.collections.map.AbstractReferenceMap;
 import org.apache.commons.collections15.map.ReferenceMap;
 import org.apache.commons.lang.StringUtils;
 
+import de.micromata.genome.logging.events.LogRegisteredCategoryChangedEvent;
+import de.micromata.genome.logging.events.LogRegisteredLogAttributesChangedEvent;
 import de.micromata.genome.logging.events.LogWriteEntryEvent;
 import de.micromata.genome.stats.Stats;
 import de.micromata.genome.util.types.Pair;
@@ -140,7 +142,8 @@ public abstract class BaseLogging implements Logging
     }
 
     registerdLogCategories = ncats;
-
+    LoggingServiceManager.get().getLoggingEventListenerRegistryService()
+        .submitEvent(new LogRegisteredCategoryChangedEvent(registerdLogCategories));
   }
 
   /**
@@ -189,6 +192,7 @@ public abstract class BaseLogging implements Logging
     if (nlogAttr.isEmpty() == false) {
       // the renderer will be used. so do directly add LogAttribute, but as weak reference
       registerdLogAttributes = createNewDisposableMap(registerdLogAttributes, nlogAttr);
+
     }
     if (nlogAttrFiller.isEmpty() == false) {
       // the filler will be used. so do directly add LogAttribute, but as weak reference
@@ -198,6 +202,8 @@ public abstract class BaseLogging implements Logging
       // this is stored as dump wrapper, no need to have disposable
       searchLogAttributes = createNewMap(searchLogAttributes, nsearchKeys);
     }
+    LoggingServiceManager.get().getLoggingEventListenerRegistryService()
+        .submitEvent(new LogRegisteredLogAttributesChangedEvent(registerdLogAttributes));
   }
 
   /**

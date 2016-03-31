@@ -12,7 +12,7 @@ function GlogForm(gLogViewer) {
 			event.preventDefault();
 		});
 		form.liveViewCheckbox.addEventListener('click', function(event) {
-//			logViewer.reset();
+			// logViewer.reset();
 		});
 		form.filterResetButton.addEventListener('click', function(event) {
 			form.filterLogLevel.selectedIndex = 0;
@@ -22,7 +22,7 @@ function GlogForm(gLogViewer) {
 			form.logAttribute2Type.value = '';
 			form.logAttribute1Value.value = '';
 			form.logAttribute2Value.value = '';
-			
+
 			event.stopPropagation();
 			event.preventDefault();
 		});
@@ -31,36 +31,62 @@ function GlogForm(gLogViewer) {
 			event.preventDefault();
 			var formData = _this.getFormData();
 			_this.logViewer.filterItems(formData);
-			
+
 		});
-		var logConfig = logViewer.logBackend.loggingConfiguration;
+		this.fillSelects(form)
+	}
+	this._refreshSelects = function() {
+		console.debug("_refreshSelects");
+		var form = document.getElementById(this.formId);
+		var catsSelect = form.filterCategory;
+		while (catsSelect.hasChildNodes()) {
+			catsSelect.removeChild(catsSelect.lastChild);
+		}
+		while (form.logAttribute1Type.hasChildNodes()) {
+			form.logAttribute1Type.removeChild(form.logAttribute1Type.lastChild);
+		}
+		while (form.logAttribute2Type.hasChildNodes()) {
+			form.logAttribute2Type.removeChild(form.logAttribute2Type.lastChild);
+		}
+		this.fillSelects(form);
+	}
+	this.fillSelects = function(form) {
+		console.debug("this.logViewer: " + this.logViewer);
+		console.debug("this.logViewer.logBackend: " + this.logViewer.logBackend);
+		for (var k in this.logViewer.logBackend) {
+			console.debug("lb: " + k + "=" + this.logViewer.logBackend[k]); 
+		}
+		console.debug("this.logViewer.logBackend.loggingConfiguration: "
+		    + this.logViewer.logBackend.getLoggingConfiguration());
+
+		var logConfig = this.logViewer.logBackend.getLoggingConfiguration();
 		var logCats = logConfig.loggingCategories;
 		var catsSelect = form.filterCategory;
 		var opts = document.createElement('option');
 		opts.setAttribute('value', '');
 		catsSelect.appendChild(opts);
-		for (var i in logCats) {
+		for ( var i in logCats) {
 			var cat = logConfig.loggingCategories[i];
 			opts = document.createElement('option');
 			opts.setAttribute('value', cat);
 			opts.appendChild(document.createTextNode(cat));
 			catsSelect.appendChild(opts);
-		} 
+		}
 		fillLogSearchAttributes(form.logAttribute1Type, logConfig.searchAttributes);
 		fillLogSearchAttributes(form.logAttribute2Type, logConfig.searchAttributes);
 	}
-	function fillLogSearchAttributes(formSelect, elements)
-	{
+
+	function fillLogSearchAttributes(formSelect, elements) {
 		var opts = document.createElement('option');
 		opts.setAttribute('value', '');
 		formSelect.appendChild(opts);
-		for (var i in elements) {
+		for ( var i in elements) {
 			var cat = elements[i];
 			opts = document.createElement('option');
 			opts.setAttribute('value', cat);
 			opts.appendChild(document.createTextNode(cat));
 			formSelect.appendChild(opts);
-		} 
+		}
 	}
 	this.isLiveUpdate = function() {
 		var form = document.getElementById(this.formId);
@@ -115,9 +141,8 @@ function GlogForm(gLogViewer) {
 		}
 		return true;
 	}
-	this.getFormData = function()
-	{
-		
+	this.getFormData = function() {
+
 		var ret = new GLogFormData();
 		var form = document.getElementById(this.formId);
 		var idx = form.filterLogLevel.selectedIndex;
@@ -129,12 +154,12 @@ function GlogForm(gLogViewer) {
 			ret.logCategory = form.filterCategory.value;
 		}
 		if (form.logAttribute1Type.value && form.logAttribute1Value.value) {
-			ret.logAttribute1Type =form.logAttribute1Type.value;
-			ret.logAttribute1Value =form.logAttribute1Value.value;
+			ret.logAttribute1Type = form.logAttribute1Type.value;
+			ret.logAttribute1Value = form.logAttribute1Value.value;
 		}
 		if (form.logAttribute2Type.value && form.logAttribute2Value.value) {
-			ret.logAttribute2Type =form.logAttribute2Type.value;
-			ret.logAttribute2Value =form.logAttribute2Value.value;
+			ret.logAttribute2Type = form.logAttribute2Type.value;
+			ret.logAttribute2Value = form.logAttribute2Value.value;
 		}
 		return ret;
 	}
