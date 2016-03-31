@@ -122,13 +122,25 @@ public abstract class AbstractConfigDialog<M extends LocalSettingsConfigModel>ex
     return false;
   }
 
+  public AbstractConfigTabController findConfigTabById(String id)
+  {
+    for (Tab tab : configurationTabs.getTabs()) {
+      if (StringUtils.equals(tab.getId(), id) == true) {
+        TabPane tabPane = tab.getTabPane();
+
+      }
+    }
+    return null;
+  }
+
   public <M extends LocalSettingsConfigModel> boolean addTab(Class<? extends AbstractConfigTabController<M>> controller,
       M model,
       String id, String title)
   {
     ControllerService cv = ControllerService.get();
 
-    Pair<Pane, ? extends AbstractConfigTabController<M>> wc = cv.loadControllerControl(controller, Pane.class, this);
+    Pair<Pane, ? extends AbstractConfigTabController<M>> wc = cv.loadControllerControl(controller, Pane.class, this,
+        id);
     Tab tab = createTab(model, wc);
     tab.setId(id);
     tab.setText(title);

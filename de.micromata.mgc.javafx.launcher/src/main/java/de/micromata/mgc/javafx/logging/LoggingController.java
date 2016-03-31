@@ -155,7 +155,6 @@ public class LoggingController implements Initializable
     listenerRegisterService.registerListener(FxLogconsoleLogWriteEntryEventListener.class);
     listenerRegisterService.registerListener(FxLogconsoleLogRegisteredCategoryChangedEventListener.class);
     listenerRegisterService.registerListener(FxLogconsoleLogRegisteredLogAttributesChangedEventListener.class);
-
   }
 
   protected String getHtmlHeader()

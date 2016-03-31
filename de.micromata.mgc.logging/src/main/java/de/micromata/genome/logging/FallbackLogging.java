@@ -43,7 +43,7 @@ public abstract class FallbackLogging extends BaseLogging implements LoggingWith
   /**
    * Used to make fallback Logging.
    */
-  private Logging secondary = new Log4JLogging("de.micromata.genome.fallback.");
+  private Logging secondary = new Log4JLogging(Log4JLogging.LOG4J_FALLBACK_PREFIX);
 
   /**
    * The max hard failed log queue.

@@ -92,10 +92,10 @@ public class JdbcLocalSettingsConfigModel extends AbstractLocalSettingsConfigMod
   {
     ValContext ctx = valContext.createSubContext(this, null);
     if (StringUtils.isBlank(drivername) == true) {
-      ctx.error("drivername", "Please select jdbcDriver");
+      ctx.directError("drivername", "Please select jdbcDriver");
     }
     if (StringUtils.isBlank(url) == true) {
-      ctx.error("url", "Please select url for JDBC");
+      ctx.directError("url", "Please select url for JDBC");
     }
     if (ctx.hasLocalError() == true) {
       return;
@@ -152,20 +152,20 @@ public class JdbcLocalSettingsConfigModel extends AbstractLocalSettingsConfigMod
       Class.forName(driver);
       try (Connection con = DriverManager.getConnection(url, user, pass)) {
         try (Statement stmt = con.createStatement()) {
-          ctx.info("Created DB Connection....");
+          ctx.directInfo(null, "Created DB Connection....");
         }
       }
       return true;
     } catch (ClassNotFoundException e) {
-      ctx.error("driver", "Cannot find db driver: " + driver);
+      ctx.directError(null, "Cannot find db driver: " + driver);
       return false;
     } catch (SQLException e) {
-      ctx.error("Cannot create connection: " + e.getMessage());
+      ctx.directError(null, "Cannot create connection: " + e.getMessage());
       SQLException ne = e.getNextException();
       if (ne != null && ne != e) {
-        ctx.error("", ne.getMessage(), ne);
+        ctx.directError(null, ne.getMessage(), ne);
       } else {
-        ctx.error("", e.getMessage(), e);
+        ctx.directError(null, e.getMessage(), e);
       }
       return false;
     }

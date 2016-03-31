@@ -34,10 +34,13 @@ import de.micromata.genome.util.types.Pair;
  */
 public class Log4JLogging extends BaseLogging
 {
+  public static final String LOG4J_DEFAULT_PREFIX = "de.micromata.genome.logging.";
+  public static final String LOG4J_FALLBACK_PREFIX = "de.micromata.genome.fallback.";
+
   /**
    * Writing to log4j prefix to category.
    */
-  private String log4jCategoryPrefix = "de.micromata.genome.logging.";
+  private String log4jCategoryPrefix = LOG4J_DEFAULT_PREFIX;
 
   /**
    * The min log level.

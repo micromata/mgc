@@ -92,12 +92,19 @@ public class ControllerService
   public <W extends Node, C extends Controller> Pair<W, C> loadControllerControl(Class<C> controlToLoad,
       Class<W> widget, Controller parentController)
   {
+    return loadControllerControl(controlToLoad, widget, parentController, null);
+  }
+
+  public <W extends Node, C extends Controller> Pair<W, C> loadControllerControl(Class<C> controlToLoad,
+      Class<W> widget, Controller parentController, String id)
+  {
     Pair<W, C> ret = loadControl(controlToLoad, widget);
     C controller = ret.getSecond();
     controller.setThisNode(ret.getFirst());
     controller.setParent((Parent) parentController.getThisNode());
     ret.getSecond().setScene(parentController.getScene());
     ret.getSecond().setStage(parentController.getStage());
+    ret.getSecond().setId(id);
     return ret;
   }
 

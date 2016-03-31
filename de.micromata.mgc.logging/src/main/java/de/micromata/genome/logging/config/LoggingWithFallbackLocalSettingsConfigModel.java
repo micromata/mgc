@@ -5,6 +5,7 @@ import org.apache.commons.lang.StringUtils;
 import de.micromata.genome.logging.Logging;
 import de.micromata.genome.logging.LoggingWithFallback;
 import de.micromata.genome.logging.spi.BaseLoggingLocalSettingsConfigModel;
+import de.micromata.genome.logging.spi.log4j.Log4JLogging;
 import de.micromata.genome.util.runtime.LocalSettings;
 import de.micromata.genome.util.runtime.config.LocalSettingsWriter;
 
@@ -52,6 +53,9 @@ public abstract class LoggingWithFallbackLocalSettingsConfigModel extends BaseLo
       Logging fallback = fallbackConfig.createLogging();
       if (fallback instanceof LsLoggingImpl) {
         fallback = ((LsLoggingImpl) fallback).getTarget();
+      }
+      if (fallback instanceof Log4JLogging) {
+        ((Log4JLogging) fallback).setLog4jCategoryPrefix(Log4JLogging.LOG4J_FALLBACK_PREFIX);
       }
       fallbackLogging.setSecondary(fallback);
     }

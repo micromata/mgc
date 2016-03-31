@@ -13,6 +13,10 @@ import javafx.stage.Stage;
  */
 public interface Controller
 {
+  public String getId();
+
+  public void setId(String id);
+
   public Node getThisNode();
 
   public void setThisNode(Node node);

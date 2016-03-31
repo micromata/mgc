@@ -19,6 +19,7 @@ import de.micromata.mgc.javafx.launcher.gui.AbstractConfigTabController;
 import de.micromata.mgc.javafx.launcher.gui.AbstractModelController;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
@@ -30,6 +31,11 @@ import javafx.scene.layout.Pane;
  */
 public class LoggingConfigTabController extends AbstractConfigTabController<LsLoggingLocalSettingsConfigModel>
 {
+  @FXML
+  private Pane passToLog4JPane;
+  @FXML
+  private CheckBox log4JToGenomeLogging;
+
   @FXML
   private ComboBox<LsLoggingDescription> loggingType;
 
@@ -44,12 +50,17 @@ public class LoggingConfigTabController extends AbstractConfigTabController<LsLo
 
   public boolean isFallback()
   {
-    return StringUtils.equals(getTab().getId(), "fallbacklogtab");
+    return StringUtils.equals(getId(), "fallbacklogtab");
   }
 
   @Override
   public void initializeWithModel()
   {
+
+    if (isFallback() == true) {
+      passToLog4JPane.setVisible(false);
+    }
+
     loggingDescriptions = LsLoggingLocalSettingsConfigModel.getAvailableServices();
     //    List<String> list = loggingDescriptions.stream().map(e -> e.name()).collect(Collectors.toList());
     loggingType.setItems(FXCollections.observableArrayList(loggingDescriptions));
@@ -143,11 +154,13 @@ public class LoggingConfigTabController extends AbstractConfigTabController<LsLo
     }
 
     configDialog.addTab(LoggingConfigTabController.class, model, "fallbacklogtab", "Fallbacklog");
+
   }
 
   @Override
   public void fromModel()
   {
+    log4JToGenomeLogging.setSelected(model.isLog4JToGenomeLogging());
     String typeId = model.getTypeId();
     Optional<LsLoggingDescription> optf = loggingDescriptions.stream().filter(e -> e.typeId().equals(typeId))
         .findFirst();
@@ -159,6 +172,7 @@ public class LoggingConfigTabController extends AbstractConfigTabController<LsLo
   @Override
   public void toModel()
   {
+    model.setLog4JToGenomeLogging(Boolean.toString(log4JToGenomeLogging.isSelected()));
     LsLoggingDescription cd = loggingType.getValue();
     if (cd == null) {
       return;

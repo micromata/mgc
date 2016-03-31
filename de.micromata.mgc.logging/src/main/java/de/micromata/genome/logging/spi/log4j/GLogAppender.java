@@ -1,20 +1,23 @@
 package de.micromata.genome.logging.spi.log4j;
 
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.ObjectUtils;
+import org.apache.log4j.Appender;
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
+import org.apache.log4j.spi.LocationInfo;
 import org.apache.log4j.spi.LoggingEvent;
 
 import de.micromata.genome.logging.GLog;
 import de.micromata.genome.logging.LogAttribute;
 import de.micromata.genome.logging.LogCategory;
-import de.micromata.genome.logging.LogCategoryWrapper;
+import de.micromata.genome.logging.LogExceptionAttribute;
 import de.micromata.genome.logging.LogLevel;
 import de.micromata.genome.logging.adapter.GenomeLogAdapterHelper;
 
@@ -65,10 +68,15 @@ public class GLogAppender extends AppenderSkeleton
   public void register()
   {
     Logger root = Logger.getRootLogger();
-    // root.setLevel(Level.TRACE);
-    // this.setThreshold(threshold)
+    for (Enumeration en = root.getAllAppenders(); en.hasMoreElements();) {
+      Appender appender = (Appender) en.nextElement();
+      if (appender instanceof GLogAppender) {
+        return;
+      }
+    }
     root.addAppender(this);
-    if (root.getLevel().isGreaterOrEqual(getThreshold())) {
+
+    if (getThreshold() != null && root.getLevel() != null && root.getLevel().isGreaterOrEqual(getThreshold())) {
       root.setLevel(Level.toLevel(getThreshold().toInt()));
     }
   }
@@ -91,9 +99,16 @@ public class GLogAppender extends AppenderSkeleton
       }
     }
 
-    LogCategoryWrapper cat = new LogCategoryWrapper("L4J", logName);
+    return Log4JLogCategory.Log4J;
+  }
 
-    return cat;
+  private String shortenCategory(String logCategory, int maxLength)
+  {
+    if (logCategory.length() <= maxLength) {
+      return logCategory;
+    }
+    logCategory = logCategory.substring(logCategory.length() - maxLength);
+    return logCategory;
   }
 
   /**
@@ -117,7 +132,9 @@ public class GLogAppender extends AppenderSkeleton
    */
   private void mapMdc(Map<Object, Object> diag, List<LogAttribute> logAttributes)
   {
+    if (diag != null && diag.isEmpty() == false) {
 
+    }
   }
 
   /**
@@ -128,6 +145,9 @@ public class GLogAppender extends AppenderSkeleton
    */
   private boolean ignoreCat(String logName)
   {
+    if (logName.startsWith(Log4JLogging.LOG4J_DEFAULT_PREFIX) == true) {
+      return true;
+    }
     if (logAdapterHelper.getIgnoreNamespaceList() == null) {
       return false;
     }
@@ -164,6 +184,17 @@ public class GLogAppender extends AppenderSkeleton
       List<LogAttribute> logAttributes = new ArrayList<LogAttribute>();
       String msg = getMessage(omsg, logAttributes);
       // long ts = event.getTimeStamp();
+      if (event.getLocationInformation() != null) {
+        StringBuilder logsb = new StringBuilder();
+        LocationInfo lif = event.getLocationInformation();
+        logsb.append(lif.getClassName()).append('.').append(lif.getMethodName()).append(':')
+            .append(lif.getLineNumber());
+        logAttributes.add(new LogAttribute(Log4JLogAttributeType.Log4JLocation, logsb.toString()));
+      }
+      if (event.getThrowableInformation() != null) {
+        logAttributes.add(new LogExceptionAttribute(event.getThrowableInformation().getThrowable()));
+      }
+      logAttributes.add(new LogAttribute(Log4JLogAttributeType.Log4JCategory, event.getLoggerName()));
 
       // String msg = event.getRenderedMessage();
       Map<Object, Object> diag = event.getProperties();

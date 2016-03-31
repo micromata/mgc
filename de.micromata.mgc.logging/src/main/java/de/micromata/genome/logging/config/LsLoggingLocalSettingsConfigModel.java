@@ -9,6 +9,7 @@ import de.micromata.genome.logging.Logging;
 import de.micromata.genome.logging.config.LsLoggingService.LsLoggingDescription;
 import de.micromata.genome.logging.spi.BaseLoggingLocalSettingsConfigModel;
 import de.micromata.genome.util.runtime.LocalSettings;
+import de.micromata.genome.util.runtime.config.ALocalSettingsPath;
 import de.micromata.genome.util.runtime.config.LocalSettingsWriter;
 import de.micromata.genome.util.validation.ValContext;
 
@@ -24,6 +25,9 @@ public class LsLoggingLocalSettingsConfigModel extends BaseLoggingLocalSettingsC
    * Created logging
    */
   private BaseLoggingLocalSettingsConfigModel nested;
+
+  @ALocalSettingsPath(defaultValue = "false", comment = "Write Log4J Logs into Genome Logging")
+  private String log4JToGenomeLogging;
 
   public LsLoggingLocalSettingsConfigModel()
   {
@@ -60,7 +64,7 @@ public class LsLoggingLocalSettingsConfigModel extends BaseLoggingLocalSettingsC
   @Override
   public LocalSettingsWriter toProperties(LocalSettingsWriter writer)
   {
-    //    LocalSettingsWriter sw = super.toProperties(writer);
+    writer.put(getKeyPrefix() + ".log4JToGenomeLogging", log4JToGenomeLogging);
     if (nested != null) {
       nested.setPrefix(getKeyPrefix());
       return nested.toProperties(writer);
@@ -103,6 +107,21 @@ public class LsLoggingLocalSettingsConfigModel extends BaseLoggingLocalSettingsC
   public void setNested(BaseLoggingLocalSettingsConfigModel nested)
   {
     this.nested = nested;
+  }
+
+  public boolean isLog4JToGenomeLogging()
+  {
+    return Boolean.valueOf(log4JToGenomeLogging);
+  }
+
+  public String getLog4JToGenomeLogging()
+  {
+    return log4JToGenomeLogging;
+  }
+
+  public void setLog4JToGenomeLogging(String log4jToGenomeLogging)
+  {
+    log4JToGenomeLogging = log4jToGenomeLogging;
   }
 
 }

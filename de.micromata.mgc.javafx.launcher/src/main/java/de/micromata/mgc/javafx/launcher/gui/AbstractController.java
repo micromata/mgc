@@ -13,6 +13,7 @@ import javafx.stage.Stage;
  */
 public class AbstractController implements Controller
 {
+  protected String id;
   protected Node thisNode;
   protected Parent parent;
   protected Scene scene;
@@ -65,4 +66,17 @@ public class AbstractController implements Controller
   {
     this.stage = stage;
   }
+
+  @Override
+  public String getId()
+  {
+    return id;
+  }
+
+  @Override
+  public void setId(String id)
+  {
+    this.id = id;
+  }
+
 }

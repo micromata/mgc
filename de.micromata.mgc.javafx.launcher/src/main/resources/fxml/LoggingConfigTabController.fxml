@@ -1,19 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="307.0" prefWidth="546.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.micromata.mgc.javafx.launcher.gui.generic.LoggingConfigTabController">
+<AnchorPane maxHeight="400.0" prefHeight="400.0" prefWidth="790.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.micromata.mgc.javafx.launcher.gui.generic.LoggingConfigTabController">
    <children>
       <VBox prefHeight="307.0" prefWidth="546.0">
          <children>
+            <HBox fx:id="passToLog4JPane" prefHeight="100.0" prefWidth="200.0">
+               <VBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </VBox.margin>
+               <children>
+                  <Label minWidth="150.0" text="Log4J" />
+                  <CheckBox fx:id="log4JToGenomeLogging" mnemonicParsing="false" text="Pass Log4J to Genome Logging" />
+               </children>
+            </HBox>
             <HBox prefHeight="52.0" prefWidth="546.0">
                <children>
-                  <Label maxWidth="100.0" minWidth="100.0" text="Label" />
+                  <Label maxWidth="100.0" minWidth="150.0" text="Genome Logging" />
                   <ComboBox fx:id="loggingType" prefWidth="150.0" />
                </children>
                <padding>
