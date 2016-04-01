@@ -56,4 +56,9 @@ public interface LocalSettingsConfigModel
    */
   String findCommentForProperty(String localProperty);
 
+  default void initializeConfiguration()
+  {
+
+  }
+
 }

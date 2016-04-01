@@ -3,8 +3,12 @@ package de.micromata.genome.logging.config;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.micromata.genome.logging.LogConfigurationDAO;
 import de.micromata.genome.logging.Logging;
+import de.micromata.genome.logging.spi.BaseLogConfigurationLocalSettingsConfigModel;
 import de.micromata.genome.logging.spi.BaseLoggingLocalSettingsConfigModel;
+import de.micromata.genome.logging.spi.FileLogConfigurationDAOImpl;
+import de.micromata.genome.logging.spi.log4j.Log4JLogConfigurationDAOImpl;
 import de.micromata.genome.logging.spi.log4j.Log4JLogging;
 
 /**
@@ -57,6 +61,88 @@ public class StdLsLoggingServiceImpl implements LsLoggingService
           public Logging createLogging()
           {
             return new Log4JLogging();
+          }
+
+        };
+      }
+
+    };
+  }
+
+  @Override
+  public List<LsLogConfigurationDescription> getLsLogConfigurationImpls()
+  {
+    List<LsLogConfigurationDescription> ret = new ArrayList<>();
+    ret.add(createLogPropFileConfigDescription());
+    ret.add(createLog4JConfigDescription());
+
+    return ret;
+  }
+
+  protected LsLogConfigurationDescription createLog4JConfigDescription()
+  {
+    return new LsLogConfigurationDescription()
+    {
+
+      @Override
+      public String typeId()
+      {
+        return "log4jconfig";
+      }
+
+      @Override
+      public String description()
+      {
+        return "Uses the log4j Configuration";
+      }
+
+      @Override
+      public BaseLogConfigurationLocalSettingsConfigModel getConfigModel()
+      {
+        return new BaseLogConfigurationLocalSettingsConfigModel()
+        {
+
+          @Override
+          public LogConfigurationDAO createLogConfigurationDAO()
+          {
+            return new Log4JLogConfigurationDAOImpl();
+          }
+
+        };
+      }
+
+    };
+  }
+
+  protected LsLogConfigurationDescription createLogPropFileConfigDescription()
+  {
+    return new LsLogConfigurationDescription()
+    {
+
+      @Override
+      public String typeId()
+      {
+        return "propfile";
+      }
+
+      @Override
+      public String description()
+      {
+        return "Uses property file Configuration";
+      }
+
+      @Override
+      public BaseLogConfigurationLocalSettingsConfigModel getConfigModel()
+      {
+        return new BaseLogConfigurationLocalSettingsConfigModel()
+        {
+
+          @Override
+          public LogConfigurationDAO createLogConfigurationDAO()
+          {
+            FileLogConfigurationDAOImpl ret = new FileLogConfigurationDAOImpl();
+            ret.setFqFileName("./GenomeLogConfig.properties");
+            return ret;
           }
 
         };

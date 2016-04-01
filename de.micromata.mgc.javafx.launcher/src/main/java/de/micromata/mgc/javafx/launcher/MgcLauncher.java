@@ -1,13 +1,9 @@
 package de.micromata.mgc.javafx.launcher;
 
-import de.micromata.genome.logging.GLog;
-import de.micromata.genome.logging.GenomeLogCategory;
 import de.micromata.genome.util.runtime.Log4JInitializer;
 import de.micromata.genome.util.runtime.config.CastableLocalSettingsConfigModel;
 import de.micromata.genome.util.runtime.config.LocalSettingsConfigModel;
 import de.micromata.genome.util.types.Pair;
-import de.micromata.genome.util.validation.ValContext;
-import de.micromata.genome.util.validation.ValMessage;
 import de.micromata.mgc.application.MgcApplication;
 import de.micromata.mgc.javafx.ControllerService;
 import de.micromata.mgc.javafx.launcher.gui.AbstractMainWindow;
@@ -73,23 +69,16 @@ public class MgcLauncher<M extends LocalSettingsConfigModel>
     sapplication = application;
     Log4JInitializer.initializeLog4J();
     if (noWindow(args) == true) {
-      checkConfiguration();
+      if (sapplication.checkConfiguration() == false) {
+        return;
+      }
+      if (sapplication.initWithConfig() == false) {
+        return;
+      }
       launchCli(args);
     } else {
       MgcJfxApplication.launch(MgcJfxApplication.class, args);
     }
-  }
-
-  public static boolean checkConfiguration()
-  {
-    LocalSettingsConfigModel configuraiton = sapplication.getConfigModel();
-    ValContext ctx = new ValContext();
-    configuraiton.validate(ctx);
-    ctx.translateMessages(sapplication.getTranslateService());
-    for (ValMessage msg : ctx.getMessages()) {
-      GLog.logValMessage(GenomeLogCategory.System, msg);
-    }
-    return ctx.hasErrors() == false;
   }
 
   private void launchCli(String[] args)
@@ -146,7 +135,10 @@ public class MgcLauncher<M extends LocalSettingsConfigModel>
           break;
       }
       mainWindowExists = true;
-      boolean configOk = checkConfiguration();
+      boolean configOk = false;
+      if (sapplication.checkConfiguration() == true) {
+        configOk = sapplication.initWithConfig();
+      }
       new SystemTrayMenu(stage).createAndShowGUI();
       showDummyWindow();
       if (configOk == true && config.isStartServerOnStartup() == true) {

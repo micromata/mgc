@@ -26,6 +26,7 @@ public class MgcApplicationStartStopToEventListener extends AbstractMgcApplicati
     switch (status) {
       case StartError:
       case StartNoConfiguration:
+        FXEvents.get().fireEvent(new MgcLauncherEvent(MgcLauncherEvent.APP_STOPPED, status, msg));
         break;
       case StartAlreadyRunning:
       case StartSuccess:

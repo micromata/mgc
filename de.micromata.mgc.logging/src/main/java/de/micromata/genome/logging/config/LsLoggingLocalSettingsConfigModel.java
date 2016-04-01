@@ -6,8 +6,12 @@ import java.util.Optional;
 import java.util.ServiceLoader;
 
 import de.micromata.genome.logging.Logging;
+import de.micromata.genome.logging.LoggingServiceManager;
 import de.micromata.genome.logging.config.LsLoggingService.LsLoggingDescription;
 import de.micromata.genome.logging.spi.BaseLoggingLocalSettingsConfigModel;
+import de.micromata.genome.logging.spi.log4j.GLogAppender;
+import de.micromata.genome.logging.spi.log4j.Log4JLogAttributeType;
+import de.micromata.genome.logging.spi.log4j.Log4JLogCategory;
 import de.micromata.genome.util.runtime.LocalSettings;
 import de.micromata.genome.util.runtime.config.ALocalSettingsPath;
 import de.micromata.genome.util.runtime.config.LocalSettingsWriter;
@@ -70,6 +74,20 @@ public class LsLoggingLocalSettingsConfigModel extends BaseLoggingLocalSettingsC
       return nested.toProperties(writer);
     }
     return writer;
+  }
+
+  @Override
+  public void initializeConfiguration()
+  {
+    nested.initializeConfiguration();
+    Logging logging = createLogging();
+    LoggingServiceManager.get().setLogging(logging);
+    if (isLog4JToGenomeLogging() == true) {
+      Log4JLogCategory.values();
+      Log4JLogAttributeType.values();
+      new GLogAppender().register();
+    }
+
   }
 
   public static LsLoggingDescription findByTypeId(String typeId)

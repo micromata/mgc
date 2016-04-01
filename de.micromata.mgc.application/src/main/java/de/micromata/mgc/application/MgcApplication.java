@@ -41,6 +41,21 @@ public interface MgcApplication<M extends LocalSettingsConfigModel>
   void storeConfig(ValContext ctx, M config);
 
   /**
+   * Check the configuration, if it is valid.
+   * 
+   * @return
+   */
+  boolean checkConfiguration();
+
+  /**
+   * If the configuraiton is valid, call initialize the applications configuration, but without starting the
+   * application.
+   * 
+   * @return
+   */
+  boolean initWithConfig();
+
+  /**
    * realod config intialize application.
    * 
    * 

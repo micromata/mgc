@@ -1,9 +1,8 @@
 package de.micromata.genome.logging.spi;
 
-import de.micromata.genome.logging.Logging;
+import de.micromata.genome.logging.LogConfigurationDAO;
 import de.micromata.genome.util.runtime.config.ALocalSettingsPath;
 import de.micromata.genome.util.runtime.config.AbstractLocalSettingsConfigModel;
-import de.micromata.genome.util.runtime.config.JdbcLocalSettingsConfigModel;
 import de.micromata.genome.util.validation.ValContext;
 
 /**
@@ -11,29 +10,24 @@ import de.micromata.genome.util.validation.ValContext;
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
  */
-public abstract class BaseLoggingLocalSettingsConfigModel extends AbstractLocalSettingsConfigModel
+public abstract class BaseLogConfigurationLocalSettingsConfigModel extends AbstractLocalSettingsConfigModel
 {
-  protected String prefix = "genome.logging";
+  protected String prefix = "genome.logging.config";
 
   @ALocalSettingsPath(defaultValue = "log4j", comment = "Type of the used logging")
   private String typeId;
 
-  public BaseLoggingLocalSettingsConfigModel()
+  public BaseLogConfigurationLocalSettingsConfigModel()
   {
-    this("genome.logging");
+    this("genome.logging.config");
   }
 
-  public BaseLoggingLocalSettingsConfigModel(String prefix)
+  public BaseLogConfigurationLocalSettingsConfigModel(String prefix)
   {
     this.prefix = prefix;
   }
 
-  public abstract Logging createLogging();
-
-  public JdbcLocalSettingsConfigModel getJdbcConfig()
-  {
-    return null;
-  }
+  public abstract LogConfigurationDAO createLogConfigurationDAO();
 
   @Override
   public String getKeyPrefix()

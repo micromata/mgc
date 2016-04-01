@@ -84,6 +84,27 @@ public abstract class AbstractMgcApplication<M extends LocalSettingsConfigModel>
 
   }
 
+  @Override
+  public boolean checkConfiguration()
+  {
+    LocalSettingsConfigModel configuraiton = getConfigModel();
+    ValContext ctx = new ValContext();
+    configuraiton.validate(ctx);
+    ctx.translateMessages(getTranslateService());
+    for (ValMessage msg : ctx.getMessages()) {
+      GLog.logValMessage(GenomeLogCategory.System, msg);
+    }
+    return ctx.hasErrors() == false;
+  }
+
+  @Override
+  public boolean initWithConfig()
+  {
+    LocalSettingsConfigModel configuraiton = getConfigModel();
+    configuraiton.initializeConfiguration();
+    return true;
+  }
+
   protected void loadFromLocalSettings(M model, LocalSettings localSettings)
   {
     model.fromLocalSettings(localSettings);
@@ -151,6 +172,7 @@ public abstract class AbstractMgcApplication<M extends LocalSettingsConfigModel>
   public MgcApplicationStartStopStatus stop()
   {
     try {
+      GLog.note(GenomeLogCategory.System, "Application stopping");
       MgcApplicationStartStopStatus ret = stopImpl();
       switch (ret) {
         case StopSuccess:

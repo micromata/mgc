@@ -87,39 +87,39 @@ public class JettyConfigModel extends AbstractCompositLocalSettingsConfigModel
     ValContext ctx = valContext.createSubContext(this, "");
 
     if (StringUtils.isBlank(port) == true) {
-      ctx.error("serverPort", "Please provide a server port");
+      ctx.directError("serverPort", "Please provide a server port");
     } else {
       if (NumberUtils.isDigits(port) == false) {
-        ctx.error("serverPort", "Please provide numeric port number");
+        ctx.directError("serverPort", "Please provide numeric port number");
       }
     }
     if (isInt(sessionTimeout) == false) {
-      ctx.error("serverPort", "Please provide a numeric value for the session timeout");
+      ctx.directError("serverPort", "Please provide a numeric value for the session timeout");
     }
     if (isSslEnabled() == false) {
       return;
     }
     if (StringUtils.isBlank(sslPort) == true) {
-      ctx.error("sslPort", "Please provide a server port");
+      ctx.directError("sslPort", "Please provide a server port");
     } else {
       if (NumberUtils.isDigits(port) == false) {
-        ctx.error("sslPort", "Please provid numeric port number");
+        ctx.directError("sslPort", "Please provid numeric port number");
       }
     }
     if (StringUtils.isBlank(sslKeystorePath) == true) {
-      ctx.error("sslKeystorePath", "Please provide a keystore file");
+      ctx.directError("sslKeystorePath", "Please provide a keystore file");
     } else {
       File keystorefile = new File(sslKeystorePath);
       if (keystorefile.exists() == false) {
-        ctx.error("sslKeystorePath", "Cannot find keystore: " + keystorefile.getAbsolutePath());
+        ctx.directError("sslKeystorePath", "Cannot find keystore: " + keystorefile.getAbsolutePath());
       }
     }
     if (StringUtils.isBlank(trustStorePath) == true) {
-      ctx.error("trustStorePath", "Please provide a trust store file");
+      ctx.directError("trustStorePath", "Please provide a trust store file");
     } else {
       File keystorefile = new File(trustStorePath);
       if (keystorefile.exists() == false) {
-        ctx.error("trustStorePath", "Cannot find trust store: " + keystorefile.getAbsolutePath());
+        ctx.directError("trustStorePath", "Cannot find trust store: " + keystorefile.getAbsolutePath());
       }
     }
   }

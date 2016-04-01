@@ -90,15 +90,15 @@ public class MailSessionLocalSettingsConfigModel extends AbstractLocalSettingsCo
       return;
     }
     if (StringUtils.isBlank(standardEmailSender) == true || standardEmailSender.contains("@") == false) {
-      ctx.error("standardEmailSender", "Please provide an email");
+      ctx.directError("standardEmailSender", "Please provide an email");
     }
     if (StringUtils.isBlank(emailHost) == true) {
-      ctx.error("emailHost", "Please provide an hostname");
+      ctx.directError("emailHost", "Please provide an hostname");
     }
     if (StringUtils.isBlank(emailPort) == true) {
-      ctx.error("emailPort", "Please provide an port number");
+      ctx.directError("emailPort", "Please provide an port number");
     } else if (NumberUtils.isDigits(emailPort) == false) {
-      ctx.error("emailPort", "Please provide an port *number*");
+      ctx.directError("emailPort", "Please provide an port *number*");
     }
     // TODO RK continue with smptauth
   }

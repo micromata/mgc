@@ -61,6 +61,18 @@ public abstract class AbstractCompositLocalSettingsConfigModel extends AbstractL
   }
 
   @Override
+  public void initializeConfiguration()
+  {
+    List<Field> found = PrivateBeanUtils.findAllFields(getClass(),
+        CommonMatchers.and(FieldMatchers.hasNotModifier(Modifier.STATIC),
+            FieldMatchers.assignableTo(LocalSettingsConfigModel.class)));
+    for (Field field : found) {
+      LocalSettingsConfigModel nested = (LocalSettingsConfigModel) PrivateBeanUtils.readField(this, field);
+      nested.initializeConfiguration();
+    }
+  }
+
+  @Override
   public void validate(ValContext ctx)
   {
     List<Field> found = PrivateBeanUtils.findAllFields(getClass(),

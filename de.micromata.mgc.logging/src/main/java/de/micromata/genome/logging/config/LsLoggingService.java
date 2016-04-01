@@ -2,6 +2,7 @@ package de.micromata.genome.logging.config;
 
 import java.util.List;
 
+import de.micromata.genome.logging.spi.BaseLogConfigurationLocalSettingsConfigModel;
 import de.micromata.genome.logging.spi.BaseLoggingLocalSettingsConfigModel;
 
 /**
@@ -14,7 +15,7 @@ import de.micromata.genome.logging.spi.BaseLoggingLocalSettingsConfigModel;
  */
 public interface LsLoggingService
 {
-  static public interface LsLoggingDescription
+  public static interface LsLoggingDescription
   {
     String typeId();
 
@@ -27,5 +28,19 @@ public interface LsLoggingService
 
   }
 
+  public static interface LsLogConfigurationDescription
+  {
+    String typeId();
+
+    @Override
+    String toString();
+
+    String description();
+
+    BaseLogConfigurationLocalSettingsConfigModel getConfigModel();
+  }
+
   List<LsLoggingDescription> getLsLoggingImpls();
+
+  List<LsLogConfigurationDescription> getLsLogConfigurationImpls();
 }

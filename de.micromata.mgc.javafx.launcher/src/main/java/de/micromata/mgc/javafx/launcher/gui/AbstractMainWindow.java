@@ -3,6 +3,8 @@ package de.micromata.mgc.javafx.launcher.gui;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -15,6 +17,7 @@ import de.micromata.genome.util.runtime.config.LocalSettingsConfigModel;
 import de.micromata.genome.util.types.Pair;
 import de.micromata.genome.util.validation.ValMessage;
 import de.micromata.mgc.application.MgcApplication;
+import de.micromata.mgc.application.MgcApplicationStartStopStatus;
 import de.micromata.mgc.javafx.ControllerService;
 import de.micromata.mgc.javafx.FXCssUtil;
 import de.micromata.mgc.javafx.FXEvents;
@@ -53,6 +56,7 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>
     implements Initializable
 {
   private static final Logger LOG = Logger.getLogger(AbstractMainWindow.class);
+  private final ExecutorService serverExecPool = Executors.newFixedThreadPool(1);
   @FXML
   private ImageView mainWindowLogo;
   @FXML
@@ -188,16 +192,29 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>
       loggingController.warn("Application is not configured.");
       return;
     }
-    M configModel = getApplication().getConfigModel();
-    configModel.fromLocalSettings(LocalSettings.get());
+    startServerButton.setDisable(true);
 
-    model.start(MgcLauncher.originalMainArgs);
+    serverExecPool.submit(() -> {
+      M configModel = getApplication().getConfigModel();
+      configModel.fromLocalSettings(LocalSettings.get());
+
+      MgcApplicationStartStopStatus res = model.start(MgcLauncher.originalMainArgs);
+      if (res == MgcApplicationStartStopStatus.StartError) {
+        startServerButton.setDisable(false);
+
+      }
+
+    });
 
   }
 
   public void stopServer()
   {
-    model.stop();
+    stopServerButton.setDisable(true);
+
+    serverExecPool.submit(() -> {
+      model.stop();
+    });
 
   }
 
