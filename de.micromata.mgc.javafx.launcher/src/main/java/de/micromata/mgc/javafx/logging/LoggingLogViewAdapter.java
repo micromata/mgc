@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 import com.eclipsesource.json.JsonArray;
 
@@ -28,6 +29,7 @@ import netscape.javascript.JSObject;
  */
 public class LoggingLogViewAdapter
 {
+  private static final Logger LOG = Logger.getLogger(LoggingLogViewAdapter.class);
   private RoundList<LogWriteEntry> logWriteEntries = new RoundList<>(1000);
   JSObject logView;
   public boolean supportsPoll = true;
@@ -217,16 +219,16 @@ public class LoggingLogViewAdapter
 
   public void jsdebug(String message)
   {
-    System.out.println(message);
+    LOG.debug(message);
   }
 
   public void jserror(String message)
   {
-    System.err.println(message);
+    LOG.error(message);
   }
 
   public void jswarn(String message)
   {
-    System.out.println(message);
+    LOG.warn(message);
   }
 }

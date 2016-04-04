@@ -1,5 +1,8 @@
 package de.micromata.mgc.javafx.launcher;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import de.micromata.genome.util.runtime.Log4JInitializer;
 import de.micromata.genome.util.runtime.config.CastableLocalSettingsConfigModel;
 import de.micromata.genome.util.runtime.config.LocalSettingsConfigModel;
@@ -38,6 +41,7 @@ public class MgcLauncher<M extends LocalSettingsConfigModel>
   private static boolean mainWindowExists = false;
   private Class<? extends AbstractMainWindow<M>> mainWindowClass;
   static Class<? extends AbstractMainWindow<?>> sMainWindowClass;
+  private final ExecutorService serverExecPool = Executors.newFixedThreadPool(1);
 
   public static MgcLauncher<?> get()
   {
@@ -142,7 +146,9 @@ public class MgcLauncher<M extends LocalSettingsConfigModel>
       new SystemTrayMenu(stage).createAndShowGUI();
       showDummyWindow();
       if (configOk == true && config.isStartServerOnStartup() == true) {
-        sapplication.start(originalMainArgs);
+        MgcLauncher.get().getServerExecPool().submit(() -> {
+          sapplication.start(originalMainArgs);
+        });
       }
     }
 
@@ -186,4 +192,10 @@ public class MgcLauncher<M extends LocalSettingsConfigModel>
   {
     return application;
   }
+
+  public ExecutorService getServerExecPool()
+  {
+    return serverExecPool;
+  }
+
 }

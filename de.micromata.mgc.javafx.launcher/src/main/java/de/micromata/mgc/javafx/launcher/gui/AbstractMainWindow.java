@@ -3,8 +3,6 @@ package de.micromata.mgc.javafx.launcher.gui;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -56,7 +54,7 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>
     implements Initializable
 {
   private static final Logger LOG = Logger.getLogger(AbstractMainWindow.class);
-  private final ExecutorService serverExecPool = Executors.newFixedThreadPool(1);
+
   @FXML
   private ImageView mainWindowLogo;
   @FXML
@@ -105,10 +103,6 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>
         }
       }
     });
-    //    .setOnCloseRequest(new EventHandler<WindowEvent>() {
-    //      public void handle(WindowEvent we) {
-    //        System.out.println("Stage is closing");
-    //    }
 
     startServerButton.setOnAction(e -> {
       startServer();
@@ -194,7 +188,7 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>
     }
     startServerButton.setDisable(true);
 
-    serverExecPool.submit(() -> {
+    MgcLauncher.get().getServerExecPool().submit(() -> {
       M configModel = getApplication().getConfigModel();
       configModel.fromLocalSettings(LocalSettings.get());
 
@@ -212,7 +206,7 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>
   {
     stopServerButton.setDisable(true);
 
-    serverExecPool.submit(() -> {
+    MgcLauncher.get().getServerExecPool().submit(() -> {
       model.stop();
     });
 
