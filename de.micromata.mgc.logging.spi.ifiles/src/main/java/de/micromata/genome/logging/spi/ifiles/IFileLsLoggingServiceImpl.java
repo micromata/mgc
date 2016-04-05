@@ -55,4 +55,11 @@ public class IFileLsLoggingServiceImpl implements LsLoggingService
     };
   }
 
+  @Override
+  public List<LsLogConfigurationDescription> getLsLogConfigurationImpls()
+  {
+    List<LsLogConfigurationDescription> ret = new ArrayList<>();
+    return ret;
+  }
+
 }
