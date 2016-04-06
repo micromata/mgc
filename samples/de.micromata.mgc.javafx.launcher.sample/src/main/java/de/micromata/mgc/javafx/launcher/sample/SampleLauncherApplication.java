@@ -12,7 +12,7 @@ import de.micromata.genome.util.runtime.config.ExtLocalSettingsLoader;
 import de.micromata.mgc.application.jetty.JettyServer;
 import de.micromata.mgc.application.jetty.MgcApplicationWithJettyApplication;
 import de.micromata.mgc.application.webserver.config.JettyConfigModel;
-import de.micromata.mgc.jettystarter.sample.SampleJettyServer;
+import de.micromata.mgc.javafx.launcher.sample.jetty.SampleJettyServer;
 
 /**
  * Application with a embedded jetty

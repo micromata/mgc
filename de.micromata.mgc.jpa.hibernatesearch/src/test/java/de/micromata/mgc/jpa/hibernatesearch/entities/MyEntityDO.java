@@ -23,16 +23,19 @@ import de.micromata.genome.jpa.ComplexEntityVisitor;
 import de.micromata.genome.jpa.StdRecordDO;
 
 /**
- * To test
+ * To test.
  * 
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
  */
 @Entity
+// annotate for Hibernate Search.
 @Indexed
 public class MyEntityDO extends StdRecordDO<Long> implements ComplexEntity
-
 {
+  /**
+   * Annotate Fields to index.
+   */
   @Field(index = Index.YES, analyze = Analyze.YES, store = Store.NO)
   private String name;
 

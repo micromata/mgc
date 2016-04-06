@@ -33,7 +33,7 @@
          you implement the application in this project. -->
     <dependency>
       <groupId>de.micromata.mgc</groupId>
-      <artifactId>de.micromata.mgc.jettystarter.sample</artifactId>
+      <artifactId>de.micromata.mgc.application.jetty</artifactId>
       <version>${mgc.version}</version>
     </dependency>
     <!-- We want mgc loging.
