@@ -51,6 +51,31 @@ public class SystemService
     return JdbProviderServices.getAvailableJdbcServices();
   }
 
+  public JdbProviderService findJdbDriverByName(String name)
+  {
+    for (JdbProviderService js : getJdbcDrivers()) {
+      if (js.getName().equals(name) == true) {
+        return js;
+      }
+    }
+    return null;
+  }
+
+  public JdbProviderService findJdbDriverByJdbcDriver(String name)
+  {
+    for (JdbProviderService js : getJdbcDrivers()) {
+      if (js.getJdbcDriver().equals(name) == true) {
+        return js;
+      }
+    }
+    return null;
+  }
+
+  public JdbProviderService findJdbDriverById(String name)
+  {
+    return JdbProviderServices.findJdbcServiceById(name);
+  }
+
   public void openUrlInBrowser(String url)
   {
     Desktop desktop = null;

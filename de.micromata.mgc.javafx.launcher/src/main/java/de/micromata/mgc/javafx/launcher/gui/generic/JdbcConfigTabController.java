@@ -78,6 +78,8 @@ public class JdbcConfigTabController extends AbstractConfigTabController<JdbcLoc
   @ModelGuiField
   private TextField validationQueryTimeout;
 
+  private String selectedJdbcConnectionTypeId;
+
   @Override
   public void initializeWithModel()
   {
@@ -121,26 +123,27 @@ public class JdbcConfigTabController extends AbstractConfigTabController<JdbcLoc
   @Override
   public void fromModel()
   {
-
-    for (JdbProviderService desc : availableDrivers) {
-      if (StringUtils.equals(model.getDrivername(), desc.getJdbcDriver()) == true) {
-        drivername.setValue(desc.getName());
-        if (StringUtils.isBlank(model.getUrl()) == true) {
-          url.setText(desc.getSampleUrl(model.getName()));
-        }
+    String typeId = model.getJdbcConntextionTypeId();
+    JdbProviderService js = null;
+    if (StringUtils.isNotBlank(typeId) == true) {
+      js = SystemService.get().findJdbDriverById(typeId);
+    }
+    if (js == null) {
+      js = SystemService.get().findJdbDriverByJdbcDriver(model.getDrivername());
+    }
+    if (js != null) {
+      drivername.setValue(js.getName());
+      if (StringUtils.isBlank(model.getUrl()) == true) {
+        url.setText(js.getSampleUrl(model.getName()));
       }
+
     }
     super.fromModel();
   }
 
   JdbProviderService getSelectedDriver()
   {
-    for (JdbProviderService desc : availableDrivers) {
-      if (desc.getName().equals(drivername.getValue()) == true) {
-        return desc;
-      }
-    }
-    return null;
+    return SystemService.get().findJdbDriverByName(drivername.getValue());
   }
 
   @Override
@@ -149,6 +152,7 @@ public class JdbcConfigTabController extends AbstractConfigTabController<JdbcLoc
     JdbProviderService sel = getSelectedDriver();
     if (sel != null) {
       model.setDrivername(sel.getJdbcDriver());
+      model.setJdbcConntextionTypeId(sel.getId());
     }
     super.toModel();
   }

@@ -68,6 +68,28 @@ public class JdbProviderServices
     return ret;
   }
 
+  public static JdbProviderService findJdbcServiceById(String id)
+  {
+    List<JdbProviderService> services = getAllJdbcServices();
+    for (JdbProviderService s : services) {
+      if (s.getId().equals(id) == true) {
+        return s;
+      }
+    }
+    return null;
+  }
+
+  public static JdbProviderService findJdbcServiceByJdbDriver(String id)
+  {
+    List<JdbProviderService> services = getAllJdbcServices();
+    for (JdbProviderService s : services) {
+      if (s.getJdbcDriver().equals(id) == true) {
+        return s;
+      }
+    }
+    return null;
+  }
+
   /**
    * Try to load jdbc driver.
    *

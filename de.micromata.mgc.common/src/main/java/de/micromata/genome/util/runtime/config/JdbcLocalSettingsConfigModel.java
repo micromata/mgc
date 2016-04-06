@@ -11,6 +11,8 @@ import org.apache.commons.lang.StringUtils;
 
 import de.micromata.genome.util.bean.PrivateBeanUtils;
 import de.micromata.genome.util.runtime.LocalSettings;
+import de.micromata.genome.util.runtime.config.jdbc.JdbProviderService;
+import de.micromata.genome.util.runtime.config.jdbc.JdbProviderServices;
 import de.micromata.genome.util.validation.ValContext;
 
 /**
@@ -21,6 +23,9 @@ import de.micromata.genome.util.validation.ValContext;
  */
 public class JdbcLocalSettingsConfigModel extends AbstractLocalSettingsConfigModel
 {
+  @ALocalSettingsPath(comment = "Internal ID of the connection type")
+  private String jdbcConntextionTypeId;
+
   @ALocalSettingsPath(key = "drivername", comment = "JDBC Java class")
   private String drivername;
   @ALocalSettingsPath(key = "username", comment = "Database user")
@@ -105,7 +110,7 @@ public class JdbcLocalSettingsConfigModel extends AbstractLocalSettingsConfigMod
     } else {
       resetExtendedSettings();
     }
-    checkDbUrl(ctx, drivername, url, username, password);
+    checkDbUrl(ctx, jdbcConntextionTypeId, drivername, url, username, password);
   }
 
   private void validateExtended(ValContext ctx)
@@ -146,8 +151,18 @@ public class JdbcLocalSettingsConfigModel extends AbstractLocalSettingsConfigMod
     resetFielToDefault("validationQueryTimeout");
   }
 
-  private boolean checkDbUrl(ValContext ctx, String driver, String url, String user, String pass)
+  private boolean checkDbUrl(ValContext ctx, String jdbcServiceId, String driver, String url, String user, String pass)
   {
+    JdbProviderService service = null;
+    if (StringUtils.isNotBlank(jdbcServiceId) == true) {
+      service = JdbProviderServices.findJdbcServiceById(jdbcServiceId);
+    }
+    if (service == null) {
+      service = JdbProviderServices.findJdbcServiceByJdbDriver(driver);
+    }
+    if (service != null) {
+      return service.tryConnect(this, ctx);
+    }
     try {
       Class.forName(driver);
       try (Connection con = DriverManager.getConnection(url, user, pass)) {
@@ -384,6 +399,16 @@ public class JdbcLocalSettingsConfigModel extends AbstractLocalSettingsConfigMod
   public void setAssociatedJndi(List<JndiLocalSettingsConfigModel> associatedJndi)
   {
     this.associatedJndi = associatedJndi;
+  }
+
+  public String getJdbcConntextionTypeId()
+  {
+    return jdbcConntextionTypeId;
+  }
+
+  public void setJdbcConntextionTypeId(String jdbcConntextionTypeId)
+  {
+    this.jdbcConntextionTypeId = jdbcConntextionTypeId;
   }
 
 }
