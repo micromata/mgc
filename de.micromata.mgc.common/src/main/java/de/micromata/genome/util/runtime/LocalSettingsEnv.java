@@ -28,6 +28,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.pool.impl.GenericObjectPool;
 import org.apache.log4j.Logger;
 
+import de.micromata.genome.util.runtime.jndi.JndiDumper;
 import de.micromata.genome.util.runtime.jndi.JndiMockupNamingContextBuilder;
 import de.micromata.genome.util.types.Pair;
 
@@ -122,14 +123,16 @@ public class LocalSettingsEnv
       try {
         initialContext = new InitialContext();
         initialContext.lookup("java:");
-      } catch (NoInitialContextException ex) {
+      } catch (NameNotFoundException | NoInitialContextException ex) {
         log.info("No initialContext. Create own context");
         JndiMockupNamingContextBuilder contextBuilder = new JndiMockupNamingContextBuilder();
         InitialContextFactory initialContextFactory = contextBuilder.createInitialContextFactory(env);
         initialContext = initialContextFactory.getInitialContext(env);
         contextBuilder.activate();
+
       }
       LocalSettingsEnv localSettingsEnv = localSettingsEnvSupplier.apply(initialContext);
+      log.info("Jndi LocalSettingsEnv intialized: " + JndiDumper.getJndiDump());
       return localSettingsEnv;
     } catch (NamingException ex) {
       throw new RuntimeException(ex);
@@ -345,6 +348,8 @@ public class LocalSettingsEnv
     try {
       // OJEJEJEJE bind modifies name and make it unusable!
       initialContext.bind(name, object);
+      name = jndiName(path);
+      initialContext.lookup(name);
     } catch (NameAlreadyBoundException ex) {
       // org.eclipse.jetty.jndi.NamingContext buggy, does not use internal normalize to find first component.
       name = jndiName(path);
@@ -355,6 +360,8 @@ public class LocalSettingsEnv
       createSubContextDirs(path);
       name = jndiName(path);
       initialContext.bind(name, object);
+      name = jndiName(path);
+      initialContext.lookup(name);
     }
   }
 

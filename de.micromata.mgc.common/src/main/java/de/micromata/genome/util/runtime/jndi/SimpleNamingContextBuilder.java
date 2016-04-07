@@ -10,8 +10,7 @@ import javax.naming.spi.NamingManager;
 
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 /**
  * Simple implementation of a JNDI naming context builder.
@@ -68,13 +67,14 @@ import org.apache.commons.logging.LogFactory;
  */
 public class SimpleNamingContextBuilder implements InitialContextFactoryBuilder
 {
-
+  private static final Logger logger = Logger.getLogger(SimpleNamingContextBuilder.class);
   /** An instance of this class bound to JNDI */
   private static volatile SimpleNamingContextBuilder activated;
 
   private static boolean initialized = false;
 
   private static final Object initializationLock = new Object();
+  private final Hashtable<String, Object> boundObjects = new Hashtable<>();
 
   /**
    * Checks if a SimpleNamingContextBuilder is active.
@@ -107,10 +107,6 @@ public class SimpleNamingContextBuilder implements InitialContextFactoryBuilder
     }
     return activated;
   }
-
-  private final Log logger = LogFactory.getLog(getClass());
-
-  private final Hashtable<String, Object> boundObjects = new Hashtable<String, Object>();
 
   /**
    * Register the context builder by registering it with the JNDI NamingManager. Note that once this has been done,
@@ -245,4 +241,10 @@ public class SimpleNamingContextBuilder implements InitialContextFactoryBuilder
       return ObjectUtils.toString(obj);
     }
   }
+
+  public Hashtable<String, Object> getBoundObjects()
+  {
+    return boundObjects;
+  }
+
 }

@@ -28,7 +28,7 @@ public class JndiMockupNamingContextBuilder extends SimpleNamingContextBuilder
       @SuppressWarnings("unchecked")
       public Context getInitialContext(Hashtable<?, ?> environment)
       {
-        return new JndiMockupContext("",
+        return new SimpleJndiContext("",
             PrivateBeanUtils.readField(JndiMockupNamingContextBuilder.this, "boundObjects", Hashtable.class),
             (Hashtable<String, Object>) environment);
       }

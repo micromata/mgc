@@ -9,6 +9,7 @@ import javax.naming.NameParser;
 import javax.naming.NamingException;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 import de.micromata.genome.util.bean.PrivateBeanUtils;
 
@@ -20,20 +21,21 @@ import de.micromata.genome.util.bean.PrivateBeanUtils;
  * @author roger
  * 
  */
-public class JndiMockupContext extends SimpleNamingContext
+public class SimpleJndiContext extends SimpleNamingContext
 {
+  public static final Logger LOG = Logger.getLogger(SimpleJndiContext.class);
 
-  public JndiMockupContext()
+  public SimpleJndiContext()
   {
     super();
   }
 
-  public JndiMockupContext(String root, Hashtable<String, Object> boundObjects, Hashtable<String, Object> env)
+  public SimpleJndiContext(String root, Hashtable<String, Object> boundObjects, Hashtable<String, Object> env)
   {
     super(root, boundObjects, env);
   }
 
-  public JndiMockupContext(String root)
+  public SimpleJndiContext(String root)
   {
     super(root);
   }
@@ -72,7 +74,7 @@ public class JndiMockupContext extends SimpleNamingContext
     if (!subcontextName.endsWith("/")) {
       subcontextName += "/";
     }
-    Context subcontext = new JndiMockupContext(subcontextName, getBoundObjects(), getEnvironment());
+    Context subcontext = new SimpleJndiContext(subcontextName, getBoundObjects(), getEnvironment());
     bind(name, subcontext);
     return subcontext;
   }

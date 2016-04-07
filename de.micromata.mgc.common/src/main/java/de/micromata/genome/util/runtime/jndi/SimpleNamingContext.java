@@ -18,8 +18,10 @@ import javax.naming.NamingException;
 import javax.naming.OperationNotSupportedException;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
+import de.micromata.genome.util.bean.PrivateBeanUtils;
 
 /**
  * Simple implementation for the naming context.
@@ -30,7 +32,7 @@ import org.apache.commons.logging.LogFactory;
 public class SimpleNamingContext implements Context
 {
 
-  private final Log logger = LogFactory.getLog(getClass());
+  private final Logger LOG = Logger.getLogger(SimpleNamingContext.class);
 
   private final String root;
 
@@ -73,8 +75,8 @@ public class SimpleNamingContext implements Context
   @Override
   public NamingEnumeration<NameClassPair> list(String root) throws NamingException
   {
-    if (logger.isDebugEnabled()) {
-      logger.debug("Listing name/class pairs under [" + root + "]");
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("LsEnv; Listing name/class pairs under [" + root + "]");
     }
     return new NameClassPairEnumeration(this, root);
   }
@@ -82,8 +84,8 @@ public class SimpleNamingContext implements Context
   @Override
   public NamingEnumeration<Binding> listBindings(String root) throws NamingException
   {
-    if (logger.isDebugEnabled()) {
-      logger.debug("Listing bindings under [" + root + "]");
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("LsEnv; Listing bindings under [" + root + "]");
     }
     return new BindingEnumeration(this, root);
   }
@@ -95,24 +97,25 @@ public class SimpleNamingContext implements Context
    * 
    * @throws javax.naming.NameNotFoundException if the object could not be found
    */
-  @Override
-  public Object lookup(String lookupName) throws NameNotFoundException
+  public Object lookupImpl(String lookupName) throws NameNotFoundException
   {
     String name = this.root + lookupName;
-    if (logger.isDebugEnabled()) {
-      logger.debug("Static JNDI lookup: [" + name + "]");
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("LsEnv; Static JNDI lookup: [" + name + "]");
     }
     if ("".equals(name)) {
       return new SimpleNamingContext(this.root, this.boundObjects, this.environment);
     }
     Object found = this.boundObjects.get(name);
+
     if (found == null) {
-      if (!name.endsWith("/")) {
-        name = name + "/";
+      String sname = name;
+      if (!sname.endsWith("/")) {
+        sname = sname + "/";
       }
       for (String boundName : this.boundObjects.keySet()) {
-        if (boundName.startsWith(name)) {
-          return new SimpleNamingContext(name, this.boundObjects, this.environment);
+        if (boundName.startsWith(sname)) {
+          return new SimpleNamingContext(sname, this.boundObjects, this.environment);
         }
       }
       throw new NameNotFoundException(
@@ -178,8 +181,8 @@ public class SimpleNamingContext implements Context
   @Override
   public void bind(String name, Object obj)
   {
-    if (logger.isInfoEnabled()) {
-      logger.info("Static JNDI binding: [" + this.root + name + "] = ["
+    if (LOG.isInfoEnabled()) {
+      LOG.info("LsEnv; Static JNDI binding: [" + this.root + name + "] = ["
           + SimpleNamingContextBuilder.jndiObjectToString(obj) + "]");
     }
     if (obj == null) {
@@ -191,8 +194,8 @@ public class SimpleNamingContext implements Context
   @Override
   public void unbind(String name)
   {
-    if (logger.isInfoEnabled()) {
-      logger.info("Static JNDI remove: [" + this.root + name + "]");
+    if (LOG.isInfoEnabled()) {
+      LOG.info("LsEnv; Static JNDI remove: [" + this.root + name + "]");
     }
     this.boundObjects.remove(this.root + name);
   }
@@ -254,6 +257,38 @@ public class SimpleNamingContext implements Context
   }
 
   @Override
+  public NamingEnumeration<NameClassPair> list(Name name) throws NamingException
+  {
+    return list(nameToString(name));
+  }
+
+  @Override
+  public NamingEnumeration<Binding> listBindings(Name name) throws NamingException
+  {
+    return listBindings(nameToString(name));
+  }
+
+  @Override
+  public Object lookupLink(Name name) throws NamingException
+  {
+    return lookupLink(nameToString(name));
+  }
+
+  @Override
+  public NameParser getNameParser(Name name) throws NamingException
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public String getNameInNamespace() throws NamingException
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
   public void close()
   {
   }
@@ -270,31 +305,6 @@ public class SimpleNamingContext implements Context
       sb.append(part);
     }
     return sb.toString();
-  }
-  // Unsupported methods follow: no support for javax.naming.Name
-
-  @Override
-  public NamingEnumeration<NameClassPair> list(Name name) throws NamingException
-  {
-    throw new OperationNotSupportedException("SimpleNamingContext does not support [javax.naming.Name]");
-  }
-
-  @Override
-  public NamingEnumeration<Binding> listBindings(Name name) throws NamingException
-  {
-    throw new OperationNotSupportedException("SimpleNamingContext does not support [javax.naming.Name]");
-  }
-
-  @Override
-  public Object lookup(Name name) throws NamingException
-  {
-    throw new OperationNotSupportedException("SimpleNamingContext does not support [javax.naming.Name]");
-  }
-
-  @Override
-  public Object lookupLink(Name name) throws NamingException
-  {
-    throw new OperationNotSupportedException("SimpleNamingContext does not support [javax.naming.Name]");
   }
 
   @Override
@@ -334,29 +344,50 @@ public class SimpleNamingContext implements Context
   }
 
   @Override
-  public String getNameInNamespace() throws NamingException
+  public Name composeName(Name name, Name prefix) throws NamingException
   {
-
-    throw new OperationNotSupportedException("SimpleNamingContext does not support [javax.naming.Name]");
-  }
-
-  @Override
-  public NameParser getNameParser(Name name) throws NamingException
-  {
-
     throw new OperationNotSupportedException("SimpleNamingContext does not support [javax.naming.Name]");
   }
 
   @Override
   public NameParser getNameParser(String name) throws NamingException
   {
-    throw new OperationNotSupportedException("SimpleNamingContext does not support [javax.naming.Name]");
+    return new JndiMockupParser();
+  }
+
+  protected String toString(Name name)
+  {
+    return name.toString();
   }
 
   @Override
-  public Name composeName(Name name, Name prefix) throws NamingException
+  public Object lookup(Name name) throws NamingException
   {
-    throw new OperationNotSupportedException("SimpleNamingContext does not support [javax.naming.Name]");
+    return lookup(toString(name));
+  }
+
+  protected String getRoot()
+  {
+    return PrivateBeanUtils.readField(this, "root", String.class);
+  }
+
+  protected Hashtable<String, Object> getBoundObjects()
+  {
+    return PrivateBeanUtils.readField(this, "boundObjects", Hashtable.class);
+  }
+
+  @Override
+  public Object lookup(String lookupName) throws NameNotFoundException
+  {
+    try {
+      return lookupImpl(lookupName);
+    } catch (NameNotFoundException ex) {
+      String prefix = "java:/comp/env/";
+      if (StringUtils.startsWith(lookupName, prefix) == false) {
+        return lookupImpl(prefix + lookupName);
+      }
+      throw ex;
+    }
   }
 
   private static abstract class AbstractNamingEnumeration<T> implements NamingEnumeration<T>

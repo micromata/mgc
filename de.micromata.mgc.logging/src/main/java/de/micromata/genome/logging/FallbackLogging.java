@@ -114,7 +114,7 @@ public abstract class FallbackLogging extends BaseLogging implements LoggingWith
       lastFailureCount = 0;
     } catch (Throwable ex) { // NOSONAR "Illegal Catch" framework
       writeToSecondary(lwe);
-      secondary.doLog(LogLevel.Fatal, GenomeLogCategory.Database, "Cannot write to Logging Table",
+      getSecondary().doLog(LogLevel.Fatal, GenomeLogCategory.Database, "Cannot write to Logging Table",
           new LogExceptionAttribute(ex));
       lastLogFailure = new Date();
       if (lastLogFailed == null) {
@@ -130,7 +130,7 @@ public abstract class FallbackLogging extends BaseLogging implements LoggingWith
    */
   protected void writeToSecondary(LogWriteEntry lwe)
   {
-    secondary.doLogImpl(lwe);
+    getSecondary().doLogImpl(lwe);
     putToFallbackQueue(lwe);
   }
 
