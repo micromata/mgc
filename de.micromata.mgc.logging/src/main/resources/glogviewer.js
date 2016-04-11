@@ -5,6 +5,8 @@ function GLogFormData() {
 	this.startRow = null;
 	this.maxRow = null;
 	this.masterOnly = false;
+	this.fromDate = null;
+	this.toDate = null;
 	this.logAttribute1Type = null;
 	this.logAttribute1Value = null;
 	this.logAttribute2Type = null;
@@ -17,9 +19,10 @@ function GLogFormData() {
 		}
 	}
 }
-
+var _glogViewer;
 function GLogViewer(options) {
 	// console.warn("GLogViewer created");
+	_glogViewer = this;
 	this.lastPollTime = 0;
 	this.options = options;
 	this.logListId = options.logListId;
@@ -27,6 +30,8 @@ function GLogViewer(options) {
 	this.logPollTimeout = options.logPollTimeout;
 	this.logPollIsRunning = false, this.buffer = new Array();
 	this.bufferSize = 2000;
+	this.pageSize = 30;
+	this.hasMoreElements = false;
 	this.showInreverseOrder = true;
 	if (options.bufferSize) {
 		this.bufferSize = options.bufferSize;
@@ -63,7 +68,7 @@ function GLogViewer(options) {
 	if (!this.searchAttributes) {
 		this.searchAttributes = [];
 	}
-	this.pageSize = 30;
+
 	if (options.pageSize) {
 		this.pageSize = options.pageSize;
 	}
@@ -88,6 +93,14 @@ function GLogViewer(options) {
 				E = new Image;
 				E['setAttribute']('src', 'https://getfirebug.com/' + '#startOpened');
 			}
+		}
+		var nextLink = document.getElementById('glogpagenav_next');
+		if (nextLink) {
+			showElement(nextLink, false);
+		}
+		var prevLink = document.getElementById('glogpagenav_prev');
+		if (prevLink) {
+			showElement(prevLink, false);
 		}
 		_startPoll(_this);
 	});
@@ -124,9 +137,12 @@ function GLogViewer(options) {
 		if (!liveUpdate) {
 			return;
 		}
+		this._appendToGuiDirect(entries);
+	}
+	this._appendToGuiDirect = function(entries) {
 		var ll = document.getElementById(this.logListId);
 		var htmitem;
-		for (var i = 0; i < entries.length; ++i) {
+		for (var i = 0; i < entries.length && i <= this.pageSize; ++i) {
 			htmitem = this._buildHtmlItem(entries[i]);
 			if (this.showInreverseOrder) {
 				if (ll.hasChildNodes()) {
@@ -186,7 +202,14 @@ function GLogViewer(options) {
 					console.error("error while parsing: " + e);
 				}
 				_this.clear();
-				_this._appendToGui(items);
+				if (items.length > _this.pageSize) {
+					items = items.slice(0, items.length - 1);
+					_this._setNextVisible(true);
+				} else {
+					_this._setNextVisible(false);
+				}
+				_this._setPrevVisible(_this.logForm.startRow > 0);
+				_this._appendToGuiDirect(items);
 			});
 		} else {
 			console.debug('backend does not support search');
@@ -271,6 +294,33 @@ function GLogViewer(options) {
 		}
 		return logattrs;
 	}
+	this._setNextVisible = function(show) {
+		var next = document.getElementById('glogpagenav_next');
+		if (next) {
+			showElement(next, show);
+		}
+	}
+	this._setPrevVisible = function(show) {
+		var prev = document.getElementById('glogpagenav_prev');
+		if (prev) {
+			showElement(prev, show);
+		}
+	}
+	this.goNextPage = function() {
+		// console.debug('goNextPage');
+		this.logForm.startRow = this.logForm.startRow + this.pageSize;
+		var formData = this.logForm.getFormData();
+		this.filterItems(formData)
+	}
+	this.goPrevPage = function() {
+		// console.debug('goNextPage');
+		this.logForm.startRow = this.logForm.startRow - this.pageSize;
+		if (this.logForm.startRow < 0) {
+			this.logForm.startRow = 0;
+		}
+		var formData = this.logForm.getFormData();
+		this.filterItems(formData)
+	}
 	function _startPoll(_this) {
 
 		if (_this.logPollIsRunning == true) {
@@ -310,6 +360,13 @@ function GLogViewer(options) {
 			setTimeout(function() {
 				_doPoll(_this);
 			}, _this.logPollTimeout);
+		}
+	}
+	function showElement(el, show) {
+		if (show) {
+			el.setAttribute('style', 'display: inline-block');
+		} else {
+			el.setAttribute('style', 'display: none;');
 		}
 	}
 

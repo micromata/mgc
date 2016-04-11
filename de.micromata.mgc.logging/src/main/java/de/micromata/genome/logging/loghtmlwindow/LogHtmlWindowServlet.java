@@ -3,8 +3,11 @@ package de.micromata.genome.logging.loghtmlwindow;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -167,6 +170,24 @@ public abstract class LogHtmlWindowServlet extends HttpServlet
     String logAttribute1Value = req.getParameter("logAttribute1Value");
     String logAttribute2Type = req.getParameter("logAttribute2Type");
     String logAttribute2Value = req.getParameter("logAttribute2Value");
+    SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX", Locale.US);
+
+    String fromDate = req.getParameter("fromDate");
+    String toDate = req.getParameter("toDate");
+    if (StringUtils.length(fromDate) == "yyyy-MM-ddTHH:mm:ss.SSSZ".length()) {
+      try {
+        start = new Timestamp(sd.parse(fromDate).getTime());
+      } catch (ParseException ex) {
+        LOG.warn("Cannot parse Logging fromDate: " + fromDate + ": " + ex.getMessage());
+      }
+    }
+    if (StringUtils.length(toDate) == "yyyy-MM-ddTHH:mm:ss.SSSZ".length()) {
+      try {
+        end = new Timestamp(sd.parse(toDate).getTime());
+      } catch (ParseException ex) {
+        LOG.warn("Cannot parse Logging fromDate: " + toDate + ": " + ex.getMessage());
+      }
+    }
     if (StringUtils.isNotBlank(logAttribute1Type) && StringUtils.isNotBlank(logAttribute1Value)) {
       logAttributes = new ArrayList<>();
       logAttributes.add(Pair.make(logAttribute1Type, logAttribute1Value));

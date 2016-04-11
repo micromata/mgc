@@ -4,7 +4,22 @@
       <label for='liveview'>Live Update</label> <input type='checkbox'
         name=liveViewCheckbox checked>
       <button name='clearLogListButton'>Clear</button>
-
+      <label for='pageSize'>Page size</label>
+        <select name='pageSize'>
+          <option value="10">10</option>
+          <option value="30">30</option>
+          <option value="30">50</option>
+          <option value="100">100</option>
+          <option value="500">500</option>
+          <option value="2000">2000</option>
+        </select>
+        <label for='bufferSize'>Buffer size</label>
+        <select name='bufferSize'>
+          <option value="100">100</option>
+          <option value="1000">1000</option>
+          <option value="2000">2000</option>
+          <option value="5000">5000</option>
+        </select>
       <label for='filterLogLevel'>LogLevel</label> <select
         name='filterLogLevel'>
         <option value="Debug">Debug</option>
@@ -23,10 +38,19 @@
           <input name='logAttribute1Value'
           type='text'> 
           <label for='logAttribute2Type'>LogAttribute
-          2</label> <select name='logAttribute2Type'></select><input
-          name='logAttribute2Value' type='text'>
+          2</label> <select name='logAttribute2Type'></select>
+          <input name='logAttribute2Value' type='text'/>
       </div>
-
+      <div class='glogformDates'>
+        <div class='glogFromDate'>
+          <label for='fromDate'>Start Date</label><input type='checkbox' name='fromDateEnabled'/> 
+          <input type='text' name='fromDate'/>
+          </div>
+          <div class='glogToDate'>
+            <label for='toDate'>End Date</label><input type='checkbox' name='toDateEnabled'/> 
+            <input type='text' name='toDate'/>
+          </div>
+      </div>
       <button name='filterResetButton'>Reset</button>
       <button name='filterSearchButton'>Search</button>
 
@@ -34,5 +58,9 @@
   </div>
   <div id="glogentriesdiv" class="glogentriesdiv">
     <div id="glogentries" class="glogentries"></div>
+    <div id="glogpagenav" class="glogpagenav">
+      <a href='#' id='glogpagenav_prev' onclick='_glogViewer.goPrevPage()'>Previous</a>
+      <a href='#' id='glogpagenav_next' onclick='_glogViewer.goNextPage()'>Next</a>
+    </div>
   </div>
 
