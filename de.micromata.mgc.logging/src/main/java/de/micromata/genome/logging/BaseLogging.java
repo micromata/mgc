@@ -214,7 +214,13 @@ public abstract class BaseLogging implements Logging
    */
   public static LogAttributeType getAttributeTypeByString(String attrName)
   {
-    return registerdLogAttributes.get(attrName);
+    LogAttributeType ret = registerdLogAttributes.get(attrName);
+    if (ret != null) {
+      return ret;
+    }
+    LogAttributeTypeWrapper la = new LogAttributeTypeWrapper(attrName);
+    return la;
+
   }
 
   /**
