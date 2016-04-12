@@ -2,6 +2,7 @@ package de.micromata.mgc.javafx.logging;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -163,13 +164,27 @@ public class LoggingLogViewAdapter
     LogLevel level = LogLevel.fromString(logLevel, LogLevel.Note);
 
     JsonArray ret = new JsonArray();
-    LoggingServiceManager.get().getLogging().selectLogs(null, null, level.getLevel(), logCategory, logMessage,
+    Logging logging = LoggingServiceManager.get().getLogging();
+    logging.selectLogs(null, null, level.getLevel(), logCategory, logMessage,
         logAttributes,
         startRow,
-        maxRow, null, false, (le) -> {
-          ret.add(LogJsonUtils.logEntryToJson(le));
+        maxRow, null, true, (le) -> {
+          ret.add(LogJsonUtils.logEntryToJson(logging, le, false));
         });
     String sret = ret.toString();
+    callback.call("doCallback", sret);
+  }
+
+  public void logSelectAttributes(String logId, JSObject callback)
+  {
+    Logging logging = LoggingServiceManager.get().getLogging();
+    Object logid = logging.parseLogId(logId);
+    List<Object> ids = Arrays.asList(logid);
+    JsonArray arr = new JsonArray();
+    logging.selectLogs(ids, false, row -> {
+      arr.add(LogJsonUtils.logEntryToJson(logging, row, true));
+    });
+    String sret = arr.toString();
     callback.call("doCallback", sret);
   }
 

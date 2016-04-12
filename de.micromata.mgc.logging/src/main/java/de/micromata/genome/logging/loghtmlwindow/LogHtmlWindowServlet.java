@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -91,10 +92,25 @@ public abstract class LogHtmlWindowServlet extends HttpServlet
 
     } else if ("search".equals(cmd) == true) {
       filter(req, resp);
+    } else if ("logSelectAttributes".equals(cmd) == true) {
+      logSelectAttributes(req, resp);
     } else {
       error(req, resp, "Unknown command");
     }
 
+  }
+
+  private void logSelectAttributes(HttpServletRequest req, HttpServletResponse resp) throws IOException
+  {
+    Logging logging = LoggingServiceManager.get().getLogging();
+    String id = req.getParameter("id");
+    Object logid = logging.parseLogId(id);
+    List<Object> ids = Arrays.asList(logid);
+    JsonArray arr = new JsonArray();
+    logging.selectLogs(ids, false, row -> {
+      arr.add(LogJsonUtils.logEntryToJson(logging, row, true));
+    });
+    sendResponse(resp, arr);
   }
 
   protected void getConfiguration(HttpServletRequest req, HttpServletResponse resp) throws IOException
@@ -198,17 +214,25 @@ public abstract class LogHtmlWindowServlet extends HttpServlet
       }
       logAttributes.add(Pair.make(logAttribute2Type, logAttribute2Value));
     }
-    List<OrderBy> orderBy = null;
+    List<OrderBy> orderBy = new ArrayList<>();
+    String orderCol = req.getParameter("orderBy");
+    if (StringUtils.isNotBlank(orderCol) == true) {
+      Boolean desc = Boolean.valueOf(req.getParameter("desc"));
+      orderBy.add(new OrderBy(orderCol, desc));
+    } else {
+      orderBy.add(new OrderBy("modifiedAt", true));
+    }
     String startRows = req.getParameter("startRow");
     String maxRows = req.getParameter("maxRow");
     int startRow = NumberUtils.toInt(startRows, 0);
     int maxRow = NumberUtils.toInt(maxRows, 30);
-    boolean masterOnly = "true".equals(req.getParameter("masterOnly"));
+    boolean allAttrs = "true".equals(req.getParameter("allAttrs"));
     JsonArray ret = new JsonArray();
-    LoggingServiceManager.get().getLogging().selectLogs(start, end, level, logCategory, logMessage, logAttributes,
+    Logging logging = LoggingServiceManager.get().getLogging();
+    logging.selectLogs(start, end, level, logCategory, logMessage, logAttributes,
         startRow,
-        maxRow, orderBy, masterOnly, (logEntry) -> {
-          ret.add(LogJsonUtils.logEntryToJson(logEntry));
+        maxRow, orderBy, allAttrs == false, (logEntry) -> {
+          ret.add(LogJsonUtils.logEntryToJson(logging, logEntry, allAttrs));
         });
     sendResponse(resp, ret);
   }

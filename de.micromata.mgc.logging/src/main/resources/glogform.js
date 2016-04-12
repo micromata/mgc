@@ -35,6 +35,7 @@ function GlogForm(gLogViewer) {
 		});
 		form.clearLogListButton.addEventListener('click', function(event) {
 			logViewer.clear();
+			_this.startRow = 0;
 			event.stopPropagation();
 			event.preventDefault();
 
@@ -50,6 +51,9 @@ function GlogForm(gLogViewer) {
 			form.logAttribute2Type.value = '';
 			form.logAttribute1Value.value = '';
 			form.logAttribute2Value.value = '';
+			form.fromDateEnabled.checked = false;
+			form.toDateEnabled.checked = false;
+			
 			_this.startRow = 0;
 			event.stopPropagation();
 			event.preventDefault();
@@ -57,6 +61,7 @@ function GlogForm(gLogViewer) {
 		form.filterSearchButton.addEventListener('click', function(event) {
 			event.stopPropagation();
 			event.preventDefault();
+			_this.startRow = 0;
 			form.liveViewCheckbox.checked = false;
 			// console.debug('filterSearch');
 			var formData = _this.getFormData();

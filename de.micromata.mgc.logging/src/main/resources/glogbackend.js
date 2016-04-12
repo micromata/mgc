@@ -19,6 +19,9 @@ function LogDummyBackend(logViewer) {
 	this.logSelect = function(logFormData, callback) {
 
 	}
+	this.logSelectAttributes = function(logId, callback) {
+
+	}
 }
 
 function GLogBackend() {
@@ -56,6 +59,13 @@ function GLogBackend() {
 	};
 	this.getLoggingConfiguration = function() {
 		return this.loggingConfiguration;
+	}
+	this.logSelectAttributes = function(logId, callback) {
+		var urlp = 'id=' + encodeURIComponent(logId);
+		this._ajax("logSelectAttributes", urlp, function(text) {
+			var res = JSON.parse(text);
+			callback(res);
+		});
 	}
 	this._initLogConfig = function() {
 		this._ajax("getConfiguration", null, function(text) {

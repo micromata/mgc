@@ -95,8 +95,11 @@ public class LoggingController implements Initializable
         "    return loggingAdapter.getLoggingConfiguration();\n" +
         "  };" +
         "  this.logSelect = function(logFormData, callback) {\r\n" +
-        "    console.debug('LogConsoleBackend.logSelect');\n" +
+        "    //console.debug('LogConsoleBackend.logSelect');\n" +
         "    loggingAdapter.logSelect(logFormData, new ALogCallback(callback));\n" +
+        "  };\n" +
+        "  this.logSelectAttributes = function(logId, callback) {\n" +
+        "    loggingAdapter.logSelectAttributes(logId, new ALogCallback(callback));\n" +
         "  }\n" +
         "}" +
         "  function logProvider() {\r\n" +

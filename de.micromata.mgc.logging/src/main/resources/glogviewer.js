@@ -140,6 +140,13 @@ function GLogViewer(options) {
 		this._appendToGuiDirect(entries);
 	}
 	this._appendToGuiDirect = function(entries) {
+		if (this.showInreverseOrder) {
+			this._appendToGuiDirectReverse(entries);
+		} else {
+			this._appendToGuiDirectInOrder(entries);
+			htmitem.scrollIntoView(true);
+		}
+
 		var ll = document.getElementById(this.logListId);
 		var htmitem;
 		for (var i = 0; i < entries.length && i <= this.pageSize; ++i) {
@@ -156,6 +163,26 @@ function GLogViewer(options) {
 		}
 		if (this.showInreverseOrder == false && this.autoScroll) {
 			htmitem.scrollIntoView(true);
+		}
+	}
+	this._appendToGuiDirectInOrder = function(entries) {
+		var ll = document.getElementById(this.logListId);
+		var htmitem;
+		for (var i = 0; i < entries.length && i <= this.pageSize; ++i) {
+			htmitem = this._buildHtmlItem(entries[i]);
+			ll.appendChild(htmitem);
+		}
+	}
+	this._appendToGuiDirectReverse = function(entries) {
+		var ll = document.getElementById(this.logListId);
+		var htmitem;
+		for (var i = 0; i < entries.length && i <= this.pageSize; ++i) {
+			htmitem = this._buildHtmlItem(entries[i]);
+			if (ll.hasChildNodes()) {
+				ll.insertBefore(htmitem, ll.firstChild);
+			} else {
+				ll.appendChild(htmitem);
+			}
 		}
 	}
 	this._appendToBuffer = function(entries) {
@@ -193,7 +220,7 @@ function GLogViewer(options) {
 	this.filterItems = function(formData) {
 		if (this.logBackend.getLoggingConfiguration().supportsSearch) {
 			this.logBackend.logSelect(formData, function(items) {
-				console.debug('got from select: ' + items);
+				//console.debug('got from select: ' + items);
 				try {
 					if (typeof (items) === 'string' || items instanceof String) {
 						items = JSON.parse(items);
@@ -209,7 +236,7 @@ function GLogViewer(options) {
 					_this._setNextVisible(false);
 				}
 				_this._setPrevVisible(_this.logForm.startRow > 0);
-				_this._appendToGuiDirect(items);
+				_this._appendToGuiDirectInOrder(items);
 			});
 		} else {
 			console.debug('backend does not support search');
@@ -259,11 +286,35 @@ function GLogViewer(options) {
 		mel.appendChild(el);
 		var attrdiv = this._buildHtmlItemAtt(item);
 		mel.appendChild(attrdiv);
+		el.setAttribute('data-allAttrs', item.allAttrs);
+		if (item.id) {
+			el.setAttribute('data-logid', item.id);
+		}
 		el.addEventListener('dblclick', function(event) {
+			var el = event.currentTarget;
 			if (attrdiv.style.display != 'none') {
 				attrdiv.style.display = 'none';
 			} else {
-				attrdiv.style.display = 'block';
+				var logid = el.getAttribute('data-logid');
+				var allatts = el.getAttribute('data-allAttrs')
+				if (allatts != 'true' && logid != null && logid.length != '') {
+					_this.logBackend.logSelectAttributes(logid, function(items) {
+						try {
+							if (typeof (items) === 'string' || items instanceof String) {
+								items = JSON.parse(items);
+							}
+						} catch (e) {
+							console.error("error while parsing: " + e);
+						}
+						el.setAttribute('data-allAttrs', 'true');
+						if (items.length > 0) {
+							_this._addMergeAttrs(attrdiv, items[0]);
+						}
+						attrdiv.style.display = 'block';
+					});
+				} else {
+					attrdiv.style.display = 'block';
+				}
 			}
 		});
 		return mel;
@@ -276,23 +327,29 @@ function GLogViewer(options) {
 			var atable = document.createElement('table');
 			atable.setAttribute("class", "logattr");
 			logattrs.appendChild(atable);
-
-			for (var i = 0; i < item.logAttributes.length; ++i) {
-
-				var la = item.logAttributes[i];
-				var tr = document.createElement('tr');
-				var td = document.createElement('td');
-				td.setAttribute("class", "logattrkey");
-				td.appendChild(document.createTextNode(la.typeName));
-				tr.appendChild(td);
-				td = document.createElement('td');
-				td.setAttribute("class", "logattrvalue");
-				td.appendChild(document.createTextNode(la.value));
-				tr.appendChild(td);
-				atable.appendChild(tr);
-			}
+			this._appendAttributeTs(atable, item);
+			return logattrs;
 		}
-		return logattrs;
+	}
+	this._appendAttributeTs = function(atable, item) {
+		for (var i = 0; i < item.logAttributes.length; ++i) {
+
+			var la = item.logAttributes[i];
+			var tr = document.createElement('tr');
+			var td = document.createElement('td');
+			td.setAttribute("class", "logattrkey");
+			td.appendChild(document.createTextNode(la.typeName));
+			tr.appendChild(td);
+			td = document.createElement('td');
+			td.setAttribute("class", "logattrvalue");
+			td.appendChild(document.createTextNode(la.value));
+			tr.appendChild(td);
+			atable.appendChild(tr);
+		}
+	}
+	this._addMergeAttrs = function(attrdiv, item) {
+		var table = attrdiv.firstChild;
+		this._appendAttributeTs(table, item);
 	}
 	this._setNextVisible = function(show) {
 		var next = document.getElementById('glogpagenav_next');
