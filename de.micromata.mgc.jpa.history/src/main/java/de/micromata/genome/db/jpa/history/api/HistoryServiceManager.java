@@ -45,7 +45,7 @@ public class HistoryServiceManager
   /**
    * Gets the service manager.
    * 
-   * @return the vls product model dao manager
+   * @return the HistoryServiceManager
    */
   public static HistoryServiceManager get()
   {

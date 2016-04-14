@@ -1,9 +1,11 @@
 <!--  USE same as from glogform.js -->
   <div id="glogformdiv" class='glogformdiv'>
     <form id="glogform">
+      <div class='glogbufsettings'>
+      <button name='clearLogListButton'>Clear</button>
       <label for='liveview'>Live Update</label> <input type='checkbox'
         name=liveViewCheckbox checked>
-      <button name='clearLogListButton'>Clear</button>
+      <div class='glogbufsizesettings'>      
       <label for='pageSize'>Page size</label>
         <select name='pageSize'>
           <option value="10">10</option>
@@ -20,6 +22,9 @@
           <option value="2000">2000</option>
           <option value="5000">5000</option>
         </select>
+        </div>
+      </div>
+      <div class="glogfilter">
       <label for='filterLogLevel'>LogLevel</label> <select
         name='filterLogLevel'>
         <option value="Debug">Debug</option>
@@ -51,9 +56,11 @@
             <input type='text' name='toDate'/>
           </div>
       </div>
-      <button name='filterResetButton'>Reset</button>
-      <button name='filterSearchButton'>Search</button>
-
+      <div class='glogsearchbuttons'>
+        <button name='filterResetButton'>Reset</button>
+        <button name='filterSearchButton'>Search</button>
+      </div>
+      </div>
     </form>
   </div>
   <div id="glogentriesdiv" class="glogentriesdiv">

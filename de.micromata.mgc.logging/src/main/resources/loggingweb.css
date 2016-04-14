@@ -20,20 +20,19 @@
 	border-right-style: none;
 	border-left-style: solid;
 	border-left-width: 1px;
-	
 }
 
 .logc {
 	width: 200px;
-	display: inline-block  ;
+	display: inline-block;
 	margin-left: 5px;
-  padding-left: 2px;
-  margin-right: 5px;
-  border-bottom-style: none;
-  border-top-style: none;
-  border-right-style: none;
-  border-left-style: solid;
-  border-left-width: 1px;
+	padding-left: 2px;
+	margin-right: 5px;
+	border-bottom-style: none;
+	border-top-style: none;
+	border-right-style: none;
+	border-left-style: solid;
+	border-left-width: 1px;
 	text-overflow: ellipsis;
 }
 
@@ -45,13 +44,13 @@
 .logm {
 	display: inline;
 	margin-left: 5px;
-  padding-left: 2px;
-  margin-right: 5px;
-  border-bottom-style: none;
-  border-top-style: none;
-  border-right-style: none;
-  border-left-style: solid;
-  border-left-width: 1px;
+	padding-left: 2px;
+	margin-right: 5px;
+	border-bottom-style: none;
+	border-top-style: none;
+	border-right-style: none;
+	border-left-style: solid;
+	border-left-width: 1px;
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
@@ -79,8 +78,8 @@
 	display: block;
 }
 
-.logattrkey {
-	//display: inline;
+.logattrkey { //
+	display: inline;
 	width: 150px;
 	padding-right: 3px;
 	vertical-align: top;
@@ -96,6 +95,45 @@
 	display: none;
 }
 
-.glogFormAttributes {
+.glogbufsizesettings {
+	float: right;
+}
+
+.glogFormAttributes { //
 	display: inline;
 }
+
+.glogbufsettings {
+	
+}
+
+.glogformDates {
+	
+}
+
+.glogFromDate {
+	display: inline;
+}
+
+.glogToDate {
+	display: inline;
+}
+
+.glogsearchbuttons {
+	display: inline;
+}
+
+.glogformdiv label {
+	display: inline-block;
+	width: 100px;
+	text-align: right;
+}
+.glogformdiv input {
+  display: inline-block;
+  //width: 150px;
+}
+.glogformdiv select {
+  display: inline-block;
+  //width: 150px;
+}
+
