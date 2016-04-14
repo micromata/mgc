@@ -95,16 +95,32 @@
 	display: none;
 }
 
+.glogrow {
+	margin-top: 3px;
+	margin-bottom: 3px;
+}
+
+.glogformdiv {
+	padding-top: 5px;
+	padding-bottom: 5px;
+	padding-left: 3px;
+	padding-right: 3px;
+  
+	border-style: solid;
+	border-width: 2px;
+	background-color: #F0F5F7;
+}
+
 .glogbufsizesettings {
 	float: right;
 }
 
-.glogFormAttributes { //
-	display: inline;
-}
-
 .glogbufsettings {
 	
+}
+
+.glogFormAttributes { //
+	display: inline;
 }
 
 .glogformDates {
@@ -121,6 +137,7 @@
 
 .glogsearchbuttons {
 	display: inline;
+	float: right;
 }
 
 .glogformdiv label {
@@ -128,12 +145,33 @@
 	width: 100px;
 	text-align: right;
 }
+
 .glogformdiv input {
-  display: inline-block;
-  //width: 150px;
-}
-.glogformdiv select {
-  display: inline-block;
-  //width: 150px;
+	display: inline-block; //
+	width: 150px;
 }
 
+.glogformdiv select {
+	display: inline-block; //
+	width: 150px;
+}
+
+.glogFormAttributes select {
+	width: 170px;
+}
+
+input[name="filterMessage"] {
+	width: 200px;
+}
+
+select[name="filterCategory"] {
+	width: 200px;
+}
+
+input[name="logAttribute1Value"] {
+	width: 200px;
+}
+
+input[name="logAttribute2Value"] {
+	width: 200px;
+}

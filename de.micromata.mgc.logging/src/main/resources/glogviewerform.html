@@ -1,6 +1,7 @@
 <!--  USE same as from glogform.js -->
   <div id="glogformdiv" class='glogformdiv'>
     <form id="glogform">
+      <div class='glogrow'>
       <div class='glogbufsettings'>
       <button name='clearLogListButton'>Clear</button>
       <label for='liveview'>Live Update</label> <input type='checkbox'
@@ -24,6 +25,8 @@
         </select>
         </div>
       </div>
+      </div>
+      <div class='glogrow'>
       <div class="glogfilter">
       <label for='filterLogLevel'>LogLevel</label> <select
         name='filterLogLevel'>
@@ -37,29 +40,33 @@
         name='filterCategory'>
       </select> <label for='filterMessage'>Message</label> <input
         name='filterMessage' type='text'></input>
+        </div>
+        <div class='glogrow'>
       <div id='glogformAttributes' class='glogFormAttributes'>
         <label for='logAttribute1Type'>LogAttribute 1</label> <select
           name='logAttribute1Type'></select>
           <input name='logAttribute1Value'
           type='text'> 
-          <label for='logAttribute2Type'>LogAttribute
-          2</label> <select name='logAttribute2Type'></select>
+          <!--  <label for='logAttribute2Type'>2</label>  --><select name='logAttribute2Type'></select>
           <input name='logAttribute2Value' type='text'/>
       </div>
-      <div class='glogformDates'>
+      </div>
+      <div class='glogrow'>
+        <div class='glogformDates'>
         <div class='glogFromDate'>
           <label for='fromDate'>Start Date</label><input type='checkbox' name='fromDateEnabled'/> 
-          <input type='text' name='fromDate'/>
+          <input id='glogFromDateText'  type='text' name='fromDate'/>
           </div>
           <div class='glogToDate'>
             <label for='toDate'>End Date</label><input type='checkbox' name='toDateEnabled'/> 
-            <input type='text' name='toDate'/>
+            <input id='glogToDateText' type='text' name='toDate'/>
           </div>
-      </div>
       <div class='glogsearchbuttons'>
         <button name='filterResetButton'>Reset</button>
         <button name='filterSearchButton'>Search</button>
       </div>
+      </div>
+    </div>
       </div>
     </form>
   </div>

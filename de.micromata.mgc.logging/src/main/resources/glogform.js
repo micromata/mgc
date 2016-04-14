@@ -1,9 +1,11 @@
 function glogFormDateToIso(date) {
-	return new Date(date).toISOString();
+	var ret =  new Date(date).toISOString();
+	console.debug('glogFormDateToIso(' + date + '): ' + ret);
+	return ret;
 }
 function glogIsoDateToForm(date) {
 	if (date.length == "2016-02-04T11:30:55.000Z".length) {
-		date = date.substring(0, date.length - 1);
+		date = date.substring(0, date.length - 5);
 		date = date.replace('T', ' ');
 	}
 	return date;

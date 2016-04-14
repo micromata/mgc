@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 
 import org.apache.commons.io.IOUtils;
@@ -35,7 +34,6 @@ import de.micromata.genome.logging.loghtmlwindow.LogHtmlWindowServlet;
 import de.micromata.genome.util.runtime.RuntimeIOException;
 import de.micromata.genome.util.validation.ValMessage;
 import de.micromata.genome.util.validation.ValState;
-import de.micromata.mgc.javafx.ControllerService;
 import de.micromata.mgc.javafx.launcher.MgcLauncher;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -91,6 +89,7 @@ public class LoggingController implements Initializable
     engine.setJavaScriptEnabled(true);
 
     StringBuilder html = new StringBuilder();
+
     String init = "  var logCounter = 0; \r\n" +
         "var loggingAdapter;\n" +
         "function ALogCallback(callback) { \n"
@@ -143,7 +142,9 @@ public class LoggingController implements Initializable
         "\r\n" +
         "  });\n" +
         "window.logViewer = logViewer;\n";
+
     html.append("<html><head>").append(getHtmlHeader())
+
         .append("\n<script  type=\"text/javascript\">\n").append(init).append("\n</script>\n")
         .append("</head>").append("<body>\r\n");
     html.append(LogHtmlWindowServlet.getGLogHtmlForm());
@@ -176,6 +177,15 @@ public class LoggingController implements Initializable
     listenerRegisterService.registerListener(FxLogconsoleLogRegisteredLogAttributesChangedEventListener.class);
   }
 
+  String loadCpResource(String name)
+  {
+    try (InputStream is = getClass().getResourceAsStream(name)) {
+      return IOUtils.toString(is);
+    } catch (IOException ex) {
+      throw new RuntimeIOException(ex);
+    }
+  }
+
   protected String getHtmlHeader()
   {
     StringBuilder sb = new StringBuilder();
@@ -186,10 +196,13 @@ public class LoggingController implements Initializable
       throw new RuntimeIOException(ex);
     }
     sb.append("\n<script type=\"text/javascript\">\n");
-
+    //    sb.append(loadCpResource("/js/jquery-1.12.1.min.js"));
     sb.append(LogHtmlWindowServlet.getJsContent());
 
     sb.append("\n</script>\n");
+    //    String url = getClass().getResource("/js/hello.js").toString();
+    //    sb.append("<script type=\"text/JavaScript\" src='" + url + "'></script>\n");
+
     return sb.toString();
   }
 
@@ -250,142 +263,6 @@ public class LoggingController implements Initializable
     }
     loggingAdapter.addLogEntry(lwe);
   }
-
-  private void addToGui(List<LogWriteEntry> logentries)
-  {
-
-    ControllerService.get().runInToolkitThread(() -> {
-      addToGuiInGui(logentries);
-    });
-  }
-
-  private void addToGuiInGui(List<LogWriteEntry> logentries)
-  {
-    loggingAdapter.addLogEntries(logentries);
-    //    WebEngine engine = htmlView.getEngine();
-
-    //    if (true) {
-    //      return;
-    //    }
-    //    WebEngine engine = htmlView.getEngine();
-    //    List<LogWriteEntry> lwes = logentries;
-    //    Document doc = engine.getDocument();
-    //    if (doc == null) {
-    //      guiWriteBuffer.addAll(lwes);
-    //      return;
-    //    } else {
-    //      lwes = new ArrayList<>(logentries);
-    //      lwes.addAll(guiWriteBuffer);
-    //      guiWriteBuffer.clear();
-    //    }
-    //    Element les = doc.getElementById("logentries");
-    //    String lielid = "";
-    //    for (LogWriteEntry lwe : lwes) {
-    //      lielid = "logentry" + ++idGenerator;
-    //
-    //      Element liel = createElement(doc, "div", "id", lielid, "class", "loge" + getLogClass(lwe));
-    //
-    //      ((EventTarget) liel).addEventListener("dblclick", event -> {
-    //        toggleLogAttribuesGui(doc, liel, lwe);
-    //      }, false);
-    //
-    //      Element logt = createElement(doc, "div", "class", "logt");
-    //      String date = DateUtils.getStandardDateTimeFormat().format(new Date(lwe.getTimestamp()));
-    //      logt.appendChild(doc.createTextNode(date));
-    //      Element logl = createElement(doc, "div", "class", "logl");
-    //      liel.appendChild(logt);
-    //      logl.appendChild(doc.createTextNode(lwe.getLevel().name()));
-    //      liel.appendChild(logl);
-    //      Element logm = createElement(doc, "div", "class", "logm");
-    //      logm.appendChild(doc.createTextNode(lwe.getMessage()));
-    //      liel.appendChild(logm);
-    //      renderAttrs(lwe, doc, liel);
-    //
-    //      les.appendChild(liel);
-
-    //    }
-    //    scrollToBottom(engine, lielid);
-
-  }
-
-  //  private void renderAttrs(LogWriteEntry lwe, Document doc, Element liel)
-  //  {
-  //    Element logattrs = createElement(doc, "div", "class", "logattrs hidden");
-  //    liel.appendChild(logattrs);
-  //    if (lwe.getAttributes() == null) {
-  //      return;
-  //    }
-  //    for (LogAttribute la : lwe.getAttributes()) {
-  //      Element attr = createElement(doc, "div", "class", "logattr");
-  //      Element attrkey = createElement(doc, "div", "class", "logattrkey");
-  //      attrkey.appendChild(doc.createTextNode(la.getTypeName()));
-  //      attr.appendChild(attrkey);
-  //      Element attrvalue = createElement(doc, "div", "class", "logattrvalue");
-  //      attrvalue.appendChild(doc.createTextNode(la.getValue()));
-  //      attr.appendChild(attrvalue);
-  //      logattrs.appendChild(attr);
-  //    }
-  //  }
-  //
-  //  private void toggleLogAttribuesGui(Document doc, Element liel, LogWriteEntry lwe)
-  //  {
-  //    Element lastchild = (Element) liel.getLastChild();
-  //    String curClass = lastchild.getAttribute("class");
-  //    if (StringUtils.equals(curClass, "logattr hidden")) {
-  //      lastchild.setAttribute("class", "logattr");
-  //    } else {
-  //      lastchild.setAttribute("class", "logattr hidden");
-  //    }
-  //
-  //  }
-
-  //  private void refilterGui()
-  //  {
-  //    clearGuiLogElements();
-  //    List<LogWriteEntry> thoShow = new ArrayList<>();
-  //    synchronized (logWriteEntries) {
-  //      for (LogWriteEntry lwe : logWriteEntries) {
-  //        if (filterLogEntry(lwe) == true) {
-  //          thoShow.add(lwe);
-  //        }
-  //      }
-  //    }
-  //
-  //    addToGui(thoShow);
-  //  }
-  //
-  //  private void clearGuiLogElements()
-  //  {
-  //    WebEngine engine = htmlView.getEngine();
-  //    Document doc = engine.getDocument();
-  //    Element les = doc.getElementById("logentries");
-  //    Element newle = createElement(doc, "div", "id", "logentries", "class", "logentries");
-  //    Node parent = les.getParentNode();
-  //    parent.removeChild(les);
-  //    parent.appendChild(newle);
-  //  }
-  //
-  //  private void scrollToBottom(WebEngine engine, String lielid)
-  //  {
-  //    if (autoScroll.isSelected() == true) {
-  //      engine.executeScript("document.getElementById(\"" + lielid + "\").scrollIntoView(true)");
-  //    }
-  //  }
-  //
-  //  private Element createElement(Document doc, String elName, String... attrs)
-  //  {
-  //    Element ret = doc.createElement(elName);
-  //    for (int i = 0; i < attrs.length; ++i) {
-  //      String attrk = attrs[i];
-  //      String value = "";
-  //      if (attrs.length > i) {
-  //        value = attrs[i + 1];
-  //      }
-  //      ret.setAttribute(attrk, value);
-  //      ++i;
-  //    }
-  //    return ret;
-  //  }
 
   public void adjustWidth(double with)
   {
