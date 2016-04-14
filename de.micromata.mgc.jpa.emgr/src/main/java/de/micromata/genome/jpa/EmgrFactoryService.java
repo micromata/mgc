@@ -27,7 +27,7 @@ public interface EmgrFactoryService
   /**
    * Register.
    *
-   * @param emgrFac the emgr fac
+   * @param emFac the emgr fac
    */
 
   void register(EmgrFactory<?> emFac);
