@@ -132,7 +132,8 @@ public class StdLocalSettingsLoader implements LocalSettingsLoader
 
   protected void loadOptionalDev(LocalSettings ls)
   {
-    loadSettings(ls, new File(getWorkingDirectory(), localSettingsPrefixName + "-dev.properties"), ls.getMap(), false,
+    loadSettings(ls, new File(getLocalSettingsFile().getParentFile(), localSettingsPrefixName + "-dev.properties"),
+        ls.getMap(), false,
         false);
   }
 
