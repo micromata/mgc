@@ -1,3 +1,19 @@
+//
+// Copyright (C) 2010-2016 Micromata GmbH
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//  http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
 package de.micromata.genome.util.runtime;
 
 import java.io.File;
@@ -22,14 +38,14 @@ public class CwdTest
     try {
       File curFile = new File("pom.xml");
       String pom1 = FileUtils.readFileToString(curFile);
-      // Ausgabe: ./pom.xml: C:\Users\roger\d\dhl\genome\genome-commons\pom.xml
+      // Ausgabe: ./pom.xml: C:\Users\roger\d\micromata\genome\genome-commons\pom.xml
       System.out.println("./pom.xml: " + curFile.getAbsolutePath());
       File parentDir = new File("./..");
       // setze user dir auf parent file
       System.setProperty("user.dir", parentDir.getCanonicalFile().getAbsolutePath());
       File pafile = new File("pom.xml");
       // das gibt den namen parent pom aus!!!!
-      // Ausgabe: new cwd: (..)./pom.xml: C:\Users\roger\d\dhl\genome\pom.xml
+      // Ausgabe: new cwd: (..)./pom.xml: C:\Users\roger\d\micromata\genome\pom.xml
       System.out.println("new cwd: (..)./pom.xml: " + pafile.getAbsolutePath());
       // !!!!!!
       // das liest trotzdem das pom1 aus!!!

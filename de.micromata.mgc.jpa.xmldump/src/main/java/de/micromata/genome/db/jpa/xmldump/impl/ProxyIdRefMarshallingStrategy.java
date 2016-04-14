@@ -1,18 +1,19 @@
-/////////////////////////////////////////////////////////////////////////////
 //
-// $RCSfile: ProxyIdRefMarshallingStrategy.java,v $
+// Copyright (C) 2010-2016 Micromata GmbH
 //
-// Project   Hibernate3History
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// Author    Wolfgang Jung (w.jung@micromata.de)
-// Created   Jan 13, 2006
-// Copyright Micromata Jan 13, 2006
+//  http://www.apache.org/licenses/LICENSE-2.0
 //
-// $Id: ProxyIdRefMarshallingStrategy.java,v 1.1 2007/03/08 22:50:48 wolle Exp $
-// $Revision: 1.1 $
-// $Date: 2007/03/08 22:50:48 $
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
-/////////////////////////////////////////////////////////////////////////////
+
 package de.micromata.genome.db.jpa.xmldump.impl;
 
 import com.thoughtworks.xstream.converters.ConverterLookup;
