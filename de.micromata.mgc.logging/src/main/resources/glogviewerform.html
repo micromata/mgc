@@ -10,8 +10,8 @@
       <label for='pageSize'>Page size</label>
         <select name='pageSize'>
           <option value="10">10</option>
-          <option value="30">30</option>
-          <option value="30">50</option>
+          <option value="20">20</option>
+          <option value="50">50</option>
           <option value="100">100</option>
           <option value="500">500</option>
           <option value="2000">2000</option>
@@ -73,8 +73,13 @@
   <div id="glogentriesdiv" class="glogentriesdiv">
     <div id="glogentries" class="glogentries"></div>
     <div id="glogpagenav" class="glogpagenav">
-      <a href='#' id='glogpagenav_prev' onclick='_glogViewer.goPrevPage()'>Previous</a>
-      <a href='#' id='glogpagenav_next' onclick='_glogViewer.goNextPage()'>Next</a>
+      <div class='glognav_prevdiv'>
+      <a href='#' id='glogpagenav_prev' onclick='_glogViewer.goPrevPage()'>&lt;&lt;Previous</a>
+      </div>
+      <div class='glognav_nextdiv'>
+      
+      <a href='#' id='glogpagenav_next' onclick='_glogViewer.goNextPage()'>Next &gt;&gt;</a>
+      </div>
     </div>
   </div>
 

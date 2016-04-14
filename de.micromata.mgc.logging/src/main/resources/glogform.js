@@ -1,6 +1,6 @@
 function glogFormDateToIso(date) {
 	var ret =  new Date(date).toISOString();
-	console.debug('glogFormDateToIso(' + date + '): ' + ret);
+//	console.debug('glogFormDateToIso(' + date + '): ' + ret);
 	return ret;
 }
 function glogIsoDateToForm(date) {

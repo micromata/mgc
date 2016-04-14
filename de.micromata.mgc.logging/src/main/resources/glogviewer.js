@@ -30,7 +30,7 @@ function GLogViewer(options) {
 	this.logPollTimeout = options.logPollTimeout;
 	this.logPollIsRunning = false, this.buffer = new Array();
 	this.bufferSize = 2000;
-	this.pageSize = 30;
+	this.pageSize = 20;
 	this.hasMoreElements = false;
 	this.showInreverseOrder = true;
 	if (options.bufferSize) {
@@ -107,7 +107,7 @@ function GLogViewer(options) {
 	this.setBackend = function(backend) {
 		this.logBackend = backend;
 		this.logBackend.init(this);
-		console.debug("new logBackend initialized: " + this.logBackend);
+//		console.debug("new logBackend initialized: " + this.logBackend);
 		_startPoll(this);
 	}
 
@@ -146,24 +146,6 @@ function GLogViewer(options) {
 			this._appendToGuiDirectInOrder(entries);
 			htmitem.scrollIntoView(true);
 		}
-
-		var ll = document.getElementById(this.logListId);
-		var htmitem;
-		for (var i = 0; i < entries.length && i <= this.pageSize; ++i) {
-			htmitem = this._buildHtmlItem(entries[i]);
-			if (this.showInreverseOrder) {
-				if (ll.hasChildNodes()) {
-					ll.insertBefore(htmitem, ll.firstChild);
-				} else {
-					ll.appendChild(htmitem);
-				}
-			} else {
-				ll.appendChild(htmitem);
-			}
-		}
-		if (this.showInreverseOrder == false && this.autoScroll) {
-			htmitem.scrollIntoView(true);
-		}
 	}
 	this._appendToGuiDirectInOrder = function(entries) {
 		var ll = document.getElementById(this.logListId);
@@ -187,7 +169,7 @@ function GLogViewer(options) {
 	}
 	this._appendToBuffer = function(entries) {
 		if (!this.buffer) {
-			console.debug('buffer not set');
+			console.warn('glog buffer not set');
 			return;
 		}
 
@@ -206,13 +188,13 @@ function GLogViewer(options) {
 			}
 			var lt = e.logTimestamp;
 
-			console.debug('compare: ' + this.logPollTimeout + "; " + lt);
+//			console.debug('compare: ' + this.logPollTimeout + "; " + lt);
 			if (typeof (lt) === 'string' || lt instanceof String) {
 				lt = parseLong(lt);
 			}
 			if (this.lastPollTime < lt) {
 				this.lastPollTime = lt;
-				console.debug('update polltimestamp: ' + this.lastPollTime);
+				//console.debug('update polltimestamp: ' + this.lastPollTime);
 			}
 		}
 		this.buffer = this.buffer.concat(entries);
