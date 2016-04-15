@@ -40,6 +40,9 @@ public class LauncherLocalSettingsConfigModel extends AbstractCompositLocalSetti
   @ALocalSettingsPath(defaultValue = "false", comment = "Starting the server will open a browser window")
   private String startBrowserOnStartup;
 
+  @ALocalSettingsPath(defaultValue = "false", comment = "Enable LF5 Viewer in Main window")
+  private String enableLF5;
+
   @Override
   public void validate(ValContext ctx)
   {
@@ -99,5 +102,20 @@ public class LauncherLocalSettingsConfigModel extends AbstractCompositLocalSetti
   public void setStartBrowserOnStartup(boolean startBrowserOnStartup)
   {
     this.startBrowserOnStartup = Boolean.toString(startBrowserOnStartup);
+  }
+
+  public String getEnableLF5()
+  {
+    return enableLF5;
+  }
+
+  public void setEnableLF5(String enableLF5)
+  {
+    this.enableLF5 = enableLF5;
+  }
+
+  public boolean isEnableLF5()
+  {
+    return Boolean.getBoolean(enableLF5);
   }
 }

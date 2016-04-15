@@ -27,7 +27,7 @@
                      </accelerator></MenuItem>
             </items>
           </Menu>
-            <Menu mnemonicParsing="false" text="Launch">
+            <Menu fx:id="launchMenu" mnemonicParsing="false" text="Launch">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#openLogLF5" text="LF5" />
               </items>

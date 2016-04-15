@@ -54,6 +54,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -73,6 +74,9 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>
 
   @FXML
   private ImageView mainWindowLogo;
+  @FXML
+  private Menu launchMenu;
+
   @FXML
   private Button startServerButton;
   @FXML
@@ -102,6 +106,10 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>
     Thread currentThread = Thread.currentThread();
     currentThread.setUncaughtExceptionHandler(model.getUncaughtExceptionHandler());
     addCss();
+    LauncherLocalSettingsConfigModel config = MgcLauncher.getLauncherConfig();
+    if (config.isEnableLF5() == false) {
+      launchMenu.setVisible(false);
+    }
     if (SystemService.get().getOsType() != OsType.Windows) {
       hideWindowMenu.setVisible(false);
     }
@@ -163,7 +171,7 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>
     MgcEventRegistries.getEventInstanceRegistry().registerListener(new MgcApplicationStartStopToEventListener());
 
     FXEvents.get().addEventHandler(this, stopServerButton, MgcLauncherEvent.APP_STARTED, event -> {
-      LauncherLocalSettingsConfigModel config = MgcLauncher.getLauncherConfig();
+
       if (config.isStartBrowserOnStartup() == true) {
         launchBrowser();
       }
