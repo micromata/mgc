@@ -22,6 +22,7 @@ import java.net.URL;
 import javax.management.MBeanServer;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.http.HttpVersion;
 import org.eclipse.jetty.jmx.MBeanContainer;
@@ -155,7 +156,9 @@ public abstract class JettyServer
         new HttpConnectionFactory(http_config));
     http.setPort(port);
     http.setIdleTimeout(config.getSessionTimeoutAsInt());
-    http.setHost(config.getListenHost());
+    if (StringUtils.isNotBlank(config.getListenHost()) == true) {
+      http.setHost(config.getListenHost());
+    }
     return http;
   }
 
@@ -187,7 +190,9 @@ public abstract class JettyServer
     int port = config.getSslPortAsInt();
     https.setPort(port);
     https.setIdleTimeout(config.getSessionTimeoutAsInt());
-    https.setHost(config.getListenHost());
+    if (StringUtils.isNotBlank(config.getListenHost()) == true) {
+      https.setHost(config.getListenHost());
+    }
     return https;
   }
 

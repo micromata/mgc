@@ -21,6 +21,7 @@ import java.lang.management.ManagementFactory;
 import javax.management.MBeanServer;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.http.HttpVersion;
 import org.eclipse.jetty.jmx.MBeanContainer;
 import org.eclipse.jetty.server.Connector;
@@ -42,6 +43,11 @@ import org.springframework.boot.context.embedded.jetty.JettyServerCustomizer;
 
 import de.micromata.mgc.application.webserver.config.JettyConfigModel;
 
+/**
+ * 
+ * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
+ *
+ */
 public class JettyServletContainerCustomizer implements JettyServerCustomizer
 {
   JettyConfigModel config;
@@ -140,7 +146,9 @@ public class JettyServletContainerCustomizer implements JettyServerCustomizer
         new HttpConnectionFactory(http_config));
     http.setPort(port);
     http.setIdleTimeout(config.getSessionTimeoutAsInt());
-    http.setHost(config.getListenHost());
+    if (StringUtils.isNotBlank(config.getListenHost()) == true) {
+      http.setHost(config.getListenHost());
+    }
     return http;
   }
 
@@ -171,7 +179,9 @@ public class JettyServletContainerCustomizer implements JettyServerCustomizer
 
     int port = config.getSslPortAsInt();
     https.setPort(port);
-    https.setHost(config.getListenHost());
+    if (StringUtils.isNotBlank(config.getListenHost()) == true) {
+      https.setHost(config.getListenHost());
+    }
     https.setIdleTimeout(config.getSessionTimeoutAsInt());
 
     return https;
