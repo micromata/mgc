@@ -35,7 +35,7 @@ import de.micromata.genome.util.types.Pair;
  *
  * @author roger@micromata.de
  */
-public abstract class AbstractCommandLineJob extends AbstractFutureJob
+public abstract class AbstractMgcCommandLineJob extends AbstractFutureJob
 {
 
   /**

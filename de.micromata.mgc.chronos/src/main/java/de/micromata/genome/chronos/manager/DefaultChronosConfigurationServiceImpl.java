@@ -37,24 +37,7 @@ public class DefaultChronosConfigurationServiceImpl implements ChronosConfigurat
     for (ChronosSchedulerInitService initService : services) {
       initService.initSchedulerManager(manager);
     }
-
+    manager.init();
   }
-  // TODO MGC
-  //  @Override
-  //  public SchedulerManager getSchedulerManager()
-  //  {
-  //    DynBeanConfig dbc = getChronosBeanConfig();
-  //    if (dbc == null) {
-  //      return null;
-  //    }
-  //    SchedulerManager manager = (SchedulerManager) dbc.getBean("schedulerManager");
-  //    manager.init();
-  //    return manager;
-  //  }
-  //
-  //  private static DynBeanConfig getChronosBeanConfig()
-  //  {
-  //    GenomeDaoManager gdm = GenomeDaoManager.get();
-  //    return (DynBeanConfig) gdm.getTimependingDAO().getVersionResource(null, "CONTEXT_CHRONOS", false);
-  //  }
+
 }

@@ -4,6 +4,11 @@ import de.micromata.genome.chronos.manager.ChronosSchedulerInitService;
 import de.micromata.genome.chronos.manager.SchedulerManager;
 import de.micromata.genome.chronos.util.SchedulerFactory;
 
+/**
+ * 
+ * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
+ *
+ */
 public class TestChronosSchedulerInitService implements ChronosSchedulerInitService
 {
 

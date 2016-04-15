@@ -23,6 +23,7 @@ import de.micromata.genome.chronos.Scheduler;
 import de.micromata.genome.chronos.State;
 import de.micromata.genome.chronos.Trigger;
 import de.micromata.genome.chronos.spi.Dispatcher;
+import de.micromata.genome.chronos.spi.DispatcherImpl2;
 import de.micromata.genome.chronos.spi.JobRunner;
 import de.micromata.genome.chronos.spi.jdbc.JobResultDO;
 import de.micromata.genome.chronos.spi.jdbc.SchedulerDO;
@@ -84,6 +85,11 @@ public abstract class SchedulerBaseDAO implements SchedulerDAO
       fc.setFilters(filters);
     }
     return fc;
+  }
+
+  protected Dispatcher createDispatcher(String virtualHostName, JobStore jobStore)
+  {
+    return new DispatcherImpl2(virtualHostName, jobStore);
   }
 
   @Override
@@ -393,6 +399,7 @@ public abstract class SchedulerBaseDAO implements SchedulerDAO
 
     try {
       dispatcher = createDispatcher(manager.getVirtualHostName());
+      dispatcher.setMinNodeBindTime(manager.getMinNodeBindTime());
       createStdSchedulers(manager);
       dispatcher.startup();
       checkBrokenJobs(manager); // nach stehengebliebenen Jobs suchen

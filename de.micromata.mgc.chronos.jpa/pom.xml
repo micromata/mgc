@@ -23,7 +23,7 @@
             <configuration>
               <archive>
                 <manifestEntries>
-                  <Genome-Import-Library>P${mgc.version}_de.micromata.mgc.jpa;reexport:=true,P${mgc.version}_de.micromata.mgc.jpa.tabattr</Genome-Import-Library>
+                  <Genome-Import-Library>P${mgc.version}_de.micromata.mgc.jpa.tabattr</Genome-Import-Library>
                 </manifestEntries>
               </archive>
             </configuration>

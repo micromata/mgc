@@ -292,6 +292,11 @@ public class SchedulerImpl implements Scheduler, RejectedExecutionHandler
     return true;
   }
 
+  protected JobRunner createJobRunner(Scheduler scheduler, TriggerJobDO job)
+  {
+    return new JobRunner(this, job);
+  }
+
   /**
    * Execute job now.
    *
@@ -301,7 +306,7 @@ public class SchedulerImpl implements Scheduler, RejectedExecutionHandler
   public synchronized void executeJobNow(TriggerJobDO jobToExecute, JobStore jobStore)
   {
     try {
-      executor.execute(new JobRunner(this, jobToExecute));
+      executor.execute(createJobRunner(this, jobToExecute));
     } catch (Exception ex) {
       /**
        * @logging

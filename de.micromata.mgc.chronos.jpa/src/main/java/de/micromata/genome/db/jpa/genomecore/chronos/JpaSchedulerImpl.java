@@ -2,7 +2,6 @@ package de.micromata.genome.db.jpa.genomecore.chronos;
 
 import de.micromata.genome.chronos.manager.SchedulerBaseDAO;
 import de.micromata.genome.chronos.spi.Dispatcher;
-import de.micromata.genome.chronos.spi.DispatcherImpl2;
 
 /**
  * The Class JpaSchedulerImpl.
@@ -16,7 +15,7 @@ public class JpaSchedulerImpl extends SchedulerBaseDAO
   public Dispatcher createDispatcher(String virtualHostName) throws Exception
   {
     JpaJobStore jobstore = new JpaJobStore();
-    Dispatcher dispatcher = new DispatcherImpl2(virtualHostName, jobstore);
+    Dispatcher dispatcher = createDispatcher(virtualHostName, jobstore);
     return dispatcher;
   }
 

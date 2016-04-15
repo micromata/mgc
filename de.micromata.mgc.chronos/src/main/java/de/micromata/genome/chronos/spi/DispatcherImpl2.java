@@ -250,17 +250,12 @@ public class DispatcherImpl2 extends DispatcherImpl
 
   protected void initOneLoop()
   {
-    //DynDaoManager.initForDeamonJobs(false);
 
   }
 
   protected void runLoop()
   {
 
-    //    ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-    // TODO MGC GENOME
-    //    ThreadContextClassLoaderScope scope = new ThreadContextClassLoaderScope(new CombinedClassLoader(DispatcherImpl.class.getClassLoader(),
-    //        GenomeApplicationListener.webClassLoader, contextClassLoader));
     String runContext = HostUtils.getRunContext();
     ScopedLogContextAttribute threadContextScope = new ScopedLogContextAttribute(GenomeAttributeType.ThreadContext,
         runContext);
@@ -354,8 +349,12 @@ public class DispatcherImpl2 extends DispatcherImpl
       if (threadContextScope2 != null) {
         threadContextScope2.restore();
       }
-      // TODO MGC scope.restore();
     }
+  }
+
+  protected Scheduler createScheduler(SchedulerDO schedulerDO)
+  {
+    return new SchedulerImpl(schedulerDO, this);
   }
 
   /**
@@ -385,7 +384,7 @@ public class DispatcherImpl2 extends DispatcherImpl
         return result;
       }
 
-      final Scheduler scheduler = new SchedulerImpl(schedulerDO, this);
+      final Scheduler scheduler = createScheduler(schedulerDO);
 
       // ist der Scheduler schon in der DB?
       final SchedulerDO schedulerDB = getSchedulerDAO().createOrGetPersistScheduler(schedulerName);

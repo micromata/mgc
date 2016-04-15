@@ -5,6 +5,7 @@ import java.util.ServiceLoader;
 import org.apache.log4j.Logger;
 
 import de.micromata.genome.chronos.manager.DefaultChronosConfigurationServiceImpl;
+import de.micromata.genome.chronos.manager.RAMSchedulerDAOImpl;
 import de.micromata.genome.chronos.manager.SchedulerDAO;
 
 /**
@@ -41,7 +42,7 @@ public class ChronosServiceManager
     return INSTANCE;
   }
 
-  private SchedulerDAO schedulerDAO;
+  private SchedulerDAO schedulerDAO = new RAMSchedulerDAOImpl();
 
   private ChronosConfigurationService chronosConfigurationService = new DefaultChronosConfigurationServiceImpl();
 

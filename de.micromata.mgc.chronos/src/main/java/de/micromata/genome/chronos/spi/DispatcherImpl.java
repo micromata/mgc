@@ -464,25 +464,6 @@ public abstract class DispatcherImpl implements Runnable, Dispatcher
   @Override
   public String getVirtualHostName()
   {
-    // if (virtualHost != null)
-    // return virtualHost;
-    // return HostUtils.getNodeName();;
-    // int maxLength = 60;
-    // int cutLength = 0;
-    // if (StringUtils.isNotEmpty(appName) == true) {
-    // cutLength = appName.length() + 1;
-    // }
-    // if (StringUtils.isNotEmpty(discriminator) == true) {
-    // cutLength = discriminator.length() + 1;
-    // }
-    // String nv = HostUtils.getNodeName();
-    // nv = MiscStringUtils.cutRight(nv, maxLength - cutLength);
-    // if (appName != null) {
-    // nv += "-" + appName;
-    // }
-    // if (StringUtils.isNotEmpty(discriminator) == true)
-    // nv += "-" + discriminator;
-    // virtualHost = nv;
     return virtualHost;
   }
 

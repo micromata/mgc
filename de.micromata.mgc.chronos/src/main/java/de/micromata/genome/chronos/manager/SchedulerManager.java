@@ -232,6 +232,36 @@ public class SchedulerManager
     this.scheduleFactories = scheduleFactories;
   }
 
+  public Map<String, JobBeanDefinition> getJobs()
+  {
+    return jobs;
+  }
+
+  public long getMaxRefreshInMillis()
+  {
+    return maxRefreshInMillis;
+  }
+
+  public void setMaxRefreshInMillis(long maxRefreshInMillis)
+  {
+    this.maxRefreshInMillis = maxRefreshInMillis;
+  }
+
+  public Map<String, List<JobRunnerFilter>> getSchedulerFilter()
+  {
+    return schedulerFilter;
+  }
+
+  public List<JobRunnerFilter> getGlobalFilter()
+  {
+    return globalFilter;
+  }
+
+  public Map<String, List<JobRunnerFilter>> getMergedFilter()
+  {
+    return mergedFilter;
+  }
+
   public void setJobs(Map<String, JobBeanDefinition> jobs)
   {
     this.jobs = jobs;

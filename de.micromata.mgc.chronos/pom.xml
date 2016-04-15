@@ -85,6 +85,18 @@
         </exclusion>
       </exclusions>
     </dependency>
+    <dependency>
+      <groupId>de.micromata.mgc</groupId>
+      <artifactId>de.micromata.mgc.common.test</artifactId>
+      <version>${mgc.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
 </project>

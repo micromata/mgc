@@ -112,12 +112,10 @@ public class JobRunner implements Runnable
 
   protected void initThread()
   {
-    // TODO MGC DynDaoManager.threadInitDynDaoManager();
   }
 
   protected void finalizeThread()
   {
-    // TODO MGC DynDaoManager.threadDeInitDynDaoManager();
   }
 
   /**
