@@ -155,6 +155,7 @@ public abstract class JettyServer
         new HttpConnectionFactory(http_config));
     http.setPort(port);
     http.setIdleTimeout(config.getSessionTimeoutAsInt());
+    http.setHost(config.getListenHost());
     return http;
   }
 
@@ -186,7 +187,7 @@ public abstract class JettyServer
     int port = config.getSslPortAsInt();
     https.setPort(port);
     https.setIdleTimeout(config.getSessionTimeoutAsInt());
-
+    https.setHost(config.getListenHost());
     return https;
   }
 

@@ -64,7 +64,7 @@ public abstract class AbstractConfigDialog<M extends LocalSettingsConfigModel>ex
   /**
    * Preferred Scene Height.
    */
-  public static final int PREF_HEIGHT = 500;
+  public static final int PREF_HEIGHT = 600;
 
   protected AbstractMainWindow<M> mainWindow;
   @FXML
@@ -106,8 +106,10 @@ public abstract class AbstractConfigDialog<M extends LocalSettingsConfigModel>ex
     Tab tabB = new Tab();
 
     VBox vbox = new VBox();
+    vbox.setPrefHeight(500);
     FeedbackPanel feedback = new FeedbackPanel();
     feedback.setPrefHeight(100);
+    feedback.setMinHeight(100);
     FXEvents.get().addEventHandler(this, feedback, FeedbackPanelEvents.CLEAR, event -> {
       feedback.clearMessages();
     });

@@ -140,6 +140,7 @@ public class JettyServletContainerCustomizer implements JettyServerCustomizer
         new HttpConnectionFactory(http_config));
     http.setPort(port);
     http.setIdleTimeout(config.getSessionTimeoutAsInt());
+    http.setHost(config.getListenHost());
     return http;
   }
 
@@ -170,6 +171,7 @@ public class JettyServletContainerCustomizer implements JettyServerCustomizer
 
     int port = config.getSslPortAsInt();
     https.setPort(port);
+    https.setHost(config.getListenHost());
     https.setIdleTimeout(config.getSessionTimeoutAsInt());
 
     return https;

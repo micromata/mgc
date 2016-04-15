@@ -70,6 +70,7 @@ public class LocalSettings implements LocalSettingsService
       return INSTANCE;
     }
     INSTANCE = localSettingsLoaderFactory.get().loadSettings();
+    LocalSettingsEnv.get();
     return INSTANCE;
   }
 

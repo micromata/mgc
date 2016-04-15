@@ -42,6 +42,9 @@ public class JettyConfigModel extends AbstractCompositLocalSettingsConfigModel
 
   @ALocalSettingsPath(defaultValue = "8080", comment = "Port the server listened")
   private String port;
+  @ALocalSettingsPath(comment = "Hostname/IP to listen. If empty listen to all")
+  private String listenHost;
+
   @ALocalSettingsPath(defaultValue = "/genome",
       comment = "subpath the application will running (part of the url)")
   private String contextpath;
@@ -363,6 +366,16 @@ public class JettyConfigModel extends AbstractCompositLocalSettingsConfigModel
   public void setSslOnly(boolean sslOnly)
   {
     this.sslOnly = Boolean.toString(sslOnly);
+  }
+
+  public String getListenHost()
+  {
+    return listenHost;
+  }
+
+  public void setListenHost(String listenHost)
+  {
+    this.listenHost = listenHost;
   }
 
 }
