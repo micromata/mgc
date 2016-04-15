@@ -19,7 +19,7 @@ import de.micromata.genome.util.types.Converter;
  *
  * @author roger@micromata.de
  */
-public class StdRecordDO implements /** BaseStdRecord, */
+public class ChronosStdRecordDO implements /** BaseStdRecord, */
     Serializable
 {
 
@@ -61,7 +61,7 @@ public class StdRecordDO implements /** BaseStdRecord, */
   /**
    * Instantiates a new std record do.
    */
-  public StdRecordDO()
+  public ChronosStdRecordDO()
   {
 
   }
@@ -71,7 +71,7 @@ public class StdRecordDO implements /** BaseStdRecord, */
    *
    * @param other the other
    */
-  public StdRecordDO(StdRecordDO other)
+  public ChronosStdRecordDO(ChronosStdRecordDO other)
   {
     this.pk = other.pk;
     this.createdAt = other.createdAt;
@@ -170,6 +170,7 @@ public class StdRecordDO implements /** BaseStdRecord, */
   }
 
   // compat < R3
+
   public long getId()
   {
     return getPk();

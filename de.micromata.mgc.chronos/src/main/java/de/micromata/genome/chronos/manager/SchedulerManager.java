@@ -82,7 +82,7 @@ public class SchedulerManager
   /**
    * The schedule factories.
    */
-  private List<SchedulerFactory> scheduleFactories;
+  private List<SchedulerFactory> scheduleFactories = new ArrayList<>();
 
   /**
    * The scheduler filter.

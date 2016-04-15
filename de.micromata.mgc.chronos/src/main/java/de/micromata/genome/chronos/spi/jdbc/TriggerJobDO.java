@@ -35,7 +35,7 @@ import de.micromata.genome.chronos.util.TriggerJobUtils;
  *
  * @author roger
  */
-public class TriggerJobDO extends StdRecordDO
+public class TriggerJobDO extends ChronosStdRecordDO
 {
 
   /**

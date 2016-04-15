@@ -26,7 +26,7 @@ import de.micromata.genome.chronos.State;
  * 
  * @see Scheduler
  */
-public class SchedulerDO extends StdRecordDO
+public class SchedulerDO extends ChronosStdRecordDO
 {
 
   /**

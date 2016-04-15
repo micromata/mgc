@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<persistence xmlns='http://java.sun.com/xml/ns/persistence' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+  xsi:schemaLocation='http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd'
+  version='1.0'>
+  <persistence-unit name="de.micromata.mgc.chronos.jpa" transaction-type="RESOURCE_LOCAL">
+    <provider>org.hibernate.ejb.HibernatePersistence</provider>
+
+    <non-jta-data-source>java:/comp/env/genome/jdbc/dsWeb</non-jta-data-source>
+    
+    <class>de.micromata.genome.db.jpa.genomecore.chronos.JpaSchedulerDO</class>
+    <class>de.micromata.genome.db.jpa.genomecore.chronos.JpaTriggerJobDO</class>
+    <class>de.micromata.genome.db.jpa.genomecore.chronos.JpaTriggerJobAttrDO</class>
+    <class>de.micromata.genome.db.jpa.genomecore.chronos.JpaTriggerJobAttrDataDO</class>
+    <class>de.micromata.genome.db.jpa.genomecore.chronos.JpaTriggerJobAttrWithDataDO</class>
+    <class>de.micromata.genome.db.jpa.genomecore.chronos.JpaJobResultDO</class>
+
+
+    <exclude-unlisted-classes>true</exclude-unlisted-classes>
+  </persistence-unit>
+</persistence>

@@ -64,18 +64,18 @@ public class MailReceiveServiceImpl implements MailReceiveService
   public List<String> getProviders(Provider.Type type)
   {
     MailReceiverLocalSettingsConfigModel cfg = configModelSuplier.get();
-    MailAccount mailAccount = new MailAccount(cfg);
-    Session session = mailAccount.createSession();
-    Provider[] providers = mailAccount.getSession().getProviders();
-    List<String> ret = new ArrayList<>();
-    for (int i = 0; i < providers.length; ++i) {
-      Provider pr = providers[i];
-      if (pr.getType() == type) {
-        ret.add(pr.getProtocol());
+    try (MailAccount mailAccount = new MailAccount(cfg)) {
+      Session session = mailAccount.createSession();
+      Provider[] providers = mailAccount.getSession().getProviders();
+      List<String> ret = new ArrayList<>();
+      for (int i = 0; i < providers.length; ++i) {
+        Provider pr = providers[i];
+        if (pr.getType() == type) {
+          ret.add(pr.getProtocol());
+        }
       }
+      return ret;
     }
-    return ret;
-
   }
 
   /**
@@ -94,9 +94,8 @@ public class MailReceiveServiceImpl implements MailReceiveService
       // No mail account configured.
       return mails;
     }
-    MailAccount mailAccount = new MailAccount(cfg);
     // TODO RK check valid
-    try {
+    try (MailAccount mailAccount = new MailAccount(cfg)) {
       // If mark messages as seen is set then open mbox read-write.
       boolean connected = mailAccount.connect("INBOX", markRecentMailsAsSeen);
       mails = mailAccount.getMails(searchTerm);
@@ -155,8 +154,6 @@ public class MailReceiveServiceImpl implements MailReceiveService
       }
 
       return mails;
-    } finally {
-      mailAccount.disconnect();
     }
   }
 

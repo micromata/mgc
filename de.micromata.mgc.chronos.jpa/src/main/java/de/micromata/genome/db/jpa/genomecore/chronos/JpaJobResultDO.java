@@ -13,21 +13,39 @@
 // $Date: 2007/03/16 13:34:18 $
 //
 /////////////////////////////////////////////////////////////////////////////
-package de.micromata.genome.chronos.spi.jdbc;
+package de.micromata.genome.db.jpa.genomecore.chronos;
 
 import java.util.Date;
 
-import org.apache.commons.lang.StringUtils;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.hibernate.annotations.Index;
 
 import de.micromata.genome.chronos.State;
+import de.micromata.genome.jpa.StdRecordDO;
 
 /**
- * Represents a Job Result.
- *
- * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
+ * The Class JpaJobResultDO.
  */
-public class JobResultDO extends ChronosStdRecordDO
+@Entity
+@Table(name = "TB_TA_CHRONOS_RESULT")
+@org.hibernate.annotations.Table(indexes = { //
+    @Index(name = "IX_TA_CHRONOS__JOB", columnNames = { "TA_CHRONOS_JOB" }),
+    @Index(name = "IX_TA_CHRONOS_RES_MODAT", columnNames = { "MODIFIEDAT" }),
+    @Index(name = "IX_TA_CHRONOS_RESULT_CRTAT", columnNames = { "CREATEDAT" }),
+}, appliesTo = "TB_TA_CHRONOS_RESULT")
+@SequenceGenerator(name = "SQ_TA_CHRONOS_RESULT", sequenceName = "SQ_TA_CHRONOS_RESULT")
+public class JpaJobResultDO extends StdRecordDO<Long>
 {
 
   /**
@@ -40,7 +58,7 @@ public class JobResultDO extends ChronosStdRecordDO
   /**
    * The job pk.
    */
-  private long jobPk;
+  private Long jobPk;
 
   /**
    * The state.
@@ -75,35 +93,32 @@ public class JobResultDO extends ChronosStdRecordDO
   private String vm;
 
   /**
-   * The result object.
-   */
-  private Object resultObject;
-
-  /**
    * The result string.
    */
   private String resultString;
 
-  // public long getId()
-  // {
-  // return id;
-  // }
+  @Column(name = "TA_CHRONOS_RESULT")
+  @Id
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_TA_CHRONOS_RESULT")
+  @Override
+  public Long getPk()
+  {
+    return pk;
+  }
 
-  // public void setId(long id)
-  // {
-  // this.id = id;
-  // }
-
-  public long getJobPk()
+  @Column(name = "TA_CHRONOS_JOB", nullable = false)
+  public Long getJobPk()
   {
     return jobPk;
   }
 
-  public void setJobPk(long jobId)
+  public void setJobPk(Long jobId)
   {
     this.jobPk = jobId;
   }
 
+  @Column(name = "STATE")
+  @Enumerated(EnumType.STRING)
   public State getState()
   {
     return state;
@@ -114,50 +129,18 @@ public class JobResultDO extends ChronosStdRecordDO
     this.state = state;
   }
 
-  public String getStateString()
-  {
-    return state == null ? "UNDEFINED" : state.name();
-  }
-
-  public void setStateString(String state)
-  {
-    this.state = State.valueOf(state);
-  }
-
-  public Object getResultObject()
-  {
-    if (resultObject == null) {
-      resultObject = SerializationUtil.deserialize(resultString, null);
-    }
-    return resultObject;
-  }
-
-  public void setResultObject(Object resultObject)
-  {
-    this.resultString = null;
-    this.resultObject = resultObject;
-  }
-
+  @Column(name = "RESULT_DATA", length = 1300)
   public String getResultString()
   {
-    if (resultString != null) {
-      return resultString;
-    }
-    resultString = SerializationUtil.serialize(resultObject);
     return resultString;
-  }
-
-  public String getResultStringForDB()
-  {
-    return StringUtils.substring(getResultString(), 0, 1290);
   }
 
   public void setResultString(String resultString)
   {
     this.resultString = resultString;
-    this.resultObject = null;
   }
 
+  @Column(name = "JOB_DURATION")
   public long getDuration()
   {
     return duration;
@@ -168,6 +151,7 @@ public class JobResultDO extends ChronosStdRecordDO
     this.duration = duration;
   }
 
+  @Column(name = "JOB_START_TIME")
   public Date getExecutionStart()
   {
     return executionStart;
@@ -178,6 +162,7 @@ public class JobResultDO extends ChronosStdRecordDO
     this.executionStart = executionStart;
   }
 
+  @Column(name = "HOST_NAME", length = 64)
   public String getHostName()
   {
     return hostName;
@@ -188,6 +173,7 @@ public class JobResultDO extends ChronosStdRecordDO
     this.hostName = hostName;
   }
 
+  @Column(name = "VM_ID", length = 64)
   public String getVm()
   {
     return vm;
@@ -198,6 +184,12 @@ public class JobResultDO extends ChronosStdRecordDO
     this.vm = vm;
   }
 
+  /**
+   * TODO RK hmm, nicht im Schema gefunden.
+   * 
+   * @return
+   */
+  @Transient
   public int getRetryCount()
   {
     return retryCount;
@@ -208,11 +200,6 @@ public class JobResultDO extends ChronosStdRecordDO
     this.retryCount = retryCount;
   }
 
-  /**
-   * To string.
-   *
-   * @return the string
-   */
   @Override
   public String toString()
   {

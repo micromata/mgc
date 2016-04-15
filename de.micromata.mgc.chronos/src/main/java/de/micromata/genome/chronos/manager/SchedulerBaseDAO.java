@@ -117,7 +117,7 @@ public abstract class SchedulerBaseDAO implements SchedulerDAO
   @Override
   public JobStore getJobStore()
   {
-    return dispatcher.getJobStore();
+    return getDispatcher().getJobStore();
   }
 
   @Override

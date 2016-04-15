@@ -6,12 +6,11 @@
     <groupId>de.micromata.mgc</groupId>
     <version>2.1.0-SNAPSHOT</version><!-- MGC -->
   </parent>
-  <artifactId>de.micromata.mgc.chronos</artifactId>
+  <artifactId>de.micromata.mgc.chronos.jpa</artifactId>
   <packaging>jar</packaging>
   <description>
-    Chronos core components.
+    Chronos DB components.
   </description>
-
   <profiles>
     <profile>
       <id>genome</id>
@@ -24,8 +23,7 @@
             <configuration>
               <archive>
                 <manifestEntries>
-                  <Genome-Import-Library>
-                  </Genome-Import-Library>
+                  <Genome-Import-Library>P${mgc.version}_de.micromata.mgc.jpa;reexport:=true,P${mgc.version}_de.micromata.mgc.jpa.tabattr</Genome-Import-Library>
                 </manifestEntries>
               </archive>
             </configuration>
@@ -42,27 +40,16 @@
       </build>
     </profile>
   </profiles>
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>2.2</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>test-jar</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
 
   <dependencies>
     <dependency>
       <groupId>de.micromata.mgc</groupId>
-      <artifactId>de.micromata.mgc.logging</artifactId>
+      <artifactId>de.micromata.mgc.chronos</artifactId>
+      <version>${mgc.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>de.micromata.mgc</groupId>
+      <artifactId>de.micromata.mgc.jpa.tabattr</artifactId>
       <version>${mgc.version}</version>
     </dependency>
     <dependency>
@@ -71,19 +58,35 @@
       <version>${log4j.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.thoughtworks.xstream</groupId>
-      <artifactId>xstream</artifactId>
-      <version>${xstream.version}</version>
-      <exclusions>
-        <exclusion>
-          <artifactId>xpp3_min</artifactId>
-          <groupId>xpp3</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>xmlpull</artifactId>
-          <groupId>xmlpull</groupId>
-        </exclusion>
-      </exclusions>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>de.micromata.mgc</groupId>
+      <artifactId>de.micromata.mgc.chronos</artifactId>
+      <version>${mgc.version}</version>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>de.micromata.mgc</groupId>
+      <artifactId>de.micromata.mgc.common.test</artifactId>
+      <version>${mgc.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.derby</groupId>
+      <artifactId>derby</artifactId>
+      <version>${org.apache.derby.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.hsqldb</groupId>
+      <artifactId>hsqldb</artifactId>
+      <version>${hsqldb.version}</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 

@@ -144,6 +144,8 @@
         <module>de.micromata.mgc.application.jetty</module>
         <module>de.micromata.mgc.application.springboot</module>
         <module>de.micromata.mgc.javafx.launcher</module>
+        <module>de.micromata.mgc.chronos</module>
+        <module>de.micromata.mgc.chronos.jpa</module>
 
         <module>samples</module>
       </modules>
