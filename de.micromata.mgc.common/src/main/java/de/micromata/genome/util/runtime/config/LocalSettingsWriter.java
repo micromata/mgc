@@ -101,6 +101,16 @@ public class LocalSettingsWriter
     return this;
   }
 
+  public LocalSettingsWriter put(String key, int value, String comment)
+  {
+    return put(key, Integer.toString(value, 10), comment);
+  }
+
+  public LocalSettingsWriter put(String key, long value, String comment)
+  {
+    return put(key, Long.toString(value, 10), comment);
+  }
+
   public LocalSettingsWriter newSection(String comment)
   {
     LocalSettingsSection lsection = new LocalSettingsSection();

@@ -45,6 +45,7 @@ public abstract class BaseSchedulerTestCase extends MgcTestCase
     }
   }
 
+  @SuppressWarnings("unused")
   @Before
   public void setUp()
   {

@@ -251,17 +251,6 @@
     </plugins>
   </build>
 
-  <repositories>
-    <repository>
-      <id>de.micromata.nexus.public</id>
-      <name>Micromata Nexus Public</name>
-      <url>http://repo.micromata.priv:8081/nexus/content/groups/public</url>
-    </repository>
-    <repository>
-      <id>de.micromata.nexus.snapshots</id>
-      <name>Micromata Nexus Snapshots</name>
-      <url>http://repo.micromata.priv:8081/nexus/content/groups/public-snapshots</url>
-    </repository>
-  </repositories>
+
 
 </project>

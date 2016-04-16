@@ -159,4 +159,17 @@ public abstract class AbstractLocalSettingsConfigModel implements LocalSettingsC
   {
     return Integer.parseInt(value, 10);
   }
+
+  protected boolean isLong(String value)
+  {
+    if (StringUtils.isBlank(value) == true) {
+      return false;
+    }
+    return NumberUtils.isDigits(value);
+  }
+
+  protected long asLong(String value)
+  {
+    return Long.parseLong(value, 10);
+  }
 }
