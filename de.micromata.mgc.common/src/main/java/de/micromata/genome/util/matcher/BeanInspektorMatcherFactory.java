@@ -30,7 +30,7 @@ public class BeanInspektorMatcherFactory implements MatcherFactory<Object>
    * Creates a new BeanInspektorMatcher object.
    *
    * @param pattern the pattern
-   * @return the matcher< object>
+   * @return the matcher
    */
   @Override
   public Matcher<Object> createMatcher(String pattern)

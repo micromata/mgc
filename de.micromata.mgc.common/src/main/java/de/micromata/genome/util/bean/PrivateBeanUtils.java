@@ -538,7 +538,7 @@ public class PrivateBeanUtils
    *
    * @param bean the bean
    * @param annotation the annotation
-   * @return the list< pair< field,? extends annotation>>
+   * @return the list of pair of field,? extends annotation
    */
   public static List<Pair<Field, ? extends Annotation>> findFieldsWithAnnotation(Object bean,
       Class<? extends Annotation> annotation)
@@ -576,7 +576,7 @@ public class PrivateBeanUtils
    *
    * @param bean the bean
    * @param classNameMatcher the class name matcher
-   * @param fieldNameMatcher matches agains <decl class name>.<fieldname>
+   * @param fieldNameMatcher matches agains (decl class name).fieldname
    * @return the bean size
    */
   public static int getBeanSize(Object bean, Matcher<String> classNameMatcher, Matcher<String> fieldNameMatcher)

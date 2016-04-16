@@ -307,8 +307,8 @@ public class Converter
    * Konvertiert ein String in ein BigDecimal.
    *
    * @param source Stringified Bigdecimal
-   * @return wenn source null oder leer <true, null> wenn source nicht leer <false, Wert> wenn konvertiert werden konnte
-   *         ansonsten <false, null>
+   * @return wenn source null oder leer (true, null) wenn source nicht leer (false, Wert) wenn konvertiert werden konnte
+   *         ansonsten (false, null)
    */
   public static Pair<Boolean, BigDecimal> convertBigDecimal(String source)
   {
@@ -1007,7 +1007,7 @@ public class Converter
   /**
    * convert map to delimited string.
    *
-   * @param map Map<String, String> to Convert
+   * @param map Map to Convert
    * @param d1 Delimiter zwischen den EintrÃ¤gen
    * @param d2 elimiter zwischen den key=value Paaren
    * @return the string

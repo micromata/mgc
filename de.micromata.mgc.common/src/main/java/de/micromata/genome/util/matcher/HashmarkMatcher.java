@@ -18,8 +18,8 @@ package de.micromata.genome.util.matcher;
 
 /**
  * matches nothing, but is used to identify inactive derivation of e.g. rights/roles that can be selected for
- * sub-matchers in a hierarchy. In that case the following mappong is used: MatchPositive -> match in sub-matcher if not
- * -'ed there MatchNegative or NoMatch -> match in sub-matcher only if +'ed there
+ * sub-matchers in a hierarchy. In that case the following mappong is used: MatchPositive - match in sub-matcher if not
+ * -'ed there MatchNegative or NoMatch : match in sub-matcher only if +'ed there
  *
  * @author jens@micromata.de
  * @param <T> the generic type

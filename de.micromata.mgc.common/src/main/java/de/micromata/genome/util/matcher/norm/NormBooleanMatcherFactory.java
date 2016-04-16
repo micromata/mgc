@@ -29,7 +29,7 @@ import de.micromata.genome.util.text.Token;
 import de.micromata.genome.util.text.TokenResult;
 
 /**
- * Like BooleanListRulesFactory, but but support and, or and not as aliase to && || ! and normalized searches.
+ * Like BooleanListRulesFactory, but but support and, or and not as aliase to &amp;&amp; || ! and normalized searches.
  *
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  * @param <T> the generic type

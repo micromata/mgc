@@ -29,7 +29,7 @@ public interface MatcherFactory<T>
    * Creates a new Matcher object from Pattern.
    *
    * @param pattern the pattern
-   * @return the matcher< t>
+   * @return the matcher
    */
   public Matcher<T> createMatcher(String pattern);
 

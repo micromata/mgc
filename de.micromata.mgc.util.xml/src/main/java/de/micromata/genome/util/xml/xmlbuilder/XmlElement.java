@@ -194,9 +194,9 @@ public class XmlElement extends XmlWithChilds
 
   /**
    * Methode zum generieren der XML-Ausgabe.
-   * 
-   * @param sb
-   * @param ident
+   *
+   * @param sb the sb
+   * @throws IOException Signals that an I/O exception has occurred.
    */
   @Override
   public void toXml(XmlRenderer sb) throws IOException

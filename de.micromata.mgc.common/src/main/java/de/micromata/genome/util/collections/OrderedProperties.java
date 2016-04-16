@@ -57,9 +57,9 @@ public class OrderedProperties extends ListOrderedMap<String, String>
 
     /**
      * Replace.
-     * 
+     *
      * @param keyValue the key value
-     * @param properties the properties
+     * @param target the target
      * @return if null, will not transfer to file/map.
      */
     Pair<String, String> replace(Pair<String, String> keyValue, Map<String, String> target);
@@ -75,8 +75,8 @@ public class OrderedProperties extends ListOrderedMap<String, String>
 
   /**
    * Reads a property list (key and element pairs) from the input byte stream. The input stream is in a simple
-   * line-oriented format as specified in {@link #load(java.io.Reader) load(Reader)} and is assumed to use the ISO
-   * 8859-1 character encoding; that is each byte is one Latin1 character. Characters not in Latin1, and certain special
+   * line-oriented format as specified in load(java.io.Reader) load(Reader) and is assumed to use the ISO 8859-1
+   * character encoding; that is each byte is one Latin1 character. Characters not in Latin1, and certain special
    * characters, are represented in keys and elements using Unicode escapes as defined in section 3.3 of <cite>The
    * Java&trade; Language Specification</cite>.
    * <p>
@@ -194,7 +194,7 @@ public class OrderedProperties extends ListOrderedMap<String, String>
 
   /**
    * Writes this property list (key and element pairs) in this <code>Properties</code> table to the output character
-   * stream in a format suitable for using the {@link #load(java.io.Reader) load(Reader)} method.
+   * stream in a format suitable for using the #load(java.io.Reader) load(Reader) method.
    * <p>
    * Properties from the defaults table of this <code>Properties</code> table (if any) are <i>not</i> written out by
    * this method.
@@ -255,14 +255,14 @@ public class OrderedProperties extends ListOrderedMap<String, String>
 
   /**
    * Writes this property list (key and element pairs) in this <code>Properties</code> table to the output stream in a
-   * format suitable for loading into a <code>Properties</code> table using the {@link #load(InputStream)
-   * load(InputStream)} method.
+   * format suitable for loading into a <code>Properties</code> table using the #load(InputStream) load(InputStream)
+   * method.
    * <p>
    * Properties from the defaults table of this <code>Properties</code> table (if any) are <i>not</i> written out by
    * this method.
    * <p>
    * This method outputs the comments, properties keys and values in the same format as specified in
-   * {@link #store(java.io.Writer, java.lang.String) store(Writer)}, with the following differences:
+   * #store(java.io.Writer, java.lang.String) store(Writer), with the following differences:
    * <ul>
    * <li>The stream is written using the ISO 8859-1 character encoding.
    * 

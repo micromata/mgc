@@ -91,10 +91,9 @@ public class ClassUtils extends org.apache.commons.lang.ClassUtils
 
   /**
    * Reads the generic type of the given class at the given index.
+   * 
+   * Note: this doesn't work, if class MyClass implements Super MyConcreteType
    *
-   * Note: this doesn't work, if class MyClass implements Super<MyConcreteType>
-   *
-   * @param <T> the generic type
    * @param clazz the class with generic types
    * @param index the index of the generic type
    * @return the generic type or null
@@ -105,6 +104,13 @@ public class ClassUtils extends org.apache.commons.lang.ClassUtils
     return findGenericTypeArgument(genericSuperclass, index);
   }
 
+  /**
+   * Find generic type argument.
+   *
+   * @param genericSuperclass the generic superclass
+   * @param index the index
+   * @return the class
+   */
   public static Class<?> findGenericTypeArgument(Type genericSuperclass, int index)
   {
     // CHECKSTYLE.OFF SIMULIERTE_POLYMORPHIE Necesssary for technical reasons (low level handling).
@@ -153,6 +159,7 @@ public class ClassUtils extends org.apache.commons.lang.ClassUtils
    *
    * @param clazz the clazz
    * @param prop the prop
+   * @param pos the pos
    * @return the class
    */
   public static Class<?> findGenericTypeFromProperty(Class<?> clazz, String prop, int pos)
@@ -430,10 +437,10 @@ public class ClassUtils extends org.apache.commons.lang.ClassUtils
 
   /**
    * Finds a method.
-   * 
-   * @param clazz
-   * @param name
-   * @param argumentTypes
+   *
+   * @param clazz the clazz
+   * @param name the name
+   * @param argumentTypes the argument types
    * @return null if not found.
    */
   public static Method findMethod(Class<?> clazz, String name, Class<?>... argumentTypes)

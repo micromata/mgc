@@ -26,10 +26,13 @@ package de.micromata.genome.util.event;
  */
 public interface McEventInstanceRegistry extends MgcEventRegistry
 {
+
   /**
    * Register an event listener.
-   * 
-   * @param listenerClass
+   *
+   * @param <EVENT> the generic type
+   * @param <LISTENER> the generic type
+   * @param listenerInstance the listener instance
    */
   <EVENT extends MgcEvent, LISTENER extends MgcEventListener<EVENT>> void registerListener(
       LISTENER listenerInstance);
@@ -39,11 +42,11 @@ public interface McEventInstanceRegistry extends MgcEventRegistry
    * 
    * May be usefull, in cases where lamda expression and you know the type of event.
    * 
-   * public void addOnEvent(MgcEventListener<TestFilter1Event> handler) { addEventListener(TestFilter1Event.class,
+   * public void addOnEvent(MgcEventListener TestFilter1Event handler) { addEventListener(TestFilter1Event.class,
    * handler); }
-   * 
-   * @param event
-   * @param listener
+   *
+   * @param event the event
+   * @param listener the listener
    */
   void addEventListener(Class<? extends MgcEvent> event, MgcEventListener<?> listener);
 }

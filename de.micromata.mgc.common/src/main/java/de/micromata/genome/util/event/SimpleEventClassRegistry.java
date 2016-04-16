@@ -32,14 +32,16 @@ import de.micromata.genome.util.runtime.ClassUtils;
 
 /**
  * Event Registry.
- * 
- * @param <T> the generic type of the event registry.
+ *
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  */
 public class SimpleEventClassRegistry extends AbstractMgcEventRegistry implements MgcEventClassRegistry
 
 {
 
+  /**
+   * The Constant LOG.
+   */
   private static final Logger LOG = Logger.getLogger(SimpleEventClassRegistry.class);
 
   /**
@@ -57,11 +59,20 @@ public class SimpleEventClassRegistry extends AbstractMgcEventRegistry implement
     super(registryName);
   }
 
+  /**
+   * Instantiates a new simple event class registry.
+   */
   public SimpleEventClassRegistry()
   {
     super(null);
   }
 
+  /**
+   * Adds the listener.
+   *
+   * @param event the event
+   * @param listener the listener
+   */
   protected void addListener(Class<? extends MgcEvent> event, Class<? extends MgcEventListener<?>> listener)
   {
     Map<Class<? extends MgcEvent>, List<Reference<Class<? extends MgcEventListener<?>>>>> nmp = new ReferenceMap<>(
@@ -102,6 +113,12 @@ public class SimpleEventClassRegistry extends AbstractMgcEventRegistry implement
     removeListener(argType, listenerClass);
   }
 
+  /**
+   * Removes the listener.
+   *
+   * @param event the event
+   * @param listener the listener
+   */
   protected void removeListener(Class<? extends MgcEvent> event, Class<? extends MgcEventListener<?>> listener)
   {
     Map<Class<? extends MgcEvent>, List<Reference<Class<? extends MgcEventListener<?>>>>> nmp = new ReferenceMap<>(
@@ -171,6 +188,12 @@ public class SimpleEventClassRegistry extends AbstractMgcEventRegistry implement
     }
   }
 
+  /**
+   * Invoke listener class.
+   *
+   * @param listenerClass the listener class
+   * @param event the event
+   */
   private void invokeListenerClass(Class<? extends MgcEventListener<?>> listenerClass, MgcEvent event)
   {
     MgcEventListener<?> listener = PrivateBeanUtils.createInstance(listenerClass);

@@ -73,7 +73,7 @@ public class HostUtils
    * 
    * @param hostName May <code>null</code>
    * 
-   * @see https://team.micromata.de/jira/browse/GENOME-1430
+   *          see https://team.micromata.de/jira/browse/GENOME-1430
    */
   public void setHostName(String hostName)
   {

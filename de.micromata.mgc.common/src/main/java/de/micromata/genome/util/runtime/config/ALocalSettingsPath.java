@@ -22,10 +22,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Used in LocalSettingsConfigModel beans to annotate fields
- * 
- * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
+ * Used in LocalSettingsConfigModel beans to annotate fields.
  *
+ * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
@@ -34,23 +33,23 @@ public @interface ALocalSettingsPath {
   /**
    * Property name for local-settings.
    * 
-   * if "<fieldName>" use the annotated fields name.
-   * 
-   * @return
+   * if "&lt;fieldName&gt;" use the annotated fields name.
+   *
+   * @return the string
    */
   String key() default "<fieldName>";
 
   /**
    * default value.
-   * 
-   * @return
+   *
+   * @return the string
    */
   String defaultValue() default "";
 
   /**
    * Used in persistence of properties to comment this key.
-   * 
-   * @return
+   *
+   * @return the string
    */
   String comment() default "";
 }

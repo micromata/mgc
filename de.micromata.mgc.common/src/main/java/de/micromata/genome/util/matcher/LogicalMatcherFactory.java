@@ -19,7 +19,7 @@ package de.micromata.genome.util.matcher;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * Same as BooleanListRulesFactory, but support and, or and not as aliase to && || !.
+ * Same as BooleanListRulesFactory, but support and, or and not as aliase to &amp;&amp; || !.
  *
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  * @param <T> the generic type

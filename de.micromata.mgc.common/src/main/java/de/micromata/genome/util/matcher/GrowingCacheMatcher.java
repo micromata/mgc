@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * always growing, never shrinking, never invalidating => must eventually be recreated.
+ * always growing, never shrinking, never invalidating must eventually be recreated.
  *
  * @author jens@micromata.de
  * @param <T> the generic type

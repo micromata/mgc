@@ -350,7 +350,7 @@ public class GenericsUtils
    * Retrieve a concrete type of a generic parameter
    * 
    * @param desiredType generic Interface or class containing generic type
-   * @param concretType concrete class. Note List<String> is not sufficient. use new List<String>() {} instead
+   * @param concretType concrete class. Note List String is not sufficient. use new List String () {} instead
    * @param position position of the generic type
    * @return null if none found
    */

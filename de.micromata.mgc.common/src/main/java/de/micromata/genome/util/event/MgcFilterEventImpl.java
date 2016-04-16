@@ -21,6 +21,12 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+/**
+ * The Class MgcFilterEventImpl.
+ *
+ * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
+ * @param <R> the generic type
+ */
 public class MgcFilterEventImpl<R> implements MgcFilterEvent<R>
 {
   /**
@@ -46,8 +52,6 @@ public class MgcFilterEventImpl<R> implements MgcFilterEvent<R>
    * Instantiates a new emgr filter event.
    * 
    * Result is initally null.
-   *
-   * @param emgr the emgr
    */
   public MgcFilterEventImpl()
   {
@@ -56,7 +60,7 @@ public class MgcFilterEventImpl<R> implements MgcFilterEvent<R>
   /**
    * Instantiates a new emgr filter event.
    *
-   * @param emgr the emgr
+   * @param result the result
    */
   public MgcFilterEventImpl(R result)
   {

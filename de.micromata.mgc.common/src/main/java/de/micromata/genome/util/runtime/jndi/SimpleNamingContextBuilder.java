@@ -29,6 +29,8 @@ import org.apache.commons.lang.ObjectUtils;
 import org.apache.log4j.Logger;
 
 /**
+ * TODO Not longer needed.
+ * 
  * Simple implementation of a JNDI naming context builder.
  *
  * <p>
@@ -71,25 +73,37 @@ import org.apache.log4j.Logger;
  * <p>
  * An instance of this class is only necessary at setup time. An application does not need to keep a reference to it
  * after activation.
- *
+ * </p>
+ * 
  * @author Juergen Hoeller
  * @author Rod Johnson
- * @see #emptyActivatedContextBuilder()
- * @see #bind(String, Object)
- * @see #activate()
- * @see SimpleNamingContext
- * @see org.springframework.jdbc.datasource.SingleConnectionDataSource
- * @see org.springframework.jdbc.datasource.DriverManagerDataSource
  */
 public class SimpleNamingContextBuilder implements InitialContextFactoryBuilder
 {
+
+  /**
+   * The Constant logger.
+   */
   private static final Logger logger = Logger.getLogger(SimpleNamingContextBuilder.class);
-  /** An instance of this class bound to JNDI */
+
+  /**
+   * An instance of this class bound to JNDI.
+   */
   private static volatile SimpleNamingContextBuilder activated;
 
+  /**
+   * The initialized.
+   */
   private static boolean initialized = false;
 
+  /**
+   * The Constant initializationLock.
+   */
   private static final Object initializationLock = new Object();
+
+  /**
+   * The bound objects.
+   */
   private final Hashtable<String, Object> boundObjects = new Hashtable<>();
 
   /**
@@ -107,8 +121,9 @@ public class SimpleNamingContextBuilder implements InitialContextFactoryBuilder
    * activate SimpleNamingContextBuilder, clear it and return it.
    * <p>
    * This is mainly intended for test suites that want to reinitialize JNDI bindings from scratch repeatedly.
-   * 
+   *
    * @return an empty SimpleNamingContextBuilder that can be used to control JNDI bindings
+   * @throws NamingException the naming exception
    */
   public static SimpleNamingContextBuilder emptyActivatedContextBuilder() throws NamingException
   {
@@ -128,8 +143,9 @@ public class SimpleNamingContextBuilder implements InitialContextFactoryBuilder
    * Register the context builder by registering it with the JNDI NamingManager. Note that once this has been done,
    * {@code new InitialContext()} will always return a context from this factory. Use the
    * {@code emptyActivatedContextBuilder()} static method to get an empty context (for example, in test methods).
-   * 
+   *
    * @throws IllegalStateException if there's already a naming context builder registered with the JNDI NamingManager
+   * @throws NamingException the naming exception
    */
   public void activate() throws IllegalStateException, NamingException
   {
@@ -231,6 +247,14 @@ public class SimpleNamingContextBuilder implements InitialContextFactoryBuilder
     };
   }
 
+  /**
+   * Resolve class name.
+   *
+   * @param className the class name
+   * @param classLoader the class loader
+   * @return the class
+   * @throws IllegalArgumentException the illegal argument exception
+   */
   public static Class<?> resolveClassName(String className, ClassLoader classLoader) throws IllegalArgumentException
   {
     try {
@@ -243,11 +267,26 @@ public class SimpleNamingContextBuilder implements InitialContextFactoryBuilder
     }
   }
 
+  /**
+   * For name.
+   *
+   * @param name the name
+   * @param classLoader the class loader
+   * @return the class
+   * @throws ClassNotFoundException the class not found exception
+   * @throws LinkageError the linkage error
+   */
   public static Class<?> forName(String name, ClassLoader classLoader) throws ClassNotFoundException, LinkageError
   {
     return Class.forName(name);
   }
 
+  /**
+   * Jndi object to string.
+   *
+   * @param obj the obj
+   * @return the string
+   */
   public static String jndiObjectToString(Object obj)
   {
     if (obj instanceof BasicDataSource) {

@@ -25,11 +25,11 @@ import de.micromata.genome.util.matcher.string.SimpleWildcardMatcherFactory;
 /**
  * Create class Matcher
  * 
- * <pre>
  * extends:fqClassName Matches if class implements or extends class anot:fqClassName Matches if class has anotation of
  * given class anotprop:fqClassName@attr=value Matches if class has annotation an Matches Value can be a class, string,
- * array from class or array from string. In case of array it matches, if expression can be found in array. &lt;/pre
- * &#064;author roger@micromata.de
+ * array from class or array from string. In case of array it matches, if expression can be found in array.
+ * 
+ * @author roger@micromata.de
  * 
  */
 public class ClassMatcherFactory implements MatcherFactory<Class<?>>
@@ -88,7 +88,7 @@ public class ClassMatcherFactory implements MatcherFactory<Class<?>>
    * Creates a new ClassMatcher object.
    *
    * @param expr the expr
-   * @return the matcher< class<?>>
+   * @return the matcher
    */
   public Matcher<Class<?>> createAnnotPropMatcher(String expr)
   {

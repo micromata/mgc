@@ -513,7 +513,6 @@ public class TextSplitterUtils
    * @param returnDelimiter the return delimiter
    * @param quoteChar the quote char
    * @return list of tokens
-   * @see TextSplitterUtilsQuotedTest
    * @since 1.2.1
    */
   public static List<String> parseQuotedStringTokens(String text, String[] tokens, boolean returnDelimiter,

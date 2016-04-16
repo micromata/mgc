@@ -17,7 +17,7 @@
 package de.micromata.genome.util.matcher;
 
 /**
- * matcher.match(object) returns true if matcher.object < arg
+ * matcher.match(object) returns true if matcher.object less than arg
  *
  * @author roger@micromata.de
  * @param <T> the generic type

@@ -27,12 +27,15 @@ import de.micromata.genome.util.runtime.ClassUtils;
 
 /**
  * Event Registry.
- * 
- * @param <T> the generic type of the event registry.
+ *
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  */
 public class SimpleEventInstanceRegistry extends AbstractMgcEventRegistry implements McEventInstanceRegistry
 {
+
+  /**
+   * The Constant LOG.
+   */
   private static final Logger LOG = Logger.getLogger(SimpleEventInstanceRegistry.class);
 
   /**
@@ -50,11 +53,15 @@ public class SimpleEventInstanceRegistry extends AbstractMgcEventRegistry implem
     super(registryName);
   }
 
+  /**
+   * Instantiates a new simple event instance registry.
+   */
   public SimpleEventInstanceRegistry()
   {
     super(null);
   }
 
+  @Override
   public void addEventListener(Class<? extends MgcEvent> event, MgcEventListener<?> listener)
   {
     Map<Class<? extends MgcEvent>, List<MgcEventListener<?>>> nmp = new HashMap<>();

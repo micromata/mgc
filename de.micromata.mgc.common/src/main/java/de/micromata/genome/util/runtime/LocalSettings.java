@@ -227,7 +227,7 @@ public class LocalSettings implements LocalSettingsService
    * Gets the entries with prefix.
    * 
    * @param prefix the prefix
-   * @return rest of key -> value
+   * @return rest of key to value
    */
   @Override
   public List<Pair<String, String>> getEntriesWithPrefix(String prefix)

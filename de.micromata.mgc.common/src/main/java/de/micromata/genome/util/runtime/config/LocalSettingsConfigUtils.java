@@ -57,7 +57,8 @@ public class LocalSettingsConfigUtils
    * To properties.
    *
    * @param bean the bean
-   * @param ret the ret
+   * @param writer the writer
+   * @return the local settings writer
    */
   public static LocalSettingsWriter toProperties(LocalSettingsConfigModel bean, LocalSettingsWriter writer)
   {
@@ -67,6 +68,12 @@ public class LocalSettingsConfigUtils
     return lw;
   }
 
+  /**
+   * To properties in section.
+   *
+   * @param bean the bean
+   * @param writer the writer
+   */
   public static void toPropertiesInSection(LocalSettingsConfigModel bean, LocalSettingsWriter writer)
   {
     List<Field> fields = PrivateBeanUtils.findAllFields(bean.getClass(),
@@ -82,6 +89,13 @@ public class LocalSettingsConfigUtils
     }
   }
 
+  /**
+   * Join.
+   *
+   * @param prefix the prefix
+   * @param key the key
+   * @return the string
+   */
   public static String join(String prefix, String key)
   {
     if (StringUtils.isBlank(prefix) == true) {

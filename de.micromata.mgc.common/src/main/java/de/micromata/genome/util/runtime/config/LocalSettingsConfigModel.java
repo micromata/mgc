@@ -27,10 +27,11 @@ import de.micromata.genome.util.validation.ValContext;
  */
 public interface LocalSettingsConfigModel
 {
+
   /**
    * Validate the model.
-   * 
-   * @param ctx
+   *
+   * @param ctx the ctx
    */
   public void validate(ValContext ctx);
 
@@ -43,35 +44,38 @@ public interface LocalSettingsConfigModel
 
   /**
    * store the configuration into local settings.
-   * 
-   * @param props
+   *
+   * @param writer the writer
    * @return if created a new section writer, returned this.
    */
   LocalSettingsWriter toProperties(LocalSettingsWriter writer);
 
   /**
    * load the configuration from local settings.
-   * 
-   * @param localSettings
+   *
+   * @param localSettings the local settings
    */
   void fromLocalSettings(LocalSettings localSettings);
 
   /**
    * Build a key from base key name.
-   * 
-   * @param key
-   * @return
+   *
+   * @param key the key
+   * @return the string
    */
   String buildKey(String key);
 
   /**
    * get the commented giben by a @ALocalSettingsPath annotion.
-   * 
-   * @param localProperty/field name
-   * @return
+   *
+   * @param localProperty the local property
+   * @return the string
    */
   String findCommentForProperty(String localProperty);
 
+  /**
+   * Initialize configuration.
+   */
   default void initializeConfiguration()
   {
 

@@ -39,11 +39,19 @@ public abstract class AbstractLocalSettingsConfigModel implements LocalSettingsC
    */
   protected String comment;
 
+  /**
+   * Instantiates a new abstract local settings config model.
+   */
   public AbstractLocalSettingsConfigModel()
   {
 
   }
 
+  /**
+   * Instantiates a new abstract local settings config model.
+   *
+   * @param comment the comment
+   */
   public AbstractLocalSettingsConfigModel(String comment)
   {
     this.comment = comment;
@@ -62,8 +70,9 @@ public abstract class AbstractLocalSettingsConfigModel implements LocalSettingsC
 
   /**
    * store the configuration into local settings.
-   * 
-   * @param props
+   *
+   * @param writer the writer
+   * @return the local settings writer
    */
   @Override
   public LocalSettingsWriter toProperties(LocalSettingsWriter writer)
@@ -126,6 +135,14 @@ public abstract class AbstractLocalSettingsConfigModel implements LocalSettingsC
     return asp.comment();
   }
 
+  /**
+   * Sets the if blank.
+   *
+   * @param localSettings the local settings
+   * @param key the key
+   * @param value the value
+   * @return the local settings
+   */
   public static LocalSettings setIfBlank(LocalSettings localSettings, String key, String value)
   {
     if (StringUtils.isBlank(localSettings.get(key)) == true) {
@@ -134,6 +151,11 @@ public abstract class AbstractLocalSettingsConfigModel implements LocalSettingsC
     return localSettings;
   }
 
+  /**
+   * Reset fiel to default.
+   *
+   * @param fieldName the field name
+   */
   protected void resetFielToDefault(String fieldName)
   {
     Field f = PrivateBeanUtils.findField(getClass(), fieldName);
@@ -142,11 +164,23 @@ public abstract class AbstractLocalSettingsConfigModel implements LocalSettingsC
     PrivateBeanUtils.writeField(this, f, ap.defaultValue());
   }
 
+  /**
+   * Checks if is true.
+   *
+   * @param value the value
+   * @return true, if is true
+   */
   protected boolean isTrue(String value)
   {
     return "true".equalsIgnoreCase(value);
   }
 
+  /**
+   * Checks if is int.
+   *
+   * @param value the value
+   * @return true, if is int
+   */
   protected boolean isInt(String value)
   {
     if (StringUtils.isBlank(value) == true) {
@@ -155,11 +189,23 @@ public abstract class AbstractLocalSettingsConfigModel implements LocalSettingsC
     return NumberUtils.isDigits(value);
   }
 
+  /**
+   * As int.
+   *
+   * @param value the value
+   * @return the int
+   */
   protected int asInt(String value)
   {
     return Integer.parseInt(value, 10);
   }
 
+  /**
+   * Checks if is long.
+   *
+   * @param value the value
+   * @return true, if is long
+   */
   protected boolean isLong(String value)
   {
     if (StringUtils.isBlank(value) == true) {
@@ -168,6 +214,12 @@ public abstract class AbstractLocalSettingsConfigModel implements LocalSettingsC
     return NumberUtils.isDigits(value);
   }
 
+  /**
+   * As long.
+   *
+   * @param value the value
+   * @return the long
+   */
   protected long asLong(String value)
   {
     return Long.parseLong(value, 10);

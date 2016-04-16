@@ -17,19 +17,19 @@
 package de.micromata.genome.util.runtime;
 
 /**
- * Extension to common lang exception utils
- * 
+ * Extension to common lang exception utils.
+ *
  * @author Roger Rene Kommer (r.kommer@micromata.de)
- * 
  */
 public class ExceptionUtils extends org.apache.commons.lang.exception.ExceptionUtils
 {
+
   /**
    * Rethrow an exception into Error, RuntimeException or Exception declared. If non, a RuntimeException will be used.
-   * 
-   * @param ex
-   * @param declared
-   * @throws Exception
+   *
+   * @param ex the ex
+   * @param declared the declared
+   * @throws Exception the exception
    */
   public static void wrappException(Throwable ex, Class<? extends Exception>... declared) throws Exception
   {

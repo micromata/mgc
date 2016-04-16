@@ -19,6 +19,7 @@ package de.micromata.genome.util.matcher.string;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.micromata.genome.util.matcher.BooleanListRulesFactory.TokenResultList;
 import de.micromata.genome.util.matcher.EqualsMatcher;
 import de.micromata.genome.util.matcher.EveryMatcher;
 import de.micromata.genome.util.matcher.GroovyMatcher;
@@ -27,7 +28,6 @@ import de.micromata.genome.util.matcher.Matcher;
 import de.micromata.genome.util.matcher.MatcherFactory;
 import de.micromata.genome.util.matcher.MatcherTokenFactory;
 import de.micromata.genome.util.matcher.NotMatcher;
-import de.micromata.genome.util.matcher.BooleanListRulesFactory.TokenResultList;
 import de.micromata.genome.util.text.TextSplitterUtils;
 import de.micromata.genome.util.text.TokenResult;
 
@@ -35,7 +35,8 @@ import de.micromata.genome.util.text.TokenResult;
  * Creates a Wildcard Matcher with some improvements.
  * 
  * In case of simple pattern it creates optimized Matcher
- * <p/>
+ * <p>
+ * </p>
  * <ul>
  * <li>: EveryMatcher
  * <li>string: EqualsMatcher
@@ -92,7 +93,7 @@ public class SimpleWildcardMatcherFactory<T> implements MatcherFactory<T>, Match
    * Creates a new SimpleWildcardMatcher object.
    *
    * @param pattern the pattern
-   * @return the matcher< t>
+   * @return the matcher
    */
   protected Matcher<T> createWildcartMatcher(String pattern)
   {

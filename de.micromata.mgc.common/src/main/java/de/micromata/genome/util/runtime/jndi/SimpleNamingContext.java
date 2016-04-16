@@ -48,12 +48,24 @@ import de.micromata.genome.util.bean.PrivateBeanUtils;
 public class SimpleNamingContext implements Context
 {
 
+  /**
+   * The log.
+   */
   private final Logger LOG = Logger.getLogger(SimpleNamingContext.class);
 
+  /**
+   * The root.
+   */
   private final String root;
 
+  /**
+   * The bound objects.
+   */
   private final Hashtable<String, Object> boundObjects;
 
+  /**
+   * The environment.
+   */
   private final Hashtable<String, Object> environment = new Hashtable<String, Object>();
 
   /**
@@ -66,6 +78,8 @@ public class SimpleNamingContext implements Context
 
   /**
    * Create a new naming context with the given naming root.
+   *
+   * @param root the root
    */
   public SimpleNamingContext(String root)
   {
@@ -76,6 +90,10 @@ public class SimpleNamingContext implements Context
   /**
    * Create a new naming context with the given naming root, the given name/object map, and the JNDI environment
    * entries.
+   *
+   * @param root the root
+   * @param boundObjects the bound objects
+   * @param env the env
    */
   public SimpleNamingContext(String root, Hashtable<String, Object> boundObjects, Hashtable<String, Object> env)
   {
@@ -110,8 +128,10 @@ public class SimpleNamingContext implements Context
    * Look up the object with the given name.
    * <p>
    * Note: Not intended for direct use by applications. Will be used by any standard InitialContext JNDI lookups.
-   * 
-   * @throws javax.naming.NameNotFoundException if the object could not be found
+   *
+   * @param lookupName the lookup name
+   * @return the object
+   * @throws NameNotFoundException the name not found exception
    */
   public Object lookupImpl(String lookupName) throws NameNotFoundException
   {
@@ -192,7 +212,6 @@ public class SimpleNamingContext implements Context
    * Bind the given object to the given name. Note: Not intended for direct use by applications if setting up a
    * JVM-level JNDI environment. Use SimpleNamingContextBuilder to set up JNDI bindings then.
    * 
-   * @see de.micromata.genome.util.runtime.jndi.springframework.mock.jndi.SimpleNamingContextBuilder#bind
    */
   @Override
   public void bind(String name, Object obj)
@@ -309,6 +328,12 @@ public class SimpleNamingContext implements Context
   {
   }
 
+  /**
+   * Name to string.
+   *
+   * @param name the name
+   * @return the string
+   */
   public String nameToString(Name name)
   {
     StringBuilder sb = new StringBuilder();
@@ -371,6 +396,12 @@ public class SimpleNamingContext implements Context
     return new JndiMockupParser();
   }
 
+  /**
+   * To string.
+   *
+   * @param name the name
+   * @return the string
+   */
   protected String toString(Name name)
   {
     return name.toString();
@@ -406,11 +437,26 @@ public class SimpleNamingContext implements Context
     }
   }
 
+  /**
+   * The Class AbstractNamingEnumeration.
+   *
+   * @param <T> the generic type
+   */
   private static abstract class AbstractNamingEnumeration<T> implements NamingEnumeration<T>
   {
 
+    /**
+     * The iterator.
+     */
     private Iterator<T> iterator;
 
+    /**
+     * Instantiates a new abstract naming enumeration.
+     *
+     * @param context the context
+     * @param proot the proot
+     * @throws NamingException the naming exception
+     */
     private AbstractNamingEnumeration(SimpleNamingContext context, String proot) throws NamingException
     {
       if (!"".equals(proot) && !proot.endsWith("/")) {
@@ -439,6 +485,13 @@ public class SimpleNamingContext implements Context
       this.iterator = contents.values().iterator();
     }
 
+    /**
+     * Creates the object.
+     *
+     * @param strippedName the stripped name
+     * @param obj the obj
+     * @return the t
+     */
     protected abstract T createObject(String strippedName, Object obj);
 
     @Override
@@ -471,9 +524,19 @@ public class SimpleNamingContext implements Context
     }
   }
 
+  /**
+   * The Class NameClassPairEnumeration.
+   */
   private static class NameClassPairEnumeration extends AbstractNamingEnumeration<NameClassPair>
   {
 
+    /**
+     * Instantiates a new name class pair enumeration.
+     *
+     * @param context the context
+     * @param root the root
+     * @throws NamingException the naming exception
+     */
     private NameClassPairEnumeration(SimpleNamingContext context, String root) throws NamingException
     {
       super(context, root);
@@ -486,9 +549,19 @@ public class SimpleNamingContext implements Context
     }
   }
 
+  /**
+   * The Class BindingEnumeration.
+   */
   private static class BindingEnumeration extends AbstractNamingEnumeration<Binding>
   {
 
+    /**
+     * Instantiates a new binding enumeration.
+     *
+     * @param context the context
+     * @param root the root
+     * @throws NamingException the naming exception
+     */
     private BindingEnumeration(SimpleNamingContext context, String root) throws NamingException
     {
       super(context, root);

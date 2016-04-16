@@ -21,13 +21,27 @@ import java.util.Map;
 
 import de.micromata.genome.util.types.Pair;
 
+/**
+ * The Interface LocalSettingsService.
+ *
+ * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
+ */
 public interface LocalSettingsService
 {
+
+  /**
+   * Gets the.
+   *
+   * @return the local settings service
+   */
   static LocalSettingsService get()
   {
     return LocalSettings.getImpl();
   }
 
+  /**
+   * Reset.
+   */
   public static void reset()
   {
     LocalSettings.resetImpl();
@@ -42,10 +56,10 @@ public interface LocalSettingsService
   String get(String key);
 
   /**
-   * get resolved value for key
-   * 
-   * @param key
-   * @return
+   * get resolved value for key.
+   *
+   * @param key the key
+   * @return the property
    */
   default String getProperty(String key)
   {
@@ -54,22 +68,50 @@ public interface LocalSettingsService
 
   /**
    * get resolved value for key if exists. otherwise defaultValue
-   * 
-   * @param key
-   * @param defaultValue
-   * @return
+   *
+   * @param key the key
+   * @param defaultValue the default value
+   * @return the property
    */
   default String getProperty(String key, String defaultValue)
   {
     return get(key, defaultValue);
   }
 
+  /**
+   * Gets the.
+   *
+   * @param key the key
+   * @param defaultValue the default value
+   * @return the string
+   */
   String get(String key, String defaultValue);
 
+  /**
+   * Gets the int value.
+   *
+   * @param key the key
+   * @param defaultValue the default value
+   * @return the int value
+   */
   int getIntValue(String key, int defaultValue);
 
+  /**
+   * Gets the long value.
+   *
+   * @param key the key
+   * @param defaultValue the default value
+   * @return the long value
+   */
   long getLongValue(String key, long defaultValue);
 
+  /**
+   * Gets the boolean value.
+   *
+   * @param key the key
+   * @param defaultValue the default value
+   * @return the boolean value
+   */
   boolean getBooleanValue(String key, boolean defaultValue);
 
   /**
@@ -80,13 +122,19 @@ public interface LocalSettingsService
    */
   public String resolve(String value);
 
+  /**
+   * Contains key.
+   *
+   * @param key the key
+   * @return true, if successful
+   */
   boolean containsKey(String key);
 
   /**
    * Gets the entries with prefix.
    * 
    * @param prefix the prefix
-   * @return rest of key -> value
+   * @return rest of key to value
    */
   List<Pair<String, String>> getEntriesWithPrefix(String prefix);
 
@@ -106,6 +154,11 @@ public interface LocalSettingsService
    */
   LocalSettingsLoader getLocalSettingsLoader();
 
+  /**
+   * Copy into.
+   *
+   * @param map the map
+   */
   void copyInto(Map<String, String> map);
 
   Map<String, String> getMap();
