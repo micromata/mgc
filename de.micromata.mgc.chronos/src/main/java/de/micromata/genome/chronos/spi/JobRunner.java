@@ -1,18 +1,19 @@
-/////////////////////////////////////////////////////////////////////////////
 //
-// $RCSfile: JobRunner.java,v $
+// Copyright (C) 2010-2016 Micromata GmbH
 //
-// Project   genome
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// Author    Wolfgang Jung (w.jung@micromata.de)
-// Created   03.01.2007
-// Copyright Micromata 03.01.2007
+//  http://www.apache.org/licenses/LICENSE-2.0
 //
-// $Id: JobRunner.java,v 1.12 2007/03/14 10:46:45 roger Exp $
-// $Revision: 1.12 $
-// $Date: 2007/03/14 10:46:45 $
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
-/////////////////////////////////////////////////////////////////////////////
+
 package de.micromata.genome.chronos.spi;
 
 import java.util.Date;
