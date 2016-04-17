@@ -31,16 +31,6 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
-        <configuration>
-          <mainClass>${start-class}</mainClass>
-          <layout>ZIP</layout>
-           <executable>true</executable>
-        </configuration>
-      </plugin>
-        <!-- Support our own plugin -->
-      <plugin>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-maven-plugin</artifactId>
         <version>${spring-boot.version}</version>
         <executions>
           <execution>
@@ -51,6 +41,8 @@
         </executions>
         <configuration>
           <mainClass>${start-class}</mainClass>
+          <layout>ZIP</layout>
+          <executable>true</executable>
         </configuration>
       </plugin>
     </plugins>

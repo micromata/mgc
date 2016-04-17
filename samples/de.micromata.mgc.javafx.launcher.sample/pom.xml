@@ -28,31 +28,26 @@
       <artifactId>de.micromata.mgc.javafx.launcher</artifactId>
       <version>${mgc.version}</version>
     </dependency>
-    <!-- we want to have the jetty sample as application.
-         Replace this with your own application or delete it, if
-         you implement the application in this project. -->
+    <!-- we want to have the jetty sample as application. Replace this with your own application or delete it, if you implement 
+      the application in this project. -->
     <dependency>
       <groupId>de.micromata.mgc</groupId>
       <artifactId>de.micromata.mgc.application.jetty</artifactId>
       <version>${mgc.version}</version>
     </dependency>
-    <!-- We want mgc loging.
-         Delete this, if you don't want mgc logging
-     -->
+    <!-- We want mgc loging. Delete this, if you don't want mgc logging -->
     <dependency>
       <groupId>de.micromata.mgc</groupId>
       <artifactId>de.micromata.mgc.jpa.logging</artifactId>
       <version>${mgc.version}</version>
     </dependency>
-     <dependency>
+    <dependency>
       <groupId>de.micromata.mgc</groupId>
       <artifactId>de.micromata.mgc.email</artifactId>
       <version>${mgc.version}</version>
     </dependency>
-    <!--  A small database.
-          Delete this, if you want another or none databases.
-          Databases can also put into the lib directory of the final fat jar. 
-    -->
+    <!-- A small database. Delete this, if you want another or none databases. Databases can also put into the lib directory 
+      of the final fat jar. -->
     <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derby</artifactId>
@@ -85,16 +80,6 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
-        <configuration>
-          <mainClass>${start-class}</mainClass>
-          <layout>ZIP</layout>
-        </configuration>
-      </plugin>
-
-      <!-- Support our own plugin -->
-      <plugin>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-maven-plugin</artifactId>
         <version>${spring-boot.version}</version>
         <executions>
           <execution>
@@ -105,9 +90,9 @@
         </executions>
         <configuration>
           <mainClass>${start-class}</mainClass>
+          <layout>ZIP</layout>
         </configuration>
       </plugin>
-
     </plugins>
   </build>
 </project>

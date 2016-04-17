@@ -108,6 +108,20 @@ public class ChronosLocalSettingsConfigModel extends AbstractLocalSettingsConfig
         manager.getStandardJobs().add(jd);
       }
     }
+    keys = localSettings.getKeysPrefixWithInfix(getKeyPrefix() + ".startupJobs", "name");
+    for (String key : keys) {
+      JobBeanDefinition jd = parseJobDefinition(key, localSettings);
+      if (jd != null) {
+        manager.getStartupJobs().add(jd);
+      }
+    }
+    keys = localSettings.getKeysPrefixWithInfix(getKeyPrefix() + ".jobs", "name");
+    for (String key : keys) {
+      JobBeanDefinition jd = parseJobDefinition(key, localSettings);
+      if (jd != null) {
+        manager.getJobs().put(jd.getJobName(), jd);
+      }
+    }
   }
 
   private JobBeanDefinition parseJobDefinition(String key, LocalSettings localSettings)

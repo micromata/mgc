@@ -242,6 +242,11 @@ public class ValContext
     return hasAtLeastLevel(messages, ValState.Error);
   }
 
+  public boolean hasWarnings()
+  {
+    return hasAtLeastLevel(messages, ValState.Warning);
+  }
+
   protected boolean hasAtLeastLevel(List<ValMessage> messages, ValState state)
   {
     return messages.stream().anyMatch(msg -> compareValidationLevels(msg.getValState(), state) >= 0);

@@ -25,8 +25,12 @@
       <version>${javax.servlet.api.version}</version>
       <scope>provided</scope>
     </dependency>
-    <!-- not stable enough <dependency> <groupId>de.micromata.mgc</groupId> <artifactId>de.micromata.mgc.logging.spi.ifiles</artifactId> 
-      <version>${mgc.version}</version> </dependency> -->
+    <dependency>
+      <groupId>javax.mail</groupId>
+      <artifactId>mail</artifactId>
+      <version>${javax.mail.version}</version>
+      <scope>provided</scope>
+    </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>

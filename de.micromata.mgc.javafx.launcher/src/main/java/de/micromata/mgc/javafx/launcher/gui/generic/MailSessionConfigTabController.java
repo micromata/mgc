@@ -16,12 +16,18 @@
 
 package de.micromata.mgc.javafx.launcher.gui.generic;
 
+import java.util.Optional;
+
 import de.micromata.genome.util.runtime.config.MailSessionLocalSettingsConfigModel;
+import de.micromata.genome.util.validation.ValContext;
 import de.micromata.mgc.javafx.ModelGuiField;
+import de.micromata.mgc.javafx.feedback.ValMessageResultBox;
 import de.micromata.mgc.javafx.launcher.gui.AbstractConfigTabController;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 
 /**
  * 
@@ -52,6 +58,8 @@ public class MailSessionConfigTabController extends AbstractConfigTabController<
   @FXML
   @ModelGuiField
   private TextField emailAuthPass;
+  @FXML
+  private Button sendTestEmailButton;
 
   @Override
   public void initializeWithModel()
@@ -59,6 +67,23 @@ public class MailSessionConfigTabController extends AbstractConfigTabController<
     emailEnabled.setOnAction(event -> setEmailEnabled(emailEnabled.isSelected()));
     fromModel();
     setEmailEnabled(emailEnabled.isSelected());
+    sendTestEmailButton.setOnAction(event -> {
+      TextInputDialog dialog = new TextInputDialog("");
+      dialog.setTitle("Send Test Mail");
+      dialog.setHeaderText("Send a test email with the configured SMPT server.");
+      dialog.setContentText("Please enter your receiver email:");
+      Optional<String> result = dialog.showAndWait();
+      if (result.isPresent() == false) {
+        return;
+      }
+      ValContext ctx = new ValContext().createSubContext(getModel(), null);
+
+      EmailSendTester sendtester = new EmailSendTester(ctx, result.get(), standardEmailSender.getText());
+      sendtester.testSendEmail(emailHost.getText(), emailPort.getText(), emailAuthEnabled.isSelected(),
+          emailAuthUser.getText(), emailAuthPass.getText());
+      mapValidationMessagesToGui(ctx);
+      ValMessageResultBox.showResultBox(ctx, "Sending email", "Result of sending Email");
+    });
 
   }
 
@@ -69,6 +94,7 @@ public class MailSessionConfigTabController extends AbstractConfigTabController<
     emailAuthEnabled.setDisable(enabled == false);
     emailAuthUser.setDisable(enabled == false);
     emailAuthPass.setDisable(enabled == false);
+    sendTestEmailButton.setDisable(enabled == false);
   }
 
   @Override

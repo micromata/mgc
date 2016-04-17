@@ -25,8 +25,10 @@ import java.util.List;
  * Status noch alpha und nicht komplett.
  *
  * @author roger@micromata.de
- * @todo !DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
- * @todo CDATA
+ * 
+ *         TODO !DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+ * 
+ *         TODO CDATA
  */
 public class Xml
 {

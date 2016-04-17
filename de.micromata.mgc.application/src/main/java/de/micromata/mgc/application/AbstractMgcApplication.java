@@ -174,7 +174,7 @@ public abstract class AbstractMgcApplication<M extends LocalSettingsConfigModel>
           break;
       }
       return ret;
-    } catch (Exception ex) {
+    } catch (Throwable ex) {
       MgcEventRegistries.getEventInstanceRegistry()
           .dispatchEvent(new MgcApplicationStartStopEvent(this, MgcApplicationStartStopStatus.StartError,
               new ValMessage(ValState.Info, "mgc.application.start.success.failed", ex)));
