@@ -14,7 +14,7 @@ function glogIsoDateToForm(date) {
 function GlogForm(gLogViewer) {
 	this.logViewer = gLogViewer;
 	this.formId = gLogViewer.formId;
-	this.logLevels = [ 'Debug', 'Info', 'Note', 'Warn', 'Error', 'Trace' ];
+	this.logLevels = [ 'Debug', 'Trace', 'Info', 'Note', 'Warn', 'Error', 'Fatal' ];
 	this.startRow = 0;
 	this.formDateToIso = glogFormDateToIso;
 	this.isoDateToForm = glogIsoDateToForm;
