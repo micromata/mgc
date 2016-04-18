@@ -18,8 +18,10 @@ package de.micromata.mgc.email;
 
 import org.apache.commons.lang.StringUtils;
 
+import de.micromata.genome.util.runtime.LocalSettings;
 import de.micromata.genome.util.runtime.config.ALocalSettingsPath;
 import de.micromata.genome.util.runtime.config.AbstractLocalSettingsConfigModel;
+import de.micromata.genome.util.runtime.config.LocalSettingsWriter;
 import de.micromata.genome.util.validation.ValContext;
 
 /**
@@ -30,6 +32,10 @@ import de.micromata.genome.util.validation.ValContext;
  */
 public class MailReceiverLocalSettingsConfigModel extends AbstractLocalSettingsConfigModel
 {
+  private boolean forceEnabled = false;
+
+  @ALocalSettingsPath(defaultValue = "false", comment = "Enable Incoming Mail")
+  private String enabled;
 
   @ALocalSettingsPath(defaultValue = "localhost", comment = "Hostname of the mail server")
   private String host;
@@ -81,8 +87,33 @@ public class MailReceiverLocalSettingsConfigModel extends AbstractLocalSettingsC
   }
 
   @Override
+  public LocalSettingsWriter toProperties(LocalSettingsWriter writer)
+  {
+    LocalSettingsWriter ret = super.toProperties(writer);
+    if (forceEnabled == true) {
+      enabled = "true";
+    }
+    return ret;
+  }
+
+  @Override
+  public void fromLocalSettings(LocalSettings localSettings)
+  {
+    super.fromLocalSettings(localSettings);
+    if (forceEnabled == true) {
+      enabled = "true";
+    }
+  }
+
+  @Override
   public void validate(ValContext ctx)
   {
+    if (forceEnabled == true) {
+      enabled = "true";
+    }
+    if (isEnabled() == false) {
+      return;
+    }
     if (StringUtils.isBlank(protocol) == true) {
       ctx.directError("protocol", "Please select a protocol");
       return;
@@ -178,6 +209,21 @@ public class MailReceiverLocalSettingsConfigModel extends AbstractLocalSettingsC
   public String getDebug()
   {
     return debug;
+  }
+
+  public boolean isEnabled()
+  {
+    return Boolean.getBoolean(enabled);
+  }
+
+  public boolean isForceEnabled()
+  {
+    return forceEnabled;
+  }
+
+  public void setForceEnabled(boolean forceEnabled)
+  {
+    this.forceEnabled = forceEnabled;
   }
 
 }

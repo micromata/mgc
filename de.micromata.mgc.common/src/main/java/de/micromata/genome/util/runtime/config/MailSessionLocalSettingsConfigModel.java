@@ -160,6 +160,11 @@ public class MailSessionLocalSettingsConfigModel extends AbstractLocalSettingsCo
 
   public Session createMailSession()
   {
+    return createMailSession(null);
+  }
+
+  public Session createMailSession(Properties addProperties)
+  {
     Properties msprops = new Properties();
 
     msprops.put("mail.debug", Boolean.toString(smptDebug));
@@ -177,6 +182,11 @@ public class MailSessionLocalSettingsConfigModel extends AbstractLocalSettingsCo
     }
     javax.mail.Session mailSession;
     msprops.put("mail.smtp.auth", Boolean.toString(isEmailAuthEnabled()));
+
+    if (addProperties != null) {
+      msprops.putAll(addProperties);
+    }
+
     if (isEmailAuthEnabled() == true) {
       mailSession = Session.getInstance(msprops, new Authenticator()
       {

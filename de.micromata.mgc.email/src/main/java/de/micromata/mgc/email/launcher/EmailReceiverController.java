@@ -43,7 +43,9 @@ import javafx.scene.control.TextField;
  */
 public class EmailReceiverController extends AbstractConfigTabController<MailReceiverLocalSettingsConfigModel>
 {
-
+  @FXML
+  @ModelGuiField
+  private CheckBox enable;
   @FXML
   Button testButton;
   @FXML
@@ -67,9 +69,6 @@ public class EmailReceiverController extends AbstractConfigTabController<MailRec
   TextField password;
 
   @FXML
-  private CheckBox extended;
-
-  @FXML
   @ModelGuiField
   private CheckBox enableSelfSignedCerts;
   @FXML
@@ -79,6 +78,9 @@ public class EmailReceiverController extends AbstractConfigTabController<MailRec
   @Override
   public void initializeWithModel()
   {
+    if (model.isForceEnabled() == true) {
+      enable.setDisable(true);
+    }
     protocol.setItems(FXCollections
         .observableList(MailReceiverServiceManager.get().getMailReceiveService().getProviders(Provider.Type.STORE)));
     super.initializeWithModel();

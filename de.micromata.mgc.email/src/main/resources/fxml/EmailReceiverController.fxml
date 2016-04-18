@@ -20,6 +20,15 @@
             <VBox maxHeight="400.0" prefWidth="750.0">
                <children>
                   <HBox>
+                     <VBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </VBox.margin>
+                     <children>
+                        <Label minWidth="150.0" text="Enable" />
+                        <CheckBox fx:id="enable" mnemonicParsing="false" text="Enable Receive Email" />
+                     </children>
+                  </HBox>
+                  <HBox>
                      <children>
                         <Label minWidth="150.0" text="Protocol" />
                         <ChoiceBox fx:id="protocol" prefWidth="150.0" />
@@ -78,15 +87,6 @@
                         <Label minWidth="150.0" text="Default Mailfolder" />
                         <ComboBox fx:id="defaultFolder" editable="true" prefHeight="25.0" prefWidth="400.0" />
                      </children>
-                  </HBox>
-                  <HBox prefWidth="200.0">
-                     <children>
-                        <Label minWidth="150.0" prefWidth="150.0" text="Extended" />
-                        <CheckBox fx:id="extended" mnemonicParsing="false" text="Enable" />
-                     </children>
-                     <VBox.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                     </VBox.margin>
                   </HBox>
                   <HBox fx:id="sslPane">
                      <children>
