@@ -6,6 +6,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -49,7 +50,7 @@
                      </padding>
                      <children>
                         <Label minWidth="150.0" text="Database password" />
-                        <TextField fx:id="password" prefHeight="25.0" prefWidth="400.0" />
+                        <PasswordField fx:id="password" prefHeight="25.0" prefWidth="400.0" />
                      </children>
                   </HBox>
                   <HBox minWidth="150.0">

@@ -16,6 +16,14 @@
 
 package de.micromata.genome.util.runtime.config;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Properties;
+
+import javax.mail.Authenticator;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 
@@ -29,6 +37,20 @@ import de.micromata.genome.util.validation.ValContext;
  */
 public class MailSessionLocalSettingsConfigModel extends AbstractLocalSettingsConfigModel
 {
+  public static enum Encryption
+  {
+    Plain, StartTLS, SSL;
+    public static Encryption fromString(String s)
+    {
+      for (Encryption v : values()) {
+        if (v.name().equals(s) == true) {
+          return v;
+        }
+      }
+      return Encryption.Plain;
+    }
+  }
+
   /**
    * name of the smpt
    */
@@ -40,12 +62,24 @@ public class MailSessionLocalSettingsConfigModel extends AbstractLocalSettingsCo
   private String defaultEmailSender;
   @ALocalSettingsPath(comment = "A standard sender email address. The application may use another one")
   private String standardEmailSender;
-
+  /**
+   * 
+   */
+  @ALocalSettingsPath(comment = "Mail protocol: Plain, StartTLS,SSL", defaultValue = "Plain")
+  private String encryption;
+  /**
+   * "mail.smtp.host"
+   */
   @ALocalSettingsPath(key = "smtp.host", defaultValue = "localhost", comment = "Hostname of the email server")
   private String emailHost;
+  /**
+   * "mail.smtp.port"
+   */
   @ALocalSettingsPath(key = "smtp.port", defaultValue = "25", comment = "Port number of the email server")
   private String emailPort;
-
+  /**
+   * "mail.smtp.auth"
+   */
   @ALocalSettingsPath(key = "smtp.auth", defaultValue = "false", comment = "The email server needs authentification")
   private String emailAuthEnabled;
 
@@ -55,14 +89,14 @@ public class MailSessionLocalSettingsConfigModel extends AbstractLocalSettingsCo
   @ALocalSettingsPath(key = "smtp.password", comment = "Users password")
   private String emailAuthPass;
 
-  @ALocalSettingsPath(key = "smtp.starttls.enable", defaultValue = "false", comment = "Use STARTTLS as encryption")
-  private String emailAuthEnableStartTls;
-  @ALocalSettingsPath(key = "smtp.ssl.enable", defaultValue = "false", comment = "Use SSL encryption")
-  private String emailAuthEnableStartSsl;
   /**
    * If set, the datasource will be registered as jndi name.
    */
   private String jndiName;
+  /**
+   * Debugging the SMPT communication.
+   */
+  private boolean smptDebug = false;
 
   public MailSessionLocalSettingsConfigModel()
   {
@@ -93,6 +127,11 @@ public class MailSessionLocalSettingsConfigModel extends AbstractLocalSettingsCo
     return writer;
   }
 
+  public List<String> getAvailableProtocols()
+  {
+    return Arrays.asList("Plain", "StartTLS", "SSL");
+  }
+
   @Override
   public String buildKey(String key)
   {
@@ -117,6 +156,40 @@ public class MailSessionLocalSettingsConfigModel extends AbstractLocalSettingsCo
       ctx.directError("emailPort", "Please provide an port *number*");
     }
     // TODO RK continue with smptauth
+  }
+
+  public Session createMailSession()
+  {
+    Properties msprops = new Properties();
+
+    msprops.put("mail.debug", Boolean.toString(smptDebug));
+    msprops.put("mail.smtp.host", this.emailHost);
+    msprops.put("mail.smtp.port", this.emailPort);
+    //    msprops.put("mail.smtp.ssl.enable", "true");
+    //msprops.put("mail.smtp.starttls.enable", "true");
+    Encryption encr = Encryption.fromString(encryption);
+    if (encr == Encryption.StartTLS) {
+      msprops.put("mail.smtp.starttls.enable", "true");
+    } else if (encr == Encryption.SSL) {
+      msprops.put("mail.smtp.ssl.enable", "true");
+      //      msprops.put("mail.smtp.socketFactory.port", emailPort);
+      //      msprops.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+    }
+    javax.mail.Session mailSession;
+    msprops.put("mail.smtp.auth", Boolean.toString(isEmailAuthEnabled()));
+    if (isEmailAuthEnabled() == true) {
+      mailSession = Session.getInstance(msprops, new Authenticator()
+      {
+        @Override
+        protected PasswordAuthentication getPasswordAuthentication()
+        {
+          return new PasswordAuthentication(emailAuthUser, emailAuthPass);
+        }
+      });
+    } else {
+      mailSession = Session.getInstance(msprops);
+    }
+    return mailSession;
   }
 
   public String getName()
@@ -157,6 +230,96 @@ public class MailSessionLocalSettingsConfigModel extends AbstractLocalSettingsCo
   public void setDefaultEmailSender(String defaultEmailSender)
   {
     this.defaultEmailSender = defaultEmailSender;
+  }
+
+  public String getEmailEnabled()
+  {
+    return emailEnabled;
+  }
+
+  public void setEmailEnabled(String emailEnabled)
+  {
+    this.emailEnabled = emailEnabled;
+  }
+
+  public String getStandardEmailSender()
+  {
+    return standardEmailSender;
+  }
+
+  public void setStandardEmailSender(String standardEmailSender)
+  {
+    this.standardEmailSender = standardEmailSender;
+  }
+
+  public String getEncryption()
+  {
+    return encryption;
+  }
+
+  public void setEncryption(String protocol)
+  {
+    this.encryption = protocol;
+  }
+
+  public String getEmailHost()
+  {
+    return emailHost;
+  }
+
+  public void setEmailHost(String emailHost)
+  {
+    this.emailHost = emailHost;
+  }
+
+  public String getEmailPort()
+  {
+    return emailPort;
+  }
+
+  public void setEmailPort(String emailPort)
+  {
+    this.emailPort = emailPort;
+  }
+
+  public String getEmailAuthEnabled()
+  {
+    return emailAuthEnabled;
+  }
+
+  public void setEmailAuthEnabled(String emailAuthEnabled)
+  {
+    this.emailAuthEnabled = emailAuthEnabled;
+  }
+
+  public String getEmailAuthUser()
+  {
+    return emailAuthUser;
+  }
+
+  public void setEmailAuthUser(String emailAuthUser)
+  {
+    this.emailAuthUser = emailAuthUser;
+  }
+
+  public String getEmailAuthPass()
+  {
+    return emailAuthPass;
+  }
+
+  public void setEmailAuthPass(String emailAuthPass)
+  {
+    this.emailAuthPass = emailAuthPass;
+  }
+
+  public boolean isSmptDebug()
+  {
+    return smptDebug;
+  }
+
+  public void setSmptDebug(boolean smptDebug)
+  {
+    this.smptDebug = smptDebug;
   }
 
 }

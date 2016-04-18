@@ -21,12 +21,9 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import javax.mail.Authenticator;
-import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.naming.CompositeName;
 import javax.naming.Context;
@@ -44,9 +41,11 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.pool.impl.GenericObjectPool;
 import org.apache.log4j.Logger;
 
+import de.micromata.genome.util.runtime.config.MailSessionLocalSettingsConfigModel;
 import de.micromata.genome.util.runtime.jndi.JndiDumper;
 import de.micromata.genome.util.runtime.jndi.JndiMockupNamingContextBuilder;
-import de.micromata.genome.util.types.Pair;
+import de.micromata.genome.util.validation.ValContext;
+import de.micromata.genome.util.validation.ValMessage;
 
 /**
  * The Class LocalSettingsEnv.
@@ -179,30 +178,41 @@ public class LocalSettingsEnv
     for (String dsn : dse) {
       String key = dsn + ".name";
       String name = localSettings.get(key);
-      Properties msprops = new Properties();
-      List<Pair<String, String>> settings = localSettings.getEntriesWithPrefix(dsn + ".smtp.");
-      for (Pair<String, String> p : settings) {
-        msprops.put("mail.smtp." + p.getFirst(), p.getSecond());
+      MailSessionLocalSettingsConfigModel model = new MailSessionLocalSettingsConfigModel(name);
+      model.fromLocalSettings(localSettings);
+      ValContext ctx = new ValContext();
+      model.validate(ctx);
+      if (ctx.hasErrors() == true) {
+        log.error("Mail Session may not configured correct");
+        for (ValMessage msg : ctx.getMessages()) {
+          log.warn(msg.toString());
+        }
       }
-      key = dsn + ".smtp.host";
-      msprops.put("mail.smtp.host", localSettings.getProperty(key));
-      key = dsn + ".smtp.port";
-      msprops.put("mail.smtp.port", localSettings.getProperty(key, "25"));
-
-      javax.mail.Session mailSession;
-      if (StringUtils.isNotBlank(msprops.getProperty("mail.smtp.password")) == true) {
-        mailSession = Session.getInstance(msprops, new Authenticator()
-        {
-          @Override
-          protected PasswordAuthentication getPasswordAuthentication()
-          {
-            return new PasswordAuthentication(msprops.getProperty("mail.smtp.user"),
-                msprops.getProperty("mail.smtp.password"));
-          }
-        });
-      } else {
-        mailSession = Session.getInstance(msprops);
-      }
+      Session mailSession = model.createMailSession();
+      //      Properties msprops = new Properties();
+      //      List<Pair<String, String>> settings = localSettings.getEntriesWithPrefix(dsn + ".smtp.");
+      //      for (Pair<String, String> p : settings) {
+      //        msprops.put("mail.smtp." + p.getFirst(), p.getSecond());
+      //      }
+      //      key = dsn + ".smtp.host";
+      //      msprops.put("mail.smtp.host", localSettings.getProperty(key));
+      //      key = dsn + ".smtp.port";
+      //      msprops.put("mail.smtp.port", localSettings.getProperty(key, "25"));
+      //
+      //      javax.mail.Session mailSession;
+      //      if (StringUtils.isNotBlank(msprops.getProperty("mail.smtp.password")) == true) {
+      //        mailSession = Session.getInstance(msprops, new Authenticator()
+      //        {
+      //          @Override
+      //          protected PasswordAuthentication getPasswordAuthentication()
+      //          {
+      //            return new PasswordAuthentication(msprops.getProperty("mail.smtp.user"),
+      //                msprops.getProperty("mail.smtp.password"));
+      //          }
+      //        });
+      //      } else {
+      //        mailSession = Session.getInstance(msprops);
+      //      }
 
       mailSessions.put(name, mailSession);
     }
