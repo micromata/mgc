@@ -121,6 +121,10 @@ public class DispatcherImpl2 extends DispatcherImpl
           return nft;
         }
         Scheduler sched = schedulerByPk.get(job.getScheduler());
+        if (sched == null) {
+          GLog.error(GenomeLogCategory.Scheduler, "Cannot fetch Scheduler with pk: " + job.getScheduler());
+          continue;
+        }
         int nbt = sched.getNodeBindingTimeout() * 1000;
         boolean foreignJob = getVirtualHost().equals(job.getHostName()) == false;
         if (foreignJob == true && now < nft + nbt) {
