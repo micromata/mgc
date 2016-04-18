@@ -44,7 +44,7 @@ public class HibernateSchemaConfigTabController extends AbstractConfigTabControl
   public void initializeWithModel()
   {
     fromModel();
-    List<String> values = Arrays.asList("update", "validate", "create", "create-drop");
+    List<String> values = Arrays.asList("", "update", "validate", "create", "create-drop");
     schemaUpdate.setItems(FXCollections.observableArrayList(values));
   }
 
