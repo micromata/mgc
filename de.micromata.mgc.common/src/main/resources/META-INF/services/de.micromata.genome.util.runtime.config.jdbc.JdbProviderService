@@ -1,4 +1,5 @@
 de.micromata.genome.util.runtime.config.jdbc.MemoryDerbyJdbcProviderServiceImpl
+de.micromata.genome.util.runtime.config.jdbc.FileHsqlJdbcProviderServiceImpl
 de.micromata.genome.util.runtime.config.jdbc.MemoryHsqlJdbcProviderServiceImpl
 de.micromata.genome.util.runtime.config.jdbc.EmbeddedDerbyJdbcProviderServiceImpl
 de.micromata.genome.util.runtime.config.jdbc.PostgreSQLJdbcProviderServiceImpl
