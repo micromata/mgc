@@ -73,26 +73,26 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>
   private static final Logger LOG = Logger.getLogger(AbstractMainWindow.class);
 
   @FXML
-  private ImageView mainWindowLogo;
+  protected ImageView mainWindowLogo;
   @FXML
-  private Menu launchMenu;
+  protected Menu launchMenu;
 
   @FXML
-  private Button startServerButton;
+  protected Button startServerButton;
   @FXML
-  private Button stopServerButton;
+  protected Button stopServerButton;
 
   @FXML
-  private Button openBrowser;
+  protected Button openBrowser;
 
   @FXML
-  private Pane loggingPane;
+  protected Pane loggingPane;
 
   @FXML
-  private LoggingController loggingController;
+  protected LoggingController loggingController;
 
   @FXML
-  private MenuItem hideWindowMenu;
+  protected MenuItem hideWindowMenu;
 
   @Override
   public void initialize(URL location, ResourceBundle resources)
@@ -138,15 +138,9 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>
     boolean runnin = MgcLauncher.get().getApplication().isRunning();
     startServerButton.setDisable(runnin);
     stopServerButton.setDisable(runnin == false);
+    addStartServerEventHandler();
+    addStopServerEventHandler();
 
-    FXEvents.get().addEventHandler(this, stopServerButton, MgcLauncherEvent.APP_STARTED, event -> {
-      startServerButton.setDisable(true);
-      stopServerButton.setDisable(false);
-    });
-    FXEvents.get().addEventHandler(this, stopServerButton, MgcLauncherEvent.APP_STOPPED, event -> {
-      startServerButton.setDisable(false);
-      stopServerButton.setDisable(true);
-    });
     openBrowser.setOnAction(e -> {
       launchBrowser();
     });
@@ -175,6 +169,22 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>
       if (config.isStartBrowserOnStartup() == true) {
         launchBrowser();
       }
+    });
+  }
+
+  protected void addStartServerEventHandler()
+  {
+    FXEvents.get().addEventHandler(this, stopServerButton, MgcLauncherEvent.APP_STARTED, event -> {
+      startServerButton.setDisable(true);
+      stopServerButton.setDisable(false);
+    });
+  }
+
+  protected void addStopServerEventHandler()
+  {
+    FXEvents.get().addEventHandler(this, stopServerButton, MgcLauncherEvent.APP_STOPPED, event -> {
+      startServerButton.setDisable(false);
+      stopServerButton.setDisable(true);
     });
   }
 

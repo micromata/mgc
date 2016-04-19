@@ -58,6 +58,7 @@ public class MgcLauncher<M extends LocalSettingsConfigModel>
   private Class<? extends AbstractMainWindow<M>> mainWindowClass;
   static Class<? extends AbstractMainWindow<?>> sMainWindowClass;
   private final ExecutorService serverExecPool = Executors.newFixedThreadPool(1);
+  public static boolean noGui = false;
 
   public static MgcLauncher<?> get()
   {
@@ -89,6 +90,7 @@ public class MgcLauncher<M extends LocalSettingsConfigModel>
     sapplication = application;
     Log4JInitializer.initializeLog4J();
     if (noWindow(args) == true) {
+      noGui = true;
       if (sapplication.checkConfiguration() == false) {
         return;
       }
@@ -97,6 +99,7 @@ public class MgcLauncher<M extends LocalSettingsConfigModel>
       }
       launchCli(args);
     } else {
+      noGui = false;
       MgcJfxApplication.launch(MgcJfxApplication.class, args);
     }
   }

@@ -22,6 +22,7 @@ import java.util.ResourceBundle;
 
 import org.apache.commons.lang.Validate;
 
+import de.micromata.genome.util.bean.PrivateBeanUtils;
 import de.micromata.genome.util.i18n.I18NTranslations;
 import de.micromata.genome.util.runtime.RuntimeIOException;
 import de.micromata.genome.util.types.Pair;
@@ -162,7 +163,14 @@ public class ControllerService
     }
     ResourceBundle resbundle = I18NTranslations
         .asResourceBundle(MgcLauncher.get().getApplication().getTranslateService());
-    FXMLLoader fxmlLoader = new FXMLLoader(ControllerService.class.getResource(path), resbundle);
+    FXMLLoader fxmlLoader = new FXMLLoader(ControllerService.class.getResource(path), resbundle, null, clazz -> {
+      if (clazz.isAssignableFrom(controlerClass) == true) {
+        return PrivateBeanUtils.createInstance(controlerClass);
+      } else {
+        return PrivateBeanUtils.createInstance(clazz);
+      }
+
+    });
     try {
       Object loaded = fxmlLoader.load();
       Object controler = fxmlLoader.getController();
