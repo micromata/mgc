@@ -42,10 +42,12 @@ import de.micromata.mgc.javafx.launcher.MgcLauncher;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 
 /**
  * Configuration of a launcher.
@@ -68,6 +70,12 @@ public abstract class AbstractConfigDialog<M extends LocalSettingsConfigModel>ex
 
   protected AbstractMainWindow<M> mainWindow;
   @FXML
+  private AnchorPane mainAnchorPane;
+  @FXML
+  private Pane mainPane;
+  @FXML
+  private HBox buttonPane;
+  @FXML
   private TabPane configurationTabs;
 
   protected List<AbstractConfigTabController<?>> tabController = new ArrayList<>();
@@ -89,7 +97,21 @@ public abstract class AbstractConfigDialog<M extends LocalSettingsConfigModel>ex
           Pane.class, this);
       createTab(tabc.configModel, wc);
     }
-    //    configurationTabs.getTabs();
+    AnchorPane.setTopAnchor(mainPane, 5.0);
+    AnchorPane.setRightAnchor(mainPane, 5.0);
+    AnchorPane.setLeftAnchor(mainPane, 5.0);
+    AnchorPane.setBottomAnchor(mainPane, 50.0);
+
+    AnchorPane.setTopAnchor(configurationTabs, 5.0);
+    AnchorPane.setRightAnchor(configurationTabs, 5.0);
+    AnchorPane.setLeftAnchor(configurationTabs, 5.0);
+    AnchorPane.setBottomAnchor(configurationTabs, 5.0);
+
+    //    AnchorPane.setTopAnchor(buttonHBox, 5.0);
+    AnchorPane.setRightAnchor(buttonPane, 5.0);
+    AnchorPane.setLeftAnchor(buttonPane, 5.0);
+    AnchorPane.setBottomAnchor(buttonPane, 5.0);
+
   }
 
   private Tab createTab(LocalSettingsConfigModel configModel, Pair<Pane, ? extends AbstractConfigTabController<?>> wc)
@@ -98,25 +120,40 @@ public abstract class AbstractConfigDialog<M extends LocalSettingsConfigModel>ex
     contrl.setConfigDialog(this);
 
     Pane tabPane = wc.getFirst();
-    tabPane.setPrefHeight(400);
-    tabPane.setMinHeight(400);
-    tabPane.setMaxHeight(400);
-    tabPane.setPrefWidth(800);
+
     contrl.setTabPane(tabPane);
     Tab tabB = new Tab();
 
-    VBox vbox = new VBox();
-    vbox.setPrefHeight(500);
+    AnchorPane tabContentPane = new AnchorPane();
+    tabContentPane.setMaxHeight(Integer.MAX_VALUE);
+    //    tabContentPane.setPrefHeight(500);
     FeedbackPanel feedback = new FeedbackPanel();
+
     feedback.setPrefHeight(100);
     feedback.setMinHeight(100);
     FXEvents.get().addEventHandler(this, feedback, FeedbackPanelEvents.CLEAR, event -> {
       feedback.clearMessages();
     });
     contrl.setFeedback(feedback);
-    vbox.getChildren().add(tabPane);
-    vbox.getChildren().add(feedback);
-    tabB.setContent(vbox);
+    tabContentPane.getChildren().add(tabPane);
+    tabContentPane.getChildren().add(feedback);
+    AnchorPane.setTopAnchor(tabPane, 2.0);
+    AnchorPane.setRightAnchor(tabPane, 0.0);
+    AnchorPane.setLeftAnchor(tabPane, 0.0);
+    AnchorPane.setBottomAnchor(tabPane, 70.0);
+    AnchorPane.setBottomAnchor(feedback, 0.0);
+
+    tabB.setContent(tabContentPane);
+    AnchorPane.setTopAnchor(tabContentPane, 0.0);
+    AnchorPane.setRightAnchor(tabContentPane, 0.0);
+    AnchorPane.setLeftAnchor(tabContentPane, 0.0);
+    AnchorPane.setBottomAnchor(tabContentPane, 0.0);
+
+    Node scrollPane = tabPane.getChildren().get(0);
+    AnchorPane.setTopAnchor(scrollPane, 0.0);
+    AnchorPane.setRightAnchor(scrollPane, 0.0);
+    AnchorPane.setLeftAnchor(scrollPane, 0.0);
+    AnchorPane.setBottomAnchor(scrollPane, 0.0);
 
     configurationTabs.getTabs().add(tabB);
     tabController.add(contrl);
@@ -126,6 +163,7 @@ public abstract class AbstractConfigDialog<M extends LocalSettingsConfigModel>ex
     contrl.addToolTips();
     tabB.setText(contrl.getTabTitle());
     contrl.registerValMessageReceivers();
+
     return tabB;
   }
 

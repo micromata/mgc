@@ -12,11 +12,11 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="400.0" prefHeight="400.0" prefWidth="790.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.micromata.mgc.javafx.launcher.gui.generic.JdbcConfigTabController">
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.micromata.mgc.javafx.launcher.gui.generic.JdbcConfigTabController">
    <children>
-      <ScrollPane maxHeight="400.0" maxWidth="1.7976931348623157E308" prefWidth="780.0">
+      <ScrollPane>
          <content>
-            <VBox maxHeight="400.0" prefWidth="750.0">
+            <VBox>
                <children>
                   <HBox>
                      <children>
@@ -68,7 +68,7 @@
                         <CheckBox fx:id="extendedSettings" mnemonicParsing="false" text="Show" />
                      </children>
                   </HBox>
-                  <HBox fx:id="extendedPane" prefHeight="100.0" prefWidth="200.0">
+                  <HBox fx:id="extendedPane">
                      <children>
                         <VBox>
                            <children>

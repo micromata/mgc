@@ -95,6 +95,7 @@ public class JettyConfigTabController extends AbstractConfigTabController<JettyC
   @Override
   public void initializeWithModel()
   {
+
     sslChildPane = sslPane.getChildren().get(0);
     fromModel();
     List<String> hosts = getListenHosts();
