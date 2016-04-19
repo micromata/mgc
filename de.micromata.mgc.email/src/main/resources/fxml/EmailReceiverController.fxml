@@ -25,7 +25,7 @@
                      </VBox.margin>
                      <children>
                         <Label minWidth="150.0" text="Enable" />
-                        <CheckBox fx:id="enable" mnemonicParsing="false" text="Enable Receive Email" />
+                        <CheckBox fx:id="enabled" mnemonicParsing="false" text="Enable Receive Email" />
                      </children>
                   </HBox>
                   <HBox>

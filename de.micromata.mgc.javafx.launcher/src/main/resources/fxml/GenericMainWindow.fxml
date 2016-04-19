@@ -39,11 +39,11 @@
           </Menu>
         </menus>
       </MenuBar>
-      <Pane maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="60.0" prefHeight="98.0" prefWidth="1000.0">
+      <Pane maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefWidth="1000.0">
          <children>
-            <Button fx:id="startServerButton" layoutX="645.0" layoutY="29.0" mnemonicParsing="false" text="%mgc.launcher.gui.button.startServer" />
-            <Button fx:id="stopServerButton" layoutX="772.0" layoutY="29.0" mnemonicParsing="false" text="%mgc.launcher.gui.button.stopServer" />
-            <Button fx:id="openBrowser" layoutX="371.0" layoutY="29.0" minWidth="-Infinity" mnemonicParsing="false" text="%mgc.launcher.gui.button.openBrowser" />
+            <Button fx:id="startServerButton" layoutX="645.0" layoutY="7.0" mnemonicParsing="false" text="%mgc.launcher.gui.button.startServer" />
+            <Button fx:id="stopServerButton" layoutX="772.0" layoutY="7.0" mnemonicParsing="false" text="%mgc.launcher.gui.button.stopServer" />
+            <Button fx:id="openBrowser" layoutX="376.0" layoutY="7.0" minWidth="-Infinity" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" text="%mgc.launcher.gui.button.openBrowser" />
             <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="14.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@/style/genome_dashboard.png" />

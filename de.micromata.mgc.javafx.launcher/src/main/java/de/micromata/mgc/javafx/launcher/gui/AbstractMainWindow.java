@@ -265,10 +265,6 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>
       e.consume();
     });
 
-    //    controller.setOwningStage(stage);
-    //    controller.getScene().s
-    //    Scene s = new Scene(root, AbstractConfigDialog.PREF_WIDTH, AbstractConfigDialog.PREF_HEIGHT);
-
     controller.getStage().initModality(Modality.APPLICATION_MODAL);
     controller.getStage().setWidth(800);
     controller.getStage().setHeight(600);

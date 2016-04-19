@@ -23,12 +23,15 @@ import org.apache.commons.lang.StringUtils;
 
 import de.micromata.genome.util.runtime.config.JdbcLocalSettingsConfigModel;
 import de.micromata.genome.util.runtime.config.jdbc.JdbProviderService;
+import de.micromata.genome.util.validation.ValContext;
 import de.micromata.mgc.javafx.ModelGuiField;
 import de.micromata.mgc.javafx.SystemService;
+import de.micromata.mgc.javafx.feedback.ValMessageResultBox;
 import de.micromata.mgc.javafx.launcher.gui.AbstractConfigTabController;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
@@ -45,6 +48,8 @@ public class JdbcConfigTabController extends AbstractConfigTabController<JdbcLoc
   @FXML
   private ComboBox<String> drivername;
 
+  @FXML
+  private Button testJdbcButton;
   @FXML
   @ModelGuiField
   private TextField url;
@@ -117,7 +122,13 @@ public class JdbcConfigTabController extends AbstractConfigTabController<JdbcLoc
       onShowExtended(extendedSettings.isSelected());
     });
     fromModel();
+    testJdbcButton.setOnAction(event -> {
+      toModel();
+      ValContext valContext = new ValContext().createSubContext(model, null);
+      model.validate(valContext);
+      ValMessageResultBox.showResultBox(valContext, "Connection Databse", "Result of Connecting DB");
 
+    });
     onShowExtended(extendedSettings.isSelected());
   }
 

@@ -226,4 +226,14 @@ public class MailReceiverLocalSettingsConfigModel extends AbstractLocalSettingsC
     this.forceEnabled = forceEnabled;
   }
 
+  public String getEnabled()
+  {
+    return enabled;
+  }
+
+  public void setEnabled(String enabled)
+  {
+    this.enabled = enabled;
+  }
+
 }

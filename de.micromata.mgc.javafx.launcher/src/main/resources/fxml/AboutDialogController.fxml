@@ -7,10 +7,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="344.0" prefWidth="447.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.micromata.mgc.javafx.launcher.gui.AboutDialogController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="344.0" prefWidth="475.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.micromata.mgc.javafx.launcher.gui.AboutDialogController">
    <children>
-      <VBox prefHeight="333.0" prefWidth="447.0">
+      <VBox prefHeight="333.0" prefWidth="475.0">
          <children>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
@@ -26,7 +25,7 @@
                   </AnchorPane>
                </children>
             </HBox>
-            <AnchorPane fx:id="appDetails" prefHeight="200.0" prefWidth="200.0">
+            <AnchorPane fx:id="appDetails" prefHeight="200.0">
                <padding>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </padding>
@@ -34,11 +33,11 @@
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </VBox.margin>
             </AnchorPane>
-            <AnchorPane prefHeight="89.0" prefWidth="447.0">
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Button fx:id="okButton" layoutX="198.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="52.0" text="Ok" />
+                  <Button fx:id="okButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="27.0" prefWidth="52.0" text="Ok" />
                </children>
-            </AnchorPane>
+            </HBox>
          </children>
       </VBox>
    </children>

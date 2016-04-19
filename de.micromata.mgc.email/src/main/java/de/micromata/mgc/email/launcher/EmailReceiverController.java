@@ -45,7 +45,7 @@ public class EmailReceiverController extends AbstractConfigTabController<MailRec
 {
   @FXML
   @ModelGuiField
-  private CheckBox enable;
+  private CheckBox enabled;
   @FXML
   Button testButton;
   @FXML
@@ -79,7 +79,7 @@ public class EmailReceiverController extends AbstractConfigTabController<MailRec
   public void initializeWithModel()
   {
     if (model.isForceEnabled() == true) {
-      enable.setDisable(true);
+      enabled.setDisable(true);
     }
     protocol.setItems(FXCollections
         .observableList(MailReceiverServiceManager.get().getMailReceiveService().getProviders(Provider.Type.STORE)));
