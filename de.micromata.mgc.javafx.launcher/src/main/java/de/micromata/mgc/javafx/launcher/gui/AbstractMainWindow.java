@@ -83,6 +83,8 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>
   protected Button stopServerButton;
 
   @FXML
+  protected Button helpButton;
+  @FXML
   protected Button openBrowser;
 
   @FXML
@@ -163,7 +165,14 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>
     loggingController.adjustHeight(loggingPane.getHeight());
     loggingController.adjustWidth(loggingPane.getWidth());
     MgcEventRegistries.getEventInstanceRegistry().registerListener(new MgcApplicationStartStopToEventListener());
-
+    String helpUrl = getModel().getApplicationInfo().getHelpUrl();
+    if (StringUtils.isBlank(helpUrl) == true) {
+      helpButton.setVisible(false);
+    } else {
+      helpButton.setOnAction(event -> {
+        SystemService.get().openUrlInBrowser(helpUrl);
+      });
+    }
     FXEvents.get().addEventHandler(this, stopServerButton, MgcLauncherEvent.APP_STARTED, event -> {
 
       if (config.isStartBrowserOnStartup() == true) {

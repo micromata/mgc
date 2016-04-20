@@ -16,6 +16,12 @@
 
 package de.micromata.mgc.application;
 
+/**
+ * Information about a MGC applictation.
+ * 
+ * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
+ *
+ */
 public interface MgcApplicationInfo
 {
   String getLogoLargePath();
@@ -31,4 +37,6 @@ public interface MgcApplicationInfo
   String getLicense();
 
   String getHomeUrl();
+
+  String getHelpUrl();
 }

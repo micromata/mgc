@@ -40,6 +40,7 @@ public class ManifestMgcApplicationInfo implements MgcApplicationInfo
   private static final String MgcLargLogoPath = "MgcLargLogoPath";
   private static final String MgcLicense = "MgcLicense";
   private static final String MgcHomeUrl = "MgcHomeUrl";
+  private static final String MgcHelpUrl = "MgcHelpUrl";
 
   private boolean inited = false;
   private String logoLargePath;
@@ -49,7 +50,7 @@ public class ManifestMgcApplicationInfo implements MgcApplicationInfo
   private String detailInfo;
   private String license;
   private String homeUrl;
-
+  private String helpUrl;
   private MgcApplication<?> application;
 
   public ManifestMgcApplicationInfo(MgcApplication<?> application)
@@ -75,6 +76,7 @@ public class ManifestMgcApplicationInfo implements MgcApplicationInfo
     logoLargePath = manifest.getMainAttributes().getValue(MgcLargLogoPath);
     license = manifest.getMainAttributes().getValue(MgcLicense);
     homeUrl = manifest.getMainAttributes().getValue(MgcHomeUrl);
+    helpUrl = manifest.getMainAttributes().getValue(MgcHelpUrl);
     inited = true;
 
   }
@@ -104,38 +106,6 @@ public class ManifestMgcApplicationInfo implements MgcApplicationInfo
     } catch (IOException ex) {
       return null;
     }
-    //    Class<? extends MgcApplication> cl = application.getClass();
-    //    InputStream inputStream = null;
-    //    try {
-    //      URLClassLoader classLoader = (URLClassLoader) cl.getClassLoader();
-    //      String classFilePath = cl.getName().replace('.', '/') + ".class";
-    //      URL classUrl = classLoader.getResource(classFilePath);
-    //      if (classUrl == null) {
-    //        return null;
-    //      }
-    //      String classUri = classUrl.toString();
-    //      if (classUri.startsWith("jar:") == false) {
-    //        return null;
-    //      }
-    //      int separatorIndex = classUri.lastIndexOf('!');
-    //      if (separatorIndex <= 0) {
-    //        return null;
-    //      }
-    //      String manifestUri = classUri.substring(0, separatorIndex + 2) + "META-INF/MANIFEST.MF";
-    //      URL url = new URL(manifestUri);
-    //      inputStream = url.openStream();
-    //      return new Manifest(inputStream);
-    //    } catch (Throwable e) {
-    //      return null;
-    //    } finally {
-    //      if (inputStream != null) {
-    //        try {
-    //          inputStream.close();
-    //        } catch (Throwable e) {
-    //          // ignore
-    //        }
-    //      }
-    //    }
   }
 
   @Override
@@ -187,4 +157,15 @@ public class ManifestMgcApplicationInfo implements MgcApplicationInfo
     return homeUrl;
   }
 
+  @Override
+  public String getHelpUrl()
+  {
+    init();
+    return helpUrl;
+  }
+
+  public boolean hasHelpUrl()
+  {
+    return StringUtils.isNotBlank(getHelpUrl());
+  }
 }

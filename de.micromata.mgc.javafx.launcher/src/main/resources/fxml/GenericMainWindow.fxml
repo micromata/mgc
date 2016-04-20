@@ -49,6 +49,7 @@
                   <Image url="@/style/genome_dashboard.png" />
                </image>
             </ImageView>
+            <Button fx:id="helpButton" layoutX="960.0" layoutY="7.0" mnemonicParsing="false" text="?" />
          </children>
       </Pane>
       <AnchorPane fx:id="loggingPane" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">

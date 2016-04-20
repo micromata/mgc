@@ -32,7 +32,8 @@ public class LauncherLocalSettingsConfigModel extends AbstractCompositLocalSetti
     Normal, Minimized, SystemTrayOnly
   }
 
-  @ALocalSettingsPath(defaultValue = "Normal")
+  @ALocalSettingsPath(defaultValue = "Normal",
+      comment = "Window state of the Launcher Main window. Valid values are Normal, Minimized, SystemTrayOnly")
   private String windowSettings;
   @ALocalSettingsPath(defaultValue = "false", comment = "Starting application also starts server")
   private String startServerAtStartup;
