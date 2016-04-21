@@ -29,6 +29,7 @@ import org.apache.commons.lang.StringUtils;
 import de.micromata.genome.util.validation.ValContext;
 import de.micromata.genome.util.validation.ValMessage;
 import de.micromata.genome.util.validation.ValState;
+import de.micromata.mgc.javafx.feedback.ValMessageResultBox;
 import de.micromata.mgc.javafx.launcher.gui.AbstractConfigTabController;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -152,7 +153,8 @@ public class JettyConfigTabController extends AbstractConfigTabController<JettyC
     createSslValidate(ctx);
     if (ctx.hasMessages() == true) {
       clearTabErros();
-      mapValidationMessagesToGui(ctx);
+      ValMessageResultBox.showResultBox(ctx, "Certificate creation failed", "");
+      //      getConfigDialog().mapValidationMessagesToGui(ctx);
     }
   }
 
@@ -162,14 +164,19 @@ public class JettyConfigTabController extends AbstractConfigTabController<JettyC
     if (StringUtils.isNotBlank(sslKeystorePath.getText()) == true) {
       String sp = sslKeystorePath.getText();
       if (sp.contains("/") == false && sp.contains("\\") == false) {
-        storePath = new File(new File("."), sp);
+        if (StringUtils.isBlank(sp) == true) {
+          storePath = new File(".");
+        } else {
+          storePath = new File(new File("."), sp);
+        }
       } else {
         storePath = new File(sslKeystorePath.getText());
       }
     }
     if (storePath.getParentFile() == null || storePath.getParentFile().exists() == false) {
       ctx.directError("sslKeystorePath",
-          "The parent path doesn't exists: " + storePath.getParentFile().getAbsolutePath());
+          "The parent path doesn't exists: " + (storePath.getParentFile() == null ? "null"
+              : storePath.getParentFile().getAbsolutePath()));
       return;
     }
     if (storePath.exists() && storePath.isDirectory() == true) {
@@ -197,8 +204,9 @@ public class JettyConfigTabController extends AbstractConfigTabController<JettyC
     }
     KeyTool.generateKey(ctx, storePath, sslKeystorePassword.getText(), sslCertAlias.getText());
     Alert alert = new Alert(AlertType.WARNING);
-    alert.setTitle("Keytool");
-    alert.setHeaderText("You are using a self signed certificate, which should not be used in production.");
+    alert.setTitle("Certificate created");
+    alert.setHeaderText(
+        "Certificate created. You are using a self signed certificate, which should not be used in production.");
     alert.setContentText(
         "If you open the browser, will will receive a warning, that the certificate is not secure.\n"
             + "You have to accept the certificate to continue.");

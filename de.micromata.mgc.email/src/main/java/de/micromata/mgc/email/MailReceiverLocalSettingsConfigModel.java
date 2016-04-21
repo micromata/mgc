@@ -236,4 +236,9 @@ public class MailReceiverLocalSettingsConfigModel extends AbstractLocalSettingsC
     this.enabled = enabled;
   }
 
+  public String getDefaultFolder()
+  {
+    return defaultFolder;
+  }
+
 }

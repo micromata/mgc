@@ -120,10 +120,10 @@ public class FXEvents
       }
       Object themod = model;
       String theprop = property;
+      if (themod == msg.getReference()) {
+        if (StringUtils.isNotBlank(property) && StringUtils.isNotBlank(msg.getProperty()) == true
+            && property.equals(msg.getProperty()) == true) {
 
-      if (StringUtils.isNotBlank(property) && StringUtils.isNotBlank(msg.getProperty()) == true
-          && property.equals(msg.getProperty()) == true) {
-        if (themod == msg.getReference()) {
           controller.addToFeedback(msg);
           FXGuiUtils.markErroneousField(controller, node, msg);
           event.consume();

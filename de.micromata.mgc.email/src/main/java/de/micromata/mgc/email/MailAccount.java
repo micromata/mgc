@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+import java.util.function.Supplier;
 
 import javax.mail.Address;
 import javax.mail.FetchProfile;
@@ -62,6 +63,26 @@ public class MailAccount implements AutoCloseable
   public MailAccount(MailReceiverLocalSettingsConfigModel mailAccountConfig)
   {
     this.config = mailAccountConfig;
+  }
+
+  /**
+   * 
+   * @param write
+   * @param callback
+   * @return null if not connected, otherwise return value of callback.
+   */
+  public <T> T runWithFolder(boolean write, Supplier<T> callback)
+  {
+    boolean connected = connect(config.getDefaultFolder(), write);
+    if (connected == false) {
+      return null;
+    }
+    try {
+      return callback.get();
+    } finally {
+      close();
+    }
+
   }
 
   /** Gets the stored email of the given user. */
@@ -433,6 +454,16 @@ public class MailAccount implements AutoCloseable
   public Session getSession()
   {
     return session;
+  }
+
+  public Folder getFolder()
+  {
+    return folder;
+  }
+
+  public Store getStore()
+  {
+    return store;
   }
 
 }

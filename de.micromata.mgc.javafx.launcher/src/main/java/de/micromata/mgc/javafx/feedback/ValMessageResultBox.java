@@ -25,9 +25,12 @@ public class ValMessageResultBox
       type = AlertType.WARNING;
     }
     Alert alert = new Alert(type);
+    if (ctx.getMessages().isEmpty() == true) {
+      ctx.directInfo("", "Success");
+    }
     alert.setTitle(title);
     alert.setHeaderText(titleMessage);
-    alert.setContentText("Ooops, there was an error!");
+    //    alert.setContentText("Ooops, there was an error!");
     VBox vbox = new VBox();
     String firstMessage = null;
     for (ValMessage msg : ctx.getMessages()) {

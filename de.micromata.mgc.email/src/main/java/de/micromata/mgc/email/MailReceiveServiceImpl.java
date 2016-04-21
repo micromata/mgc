@@ -202,7 +202,7 @@ public class MailReceiveServiceImpl implements MailReceiveService
       return mailAccount.testConnect();
 
     } catch (MessagingException e) {
-      ctx.directError("", e.getMessage());
+      ctx.directError("", e.getMessage(), e);
       return Collections.emptyList();
     }
   }
