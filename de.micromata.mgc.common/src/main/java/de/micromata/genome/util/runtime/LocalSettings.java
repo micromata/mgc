@@ -331,6 +331,16 @@ public class LocalSettings implements LocalSettingsService
     this.fromFile = fromFile;
   }
 
+  public List<String> getLoadedFilesPath()
+  {
+    ArrayList<String> list = new ArrayList<>();
+    for (File loadedFile : localSettingsLoader.getLoadedFiles()) {
+      list.add(loadedFile.getAbsolutePath());
+    }
+    return list;
+  }
+
+
   /**
    * Call this after loading local settings and initialized logging.
    */
