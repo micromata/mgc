@@ -16,20 +16,20 @@
 
 package de.micromata.genome.util.runtime;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.function.Function;
-
+import de.micromata.genome.util.collections.OrderedProperties;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import de.micromata.genome.util.collections.OrderedProperties;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.function.Function;
 
 /**
  * Standard implementation to load local-settings.properties.
@@ -124,7 +124,10 @@ public class StdLocalSettingsLoader implements LocalSettingsLoader
   public void loadSettingsImpl(LocalSettings ls)
   {
     //log.info("Loading localSettingsfile: " + new File(localSettingsFile).getAbsolutePath());
-    loadSettings(ls, getLocalSettingsFile(), ls.getMap(), true, true);
+    HashMap<String, String> map = new HashMap<>();
+    loadSettings(ls, getLocalSettingsFile(), map, true, true);
+    ls.getMap().putAll(map);
+    ls.getFromFile().putAll(map);
     loadOptionalDev(ls);
     loadSystemEnv(ls);
     loadSystemProperties(ls);
@@ -132,9 +135,11 @@ public class StdLocalSettingsLoader implements LocalSettingsLoader
 
   protected void loadOptionalDev(LocalSettings ls)
   {
+    HashMap<String, String> map = new HashMap<>();
     loadSettings(ls, new File(getLocalSettingsFile().getParentFile(), localSettingsPrefixName + "-dev.properties"),
-        ls.getMap(), false,
-        false);
+        map, false, false);
+    ls.getMap().putAll(map);
+    ls.getFromFile().putAll(map);
   }
 
   protected void loadSystemEnv(LocalSettings ls)

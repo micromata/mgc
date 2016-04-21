@@ -16,6 +16,11 @@
 
 package de.micromata.genome.util.runtime;
 
+import de.micromata.genome.util.text.PlaceHolderReplacer;
+import de.micromata.genome.util.types.Pair;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,12 +28,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.function.Supplier;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-
-import de.micromata.genome.util.text.PlaceHolderReplacer;
-import de.micromata.genome.util.types.Pair;
 
 /**
  * Wrapper for local-settings.properties
@@ -64,6 +63,11 @@ public class LocalSettings implements LocalSettingsService
     return getImpl();
   }
 
+  static public LocalSettings resetAndGet(){
+    resetImpl();
+    return getImpl();
+  }
+
   static protected LocalSettings getImpl()
   {
     if (INSTANCE != null) {
@@ -95,6 +99,8 @@ public class LocalSettings implements LocalSettingsService
    * The map.
    */
   private Map<String, String> map = new HashMap<String, String>();
+
+  private Map<String, String> fromFile = new HashMap<>();
 
   /**
    * Default values for test envirments.
@@ -313,6 +319,16 @@ public class LocalSettings implements LocalSettingsService
   public void setMap(Map<String, String> map)
   {
     this.map = map;
+  }
+
+  public Map<String, String> getFromFile()
+  {
+    return fromFile;
+  }
+
+  public void setFromFile(Map<String, String> fromFile)
+  {
+    this.fromFile = fromFile;
   }
 
   /**
