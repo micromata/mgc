@@ -95,7 +95,7 @@ public class TriggerJobDisplayDO extends TriggerJobDO
   @Override
   public String getJobDefinitionString()
   {
-    return StringEscapeUtils.escapeHtml(super.getJobDefinitionString());
+    return super.getJobDefinitionString();
   }
 
   public String getJobDefinitionStringShortShort(){
