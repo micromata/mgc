@@ -21,11 +21,11 @@ import java.util.List;
 import javax.mail.Provider;
 
 import de.micromata.genome.util.validation.ValContext;
-import de.micromata.genome.util.validation.ValState;
 import de.micromata.mgc.email.MailReceiveService;
 import de.micromata.mgc.email.MailReceiverLocalSettingsConfigModel;
 import de.micromata.mgc.email.MailReceiverServiceManager;
 import de.micromata.mgc.javafx.ModelGuiField;
+import de.micromata.mgc.javafx.feedback.ValMessageResultBox;
 import de.micromata.mgc.javafx.launcher.gui.AbstractConfigTabController;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -101,10 +101,11 @@ public class EmailReceiverController extends AbstractConfigTabController<MailRec
     }
     MailReceiveService service = MailReceiverServiceManager.get().getMailReceiveService();
     List<String> folderlist = service.testConnection(model, ctx);
-    if (ctx.hasErrors() == false) {
-      ctx.addDirect(ValState.Ok, model, null, "Successfull connected", null);
-    }
-    getConfigDialog().mapValidationMessagesToGui(ctx);
+    ValMessageResultBox.showResultBox(ctx, "Mailfolder", "");
+    //    if (ctx.hasErrors() == false) {
+    //      ctx.addDirect(ValState.Ok, model, null, "Successfull connected", null);
+    //    }
+    //    getConfigDialog().mapValidationMessagesToGui(ctx);
     defaultFolder.setItems(FXCollections.observableList(folderlist));
 
   }
