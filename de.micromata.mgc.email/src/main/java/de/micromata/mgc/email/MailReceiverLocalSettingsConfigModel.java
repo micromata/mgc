@@ -213,7 +213,8 @@ public class MailReceiverLocalSettingsConfigModel extends AbstractLocalSettingsC
 
   public boolean isEnabled()
   {
-    return Boolean.getBoolean(enabled);
+    boolean ret = Boolean.parseBoolean(enabled);
+    return ret;
   }
 
   public boolean isForceEnabled()
