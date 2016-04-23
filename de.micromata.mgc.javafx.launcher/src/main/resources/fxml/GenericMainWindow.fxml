@@ -41,7 +41,7 @@
       </MenuBar>
       <Pane maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefWidth="1000.0">
          <children>
-            <Button fx:id="startServerButton" layoutX="292.0" layoutY="7.0" mnemonicParsing="false" text="%mgc.launcher.gui.button.startServer" />
+            <Button fx:id="startServerButton" layoutX="393.0" layoutY="7.0" mnemonicParsing="false" text="%mgc.launcher.gui.button.startServer" />
             <Button fx:id="stopServerButton" layoutX="517.0" layoutY="7.0" mnemonicParsing="false" text="%mgc.launcher.gui.button.stopServer" />
             <Button fx:id="openBrowser" layoutX="673.0" layoutY="7.0" minWidth="-Infinity" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" text="%mgc.launcher.gui.button.openBrowser" />
             <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="14.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true">

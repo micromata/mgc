@@ -140,6 +140,7 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>
     boolean runnin = MgcLauncher.get().getApplication().isRunning();
     startServerButton.setDisable(runnin);
     stopServerButton.setDisable(runnin == false);
+    openBrowser.setDisable(runnin == false);
     addStartServerEventHandler();
     addStopServerEventHandler();
 
@@ -186,6 +187,7 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>
     FXEvents.get().addEventHandler(this, stopServerButton, MgcLauncherEvent.APP_STARTED, event -> {
       startServerButton.setDisable(true);
       stopServerButton.setDisable(false);
+      openBrowser.setDisable(false);
     });
   }
 
@@ -194,6 +196,7 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>
     FXEvents.get().addEventHandler(this, stopServerButton, MgcLauncherEvent.APP_STOPPED, event -> {
       startServerButton.setDisable(false);
       stopServerButton.setDisable(true);
+      openBrowser.setDisable(true);
     });
   }
 
@@ -238,7 +241,7 @@ public abstract class AbstractMainWindow<M extends LocalSettingsConfigModel>
       MgcApplicationStartStopStatus res = model.start(MgcLauncher.originalMainArgs);
       if (res == MgcApplicationStartStopStatus.StartError) {
         startServerButton.setDisable(false);
-
+        openBrowser.setDisable(true);
       }
 
     });
