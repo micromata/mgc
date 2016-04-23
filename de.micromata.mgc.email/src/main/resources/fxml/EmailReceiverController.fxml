@@ -49,7 +49,7 @@
                   </HBox>
                   <HBox>
                      <children>
-                        <Label minWidth="150.0" text="Server hostname and port" />
+                        <Label minWidth="150.0" text="Hostname and port" />
                         <TextField fx:id="host" prefHeight="25.0" prefWidth="250.0" promptText="Host name" />
                         <TextField fx:id="port" prefHeight="25.0" prefWidth="130.0" promptText="Port number">
                            <HBox.margin>
