@@ -43,8 +43,8 @@ public class MgcTestCase
   public static void initLs()
   {
     LocalSettings ls = LocalSettings.get();
-    //    prepareJndi();
     Log4JInitializer.initializeLog4J();
+    LocalSettingsEnv.get();
   }
 
   protected static void prepareJndi()
