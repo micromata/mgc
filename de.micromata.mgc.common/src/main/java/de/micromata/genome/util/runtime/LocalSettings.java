@@ -16,11 +16,6 @@
 
 package de.micromata.genome.util.runtime;
 
-import de.micromata.genome.util.text.PlaceHolderReplacer;
-import de.micromata.genome.util.types.Pair;
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,6 +23,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.function.Supplier;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
+import de.micromata.genome.util.text.PlaceHolderReplacer;
+import de.micromata.genome.util.types.Pair;
 
 /**
  * Wrapper for local-settings.properties
@@ -63,7 +64,8 @@ public class LocalSettings implements LocalSettingsService
     return getImpl();
   }
 
-  static public LocalSettings resetAndGet(){
+  static public LocalSettings resetAndGet()
+  {
     resetImpl();
     return getImpl();
   }
@@ -74,7 +76,6 @@ public class LocalSettings implements LocalSettingsService
       return INSTANCE;
     }
     INSTANCE = localSettingsLoaderFactory.get().loadSettings();
-    LocalSettingsEnv.get();
     return INSTANCE;
   }
 
@@ -339,7 +340,6 @@ public class LocalSettings implements LocalSettingsService
     }
     return list;
   }
-
 
   /**
    * Call this after loading local settings and initialized logging.
