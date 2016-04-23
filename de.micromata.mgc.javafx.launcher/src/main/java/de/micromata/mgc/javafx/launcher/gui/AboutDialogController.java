@@ -16,17 +16,24 @@
 
 package de.micromata.mgc.javafx.launcher.gui;
 
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 
 import de.micromata.genome.util.validation.ValMessage;
 import de.micromata.mgc.application.MgcApplication;
 import de.micromata.mgc.application.MgcApplicationInfo;
 import de.micromata.mgc.javafx.SystemService;
+import groovy.json.internal.Charsets;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -41,6 +48,12 @@ import javafx.scene.text.TextFlow;
 public class AboutDialogController extends AbstractModelController<MgcApplication<?>>
 {
   @FXML
+  private Pane aboutLogoPanel;
+  @FXML
+  private Pane licensePanel;
+  @FXML
+  private Pane buttonPanel;
+  @FXML
   private ImageView logo;
   @FXML
   private Pane appInfo;
@@ -48,11 +61,28 @@ public class AboutDialogController extends AbstractModelController<MgcApplicatio
   private Pane appDetails;
   @FXML
   private Button okButton;
+  @FXML
+  private TextArea licenceTextArea;
 
   @Override
   public void initializeWithModel()
   {
     MgcApplicationInfo ai = model.getApplicationInfo();
+
+    AnchorPane.setTopAnchor(aboutLogoPanel, 2.0);
+    AnchorPane.setRightAnchor(aboutLogoPanel, 2.0);
+    AnchorPane.setLeftAnchor(aboutLogoPanel, 2.0);
+    AnchorPane.setTopAnchor(aboutLogoPanel, 2.0);
+    AnchorPane.setRightAnchor(licensePanel, 2.0);
+    AnchorPane.setLeftAnchor(licensePanel, 2.0);
+    AnchorPane.setRightAnchor(licenceTextArea, 5.0);
+    AnchorPane.setLeftAnchor(licenceTextArea, 2.0);
+    //    AnchorPane.setTopAnchor(licensePanel, 100.0);
+    //    AnchorPane.setBottomAnchor(configurationTabs, 5.0);
+    AnchorPane.setRightAnchor(buttonPanel, 2.0);
+    AnchorPane.setLeftAnchor(buttonPanel, 2.0);
+    AnchorPane.setBottomAnchor(buttonPanel, 2.0);
+
     okButton.setOnAction(event -> getStage().close());
 
     String name = ai.getName() + " " + ai.getVersion();
@@ -80,6 +110,25 @@ public class AboutDialogController extends AbstractModelController<MgcApplicatio
       detailText.getChildren().add(hlink);
     }
     appDetails.getChildren().add(detailText);
+    initLicenseText();
+  }
+
+  private void initLicenseText()
+  {
+    try {
+
+      InputStream is = getClass().getClassLoader().getResourceAsStream("AppLicense.txt");
+      if (is == null) {
+        licenceTextArea.setMaxHeight(0.0);
+        licenceTextArea.setVisible(false);
+        return;
+      }
+      String text = IOUtils.toString(is, Charsets.UTF_8);
+      licenceTextArea.setText(text);
+      IOUtils.closeQuietly(is);
+    } catch (IOException ex) {
+
+    }
 
   }
 
