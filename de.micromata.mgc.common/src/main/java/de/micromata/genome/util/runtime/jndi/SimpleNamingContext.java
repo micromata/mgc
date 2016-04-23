@@ -124,6 +124,15 @@ public class SimpleNamingContext implements Context
     return new BindingEnumeration(this, root);
   }
 
+  private String fixJavaCompName(String name)
+  {
+    if (StringUtils.startsWith(name, "java:/comp") == false) {
+      return name;
+    }
+    name = "java:" + name.substring("java:/".length());
+    return name;
+  }
+
   /**
    * Look up the object with the given name.
    * <p>
@@ -136,6 +145,7 @@ public class SimpleNamingContext implements Context
   public Object lookupImpl(String lookupName) throws NameNotFoundException
   {
     String name = this.root + lookupName;
+    name = fixJavaCompName(name);
     if (LOG.isDebugEnabled()) {
       LOG.debug("LsEnv; Static JNDI lookup: [" + name + "]");
     }
@@ -216,6 +226,7 @@ public class SimpleNamingContext implements Context
   @Override
   public void bind(String name, Object obj)
   {
+    name = fixJavaCompName(name);
     if (LOG.isInfoEnabled()) {
       LOG.info("LsEnv; Static JNDI binding: [" + this.root + name + "] = ["
           + SimpleNamingContextBuilder.jndiObjectToString(obj) + "]");
@@ -229,6 +240,7 @@ public class SimpleNamingContext implements Context
   @Override
   public void unbind(String name)
   {
+    name = fixJavaCompName(name);
     if (LOG.isInfoEnabled()) {
       LOG.info("LsEnv; Static JNDI remove: [" + this.root + name + "]");
     }
