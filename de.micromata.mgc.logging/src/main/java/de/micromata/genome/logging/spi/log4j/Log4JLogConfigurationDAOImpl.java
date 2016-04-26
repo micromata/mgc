@@ -96,13 +96,14 @@ public class Log4JLogConfigurationDAOImpl implements LogConfigurationDAO
   /*
    * (non-Javadoc)
    * 
-   * @see de.micromata.genome.logging.LogConfigurationDAO#isLogEnabled(de.micromata.genome.logging.LogLevel, java.lang.String,
-   * java.lang.String)
+   * @see de.micromata.genome.logging.LogConfigurationDAO#isLogEnabled(de.micromata.genome.logging.LogLevel,
+   * java.lang.String, java.lang.String)
    */
   @Override
   public boolean isLogEnabled(LogLevel logLevel, String categoryNamePart, String message)
   {
-    Logger log = Logger.getLogger(log4jCategoryPrefix + categoryNamePart + "." + message);
+    // NOT append message, because this results to a memory leak in org.apache.log4j.Hierarchy
+    Logger log = Logger.getLogger(log4jCategoryPrefix + categoryNamePart);
     return log.isEnabledFor(Log4JLogging.mapLoglevel(logLevel));
   }
 
