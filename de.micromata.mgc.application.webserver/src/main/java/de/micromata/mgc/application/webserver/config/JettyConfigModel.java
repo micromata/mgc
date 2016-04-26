@@ -198,6 +198,16 @@ public class JettyConfigModel extends AbstractCompositLocalSettingsConfigModel
     this.publicUrl = publicUrl;
   }
 
+  public String getSessionTimeout()
+  {
+    return sessionTimeout;
+  }
+
+  public void setSessionTimeout(String sessionTimeout)
+  {
+    this.sessionTimeout = sessionTimeout;
+  }
+
   public int getSessionTimeoutAsInt()
   {
     return asInt(sessionTimeout);

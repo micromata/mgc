@@ -49,6 +49,15 @@
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </VBox.margin>
                      <children>
+                        <Label minWidth="150.0" text="Session timout in Sec" />
+                        <TextField fx:id="sessionTimeout" />
+                     </children>
+                  </HBox>
+                  <HBox>
+                     <VBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </VBox.margin>
+                     <children>
                         <Label minWidth="150.0" text="Listen on IP" />
                         <ChoiceBox fx:id="listenHost" prefHeight="25.0" prefWidth="400.0" />
                      </children>

@@ -59,6 +59,8 @@ public class JettyConfigTabController extends AbstractConfigTabController<JettyC
   @FXML
   private TextField publicUrl;
   @FXML
+  private TextField sessionTimeout;
+  @FXML
   private ChoiceBox<String> listenHost;
   @FXML
   private CheckBox serverEnableJmx;
@@ -235,6 +237,7 @@ public class JettyConfigTabController extends AbstractConfigTabController<JettyC
     model.setListenHost(listenHost.getValue());
     model.setContextPath(contextPath.getText());
     model.setPublicUrl(publicUrl.getText());
+    model.setSessionTimeout(sessionTimeout.getText());
     model.setServerEnableJmx(serverEnableJmx.isSelected());
     model.setServerRequestLoggingEnabled(serverRequestLoggingEnabled.isSelected());
 
@@ -254,6 +257,7 @@ public class JettyConfigTabController extends AbstractConfigTabController<JettyC
   {
     port.setText(model.getPort());
     contextPath.setText(model.getContextPath());
+    sessionTimeout.setText(model.getSessionTimeout());
     listenHost.setValue(model.getListenHost());
     publicUrl.setText(model.getPublicUrl());
     serverEnableJmx.setSelected(model.isServerEnableJmx());
