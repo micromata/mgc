@@ -287,8 +287,16 @@ public class SchedulerImpl implements Scheduler, RejectedExecutionHandler
     }
     TriggerJobDO jobToExecute = jobStore.reserveJob(job);
     if (jobToExecute == null) {
+      /**
+       * @logging
+       * @reason cannot reserve job (set to SCHEDULE), probably because other node already reserved it.
+       * @action nothing
+       */
+      GLog.info(GenomeLogCategory.Scheduler, "Cannot reservice job",
+          new LogJobEventAttribute(new JobEventImpl(job, job.getJobDefinition(), null, null, this)));
       return false;
     }
+
     executeJobNow(jobToExecute, jobStore);
     return true;
   }
