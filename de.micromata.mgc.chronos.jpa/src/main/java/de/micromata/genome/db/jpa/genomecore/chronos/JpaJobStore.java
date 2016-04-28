@@ -376,24 +376,20 @@ public class JpaJobStore extends AbstractJobStore
     if (LOG.isDebugEnabled() == true) {
       LOG.debug("reserveJob: " + job);
     }
-    emfac.runInTrans(new EmgrCallable<Void, DefaultEmgr>()
-    {
-      @Override
-      public Void call(DefaultEmgr emgr)
-      {
-        CriteriaUpdate<JpaTriggerJobDO> cu = CriteriaUpdate.createUpdate(JpaTriggerJobDO.class);
-        cu.set("state", State.SCHEDULED)
-            .addWhere(Clauses.and(
-                Clauses.equal("pk", job.getPk()),
-                Clauses.equal("state", State.WAIT)));
-        int count = emgr.update(cu);
-        if (count > 0) {
-          job.setState(State.SCHEDULED);
-        }
-        return null;
+    return emfac.runInTrans(emgr -> {
+      CriteriaUpdate<JpaTriggerJobDO> cu = CriteriaUpdate.createUpdate(JpaTriggerJobDO.class);
+      cu.set("state", State.SCHEDULED)
+          .addWhere(Clauses.and(
+              Clauses.equal("pk", job.getPk()),
+              Clauses.equal("state", State.WAIT)));
+      int count = emgr.update(cu);
+      if (count > 0) {
+        job.setState(State.SCHEDULED);
+        return job;
       }
+      return null;
     });
-    return job;
+
   }
 
   @Override
