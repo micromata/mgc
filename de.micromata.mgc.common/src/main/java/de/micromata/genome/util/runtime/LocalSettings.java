@@ -16,6 +16,11 @@
 
 package de.micromata.genome.util.runtime;
 
+import de.micromata.genome.util.text.PlaceHolderReplacer;
+import de.micromata.genome.util.types.Pair;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,12 +28,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.function.Supplier;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-
-import de.micromata.genome.util.text.PlaceHolderReplacer;
-import de.micromata.genome.util.types.Pair;
 
 /**
  * Wrapper for local-settings.properties
@@ -64,12 +63,6 @@ public class LocalSettings implements LocalSettingsService
     return getImpl();
   }
 
-  static public LocalSettings resetAndGet()
-  {
-    resetImpl();
-    return getImpl();
-  }
-
   static protected LocalSettings getImpl()
   {
     if (INSTANCE != null) {
@@ -79,7 +72,7 @@ public class LocalSettings implements LocalSettingsService
     return INSTANCE;
   }
 
-  protected static void resetImpl()
+  public static void resetImpl()
   {
     INSTANCE = null;
   }
@@ -322,6 +315,10 @@ public class LocalSettings implements LocalSettingsService
     this.map = map;
   }
 
+  /**
+   * Gets only LocalSettings from LocalSettings.properties-File, without the System's environment
+   * @return
+   */
   public Map<String, String> getFromFile()
   {
     return fromFile;
