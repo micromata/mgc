@@ -4,7 +4,7 @@
   version='1.0'>
   <persistence-unit name="de.micromata.genome.jpa.multipc.first" transaction-type="RESOURCE_LOCAL">
     <provider>org.hibernate.ejb.HibernatePersistence</provider>
-    <non-jta-data-source>java:/comp/env/genome/jdbc/dsWeb</non-jta-data-source>
+    <non-jta-data-source>java:comp/env/genome/jdbc/dsWeb</non-jta-data-source>
 
     <class>de.micromata.mgc.db.jpa.multipc.entities.MyUserDO</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
@@ -14,18 +14,18 @@
   </persistence-unit>
   <persistence-unit name="de.micromata.genome.jpa.multipc.second" transaction-type="RESOURCE_LOCAL">
     <provider>org.hibernate.ejb.HibernatePersistence</provider>
-    <non-jta-data-source>java:/comp/env/genome/jdbc/dsWeb</non-jta-data-source>
+    <non-jta-data-source>java:comp/env/genome/jdbc/dsWeb</non-jta-data-source>
     <class>de.micromata.genome.jpa.multipc.entities.MySkillDO</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
   </persistence-unit>
   <persistence-unit name="de.micromata.genome.jpa.multipc.auto" transaction-type="RESOURCE_LOCAL">
     <provider>org.hibernate.ejb.HibernatePersistence</provider>
-    <non-jta-data-source>java:/comp/env/genome/jdbc/dsWeb</non-jta-data-source>
+    <non-jta-data-source>java:comp/env/genome/jdbc/dsWeb</non-jta-data-source>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
   </persistence-unit>
   <persistence-unit name="de.micromata.genome.jpa.test" transaction-type="RESOURCE_LOCAL">
     <provider>org.hibernate.ejb.HibernatePersistence</provider>
-    <non-jta-data-source>java:/comp/env/genome/jdbc/dsWeb</non-jta-data-source>
+    <non-jta-data-source>java:comp/env/genome/jdbc/dsWeb</non-jta-data-source>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
   </persistence-unit>
 </persistence>
