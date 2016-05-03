@@ -12,7 +12,6 @@
    Sample for the jetty
   </description>
   <properties>
-    <mgc.version>2.1.0-SNAPSHOT</mgc.version><!-- MGC -->
     <start-class>de.micromata.mgc.jettystarter.sample.SampleJettyMain</start-class>
   </properties>
 
