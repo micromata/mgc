@@ -16,10 +16,10 @@
 
 package de.micromata.genome.db.jpa.normsearch.entities;
 
+import de.micromata.genome.jpa.StdRecordDO;
+
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
-
-import de.micromata.genome.jpa.StdRecordDO;
 
 /**
  * Base table for normalized search.
@@ -43,13 +43,11 @@ public abstract class NormSearchDO extends StdRecordDO<Long> {
 	/**
 	 * The col name.
 	 */
-	@Column(name = "COLNAME", length = 30)
 	private String colName;
 
 	/**
 	 * The value.
 	 */
-	@Column(name = "VALUE", length = 50)
 	private String value;
 
 	/**
@@ -57,6 +55,7 @@ public abstract class NormSearchDO extends StdRecordDO<Long> {
 	 *
 	 * @return the col name
 	 */
+	@Column(name = "COLNAME", length = 30)
 	public String getColName() {
 		return colName;
 	}
@@ -76,6 +75,7 @@ public abstract class NormSearchDO extends StdRecordDO<Long> {
 	 *
 	 * @return the value
 	 */
+	@Column(name = "VALUE", length = 50)
 	public String getValue() {
 		return value;
 	}
