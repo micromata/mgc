@@ -48,7 +48,7 @@ public class HistoryMasterClassBridge implements MetadataProvidingFieldBridge
   public void set(String name, Object value, Document document, LuceneOptions luceneOptions)
   {
     if (value == null) {
-      logError("Error in history class bridge: Object is null.");
+      log.error("Error in history class bridge: Object is null.");
       return;
     }
     HistoryMasterBaseDO<?, ?> hm = (HistoryMasterBaseDO<?, ?>) value;
@@ -57,25 +57,25 @@ public class HistoryMasterClassBridge implements MetadataProvidingFieldBridge
       Field field = new LongField("entityId", hm.getEntityId(), Field.Store.YES);
       document.add(field);
     } else {
-      logError("Error in history class bridge: entityId is null.");
+      log.error("Error in history class bridge: entityId is null.");
     }
     if (hm.getEntityName() != null) {
       Field field = new StringField("entityName", hm.getEntityName(), TabAttrFieldBridge.DEFAULT_STORE);
       document.add(field);
     } else {
-      logError("Error in history class bridge: entityName is null.");
+      log.error("Error in history class bridge: entityName is null.");
     }
     if (hm.getModifiedAt() != null) {
       Field field = new LongField("modifiedAt", hm.getModifiedAt().getTime(), TabAttrFieldBridge.DEFAULT_STORE);
       document.add(field);
     } else {
-      logError("Error in history class bridge: modifiedAt is null.");
+      log.error("Error in history class bridge: modifiedAt is null.");
     }
 
     for (String key : hm.getAttributeKeys()) {
       String svalue = hm.getStringAttribute(key);
       if (StringUtils.isBlank(svalue) == true) {
-        logError("Error in history class bridge: value of attribute key: " + key + " is null.");
+        log.info("HistoryMaster class bridge: value of attribute key: " + key + " is null.");
         continue;
       }
       if (StringUtils.endsWith(key, ":ov") == true) {
@@ -87,11 +87,6 @@ public class HistoryMasterClassBridge implements MetadataProvidingFieldBridge
         document.add(field);
       }
     }
-  }
-
-  private void logError(String message)
-  {
-    log.error(message);
   }
 
   @Override
