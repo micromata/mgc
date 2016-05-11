@@ -19,56 +19,49 @@ package de.micromata.genome.db.jpa.tabattr.api;
 import java.io.Serializable;
 import java.util.List;
 
-/**
- *
- * A Schema for Attributes.
- *
- * @author Roger Kommer (r.kommer.extern@micromata.de)
- *
- */
-public class AttrSchema implements Serializable
+public class AttrSchemaGroup implements Serializable
 {
 
   /**
-   * The groups.
+   * The columns.
    */
-  private List<AttrSchemaGroup> groups;
+  private List<AttrDescription> columns;
 
   /**
-   * Instantiates a new attr schema.
+   * Instantiates a new attr schema group.
    */
-  public AttrSchema()
+  public AttrSchemaGroup()
   {
 
   }
 
   /**
-   * Instantiates a new attr schema.
+   * Instantiates a new attr schema group.
    *
-   * @param groups the groups
+   * @param columns the columns
    */
-  public AttrSchema(final List<AttrSchemaGroup> groups)
+  public AttrSchemaGroup(final List<AttrDescription> columns)
   {
-    this.groups = groups;
+    this.columns = columns;
   }
 
   /**
-   * Gets the groups.
+   * Gets the columns.
    *
-   * @return the groups
+   * @return the columns
    */
-  public List<AttrSchemaGroup> getGroups()
+  public List<AttrDescription> getColumns()
   {
-    return groups;
+    return columns;
   }
 
   /**
-   * Sets the groups.
+   * Sets the columns.
    *
-   * @param groups the new groups
+   * @param columns the new columns
    */
-  public void setGroups(final List<AttrSchemaGroup> groups)
+  public void setColumns(final List<AttrDescription> columns)
   {
-    this.groups = groups;
+    this.columns = columns;
   }
 }

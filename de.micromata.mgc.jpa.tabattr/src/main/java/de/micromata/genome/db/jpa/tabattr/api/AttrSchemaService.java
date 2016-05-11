@@ -34,7 +34,6 @@ public interface AttrSchemaService
   /**
    * Loads the meta description for the Entity.
    *
-   * @param attrMaster the attr master
    * @return the attr descriptions
    */
   AttrSchema getAttrSchema(String name);
