@@ -72,20 +72,24 @@ public class HistoryMasterClassBridge implements MetadataProvidingFieldBridge
       log.error("Error in history class bridge: modifiedAt is null.");
     }
 
-    for (String key : hm.getAttributeKeys()) {
-      String svalue = hm.getStringAttribute(key);
-      if (StringUtils.isBlank(svalue) == true) {
-        log.info("HistoryMaster class bridge: value of attribute key: " + key + " is null.");
-        continue;
-      }
-      if (StringUtils.endsWith(key, ":ov") == true) {
-        String indexv = svalue;
-        if (indexv.length() > MAX_FULLTEXT_FIELDLENGTH) {
-          indexv = indexv.substring(0, MAX_FULLTEXT_FIELDLENGTH);
+    if (hm.getAttributeKeys() != null) {
+      for (String key : hm.getAttributeKeys()) {
+        String svalue = hm.getStringAttribute(key);
+        if (StringUtils.isBlank(svalue) == true) {
+          log.info("HistoryMaster class bridge: value of attribute key: " + key + " is null.");
+          continue;
         }
-        Field field = new StringField("oldValue", indexv, TabAttrFieldBridge.DEFAULT_STORE);
-        document.add(field);
+        if (StringUtils.endsWith(key, ":ov") == true) {
+          String indexv = svalue;
+          if (indexv.length() > MAX_FULLTEXT_FIELDLENGTH) {
+            indexv = indexv.substring(0, MAX_FULLTEXT_FIELDLENGTH);
+          }
+          Field field = new StringField("oldValue", indexv, TabAttrFieldBridge.DEFAULT_STORE);
+          document.add(field);
+        }
       }
+    } else {
+      log.info("HistoryMaster class bridge: attribute keys list is null.");
     }
   }
 
