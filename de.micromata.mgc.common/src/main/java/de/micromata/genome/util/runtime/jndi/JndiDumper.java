@@ -69,11 +69,11 @@ public class JndiDumper
       Binding binding = bindings.next();
       dumpJndiBinding(initialContext, "", binding, sb, indent);
     }
-    bindings = initialContext.listBindings("java:/comp");
+    bindings = initialContext.listBindings("java:comp");
 
     while (bindings.hasMore()) {
       Binding binding = bindings.next();
-      dumpJndiBinding(initialContext, "java:/comp", binding, sb, indent);
+      dumpJndiBinding(initialContext, "java:comp", binding, sb, indent);
     }
 
   }

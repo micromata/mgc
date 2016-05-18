@@ -38,7 +38,7 @@ public class JpaLoggingLocalSettingsConfigModel extends LoggingWithFallbackLocal
   {
     jdbcConfig = new JdbcLocalSettingsConfigModel("genomelog", "Logging Database",
         new JndiLocalSettingsConfigModel("genomelog", JndiLocalSettingsConfigModel.DataType.DataSource,
-            "java:/comp/env/genome/jdbc/dsLogging"));
+            "java:comp/env/genome/jdbc/dsLogging"));
 
   }
 

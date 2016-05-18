@@ -101,7 +101,7 @@ public class SimpleJndiContext extends SimpleNamingContext
     try {
       return super.lookup(lookupName);
     } catch (NameNotFoundException ex) {
-      String prefix = "java:/comp/env/";
+      String prefix = "java:comp/env/";
       if (StringUtils.startsWith(lookupName, prefix) == false) {
         return super.lookup(prefix + lookupName);
       }
