@@ -126,10 +126,10 @@ public class SimpleNamingContext implements Context
 
   private String fixJavaCompName(String name)
   {
-    if (StringUtils.startsWith(name, "java:comp") == false) {
+    if (StringUtils.startsWith(name, "java:/comp") == false) {
       return name;
     }
-    name = "java:" + name.substring("java:".length());
+    name = "java:" + name.substring("java:/".length());
     return name;
   }
 
@@ -441,7 +441,7 @@ public class SimpleNamingContext implements Context
     try {
       return lookupImpl(lookupName);
     } catch (NameNotFoundException ex) {
-      String prefix = "java:comp/env/";
+      String prefix = "java:/comp/env/";
       if (StringUtils.startsWith(lookupName, prefix) == false) {
         return lookupImpl(prefix + lookupName);
       }

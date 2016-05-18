@@ -5,7 +5,7 @@
   <persistence-unit name="de.micromata.genome.db.jpa.logging" transaction-type="RESOURCE_LOCAL">
     <provider>org.hibernate.ejb.HibernatePersistence</provider>
 
-    <non-jta-data-source>java:comp/env/genome/jdbc/dsLogging</non-jta-data-source>
+    <non-jta-data-source>java:/comp/env/genome/jdbc/dsLogging</non-jta-data-source>
     <class>de.micromata.genome.db.jpa.logging.entities.GenomeLogMasterDO</class>
     <class>de.micromata.genome.db.jpa.logging.entities.GenomeLogAttributeDO</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>

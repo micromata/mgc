@@ -59,7 +59,7 @@ public class JPALsLoggingServiceImpl implements LsLoggingService
       @Override
       public String description()
       {
-        return "Need to declare datasource under JNDI java:comp/env/genome/jdbc/dsLogging";
+        return "Need to declare datasource under JNDI java:/comp/env/genome/jdbc/dsLogging";
       }
 
       @Override
