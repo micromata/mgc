@@ -37,6 +37,8 @@ import de.micromata.genome.db.jpa.history.entities.HistoryMasterBaseDO;
  */
 public class HistoryMasterClassBridge implements MetadataProvidingFieldBridge
 {
+  private static final org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(HistoryMasterClassBridge.class);
+
   /**
    * Limit of Lucene.
    */
@@ -45,34 +47,49 @@ public class HistoryMasterClassBridge implements MetadataProvidingFieldBridge
   @Override
   public void set(String name, Object value, Document document, LuceneOptions luceneOptions)
   {
+    if (value == null) {
+      log.error("Error in history class bridge: Object is null.");
+      return;
+    }
     HistoryMasterBaseDO<?, ?> hm = (HistoryMasterBaseDO<?, ?>) value;
 
-    Field field = new LongField("entityId", hm.getEntityId(), Field.Store.YES);
-    document.add(field);
-    field = new StringField("entityName", hm.getEntityName(), TabAttrFieldBridge.DEFAULT_STORE);
-    document.add(field);
-    field = new LongField("modifiedAt", hm.getModifiedAt().getTime(), TabAttrFieldBridge.DEFAULT_STORE);
-    document.add(field);
+    if (hm.getEntityId() != null) {
+      Field field = new LongField("entityId", hm.getEntityId(), Field.Store.YES);
+      document.add(field);
+    } else {
+      log.error("Error in history class bridge: entityId is null.");
+    }
+    if (hm.getEntityName() != null) {
+      Field field = new StringField("entityName", hm.getEntityName(), TabAttrFieldBridge.DEFAULT_STORE);
+      document.add(field);
+    } else {
+      log.error("Error in history class bridge: entityName is null.");
+    }
+    if (hm.getModifiedAt() != null) {
+      Field field = new LongField("modifiedAt", hm.getModifiedAt().getTime(), TabAttrFieldBridge.DEFAULT_STORE);
+      document.add(field);
+    } else {
+      log.error("Error in history class bridge: modifiedAt is null.");
+    }
 
-    for (String key : hm.getAttributeKeys()) {
-      String svalue = hm.getStringAttribute(key);
-      if (StringUtils.isBlank(svalue) == true) {
-        continue;
-      }
-      //      field = new StringField(key, svalue, Field.Store.NO);
-      //      document.add(field);
-      //      if (StringUtils.endsWith(key, ":nv") == true) {
-      //        field = new StringField("NEW_VALUE", svalue, Field.Store.NO);
-      //        document.add(field);
-      //      }
-      if (StringUtils.endsWith(key, ":ov") == true) {
-        String indexv = svalue;
-        if (indexv.length() > MAX_FULLTEXT_FIELDLENGTH) {
-          indexv = indexv.substring(0, MAX_FULLTEXT_FIELDLENGTH);
+    if (hm.getAttributeKeys() != null) {
+      for (String key : hm.getAttributeKeys()) {
+        String svalue = hm.getStringAttribute(key);
+        if (StringUtils.isBlank(svalue) == true) {
+          log.info("HistoryMaster class bridge: value of attribute key: " + key + " is null.");
+          continue;
         }
-        field = new StringField("oldValue", indexv, TabAttrFieldBridge.DEFAULT_STORE);
-        document.add(field);
+        if (StringUtils.endsWith(key, ":ov") == true) {
+          String indexv = svalue;
+          if (indexv.length() > MAX_FULLTEXT_FIELDLENGTH) {
+            indexv = indexv.substring(0, MAX_FULLTEXT_FIELDLENGTH);
+          }
+          Field field = new StringField("oldValue", indexv, TabAttrFieldBridge.DEFAULT_STORE);
+          document.add(field);
+        }
       }
+    } else {
+      log.info("HistoryMaster class bridge: attribute keys list is null.");
     }
   }
 
