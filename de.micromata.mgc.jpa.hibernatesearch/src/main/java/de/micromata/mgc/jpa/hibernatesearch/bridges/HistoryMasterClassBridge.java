@@ -76,7 +76,7 @@ public class HistoryMasterClassBridge implements MetadataProvidingFieldBridge
       for (String key : hm.getAttributeKeys()) {
         String svalue = hm.getStringAttribute(key);
         if (StringUtils.isBlank(svalue) == true) {
-          log.info("HistoryMaster class bridge: value of attribute key: " + key + " is null.");
+          log.debug("HistoryMaster class bridge: value of attribute key: " + key + " is null.");
           continue;
         }
         if (StringUtils.endsWith(key, ":ov") == true) {
@@ -89,7 +89,7 @@ public class HistoryMasterClassBridge implements MetadataProvidingFieldBridge
         }
       }
     } else {
-      log.info("HistoryMaster class bridge: attribute keys list is null.");
+      log.debug("HistoryMaster class bridge: attribute keys list is null.");
     }
   }
 

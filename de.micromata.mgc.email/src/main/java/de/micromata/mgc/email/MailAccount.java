@@ -59,6 +59,7 @@ public class MailAccount implements AutoCloseable
 
   private MailReceiverLocalSettingsConfigModel config;
   private Session session;
+  private static final String defaultInboxFolder = "INBOX";
 
   public MailAccount(MailReceiverLocalSettingsConfigModel mailAccountConfig)
   {
@@ -73,7 +74,11 @@ public class MailAccount implements AutoCloseable
    */
   public <T> T runWithFolder(boolean write, Supplier<T> callback)
   {
-    boolean connected = connect(config.getDefaultFolder(), write);
+    String defaultFolder = config.getDefaultFolder();
+    if (defaultFolder == null || defaultFolder.isEmpty()) {
+      defaultFolder = defaultInboxFolder;
+    }
+    boolean connected = connect(defaultFolder, write);
     if (connected == false) {
       return null;
     }
