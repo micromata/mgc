@@ -19,6 +19,7 @@ package de.micromata.genome.logging;
 import de.micromata.genome.logging.spi.log4j.Log4JLogging;
 import de.micromata.genome.util.validation.ValMessage;
 import de.micromata.genome.util.validation.ValState;
+import java.util.function.Supplier;
 
 /**
  * Simplified interface for logging.
@@ -288,5 +289,41 @@ public class GLog
   public static boolean isTraceEnabled()
   {
     return isLogEnabled(LogLevel.Trace);
+  }
+
+
+
+  /**
+   * Adds a {@link LogAttribute} for the execution of the callback.
+   * Pushes existing overridden attributes temporarily on the stack and
+   * automatically restores them after execution
+   *
+   * @param attrType attribute type
+   * @param data attribute value
+   * @param r the callback
+   */
+  public static void runWithLogAttribute(LogAttributeType attrType, String data, Runnable r)
+  {
+    try (ScopedLogContextAttribute scopedAttr = new ScopedLogContextAttribute(attrType, data)) {
+      r.run();
+    }
+  }
+
+  /**
+   * Adds a {@link LogAttribute} for the execution of the callback.
+   * Pushes existing overridden attributes temporarily on the stack and
+   * automatically restores them after execution
+   *
+   * @param attrType attribute type
+   * @param data attribute value
+   * @param r the callback
+   * @param <T> type of the callback return value
+   * @return return value of the callback
+   */
+  public static <T> T runWithLogAttribute(LogAttributeType attrType, String data, Supplier<T> r)
+  {
+    try (ScopedLogContextAttribute scopedAttr = new ScopedLogContextAttribute(attrType, data)) {
+      return r.get();
+    }
   }
 }
