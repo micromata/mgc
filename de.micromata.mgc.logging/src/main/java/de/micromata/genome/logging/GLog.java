@@ -19,6 +19,9 @@ package de.micromata.genome.logging;
 import de.micromata.genome.logging.spi.log4j.Log4JLogging;
 import de.micromata.genome.util.validation.ValMessage;
 import de.micromata.genome.util.validation.ValState;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.function.Supplier;
 
 /**
@@ -294,9 +297,8 @@ public class GLog
 
 
   /**
-   * Adds a {@link LogAttribute} for the execution of the callback.
-   * Pushes existing overridden attributes temporarily on the stack and
-   * automatically restores them after execution
+   * Simple version of {@link #runWithLogAttribute(LogAttributeType, String, Supplier)} without return values (using
+   * {@link Runnable} arg instead of {@link Supplier}.
    *
    * @param attrType attribute type
    * @param data attribute value
@@ -325,5 +327,47 @@ public class GLog
     try (ScopedLogContextAttribute scopedAttr = new ScopedLogContextAttribute(attrType, data)) {
       return r.get();
     }
+  }
+
+  /**
+   * Adds multiple {@link LogAttribute}s for the execution of the callback.
+   * Pushes existing overridden attributes temporarily on the stack and
+   * automatically restores them after execution.
+   *
+   * Hint: We do not use varargs here, because the callback is usually an inline closure and may be large and make
+   * trailing parameters appear out of scope. Use in combination with {@link java.util.Arrays#asList(Object[])} if you
+   * still like varargs.
+   *
+   * @param attrs the attributes to add
+   * @param r the callback
+   * @param <T> type of the callback return value
+   * @return return value of the callback
+   */
+  public static <T> T runWithLogAttribute(Collection<? extends LogAttribute> attrs, Supplier<T> r)
+  {
+    final List<ScopedLogContextAttribute> pushedAttrs = new ArrayList<>(attrs.size());
+    try {
+      for (LogAttribute attr : attrs) {
+        pushedAttrs.add(new ScopedLogContextAttribute(attr));
+      }
+      return r.get();
+    } finally {
+      // restore in reverse order
+      for (int i = pushedAttrs.size() - 1; i >= 0; --i) {
+        pushedAttrs.get(i).restore();
+      }
+    }
+  }
+
+  /**
+   * Simple version of {@link #runWithLogAttribute(LogAttributeType, String, Supplier)} without return values (using
+   * {@link Runnable} arg instead of {@link Supplier})
+   *
+   * @param attrs the attributes to add
+   * @param r the callback
+   */
+  public static void runWithLogAttribute(Collection<? extends LogAttribute> attrs, Runnable r)
+  {
+    runWithLogAttribute(attrs, () -> {r.run(); return null; });
   }
 }
