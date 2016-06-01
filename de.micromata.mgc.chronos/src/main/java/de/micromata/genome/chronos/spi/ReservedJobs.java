@@ -63,6 +63,9 @@ public class ReservedJobs
     Collections.sort(jobsByStarted, new JobsByStartedComparator());
   }
 
+  /**
+   * The type Jobs by started comparator.
+   */
   public class JobsByStartedComparator implements Comparator<TriggerJobDO>
   {
     @Override
@@ -80,6 +83,11 @@ public class ReservedJobs
     }
   }
 
+  /**
+   * Gets jobs by next fire time iterator.
+   *
+   * @return the jobs by next fire time iterator
+   */
   public Iterator<TriggerJobDO> getJobsByNextFireTimeIterator()
   {
     return jobsByStarted.iterator();
@@ -97,6 +105,11 @@ public class ReservedJobs
     it.remove();
   }
 
+  /**
+   * Sets reserved jobs.
+   *
+   * @param jobs the jobs
+   */
   public synchronized void setReservedJobs(final List<TriggerJobDO> jobs)
   {
     jobsByPk.clear();
@@ -110,6 +123,11 @@ public class ReservedJobs
     }
   }
 
+  /**
+   * Gets jobs by started.
+   *
+   * @return the jobs by started
+   */
   public List<TriggerJobDO> getJobsByStarted()
   {
     return jobsByStarted;
