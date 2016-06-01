@@ -16,6 +16,7 @@
 
 package de.micromata.genome.chronos.spi;
 
+import de.micromata.genome.chronos.spi.jdbc.TriggerJobDO;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -23,18 +24,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.commons.lang.Validate;
-
-import de.micromata.genome.chronos.spi.jdbc.TriggerJobDO;
 
 /**
  * Jobs which start in soon future. Used by the Dispatcher implementation
- * 
+ *
  * Problem: Job, which has a very high nodebinding timeout are kept in this cache for this long time.
- * 
+ *
  * @author roger
- * 
  */
 public class ReservedJobs
 {
@@ -63,6 +60,24 @@ public class ReservedJobs
     Validate.notNull(job.getScheduler(), "job.getSchedulerName() is not set in addReservedJob");
     jobsByPk.put(job.getPk(), job);
     jobsByStarted.add(job);
+    Collections.sort(jobsByStarted, new JobsByStartedComparator());
+  }
+
+  public class JobsByStartedComparator implements Comparator<TriggerJobDO>
+  {
+    @Override
+    public int compare(final TriggerJobDO o1, final TriggerJobDO o2)
+    {
+      final long t1 = o1.getNextFireTime().getTime();
+      final long t2 = o2.getNextFireTime().getTime();
+      if (t1 > t2) {
+        return 1;
+      }
+      if (t1 < t2) {
+        return -1;
+      }
+      return 0;
+    }
   }
 
   public Iterator<TriggerJobDO> getJobsByNextFireTimeIterator()
@@ -87,22 +102,7 @@ public class ReservedJobs
     jobsByPk.clear();
     jobsByStarted.clear();
     jobsByStarted.addAll(jobs);
-    Collections.sort(jobsByStarted, new Comparator<TriggerJobDO>() {
-
-      @Override
-      public int compare(final TriggerJobDO o1, final TriggerJobDO o2)
-      {
-        final long t1 = o1.getNextFireTime().getTime();
-        final long t2 = o2.getNextFireTime().getTime();
-        if (t1 > t2) {
-          return 1;
-        }
-        if (t1 < t2) {
-          return -1;
-        }
-        return 0;
-      }
-    });
+    Collections.sort(jobsByStarted, new JobsByStartedComparator());
     for (final TriggerJobDO job : jobs) {
       Validate.notNull(job.getScheduler(), "job.getSchedulerName() is not set in addReservedJob");
       Validate.notNull(job.getPk(), "job.getPk() is not set in addReservedJob");
