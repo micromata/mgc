@@ -32,7 +32,7 @@ public class AttrSchema implements Serializable
   /**
    * The groups.
    */
-  private List<AttrSchemaGroup> groups;
+  private List<AttrGroup> groups;
 
   /**
    * Instantiates a new attr schema.
@@ -47,7 +47,7 @@ public class AttrSchema implements Serializable
    *
    * @param groups the groups
    */
-  public AttrSchema(final List<AttrSchemaGroup> groups)
+  public AttrSchema(final List<AttrGroup> groups)
   {
     this.groups = groups;
   }
@@ -57,7 +57,7 @@ public class AttrSchema implements Serializable
    *
    * @return the groups
    */
-  public List<AttrSchemaGroup> getGroups()
+  public List<AttrGroup> getGroups()
   {
     return groups;
   }
@@ -67,7 +67,7 @@ public class AttrSchema implements Serializable
    *
    * @param groups the new groups
    */
-  public void setGroups(final List<AttrSchemaGroup> groups)
+  public void setGroups(final List<AttrGroup> groups)
   {
     this.groups = groups;
   }

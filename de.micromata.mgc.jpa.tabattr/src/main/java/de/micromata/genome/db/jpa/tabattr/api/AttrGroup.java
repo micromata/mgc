@@ -19,7 +19,7 @@ package de.micromata.genome.db.jpa.tabattr.api;
 import java.io.Serializable;
 import java.util.List;
 
-public class AttrSchemaGroup implements Serializable
+public class AttrGroup implements Serializable
 {
 
   /**
@@ -28,21 +28,16 @@ public class AttrSchemaGroup implements Serializable
   private List<AttrDescription> columns;
 
   /**
-   * Instantiates a new attr schema group.
+   * The i18n key of the title.
    */
-  public AttrSchemaGroup()
-  {
-
-  }
+  private String i18nKey;
 
   /**
-   * Instantiates a new attr schema group.
-   *
-   * @param columns the columns
+   * Instantiates a new attr group.
    */
-  public AttrSchemaGroup(final List<AttrDescription> columns)
+  public AttrGroup()
   {
-    this.columns = columns;
+
   }
 
   /**
@@ -63,5 +58,15 @@ public class AttrSchemaGroup implements Serializable
   public void setColumns(final List<AttrDescription> columns)
   {
     this.columns = columns;
+  }
+
+  public String getI18nKey()
+  {
+    return i18nKey;
+  }
+
+  public void setI18nKey(String i18nKey)
+  {
+    this.i18nKey = i18nKey;
   }
 }
