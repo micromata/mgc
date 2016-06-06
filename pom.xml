@@ -55,7 +55,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-    <mgc.version>2.1.0-SNAPSHOT</mgc.version><!-- MGCVERSION -->
+    <mgc.version>2.3.0-SNAPSHOT</mgc.version><!-- MGCVERSION -->
 
 
 
