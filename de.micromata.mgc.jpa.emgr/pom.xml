@@ -4,7 +4,7 @@
   <parent>
     <artifactId>de.micromata.mgc.rootpom</artifactId>
     <groupId>de.micromata.mgc</groupId>
-    <version>2.3.0-SNAPSHOT</version><!-- MGC -->
+    <version>2.3.EDG-SNAPSHOT</version><!-- MGC -->
   </parent>
   <artifactId>de.micromata.mgc.jpa.emgr</artifactId>
   <packaging>jar</packaging>
