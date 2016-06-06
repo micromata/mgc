@@ -9,7 +9,7 @@
 
   <organization>
     <name>Micromata GmbH</name>
-    <url>http://www.micromata.de/</url>
+    <url>https://labs.micromata.de/mgc</url>
   </organization>
   <inceptionYear>2016</inceptionYear>
   <developers>
@@ -55,7 +55,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-    <mgc.version>${project.version}</mgc.version>
+    <mgc.version>2.1.0-SNAPSHOT</mgc.version><!-- MGCVERSION -->
 
 
 
@@ -253,4 +253,13 @@
 
 
 
+  <scm>
+    <url>https://github.com/micromata/mgc.git</url>
+    <developerConnection>Roger Rene Kommer</developerConnection>
+  </scm>
+  <issueManagement>
+    <system>JIRA</system>
+    <url>https://labs.micromata.de/jira/projects/MGC</url>
+  </issueManagement>
+  <url>https://labs.micromata.de/mgc</url>
 </project>

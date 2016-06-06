@@ -16,6 +16,9 @@
 
 package de.micromata.genome.util.runtime;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections15.iterators.IteratorEnumeration;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -24,16 +27,12 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections15.iterators.IteratorEnumeration;
-
 /**
  * Hilfclassloader der mehrere ClassLoader abfragt.
- * 
+ *
  * Parent URL wird ignoriert
- * 
+ *
  * @author roger@micromata.de
- * 
  */
 public class CombinedClassLoader extends URLClassLoader
 {
@@ -208,7 +207,13 @@ public class CombinedClassLoader extends URLClassLoader
   @Override
   protected synchronized Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException
   {
+    try {
+      return loadClass(name);
+    } catch (ClassNotFoundException e) {
 
+    }
+
+    // fallback to normal classloading
     return super.loadClass(name, resolve);
   }
 
