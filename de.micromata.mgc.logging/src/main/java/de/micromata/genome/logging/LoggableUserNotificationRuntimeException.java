@@ -17,13 +17,12 @@
 package de.micromata.genome.logging;
 
 /**
- * * Exception, die strukturiert einmalig an dem Punkt geloggt werden sollte, wo man auf die Fehlersituation akkurat reagieren und daher
+ * * Exception, die strukturiert einmalig an dem Punkt geloggt werden sollte, wo man auf die Fehlersituation akkurat
+ * reagieren und daher
  * entscheiden kann, ob die Meldung wirklich geloggt werden muss.
- * 
- * TODO minor constructor wrong!
- * 
+ *
+ *
  * @author roger@micromata.de
- * 
  */
 public class LoggableUserNotificationRuntimeException extends LoggableRuntimeException implements UserNotification
 {
@@ -56,7 +55,8 @@ public class LoggableUserNotificationRuntimeException extends LoggableRuntimeExc
    * @param message the message
    * @param attributes the attributes
    */
-  public LoggableUserNotificationRuntimeException(LogLevel loglevel, LogCategory category, String message, LogAttribute... attributes)
+  public LoggableUserNotificationRuntimeException(LogLevel loglevel, LogCategory category, String message,
+      LogAttribute... attributes)
   {
     super(loglevel, category, message, message, attributes);
   }
@@ -70,7 +70,8 @@ public class LoggableUserNotificationRuntimeException extends LoggableRuntimeExc
    * @param userMessage the user message
    * @param attributes the attributes
    */
-  public LoggableUserNotificationRuntimeException(LogLevel loglevel, LogCategory category, String message, String userMessage,
+  public LoggableUserNotificationRuntimeException(LogLevel loglevel, LogCategory category, String message, String
+      userMessage,
       LogAttribute... attributes)
   {
     super(loglevel, category, message, userMessage, attributes);
@@ -86,7 +87,8 @@ public class LoggableUserNotificationRuntimeException extends LoggableRuntimeExc
    * @param userMessage the user message
    * @param attributes the attributes
    */
-  public LoggableUserNotificationRuntimeException(Throwable cause, LogLevel loglevel, LogCategory category, String message,
+  public LoggableUserNotificationRuntimeException(Throwable cause, LogLevel loglevel, LogCategory category, String
+      message,
       String userMessage, LogAttribute... attributes)
   {
     super(cause, loglevel, category, message, userMessage, attributes);
@@ -103,10 +105,11 @@ public class LoggableUserNotificationRuntimeException extends LoggableRuntimeExc
    * @param formLocation the form location
    * @param attributes the attributes
    */
-  public LoggableUserNotificationRuntimeException(LogLevel loglevel, LogCategory category, String message, String i18nKey, String[] args,
+  public LoggableUserNotificationRuntimeException(LogLevel loglevel, LogCategory category, String message, String
+      i18nKey, String[] args,
       String formLocation, LogAttribute... attributes)
   {
-    super(loglevel, category, message, attributes);
+    this(null, loglevel, category, message, i18nKey, args, formLocation, attributes);
   }
 
   /**
@@ -121,7 +124,8 @@ public class LoggableUserNotificationRuntimeException extends LoggableRuntimeExc
    * @param formLocation the form location
    * @param attributes the attributes
    */
-  public LoggableUserNotificationRuntimeException(Throwable cause, LogLevel loglevel, LogCategory category, String message, String i18nKey,
+  public LoggableUserNotificationRuntimeException(Throwable cause, LogLevel loglevel, LogCategory category, String
+      message, String i18nKey,
       String[] args, String formLocation, LogAttribute... attributes)
   {
     super(cause, loglevel, category, message, attributes);
