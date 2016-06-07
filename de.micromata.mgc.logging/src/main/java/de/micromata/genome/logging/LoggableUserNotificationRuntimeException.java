@@ -21,7 +21,6 @@ package de.micromata.genome.logging;
  * reagieren und daher
  * entscheiden kann, ob die Meldung wirklich geloggt werden muss.
  *
- * TODO minor constructor wrong!
  *
  * @author roger@micromata.de
  */
