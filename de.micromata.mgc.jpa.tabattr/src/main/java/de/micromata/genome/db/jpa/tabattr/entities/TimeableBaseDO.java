@@ -40,6 +40,8 @@ public abstract class TimeableBaseDO<M extends TimeableBaseDO<?, ?>, PK extends 
 
   private Date endTime;
 
+  private String groupName;
+
   public TimeableBaseDO()
   {
 
@@ -70,6 +72,17 @@ public abstract class TimeableBaseDO<M extends TimeableBaseDO<?, ?>, PK extends 
   public void setEndTime(final Date endTime)
   {
     this.endTime = endTime;
+  }
+
+  @Column(name = "GROUP_NAME", nullable = false)
+  public String getGroupName()
+  {
+    return groupName;
+  }
+
+  public void setGroupName(String groupName)
+  {
+    this.groupName = groupName;
   }
 
 }

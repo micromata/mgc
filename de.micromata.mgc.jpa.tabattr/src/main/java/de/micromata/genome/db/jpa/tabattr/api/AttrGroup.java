@@ -28,6 +28,11 @@ public class AttrGroup implements Serializable
   private List<AttrDescription> columns;
 
   /**
+   * The name of the group, used as column in the "timed master" table of the entity.
+   */
+  private String name;
+
+  /**
    * The i18n key of the title.
    */
   private String i18nKey;
@@ -58,6 +63,16 @@ public class AttrGroup implements Serializable
   public void setColumns(final List<AttrDescription> columns)
   {
     this.columns = columns;
+  }
+
+  public String getName()
+  {
+    return name;
+  }
+
+  public void setName(String name)
+  {
+    this.name = name;
   }
 
   public String getI18nKey()

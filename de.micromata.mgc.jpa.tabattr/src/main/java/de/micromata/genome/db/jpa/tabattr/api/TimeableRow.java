@@ -31,4 +31,8 @@ public interface TimeableRow
   Date getEndTime();
 
   void setEndTime(final Date endTime);
+
+  String getGroupName();
+
+  void setGroupName(final String groupName);
 }
