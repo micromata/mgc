@@ -73,8 +73,7 @@ public class AttrDescription implements Serializable
   /**
    * Bootstrap span for this column.
    */
-  private   int span = 2;
-
+  private int span = 2;
 
 
   public String getWicketComponentFactoryClass()
@@ -95,7 +94,6 @@ public class AttrDescription implements Serializable
   public void setPropertyName(final String propertyName)
   {
     this.propertyName = propertyName;
-
   }
 
   public Class<?> getType()
@@ -182,6 +180,7 @@ public class AttrDescription implements Serializable
   {
     return span;
   }
+
   public void setSpan(final int span)
   {
     this.span = span;

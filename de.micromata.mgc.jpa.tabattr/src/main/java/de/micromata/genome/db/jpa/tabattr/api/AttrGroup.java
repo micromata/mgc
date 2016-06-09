@@ -23,9 +23,9 @@ public class AttrGroup implements Serializable
 {
 
   /**
-   * The columns.
+   * The descriptions.
    */
-  private List<AttrDescription> columns;
+  private List<AttrDescription> descriptions;
 
   /**
    * The name of the group, used as column in the "timed master" table of the entity.
@@ -46,23 +46,23 @@ public class AttrGroup implements Serializable
   }
 
   /**
-   * Gets the columns.
+   * Gets the descriptions.
    *
-   * @return the columns
+   * @return the descriptions
    */
-  public List<AttrDescription> getColumns()
+  public List<AttrDescription> getDescriptions()
   {
-    return columns;
+    return descriptions;
   }
 
   /**
-   * Sets the columns.
+   * Sets the descriptions.
    *
-   * @param columns the new columns
+   * @param descriptions the new descriptions
    */
-  public void setColumns(final List<AttrDescription> columns)
+  public void setDescriptions(final List<AttrDescription> descriptions)
   {
-    this.columns = columns;
+    this.descriptions = descriptions;
   }
 
   public String getName()
