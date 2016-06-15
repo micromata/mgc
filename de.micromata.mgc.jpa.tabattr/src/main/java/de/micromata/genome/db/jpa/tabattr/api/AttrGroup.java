@@ -21,11 +21,24 @@ import java.util.List;
 
 public class AttrGroup implements Serializable
 {
+  public enum Type
+  {
+    NOT_TIMEABLE,
+    PERIOD,
+    INSTANT_OF_TIME
+  }
 
-  /**
-   * The descriptions.
-   */
-  private List<AttrDescription> descriptions;
+  private Type type;
+
+  public Type getType()
+  {
+    return type;
+  }
+
+  public void setType(Type type)
+  {
+    this.type = type;
+  }
 
   /**
    * The name of the group, used as column in the "timed master" table of the entity.
@@ -38,31 +51,21 @@ public class AttrGroup implements Serializable
   private String i18nKey;
 
   /**
+   * The i18n key of the start time.
+   */
+  private String i18nKeyStartTime;
+
+  /**
+   * The descriptions.
+   */
+  private List<AttrDescription> descriptions;
+
+  /**
    * Instantiates a new attr group.
    */
   public AttrGroup()
   {
 
-  }
-
-  /**
-   * Gets the descriptions.
-   *
-   * @return the descriptions
-   */
-  public List<AttrDescription> getDescriptions()
-  {
-    return descriptions;
-  }
-
-  /**
-   * Sets the descriptions.
-   *
-   * @param descriptions the new descriptions
-   */
-  public void setDescriptions(final List<AttrDescription> descriptions)
-  {
-    this.descriptions = descriptions;
   }
 
   public String getName()
@@ -83,5 +86,35 @@ public class AttrGroup implements Serializable
   public void setI18nKey(String i18nKey)
   {
     this.i18nKey = i18nKey;
+  }
+
+  public String getI18nKeyStartTime()
+  {
+    return i18nKeyStartTime;
+  }
+
+  public void setI18nKeyStartTime(String i18nKeyStartTime)
+  {
+    this.i18nKeyStartTime = i18nKeyStartTime;
+  }
+
+  /**
+   * Gets the descriptions.
+   *
+   * @return the descriptions
+   */
+  public List<AttrDescription> getDescriptions()
+  {
+    return descriptions;
+  }
+
+  /**
+   * Sets the descriptions.
+   *
+   * @param descriptions the new descriptions
+   */
+  public void setDescriptions(final List<AttrDescription> descriptions)
+  {
+    this.descriptions = descriptions;
   }
 }
