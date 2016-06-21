@@ -74,7 +74,7 @@ public abstract class EmgrFactory<E extends IEmgr<?>>
   /**
    * The unit name.
    */
-  private String unitName;
+  protected String unitName;
 
   /**
    * The metadata repository.
@@ -125,10 +125,24 @@ public abstract class EmgrFactory<E extends IEmgr<?>>
    *
    * @param unitName the unit name
    */
+  protected EmgrFactory()
+  {
+  }
+
+  /**
+   * Instantiates a new emgr factory.
+   *
+   * @param unitName the unit name
+   */
   protected EmgrFactory(String unitName)
   {
     this.unitName = unitName;
-    entityManagerFactory = createEntityManagerFactory(unitName);
+    initialize();
+  }
+
+  protected void initialize()
+  {
+    this.entityManagerFactory = createEntityManagerFactory(unitName);
     initMetadata();
     registerEvents();
     EmgrFactoryServiceManager.get().getEmgrFactoryService().register(this);

@@ -207,9 +207,10 @@ public class MailSessionLocalSettingsConfigModel extends AbstractLocalSettingsCo
     return name;
   }
 
-  public void setName(String name)
+  public MailSessionLocalSettingsConfigModel setName(String name)
   {
     this.name = name;
+    return this;
   }
 
   public boolean isEmailEnabled()
@@ -227,9 +228,10 @@ public class MailSessionLocalSettingsConfigModel extends AbstractLocalSettingsCo
     return jndiName;
   }
 
-  public void setJndiName(String jndiName)
+  public MailSessionLocalSettingsConfigModel setJndiName(String jndiName)
   {
     this.jndiName = jndiName;
+    return this;
   }
 
   public String getDefaultEmailSender()
@@ -237,9 +239,10 @@ public class MailSessionLocalSettingsConfigModel extends AbstractLocalSettingsCo
     return defaultEmailSender;
   }
 
-  public void setDefaultEmailSender(String defaultEmailSender)
+  public MailSessionLocalSettingsConfigModel setDefaultEmailSender(String defaultEmailSender)
   {
     this.defaultEmailSender = defaultEmailSender;
+    return this;
   }
 
   public String getEmailEnabled()
@@ -247,9 +250,10 @@ public class MailSessionLocalSettingsConfigModel extends AbstractLocalSettingsCo
     return emailEnabled;
   }
 
-  public void setEmailEnabled(String emailEnabled)
+  public MailSessionLocalSettingsConfigModel setEmailEnabled(String emailEnabled)
   {
     this.emailEnabled = emailEnabled;
+    return this;
   }
 
   public String getStandardEmailSender()
@@ -257,9 +261,10 @@ public class MailSessionLocalSettingsConfigModel extends AbstractLocalSettingsCo
     return standardEmailSender;
   }
 
-  public void setStandardEmailSender(String standardEmailSender)
+  public MailSessionLocalSettingsConfigModel setStandardEmailSender(String standardEmailSender)
   {
     this.standardEmailSender = standardEmailSender;
+    return this;
   }
 
   public String getEncryption()
@@ -267,9 +272,10 @@ public class MailSessionLocalSettingsConfigModel extends AbstractLocalSettingsCo
     return encryption;
   }
 
-  public void setEncryption(String protocol)
+  public MailSessionLocalSettingsConfigModel setEncryption(String protocol)
   {
     this.encryption = protocol;
+    return this;
   }
 
   public String getEmailHost()
@@ -277,9 +283,10 @@ public class MailSessionLocalSettingsConfigModel extends AbstractLocalSettingsCo
     return emailHost;
   }
 
-  public void setEmailHost(String emailHost)
+  public MailSessionLocalSettingsConfigModel setEmailHost(String emailHost)
   {
     this.emailHost = emailHost;
+    return this;
   }
 
   public String getEmailPort()
@@ -287,9 +294,10 @@ public class MailSessionLocalSettingsConfigModel extends AbstractLocalSettingsCo
     return emailPort;
   }
 
-  public void setEmailPort(String emailPort)
+  public MailSessionLocalSettingsConfigModel setEmailPort(String emailPort)
   {
     this.emailPort = emailPort;
+    return this;
   }
 
   public String getEmailAuthEnabled()
@@ -297,9 +305,10 @@ public class MailSessionLocalSettingsConfigModel extends AbstractLocalSettingsCo
     return emailAuthEnabled;
   }
 
-  public void setEmailAuthEnabled(String emailAuthEnabled)
+  public MailSessionLocalSettingsConfigModel setEmailAuthEnabled(String emailAuthEnabled)
   {
     this.emailAuthEnabled = emailAuthEnabled;
+    return this;
   }
 
   public String getEmailAuthUser()
@@ -307,9 +316,10 @@ public class MailSessionLocalSettingsConfigModel extends AbstractLocalSettingsCo
     return emailAuthUser;
   }
 
-  public void setEmailAuthUser(String emailAuthUser)
+  public MailSessionLocalSettingsConfigModel setEmailAuthUser(String emailAuthUser)
   {
     this.emailAuthUser = emailAuthUser;
+    return this;
   }
 
   public String getEmailAuthPass()
@@ -317,9 +327,10 @@ public class MailSessionLocalSettingsConfigModel extends AbstractLocalSettingsCo
     return emailAuthPass;
   }
 
-  public void setEmailAuthPass(String emailAuthPass)
+  public MailSessionLocalSettingsConfigModel setEmailAuthPass(String emailAuthPass)
   {
     this.emailAuthPass = emailAuthPass;
+    return this;
   }
 
   public boolean isSmptDebug()
@@ -327,9 +338,10 @@ public class MailSessionLocalSettingsConfigModel extends AbstractLocalSettingsCo
     return smptDebug;
   }
 
-  public void setSmptDebug(boolean smptDebug)
+  public MailSessionLocalSettingsConfigModel setSmptDebug(boolean smptDebug)
   {
     this.smptDebug = smptDebug;
+    return this;
   }
 
 }
