@@ -176,9 +176,10 @@ public class MailReceiverLocalSettingsConfigModel extends AbstractLocalSettingsC
     return enableTLS;
   }
 
-  public void setEnableTLS(String enableTLS)
+  public MailReceiverLocalSettingsConfigModel setEnableTLS(String enableTLS)
   {
     this.enableTLS = enableTLS;
+    return this;
   }
 
   public String getAuth()
@@ -186,9 +187,10 @@ public class MailReceiverLocalSettingsConfigModel extends AbstractLocalSettingsC
     return auth;
   }
 
-  public void setAuth(String auth)
+  public MailReceiverLocalSettingsConfigModel setAuth(String auth)
   {
     this.auth = auth;
+    return this;
   }
 
   public String getAuthPlainDisable()
@@ -232,9 +234,10 @@ public class MailReceiverLocalSettingsConfigModel extends AbstractLocalSettingsC
     return enabled;
   }
 
-  public void setEnabled(String enabled)
+  public MailReceiverLocalSettingsConfigModel setEnabled(String enabled)
   {
     this.enabled = enabled;
+    return this;
   }
 
   public String getDefaultFolder()
@@ -242,4 +245,74 @@ public class MailReceiverLocalSettingsConfigModel extends AbstractLocalSettingsC
     return defaultFolder;
   }
 
+  public MailReceiverLocalSettingsConfigModel setHost(String host)
+  {
+    this.host = host;
+    return this;
+  }
+
+  public MailReceiverLocalSettingsConfigModel setProtocol(String protocol)
+  {
+    this.protocol = protocol;
+    return this;
+  }
+
+  public MailReceiverLocalSettingsConfigModel setPort(String port)
+  {
+    this.port = port;
+    return this;
+  }
+
+  public MailReceiverLocalSettingsConfigModel setSocketFactoryClass(String socketFactoryClass)
+  {
+    this.socketFactoryClass = socketFactoryClass;
+    return this;
+  }
+
+  public MailReceiverLocalSettingsConfigModel setAuthPlainDisable(String authPlainDisable)
+  {
+    this.authPlainDisable = authPlainDisable;
+    return this;
+  }
+
+  public MailReceiverLocalSettingsConfigModel setDebug(String debug)
+  {
+    this.debug = debug;
+    return this;
+  }
+
+  public String getSocketFactoryPort()
+  {
+    return socketFactoryPort;
+  }
+
+  public MailReceiverLocalSettingsConfigModel setSocketFactoryPort(String socketFactoryPort)
+  {
+    this.socketFactoryPort = socketFactoryPort;
+    return this;
+  }
+
+  public MailReceiverLocalSettingsConfigModel setUser(String user)
+  {
+    this.user = user;
+    return this;
+  }
+
+  public MailReceiverLocalSettingsConfigModel setDefaultFolder(String defaultFolder)
+  {
+    this.defaultFolder = defaultFolder;
+    return this;
+  }
+
+  public MailReceiverLocalSettingsConfigModel setPassword(String password)
+  {
+    this.password = password;
+    return this;
+  }
+
+  public MailReceiverLocalSettingsConfigModel setEnableSelfSignedCerts(String enableSelfSignedCerts)
+  {
+    this.enableSelfSignedCerts = enableSelfSignedCerts;
+    return this;
+  }
 }

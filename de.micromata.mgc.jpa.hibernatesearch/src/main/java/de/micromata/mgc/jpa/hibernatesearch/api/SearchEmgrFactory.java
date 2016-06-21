@@ -31,12 +31,17 @@ import de.micromata.mgc.jpa.hibernatesearch.impl.SearchEmgrFactoryRegistryUtils;
  *
  * @param <EMGR>
  */
-public abstract class SearchEmgrFactory<EMGR extends ISearchEmgr<?>>extends EmgrFactory<EMGR>
+public abstract class SearchEmgrFactory<EMGR extends ISearchEmgr<?>> extends EmgrFactory<EMGR>
 {
   /**
    * Key to getMetadataRepository().getServiceCustomAttributes().
    */
   public static Class<?> REPO_ENTITY_SEARCHFIELDS = org.hibernate.search.annotations.Field.class;
+
+  protected SearchEmgrFactory()
+  {
+    super();
+  }
 
   protected SearchEmgrFactory(String unitName)
   {
@@ -104,4 +109,5 @@ public abstract class SearchEmgrFactory<EMGR extends ISearchEmgr<?>>extends Emgr
     }
     return searchFieldSet;
   }
+
 }
