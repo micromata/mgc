@@ -26,6 +26,7 @@ package de.micromata.genome.db.jpa.tabattr.impl;
 import org.apache.commons.lang.StringUtils;
 
 import de.micromata.genome.db.jpa.tabattr.api.AttrDescription;
+import de.micromata.genome.db.jpa.tabattr.api.AttrGroup;
 import de.micromata.genome.db.jpa.tabattr.api.AttrSchema;
 import de.micromata.genome.db.jpa.tabattr.api.AttrSchemaService;
 import de.micromata.genome.db.jpa.tabattr.api.EntityWithAttributes;
@@ -69,11 +70,14 @@ public abstract class AttrSchemaServiceBaseImpl implements AttrSchemaService
     final AttrSchema schema = getAttrSchema(schemaName);
     if (schema == null) {
       // TODO RK warn
+      return null;
     }
-    for (final AttrDescription desc : schema.getColumns()) {
+    for (final AttrGroup group : schema.getGroups()) {
+      for (final AttrDescription desc : group.getDescriptions()) {
       if (StringUtils.equals(desc.getPropertyName(), propertyName) == true) {
         return getDefaultValue(desc, expectedClass);
       }
+    }
     }
     // TODO RK warn
     return null;
