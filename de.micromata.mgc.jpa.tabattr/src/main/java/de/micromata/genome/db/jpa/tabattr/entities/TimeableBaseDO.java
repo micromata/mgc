@@ -38,8 +38,6 @@ public abstract class TimeableBaseDO<M extends TimeableBaseDO<?, ?>, PK extends 
 {
   private Date startTime;
 
-  private Date endTime;
-
   private String groupName;
 
   public TimeableBaseDO()
@@ -59,19 +57,6 @@ public abstract class TimeableBaseDO<M extends TimeableBaseDO<?, ?>, PK extends 
   public void setStartTime(final Date startTime)
   {
     this.startTime = startTime;
-  }
-
-  @Override
-  @Column(name = "END_TIME", nullable = true)
-  public Date getEndTime()
-  {
-    return endTime;
-  }
-
-  @Override
-  public void setEndTime(final Date endTime)
-  {
-    this.endTime = endTime;
   }
 
   @Column(name = "GROUP_NAME", nullable = false)

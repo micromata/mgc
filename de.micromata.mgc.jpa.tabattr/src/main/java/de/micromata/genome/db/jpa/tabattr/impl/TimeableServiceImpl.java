@@ -71,9 +71,6 @@ public class TimeableServiceImpl implements TimeableService
       if (td.getStartTime() == null || td.getStartTime().getTime() > date.getTime()) {
         continue;
       }
-      if (td.getEndTime() != null && td.getEndTime().getTime() < date.getTime()) {
-        continue;
-      }
       lastRow = td;
       break;
     }

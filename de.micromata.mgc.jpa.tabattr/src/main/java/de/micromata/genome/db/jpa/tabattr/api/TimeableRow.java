@@ -28,10 +28,6 @@ public interface TimeableRow
 
   void setStartTime(final Date startTime);
 
-  Date getEndTime();
-
-  void setEndTime(final Date endTime);
-
   String getGroupName();
 
   void setGroupName(final String groupName);
