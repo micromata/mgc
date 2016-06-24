@@ -47,6 +47,7 @@ import de.micromata.genome.jpa.impl.JpaSchemaServiceImpl;
 import de.micromata.genome.jpa.metainf.JpaMetadataRepostory;
 import de.micromata.genome.jpa.metainf.MetaInfoUtils;
 import de.micromata.genome.jpa.trace.eventhandler.TracerEmgrCreateQueryFilterEventHandler;
+import de.micromata.genome.jpa.trace.eventhandler.TracerEmgrCreateTypedQueryFilterEventHandler;
 import de.micromata.genome.jpa.trace.eventhandler.TracerEmgrInsertDbRecordFilterEventHandler;
 import de.micromata.genome.jpa.trace.eventhandler.TracerEmgrMergeDbRecordFilterEventHandler;
 import de.micromata.genome.jpa.trace.eventhandler.TracerEmgrRemoveDbRecordFilterEventHandler;
@@ -160,6 +161,7 @@ public abstract class EmgrFactory<E extends IEmgr<?>>
     eventFactory.registerEvent(new TracerEmgrUpdateDbRecordFilterEventHandler());
     eventFactory.registerEvent(new TracerEmgrMergeDbRecordFilterEventHandler());
     eventFactory.registerEvent(new TracerEmgrCreateQueryFilterEventHandler());
+    eventFactory.registerEvent(new TracerEmgrCreateTypedQueryFilterEventHandler());
     eventFactory.registerEvent(new EmgrMarkUndeletedCriteriaUpdateFilterEventHandler());
     eventFactory.registerEvent(new EmgrMarkDeletedCriteriaUpdateFilterEventHandler());
 
