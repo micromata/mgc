@@ -44,9 +44,10 @@ public class TimependingHistoryPropertyConverter implements HistoryPropertyConve
     List<HistProp> ret = new ArrayList<>();
     for (TimeableAttrRow row : tlist) {
       String key = Converter.isoTimestampFormat.get().format(row.getStartTime());
+      String groupName = row.getGroupName();
 
       HistProp hp = new HistProp();
-      hp.setName(key + ".startTime");
+      hp.setName(groupName + "." + key + ".startTime");
       hp.setType(Date.class.getName());
       hp.setValue(key);
       ret.add(hp);
@@ -55,11 +56,11 @@ public class TimependingHistoryPropertyConverter implements HistoryPropertyConve
       ColumnMetadata mattributes = rowmd.getColumn("attributes");
       List<HistProp> attrs = attrConverter.convert(emgr, historyMetaInfo, row, mattributes);
       for (HistProp chp : attrs) {
-        chp.setName(key + "." + chp.getName());
+        chp.setName(groupName + "." + key + "." + chp.getName());
         ret.add(chp);
       }
-
     }
+
     return ret;
   }
 
