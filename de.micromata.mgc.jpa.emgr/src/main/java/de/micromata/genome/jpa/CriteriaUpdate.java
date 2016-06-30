@@ -117,6 +117,19 @@ public class CriteriaUpdate<T>
   }
 
   /**
+   * If column not already set in critia update, set it with vlue
+   * 
+   * @param column the column
+   * @param value the value
+   * @return
+   */
+  public CriteriaUpdate<T> setIfAbsend(String column, Object value)
+  {
+    setMap.putIfAbsent(column, value);
+    return this;
+  }
+
+  /**
    * set a expression, which will be used as raw expression in the hql.
    *
    * Use setMasterAlias

@@ -38,6 +38,7 @@ import org.hibernate.exception.DataException;
 import de.micromata.genome.jpa.events.EmgrEventRegistry;
 import de.micromata.genome.jpa.events.impl.BeforeCopyForUpdateUpdateCounterEventEventHandler;
 import de.micromata.genome.jpa.events.impl.EmgrAfterCopyForUpdateEventEventHandler;
+import de.micromata.genome.jpa.events.impl.EmgrBeforeCriteriaUpdateEventHandler;
 import de.micromata.genome.jpa.events.impl.EmgrMarkDeletedCriteriaUpdateFilterEventHandler;
 import de.micromata.genome.jpa.events.impl.EmgrMarkUndeletedCriteriaUpdateFilterEventHandler;
 import de.micromata.genome.jpa.events.impl.InitCreatedStdRecordFieldsEventHandler;
@@ -153,6 +154,7 @@ public abstract class EmgrFactory<E extends IEmgr<?>>
     eventFactory.registerEvent(new UpdateStdRecordCriteriaUpdateEventHandler());
     eventFactory.registerEvent(new EmgrAfterCopyForUpdateEventEventHandler());
     eventFactory.registerEvent(new BeforeCopyForUpdateUpdateCounterEventEventHandler());
+    eventFactory.registerEvent(new EmgrBeforeCriteriaUpdateEventHandler());
 
     // tracer wrapper
     eventFactory.registerEvent(new TracerFindByPkFilterEventHandler());
