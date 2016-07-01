@@ -18,108 +18,67 @@ package de.micromata.genome.db.jpa.tabattr.impl;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
-import de.micromata.genome.db.jpa.tabattr.api.AttrSchemaService;
+import de.micromata.genome.db.jpa.tabattr.api.AttrGroup;
 import de.micromata.genome.db.jpa.tabattr.api.EntityWithTimeableAttr;
 import de.micromata.genome.db.jpa.tabattr.api.TimeableAttrRow;
 import de.micromata.genome.db.jpa.tabattr.api.TimeableService;
 
 /**
  * Standard implementation for TimeableService.
- *
- * @author Roger Kommer (r.kommer.extern@micromata.de)
  */
-public class TimeableServiceImpl implements TimeableService
+public class TimeableServiceImpl<PK extends Serializable, T extends TimeableAttrRow<PK>> implements TimeableService<PK, T>
 {
-  private AttrSchemaService attrSchemaService;
+  private static final org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(TimeableServiceImpl.class);
 
-  /**
-   * Validate timeable.
-   *
-   * @param ctx the ctx
-   * @param list the list
-   * @return true, if successful
-   */
-  //  public boolean validateTimeable(final FrontendValidationContext ctx, final List<TimeableBaseDO<?>> list)
-  //  {
-  //    if (list.isEmpty() == true) {
-  //      return true;
-  //    }
-  //    list.sort(Comparator.comparing(TimeableBaseDO::getStartTime));
-  //    final Stream<TimeableBaseDO<?>> noEndTime = list.stream().filter(a -> a.getEndTime() == null);
-  //    if (noEndTime.count() > 1) {
-  //      // TODO collect elements
-  //      noEndTime.collect(Collectors.toList());
-  //      ctx.addValidationMessage(ValidationState.Error, "TODO only one empty");
-  //      return false;
-  //    }
-  //
-  //    return true;
-  //  }
-
-  /**
-   * @see org.projectforge.framework.persistence.attr.api.TimeableService#getRowForTime(java.util.Date,
-   *      org.projectforge.framework.persistence.attr.api.EntityWithTimeableAttr)
-   */
   @Override
-  public <PK extends Serializable, T extends TimeableAttrRow<PK>> T getRowForTime(final Date date,
-      final EntityWithTimeableAttr<PK, T> entity)
+  public T getAttrRowForDate(final List<T> attrRows, final AttrGroup group, final Date date)
   {
-    T lastRow = null;
+    Predicate<T> filterPredicate;
 
-    for (final T td : entity.getTimeableAttributes()) {
-      if (td.getStartTime() == null || td.getStartTime().getTime() > date.getTime()) {
-        continue;
-      }
-      lastRow = td;
-      break;
-    }
-    return lastRow;
-  }
+    switch (group.getType()) {
+      case PERIOD:
+        // filter all attrRows without a start time and where the given date is equal or after the rows date
+        filterPredicate = row -> (row.getStartTime() == null || date.compareTo(row.getStartTime()) >= 0);
+        break;
 
-  public <PK extends Serializable, R, T extends TimeableAttrRow<PK>> R getDefaultAttrValue(
-      final EntityWithTimeableAttr<PK, T> entity,
-      final String propertyName, final Class<R> expectedClass)
-  {
-    return attrSchemaService.getDefaultValue(entity.getAttrSchemaName(), propertyName, expectedClass);
-  }
+      case INSTANT_OF_TIME:
+        // do not select a row by default
+        return null;
 
-  /**
-   * @see org.projectforge.framework.persistence.attr.api.TimeableService#getAttrValue(java.util.Date,
-   *      org.projectforge.framework.persistence.attr.api.EntityWithTimeableAttr, java.lang.String, java.lang.Class)
-   */
-  @Override
-  public <PK extends Serializable, R, T extends TimeableAttrRow<PK>> R getAttrValue(final Date date,
-      final EntityWithTimeableAttr<PK, T> entity,
-      final String propertyName, final Class<R> expectedClass)
-  {
-    final T row = getRowForTime(date, entity);
-    if (row == null) {
-      return getDefaultAttrValue(entity, propertyName, expectedClass);
+      default:
+        log.error("The Type " + group.getType() + " is not supported.");
+        return null;
     }
-    final R ret = row.getAttribute(propertyName, expectedClass);
-    if (ret == null) {
-      return getDefaultAttrValue(entity, propertyName, expectedClass);
-    }
-    return ret;
+
+    return attrRows
+        .stream()
+        .filter(filterPredicate)
+        .findFirst()
+        .orElse(null);
   }
 
   @Override
-  public <PK extends Serializable, R, T extends TimeableAttrRow<PK>> R getAttrValue(
-      final EntityWithTimeableAttr<PK, T> entity,
-      final String propertyName, final Class<R> expectedClass)
+  public List<T> getTimeableAttrRowsForGroup(final EntityWithTimeableAttr<PK, T> entity, final AttrGroup group)
   {
-    return getAttrValue(new Date(), entity, propertyName, expectedClass);
+    final String groupName = group.getName();
+    return entity
+        .getTimeableAttributes()
+        .stream()
+        .filter(row -> groupName.equals(row.getGroupName()))
+        .collect(Collectors.toList());
   }
 
-  public AttrSchemaService getAttrSchemaService()
+  @Override
+  public List<T> sortTimeableAttrRowsByDateDescending(List<T> attrRows)
   {
-    return attrSchemaService;
+    return attrRows
+        .stream()
+        .sorted((row1, row2) -> (row1.getStartTime() == null || row2.getStartTime() == null) ? -1 : row2.getStartTime().compareTo(row1.getStartTime()))
+        .collect(Collectors.toList());
   }
 
-  public void setAttrSchemaService(final AttrSchemaService attrSchemaService)
-  {
-    this.attrSchemaService = attrSchemaService;
-
-  }
 }

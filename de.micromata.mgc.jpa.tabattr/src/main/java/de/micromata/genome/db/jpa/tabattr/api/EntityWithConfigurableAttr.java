@@ -16,24 +16,16 @@
 
 package de.micromata.genome.db.jpa.tabattr.api;
 
-import java.io.Serializable;
-import java.util.List;
-
 /**
- * Entity having an timeable attributes.
- *
- * @author Roger Kommer (r.kommer.extern@micromata.de)
- *
+ * Entity having configurable attributes.
  */
-public interface EntityWithTimeableAttr<PK extends Serializable, T extends TimeableAttrRow<PK>>
+public interface EntityWithConfigurableAttr
 {
 
-  void addTimeableAttribute(T row);
-
   /**
-   * Gets the timeable attributes.
+   * Name of the schema of the attributes.
    *
-   * @return the timeable attributes
+   * @return the attr schema name
    */
-  List<T> getTimeableAttributes();
+  String getAttrSchemaName();
 }

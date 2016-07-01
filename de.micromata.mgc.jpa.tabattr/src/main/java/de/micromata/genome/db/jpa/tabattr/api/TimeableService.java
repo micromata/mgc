@@ -18,53 +18,37 @@ package de.micromata.genome.db.jpa.tabattr.api;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Methods to manage/validate Timeable DOs.
- *
- * @author Roger Kommer (r.kommer.extern@micromata.de)
- *
  */
-public interface TimeableService
+public interface TimeableService<PK extends Serializable, T extends TimeableAttrRow<PK>>
 {
+  /**
+   * Returns the attrRow for a given Date depending on the type of the group or null.
+   *
+   * @param attrRows The attrRows must be sorted by start time descending.
+   * @param group    The group.
+   * @param date     The date to find a row for.
+   * @return The attrRow or null.
+   */
+  T getAttrRowForDate(final List<T> attrRows, final AttrGroup group, final Date date);
 
   /**
-   * Search the row, on given date.
+   * Returns the attrRows belonging to the given group.
    *
-   * @param <T> the generic type
-   * @param date must not be null
-   * @param entity the entity
-   * @return null if not found
+   * @param entity The entity with timeable attrRows
+   * @param group  The group to find attrRows for.
+   * @return The attrRows belonging to the given group.
    */
-  <PK extends Serializable, T extends TimeableAttrRow<PK>> T getRowForTime(Date date,
-      EntityWithTimeableAttr<PK, T> entity);
+  List<T> getTimeableAttrRowsForGroup(final EntityWithTimeableAttr<PK, T> entity, final AttrGroup group);
 
   /**
-   * Gets the attr value.
+   * Sorts the attrRows by start time descending, if the start time of a row is null, this row will the first element of the list.
    *
-   * @param <R> the generic type
-   * @param <T> the generic type
-   * @param date the date
-   * @param entity the entity
-   * @param propertyName the property name
-   * @param expectedClass the expected class
-   * @return the attr value
+   * @param attrRows The TimeableAttrRows to sort.
+   * @return The sorted TimeableAttrRow.
    */
-  <PK extends Serializable, R, T extends TimeableAttrRow<PK>> R getAttrValue(final Date date,
-      final EntityWithTimeableAttr<PK, T> entity,
-      final String propertyName, final Class<R> expectedClass);
-
-  /**
-   * Gets the attr value.
-   *
-   * @param <R> the generic type
-   * @param <T> the generic type
-   * @param entity the entity
-   * @param propertyName the property name
-   * @param expectedClass the expected class
-   * @return the attr value
-   */
-  <PK extends Serializable, R, T extends TimeableAttrRow<PK>> R getAttrValue(final EntityWithTimeableAttr<PK, T> entity,
-      final String propertyName, final Class<R> expectedClass);
-
+  List<T> sortTimeableAttrRowsByDateDescending(List<T> attrRows);
 }
