@@ -145,7 +145,7 @@ public class JettyServletContainerCustomizer implements JettyServerCustomizer
     ServerConnector http = new ServerConnector(server,
         new HttpConnectionFactory(http_config));
     http.setPort(port);
-    http.setIdleTimeout(config.getSessionTimeoutAsInt());
+
     if (StringUtils.isNotBlank(config.getListenHost()) == true) {
       http.setHost(config.getListenHost());
     }

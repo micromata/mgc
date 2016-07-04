@@ -140,8 +140,8 @@ public abstract class JettyServer
 
   protected void initSessionTimeout(JettyConfigModel config)
   {
-    // TODO RRK implement
-
+    int sessionTimeout = config.getSessionTimeoutAsInt();
+    contextHandler.getSessionHandler().getSessionManager().setMaxInactiveInterval(sessionTimeout);
   }
 
   protected SessionHandler createSessionHandler()
@@ -155,7 +155,6 @@ public abstract class JettyServer
     ServerConnector http = new ServerConnector(server,
         new HttpConnectionFactory(http_config));
     http.setPort(port);
-    http.setIdleTimeout(config.getSessionTimeoutAsInt());
     if (StringUtils.isNotBlank(config.getListenHost()) == true) {
       http.setHost(config.getListenHost());
     }
