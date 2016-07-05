@@ -17,6 +17,7 @@
 package de.micromata.genome.db.jpa.tabattr.impl;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.function.Predicate;
@@ -50,8 +51,7 @@ public class TimeableServiceImpl<PK extends Serializable, T extends TimeableAttr
         return null;
 
       default:
-        log.error("The Type " + group.getType() + " is not supported.");
-        return null;
+        throw new IllegalArgumentException("The Type " + group.getType() + " is not supported.");
     }
 
     return attrRows
@@ -65,6 +65,11 @@ public class TimeableServiceImpl<PK extends Serializable, T extends TimeableAttr
   public List<T> getTimeableAttrRowsForGroup(final EntityWithTimeableAttr<PK, T> entity, final AttrGroup group)
   {
     final String groupName = group.getName();
+
+    if (groupName == null) {
+      return Collections.emptyList();
+    }
+
     return entity
         .getTimeableAttributes()
         .stream()
