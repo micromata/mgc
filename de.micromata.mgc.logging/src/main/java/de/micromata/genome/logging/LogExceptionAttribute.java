@@ -32,7 +32,7 @@ public class LogExceptionAttribute extends LogAttribute implements WithLogAttrib
   /**
    * The Constant serialVersionUID.
    */
-  private static final long serialVersionUID = -6868966772934042048L;
+  private static final long serialVersionUID = -6868966772.4.0-SNAPSHOT42048L;
 
   /**
    * The exception.
