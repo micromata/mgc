@@ -72,7 +72,7 @@ public class JdbcLocalSettingsConfigModel extends AbstractLocalSettingsConfigMod
   private String intialSize;
   @ALocalSettingsPath(comment = "Sets the default catalog.")
   private String defaultCatalog;
-  @ALocalSettingsPath(comment = "Sets default auto-commit state of connections returned by this datasource.")
+  @ALocalSettingsPath(defaultValue = "true", comment = "Sets default auto-commit state of connections returned by this datasource.")
   private String defaultAutoCommit;
   @ALocalSettingsPath(comment = "Validation query to test if connection is valid.")
   private String validationQuery;
