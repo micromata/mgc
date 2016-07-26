@@ -4,7 +4,7 @@
   <parent>
     <artifactId>de.micromata.mgc.rootpom</artifactId>
     <groupId>de.micromata.mgc</groupId>
-    <version>2.3.0</version><!-- MGC -->
+    <version>2.3.1</version><!-- MGC -->
   </parent>
   <artifactId>de.micromata.mgc.email</artifactId>
   <packaging>jar</packaging>
