@@ -23,9 +23,7 @@ public class AttrGroup implements Serializable
 {
   public enum Type
   {
-    NOT_TIMEABLE,
-    PERIOD,
-    INSTANT_OF_TIME
+    NOT_TIMEABLE, PERIOD, INSTANT_OF_TIME
   }
 
   private Type type;
@@ -59,6 +57,11 @@ public class AttrGroup implements Serializable
    * The descriptions.
    */
   private List<AttrDescription> descriptions;
+
+  /**
+   * Submenu name as i18n key
+   */
+  private String i18nKeySubmenu;
 
   /**
    * Instantiates a new attr group.
@@ -117,4 +120,15 @@ public class AttrGroup implements Serializable
   {
     this.descriptions = descriptions;
   }
+
+  public String getI18nKeySubmenu()
+  {
+    return i18nKeySubmenu;
+  }
+
+  public void setI18nKeySubmenu(String i18nKeySubmenu)
+  {
+    this.i18nKeySubmenu = i18nKeySubmenu;
+  }
+
 }
