@@ -51,7 +51,7 @@ public class SchedulerFactory
   private int startupTimeout;
 
   /**
-   * The job retry time.
+   * The job retry time in seconds.
    */
   private int jobRetryTime = 60;
 
@@ -61,7 +61,7 @@ public class SchedulerFactory
   private int jobMaxRetryCount = 0;
 
   /**
-   * The service retry time.
+   * The service retry time in seconds.
    */
   private int serviceRetryTime = 60;
 
