@@ -55,10 +55,15 @@ public class RamJobStore extends AbstractJobStore
   private static final Logger log = Logger.getLogger(RamJobStore.class);
 
   /**
-   * The schedulers.
+   * The schedulers by pk.
    */
-  private Map<Long, SchedulerDO> schedulers = new HashMap<Long, SchedulerDO>();
+  private Map<Long, SchedulerDO> schedulersByPk = new HashMap<Long, SchedulerDO>();
 
+  /**
+   * The schedulers by name.
+   */
+  private Map<String, SchedulerDO> schedulersByName = new HashMap<String, SchedulerDO>();
+  
   /**
    * Scheduler.pk -> Job.pk -> Job
    */
@@ -89,7 +94,7 @@ public class RamJobStore extends AbstractJobStore
    */
   public synchronized void _clearJobStore()
   {
-    schedulers.clear();
+    schedulersByPk.clear();
     allJobs.clear();
     jobResults.clear();
   }
@@ -97,14 +102,15 @@ public class RamJobStore extends AbstractJobStore
   @Override
   public synchronized SchedulerDO createOrGetScheduler(String schedulerName)
   {
-    SchedulerDO ret = schedulers.get(schedulerName);
+    SchedulerDO ret = schedulersByName.get(schedulerName);
     if (ret != null) {
       return ret;
     }
     ret = new SchedulerDO();
     ret.setName(schedulerName);
     ret.setPk(++nextSchedulerId);
-    schedulers.put(ret.getPk(), ret);
+    schedulersByPk.put(ret.getPk(), ret);
+    schedulersByName.put(ret.getName(), ret);
     return ret;
   }
 
@@ -119,7 +125,7 @@ public class RamJobStore extends AbstractJobStore
     if (StringUtils.isBlank(schedulerName) == true) {
       return null;
     }
-    SchedulerDO sched = schedulers.get(schedulerName);
+    SchedulerDO sched = schedulersByName.get(schedulerName);
     if (sched != null) {
       return sched.getPk();
     }
@@ -244,7 +250,6 @@ public class RamJobStore extends AbstractJobStore
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public synchronized List<JobResultDO> getResults(TriggerJobDO job, int maxResults)
   {
 
@@ -273,7 +278,7 @@ public class RamJobStore extends AbstractJobStore
   {
     List<SchedulerDO> ret = new ArrayList<SchedulerDO>();
 
-    ret.addAll(schedulers.values());
+    ret.addAll(schedulersByPk.values());
 
     return ret;
   }
@@ -324,7 +329,8 @@ public class RamJobStore extends AbstractJobStore
     if (scheduler.getPk() == null || scheduler.getPk() == SchedulerDO.UNSAVED_SCHEDULER_ID) {
       scheduler.setPk(nextSchedulerId++);
     }
-    schedulers.put(scheduler.getPk(), scheduler);
+    schedulersByPk.put(scheduler.getPk(), scheduler);
+    schedulersByName.put(scheduler.getName(), scheduler);
 
   }
 
@@ -441,7 +447,7 @@ public class RamJobStore extends AbstractJobStore
   {
     Long schedulerPk = null;
     if (StringUtils.isNotEmpty(schedulerName) == true) {
-      SchedulerDO sched = schedulers.get(schedulerName);
+      SchedulerDO sched = schedulersByName.get(schedulerName);
       if (sched != null) {
         schedulerPk = sched.getPk();
       }
@@ -470,7 +476,7 @@ public class RamJobStore extends AbstractJobStore
   public synchronized List<SchedulerDisplayDO> getAdminSchedulers()
   {
     List<SchedulerDisplayDO> ret = new ArrayList<SchedulerDisplayDO>();
-    for (SchedulerDO s : schedulers.values()) {
+    for (SchedulerDO s : schedulersByPk.values()) {
       ret.add(new SchedulerDisplayDO(s));
     }
     return ret;
