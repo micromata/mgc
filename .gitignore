@@ -35,6 +35,7 @@ nohup.out
 .settings
 .classpath
 .project
+.pmd
 
 # Ignore local coverage reports.
 coverage/
