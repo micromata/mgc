@@ -26,6 +26,23 @@ public class AttrGroup implements Serializable
     NOT_TIMEABLE, PERIOD, INSTANT_OF_TIME
   }
 
+  public enum DayMonthGranularity
+  {
+    DAY, MONTH;
+  }
+
+  private DayMonthGranularity dayMonthGranularity;
+
+  public DayMonthGranularity getDayMonthGranularity()
+  {
+    return dayMonthGranularity;
+  }
+
+  public void setDayMonthGranularity(DayMonthGranularity dayMonthGranularity)
+  {
+    this.dayMonthGranularity = dayMonthGranularity;
+  }
+
   private Type type;
 
   public Type getType()
