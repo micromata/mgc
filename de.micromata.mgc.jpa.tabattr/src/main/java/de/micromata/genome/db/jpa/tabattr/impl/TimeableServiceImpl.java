@@ -64,8 +64,12 @@ public class TimeableServiceImpl<PK extends Serializable, T extends TimeableAttr
   @Override
   public List<T> getTimeableAttrRowsForGroup(final EntityWithTimeableAttr<PK, T> entity, final AttrGroup group)
   {
-    final String groupName = group.getName();
+    return getTimeableAttrRowsForGroupName(entity, group.getName());
+  }
 
+  @Override
+  public List<T> getTimeableAttrRowsForGroupName(final EntityWithTimeableAttr<PK, T> entity, final String groupName)
+  {
     if (groupName == null) {
       return Collections.emptyList();
     }

@@ -45,6 +45,15 @@ public interface TimeableService<PK extends Serializable, T extends TimeableAttr
   List<T> getTimeableAttrRowsForGroup(final EntityWithTimeableAttr<PK, T> entity, final AttrGroup group);
 
   /**
+   * Returns the attrRows belonging to the given group name.
+   *
+   * @param entity    The entity with timeable attrRows
+   * @param groupName The group name to find attrRows for.
+   * @return The attrRows belonging to the given group.
+   */
+  List<T> getTimeableAttrRowsForGroupName(final EntityWithTimeableAttr<PK, T> entity, final String groupName);
+
+  /**
    * Sorts the attrRows by start time descending, if the start time of a row is null, this row will the first element of the list.
    *
    * @param attrRows The TimeableAttrRows to sort.
