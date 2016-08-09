@@ -36,6 +36,35 @@ public interface TimeableService<PK extends Serializable, T extends TimeableAttr
   T getAttrRowForDate(final List<T> attrRows, final AttrGroup group, final Date date);
 
   /**
+   * Returns an attrRow which is in the same month as the given date or null. If there are multiple attrRows in the list, it will return the first one.
+   *
+   * @param attrRows            The attrRows to look for.
+   * @param dateToSelectAttrRow The date to find a row for in the same month.
+   * @return The attrRow or null.
+   */
+  T getAttrRowForSameMonth(final List<T> attrRows, final Date dateToSelectAttrRow);
+
+  /**
+   * Returns an attrRow which is in the same month as the given date or null. If there are multiple attrRows in the list, it will return the first one.
+   *
+   * @param entity              The entity with timeable attrRows.
+   * @param group               The group.
+   * @param dateToSelectAttrRow The date to find a row for in the same month.
+   * @return The attrRow or null.
+   */
+  T getAttrRowForSameMonth(final EntityWithTimeableAttr<PK, T> entity, final AttrGroup group, final Date dateToSelectAttrRow);
+
+  /**
+   * Returns an attrRow which is in the same month as the given date or null. If there are multiple attrRows in the list, it will return the first one.
+   *
+   * @param entity              The entity with timeable attrRows.
+   * @param groupName           The group name.
+   * @param dateToSelectAttrRow The date to find a row for in the same month.
+   * @return The attrRow or null.
+   */
+  T getAttrRowForSameMonth(final EntityWithTimeableAttr<PK, T> entity, final String groupName, final Date dateToSelectAttrRow);
+
+  /**
    * Returns the attrRows belonging to the given group.
    *
    * @param entity The entity with timeable attrRows

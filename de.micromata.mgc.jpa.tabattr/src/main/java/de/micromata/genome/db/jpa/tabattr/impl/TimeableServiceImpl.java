@@ -27,6 +27,7 @@ import de.micromata.genome.db.jpa.tabattr.api.AttrGroup;
 import de.micromata.genome.db.jpa.tabattr.api.EntityWithTimeableAttr;
 import de.micromata.genome.db.jpa.tabattr.api.TimeableAttrRow;
 import de.micromata.genome.db.jpa.tabattr.api.TimeableService;
+import de.micromata.genome.util.types.DateUtils;
 
 /**
  * Standard implementation for TimeableService.
@@ -59,6 +60,27 @@ public class TimeableServiceImpl<PK extends Serializable, T extends TimeableAttr
         .filter(filterPredicate)
         .findFirst()
         .orElse(null);
+  }
+
+  public T getAttrRowForSameMonth(final List<T> attrRows, final Date dateToSelectAttrRow)
+  {
+    return attrRows
+        .stream()
+        .filter(row -> (row.getStartTime() != null && DateUtils.isSameMonth(row.getStartTime(), dateToSelectAttrRow)))
+        .findFirst()
+        .orElse(null);
+  }
+
+  public T getAttrRowForSameMonth(final EntityWithTimeableAttr<PK, T> entity, final AttrGroup group, final Date dateToSelectAttrRow)
+  {
+    final List<T> timeableAttrRowsForGroup = getTimeableAttrRowsForGroup(entity, group);
+    return getAttrRowForSameMonth(timeableAttrRowsForGroup, dateToSelectAttrRow);
+  }
+
+  public T getAttrRowForSameMonth(final EntityWithTimeableAttr<PK, T> entity, final String groupName, final Date dateToSelectAttrRow)
+  {
+    final List<T> timeableAttrRowsForGroup = getTimeableAttrRowsForGroupName(entity, groupName);
+    return getAttrRowForSameMonth(timeableAttrRowsForGroup, dateToSelectAttrRow);
   }
 
   @Override
