@@ -85,7 +85,7 @@ public class LogAttribute implements Serializable
     if (val == null) {
       return StringUtils.EMPTY;
     }
-    return StringUtils.abbreviate(val, size);
+    return val.substring(0, size);
   }
 
   public LogAttributeType getType()
