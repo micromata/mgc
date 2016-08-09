@@ -19,6 +19,7 @@ package de.micromata.genome.db.jpa.tabattr.api;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Methods to manage/validate Timeable DOs.
@@ -29,46 +30,51 @@ public interface TimeableService<PK extends Serializable, T extends TimeableAttr
    * Returns the attrRow for a given Date depending on the type of the group or null.
    *
    * @param attrRows The attrRows must be sorted by start time descending.
-   * @param group    The group.
-   * @param date     The date to find a row for.
+   * @param group The group.
+   * @param date The date to find a row for.
    * @return The attrRow or null.
    */
   T getAttrRowForDate(final List<T> attrRows, final AttrGroup group, final Date date);
 
   /**
-   * Returns an attrRow which is in the same month as the given date or null. If there are multiple attrRows in the list, it will return the first one.
+   * Returns an attrRow which is in the same month as the given date or null. If there are multiple attrRows in the
+   * list, it will return the first one.
    *
-   * @param attrRows            The attrRows to look for.
+   * @param attrRows The attrRows to look for.
    * @param dateToSelectAttrRow The date to find a row for in the same month.
    * @return The attrRow or null.
    */
   T getAttrRowForSameMonth(final List<T> attrRows, final Date dateToSelectAttrRow);
 
   /**
-   * Returns an attrRow which is in the same month as the given date or null. If there are multiple attrRows in the list, it will return the first one.
+   * Returns an attrRow which is in the same month as the given date or null. If there are multiple attrRows in the
+   * list, it will return the first one.
    *
-   * @param entity              The entity with timeable attrRows.
-   * @param group               The group.
+   * @param entity The entity with timeable attrRows.
+   * @param group The group.
    * @param dateToSelectAttrRow The date to find a row for in the same month.
    * @return The attrRow or null.
    */
-  T getAttrRowForSameMonth(final EntityWithTimeableAttr<PK, T> entity, final AttrGroup group, final Date dateToSelectAttrRow);
+  T getAttrRowForSameMonth(final EntityWithTimeableAttr<PK, T> entity, final AttrGroup group,
+      final Date dateToSelectAttrRow);
 
   /**
-   * Returns an attrRow which is in the same month as the given date or null. If there are multiple attrRows in the list, it will return the first one.
+   * Returns an attrRow which is in the same month as the given date or null. If there are multiple attrRows in the
+   * list, it will return the first one.
    *
-   * @param entity              The entity with timeable attrRows.
-   * @param groupName           The group name.
+   * @param entity The entity with timeable attrRows.
+   * @param groupName The group name.
    * @param dateToSelectAttrRow The date to find a row for in the same month.
    * @return The attrRow or null.
    */
-  T getAttrRowForSameMonth(final EntityWithTimeableAttr<PK, T> entity, final String groupName, final Date dateToSelectAttrRow);
+  T getAttrRowForSameMonth(final EntityWithTimeableAttr<PK, T> entity, final String groupName,
+      final Date dateToSelectAttrRow);
 
   /**
    * Returns the attrRows belonging to the given group.
    *
    * @param entity The entity with timeable attrRows
-   * @param group  The group to find attrRows for.
+   * @param group The group to find attrRows for.
    * @return The attrRows belonging to the given group.
    */
   List<T> getTimeableAttrRowsForGroup(final EntityWithTimeableAttr<PK, T> entity, final AttrGroup group);
@@ -76,17 +82,26 @@ public interface TimeableService<PK extends Serializable, T extends TimeableAttr
   /**
    * Returns the attrRows belonging to the given group name.
    *
-   * @param entity    The entity with timeable attrRows
+   * @param entity The entity with timeable attrRows
    * @param groupName The group name to find attrRows for.
    * @return The attrRows belonging to the given group.
    */
   List<T> getTimeableAttrRowsForGroupName(final EntityWithTimeableAttr<PK, T> entity, final String groupName);
 
   /**
-   * Sorts the attrRows by start time descending, if the start time of a row is null, this row will the first element of the list.
+   * Sorts the attrRows by start time descending, if the start time of a row is null, this row will the first element of
+   * the list.
    *
    * @param attrRows The TimeableAttrRows to sort.
    * @return The sorted TimeableAttrRow.
    */
   List<T> sortTimeableAttrRowsByDateDescending(List<T> attrRows);
+
+  /**
+   * Get a set of available years in timeable attr data.
+   * 
+   * @param entity The entity with timeable attrRows
+   * @return the set of available years
+   */
+  Set<Integer> getAvailableStartTimeYears(final List<? extends EntityWithTimeableAttr<PK, T>> entityList);
 }
