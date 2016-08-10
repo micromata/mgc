@@ -19,7 +19,6 @@ package de.micromata.genome.db.jpa.tabattr.api;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Methods to manage/validate Timeable DOs.
@@ -99,9 +98,9 @@ public interface TimeableService<PK extends Serializable, T extends TimeableAttr
 
   /**
    * Get a set of available years in timeable attr data.
-   * 
-   * @param entity The entity with timeable attrRows
-   * @return the set of available years
+   *
+   * @param entityList The list of entities with timeable attrRows
+   * @return the list of available years
    */
-  Set<Integer> getAvailableStartTimeYears(final List<? extends EntityWithTimeableAttr<PK, T>> entityList);
+  List<Integer> getAvailableStartTimeYears(final List<? extends EntityWithTimeableAttr<PK, T>> entityList);
 }

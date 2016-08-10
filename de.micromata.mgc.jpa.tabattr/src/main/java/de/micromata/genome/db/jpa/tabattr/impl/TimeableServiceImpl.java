@@ -22,9 +22,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -122,21 +119,21 @@ public class TimeableServiceImpl<PK extends Serializable, T extends TimeableAttr
   }
 
   @Override
-  public Set<Integer> getAvailableStartTimeYears(final List<? extends EntityWithTimeableAttr<PK, T>> entityList)
+  public List<Integer> getAvailableStartTimeYears(final List<? extends EntityWithTimeableAttr<PK, T>> entityList)
   {
-    SortedSet<Integer> allYears = new TreeSet<>();
-    for (EntityWithTimeableAttr<PK, T> entity : entityList) {
-      allYears.addAll(entity.getTimeableAttributes()
-          .stream()
-          .map(TimeableAttrRow::getStartTime)
-          .map(date -> {
-            Calendar cal = new GregorianCalendar();
-            cal.setTime(date);
-            return cal.get(Calendar.YEAR);
-          })
-          .collect(Collectors.toSet()));
-    }
-    return allYears;
+    return entityList
+        .stream()
+        .map(EntityWithTimeableAttr::getTimeableAttributes)
+        .flatMap(List::stream) // flatten the stream of lists to a single stream
+        .map(TimeableAttrRow::getStartTime)
+        .map(date -> {
+          final Calendar cal = new GregorianCalendar();
+          cal.setTime(date);
+          return cal.get(Calendar.YEAR);
+        })
+        .distinct()
+        .sorted()
+        .collect(Collectors.toList());
   }
 
 }
