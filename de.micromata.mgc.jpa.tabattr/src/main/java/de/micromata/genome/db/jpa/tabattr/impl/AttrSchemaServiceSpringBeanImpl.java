@@ -28,7 +28,9 @@ import java.util.Map;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
+import de.micromata.genome.db.jpa.tabattr.api.AttrGroup;
 import de.micromata.genome.db.jpa.tabattr.api.AttrSchema;
+import de.micromata.genome.db.jpa.tabattr.api.EntityWithConfigurableAttr;
 
 ;
 
@@ -95,6 +97,14 @@ public class AttrSchemaServiceSpringBeanImpl extends AttrSchemaServiceBaseImpl
   public void setAttrSchemata(Map<String, AttrSchema> attrSchemata)
   {
     this.attrSchemata = attrSchemata;
+  }
+
+  @Override
+  public AttrGroup getAttrGroup(EntityWithConfigurableAttr entity, String groupName)
+  {
+    AttrSchema entitySchema = attrSchemata.get(entity.getAttrSchemaName());
+    return entitySchema.getGroups().stream().filter(group -> group.getName().equals(groupName)).findFirst()
+        .orElse(null);
   }
 
 }
