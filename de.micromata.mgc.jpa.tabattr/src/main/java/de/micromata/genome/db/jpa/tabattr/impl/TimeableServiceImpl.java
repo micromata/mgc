@@ -17,8 +17,10 @@
 package de.micromata.genome.db.jpa.tabattr.impl;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -27,11 +29,13 @@ import de.micromata.genome.db.jpa.tabattr.api.AttrGroup;
 import de.micromata.genome.db.jpa.tabattr.api.EntityWithTimeableAttr;
 import de.micromata.genome.db.jpa.tabattr.api.TimeableAttrRow;
 import de.micromata.genome.db.jpa.tabattr.api.TimeableService;
+import de.micromata.genome.util.types.DateUtils;
 
 /**
  * Standard implementation for TimeableService.
  */
-public class TimeableServiceImpl<PK extends Serializable, T extends TimeableAttrRow<PK>> implements TimeableService<PK, T>
+public class TimeableServiceImpl<PK extends Serializable, T extends TimeableAttrRow<PK>>
+    implements TimeableService<PK, T>
 {
   private static final org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(TimeableServiceImpl.class);
 
@@ -61,11 +65,38 @@ public class TimeableServiceImpl<PK extends Serializable, T extends TimeableAttr
         .orElse(null);
   }
 
+  public T getAttrRowForSameMonth(final List<T> attrRows, final Date dateToSelectAttrRow)
+  {
+    return attrRows
+        .stream()
+        .filter(row -> (row.getStartTime() != null && DateUtils.isSameMonth(row.getStartTime(), dateToSelectAttrRow)))
+        .findFirst()
+        .orElse(null);
+  }
+
+  public T getAttrRowForSameMonth(final EntityWithTimeableAttr<PK, T> entity, final AttrGroup group,
+      final Date dateToSelectAttrRow)
+  {
+    final List<T> timeableAttrRowsForGroup = getTimeableAttrRowsForGroup(entity, group);
+    return getAttrRowForSameMonth(timeableAttrRowsForGroup, dateToSelectAttrRow);
+  }
+
+  public T getAttrRowForSameMonth(final EntityWithTimeableAttr<PK, T> entity, final String groupName,
+      final Date dateToSelectAttrRow)
+  {
+    final List<T> timeableAttrRowsForGroup = getTimeableAttrRowsForGroupName(entity, groupName);
+    return getAttrRowForSameMonth(timeableAttrRowsForGroup, dateToSelectAttrRow);
+  }
+
   @Override
   public List<T> getTimeableAttrRowsForGroup(final EntityWithTimeableAttr<PK, T> entity, final AttrGroup group)
   {
-    final String groupName = group.getName();
+    return getTimeableAttrRowsForGroupName(entity, group.getName());
+  }
 
+  @Override
+  public List<T> getTimeableAttrRowsForGroupName(final EntityWithTimeableAttr<PK, T> entity, final String groupName)
+  {
     if (groupName == null) {
       return Collections.emptyList();
     }
@@ -82,7 +113,26 @@ public class TimeableServiceImpl<PK extends Serializable, T extends TimeableAttr
   {
     return attrRows
         .stream()
-        .sorted((row1, row2) -> (row1.getStartTime() == null || row2.getStartTime() == null) ? -1 : row2.getStartTime().compareTo(row1.getStartTime()))
+        .sorted((row1, row2) -> (row1.getStartTime() == null || row2.getStartTime() == null) ? -1
+            : row2.getStartTime().compareTo(row1.getStartTime()))
+        .collect(Collectors.toList());
+  }
+
+  @Override
+  public List<Integer> getAvailableStartTimeYears(final List<? extends EntityWithTimeableAttr<PK, T>> entityList)
+  {
+    return entityList
+        .stream()
+        .map(EntityWithTimeableAttr::getTimeableAttributes)
+        .flatMap(List::stream) // flatten the stream of lists to a single stream
+        .map(TimeableAttrRow::getStartTime)
+        .map(date -> {
+          final Calendar cal = new GregorianCalendar();
+          cal.setTime(date);
+          return cal.get(Calendar.YEAR);
+        })
+        .distinct()
+        .sorted()
         .collect(Collectors.toList());
   }
 

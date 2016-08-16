@@ -47,7 +47,7 @@ public class LogStatsDO extends TypeStatsDO implements Cloneable
     /**
      * The Constant serialVersionUID.
      */
-    private static final long serialVersionUID = 8471880233507225170L;
+    private static final long serialVersionUID = 84718807225170L;
 
     /**
      * The debug count.
