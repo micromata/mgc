@@ -102,6 +102,9 @@ public class AttrSchemaServiceSpringBeanImpl extends AttrSchemaServiceBaseImpl
   @Override
   public AttrGroup getAttrGroup(EntityWithConfigurableAttr entity, String groupName)
   {
+    if (attrSchemata == null) {
+      loadAttrSchema();
+    }
     AttrSchema entitySchema = attrSchemata.get(entity.getAttrSchemaName());
     return entitySchema.getGroups().stream().filter(group -> group.getName().equals(groupName)).findFirst()
         .orElse(null);
