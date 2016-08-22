@@ -447,7 +447,7 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    * @param cls the cls
    * @param sql the sql
    * @param keyValues the key values
-   * @return the r
+   * @return the found or null if not found.
    */
   @Override
   public <R> R findSingleDetached(Class<R> cls, String sql, Object... keyValues)
