@@ -74,15 +74,15 @@ public abstract class JettyServer
     return server;
   }
 
-  public void initJetty(JettyConfigModel config)
+  public void initJetty(final JettyConfigModel config)
   {
-    LocalSettingsEnv localEnv = LocalSettingsEnv.get();
+    final LocalSettingsEnv localEnv = LocalSettingsEnv.get();
 
     //    LocalSettings localSettings = localEnv.getLocalSettings();
     server = new Server();
-    HttpConfiguration http_config = new HttpConfiguration();
-    ServerConnector connector = initHttpConnector(config, server, http_config);
-    ServerConnector sslConnector = initSslConnector(config, server, http_config);
+    final HttpConfiguration http_config = new HttpConfiguration();
+    final ServerConnector connector = initHttpConnector(config, server, http_config);
+    final ServerConnector sslConnector = initSslConnector(config, server, http_config);
 
     Connector[] connectors = new Connector[] { connector };
     if (sslConnector != null) {
@@ -104,27 +104,27 @@ public abstract class JettyServer
 
   }
 
-  protected void initJmx(JettyConfigModel config, ServletContextHandler contextHandler)
+  protected void initJmx(final JettyConfigModel config, final ServletContextHandler contextHandler)
   {
     if (config.isServerEnableJmx() == false) {
       return;
     }
-    MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
-    MBeanContainer mBeanContainer = new MBeanContainer(mBeanServer);
+    final MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
+    final MBeanContainer mBeanContainer = new MBeanContainer(mBeanServer);
     contextHandler.addEventListener(mBeanContainer);
   }
 
-  protected void initRequestLogger(JettyConfigModel config, ServletContextHandler contextHandler)
+  protected void initRequestLogger(final JettyConfigModel config, final ServletContextHandler contextHandler)
   {
     if (config.isServerRequestLoggingEnabled() == false) {
       return;
     }
-    HandlerCollection handlers = new HandlerCollection();
-    RequestLogHandler requestLogHandler = new RequestLogHandler();
+    final HandlerCollection handlers = new HandlerCollection();
+    final RequestLogHandler requestLogHandler = new RequestLogHandler();
     handlers.setHandlers(new Handler[] { contextHandler, new DefaultHandler(), requestLogHandler });
     server.setHandler(handlers);
     // TODO RK check if directory exists and if not, create it.
-    NCSARequestLog requestLog = new NCSARequestLog("log/genome-yyyy_mm_dd.request.log");
+    final NCSARequestLog requestLog = new NCSARequestLog("log/genome-yyyy_mm_dd.request.log");
     requestLog.setExtended(true);
     requestLog.setRetainDays(90);
     requestLog.setAppend(true);
@@ -133,14 +133,14 @@ public abstract class JettyServer
     requestLogHandler.setRequestLog(requestLog);
   }
 
-  protected void registerJmxBeans(JettyConfigModel config, MBeanContainer mBeanContainer)
+  protected void registerJmxBeans(final JettyConfigModel config, final MBeanContainer mBeanContainer)
   {
 
   }
 
-  protected void initSessionTimeout(JettyConfigModel config)
+  protected void initSessionTimeout(final JettyConfigModel config)
   {
-    int sessionTimeout = config.getSessionTimeoutAsInt();
+    final int sessionTimeout = config.getSessionTimeoutAsInt();
     contextHandler.getSessionHandler().getSessionManager().setMaxInactiveInterval(sessionTimeout);
   }
 
@@ -149,27 +149,32 @@ public abstract class JettyServer
     return new SessionHandler();
   }
 
-  private ServerConnector initHttpConnector(JettyConfigModel config, Server server, HttpConfiguration http_config)
+  private ServerConnector initHttpConnector(final JettyConfigModel config, final Server server, final HttpConfiguration http_config)
   {
-    int port = config.getPortAsInt();
-    ServerConnector http = new ServerConnector(server,
+    final int port = config.getPortAsInt();
+    final ServerConnector http = new ServerConnector(server,
         new HttpConnectionFactory(http_config));
     http.setPort(port);
     if (StringUtils.isNotBlank(config.getListenHost()) == true) {
       http.setHost(config.getListenHost());
     }
+    
+    http.setIdleTimeout(config.getIdleTimeoutAsLong());
+    
+    System.err.println("Initialize Jetty with JettyConfigModel: "+config);
+    
     return http;
   }
 
-  private ServerConnector initSslConnector(JettyConfigModel config, Server server, HttpConfiguration http_config)
+  private ServerConnector initSslConnector(final JettyConfigModel config, final Server server, final HttpConfiguration http_config)
   {
 
     if (config.isSslEnabled() == false) {
       return null;
     }
 
-    SslContextFactory sslContextFactory = new SslContextFactory();
-    String keystorePath = config.getSslKeystorePath();
+    final SslContextFactory sslContextFactory = new SslContextFactory();
+    final String keystorePath = config.getSslKeystorePath();
     sslContextFactory.setKeyStorePath(keystorePath);
     // no null check required, because if password is null, setPassword will prompt user to provide a password
     sslContextFactory.setKeyStorePassword(config.getSslKeystorePassword());
@@ -180,13 +185,13 @@ public abstract class JettyServer
 
     sslContextFactory.setCertAlias(config.getSslCertAlias());
     sslContextFactory.setTrustAll(true);
-    HttpConfiguration https_config = new HttpConfiguration(http_config);
+    final HttpConfiguration https_config = new HttpConfiguration(http_config);
     https_config.addCustomizer(new SecureRequestCustomizer());
-    ServerConnector https = new ServerConnector(server,
+    final ServerConnector https = new ServerConnector(server,
         new SslConnectionFactory(sslContextFactory, HttpVersion.HTTP_1_1.asString()),
         new HttpConnectionFactory(https_config));
 
-    int port = config.getSslPortAsInt();
+    final int port = config.getSslPortAsInt();
     https.setPort(port);
     https.setIdleTimeout(config.getSessionTimeoutAsInt());
     if (StringUtils.isNotBlank(config.getListenHost()) == true) {
@@ -195,9 +200,9 @@ public abstract class JettyServer
     return https;
   }
 
-  protected Resource getWebResource(String pathInCp)
+  protected Resource getWebResource(final String pathInCp)
   {
-    URL url = getClass().getClassLoader().getResource(pathInCp);
+    final URL url = getClass().getClassLoader().getResource(pathInCp);
     // TODO RK debug only
     LOG.warn("Bound web public directory to " + url);
 

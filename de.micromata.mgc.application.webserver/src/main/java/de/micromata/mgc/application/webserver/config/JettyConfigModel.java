@@ -38,7 +38,7 @@ public class JettyConfigModel extends AbstractCompositLocalSettingsConfigModel
   /**
    * prefix for the localsetings
    */
-  private String prefix;
+  private final String prefix;
 
   @ALocalSettingsPath(defaultValue = "8080", comment = "Port the server listened")
   private String port;
@@ -84,12 +84,15 @@ public class JettyConfigModel extends AbstractCompositLocalSettingsConfigModel
   @ALocalSettingsPath(comment = "Alias used from inside the key store")
   private String sslCertAlias;
 
+  @ALocalSettingsPath(defaultValue = "300000", comment = "TODO what's that in detail")
+  private String idleTimeout;
+
   public JettyConfigModel()
   {
     this("genome.jetty");
   }
 
-  public JettyConfigModel(String prefix)
+  public JettyConfigModel(final String prefix)
   {
     this.prefix = prefix;
   }
@@ -101,9 +104,13 @@ public class JettyConfigModel extends AbstractCompositLocalSettingsConfigModel
   }
 
   @Override
-  public void validate(ValContext valContext)
+  public void validate(final ValContext valContext)
   {
-    ValContext ctx = valContext.createSubContext(this, "");
+    final ValContext ctx = valContext.createSubContext(this, "");
+
+    if (NumberUtils.isDigits(idleTimeout) == false) {
+      ctx.directError("idleTimeout", "Please provide numeric idleTimeout number");
+    }
 
     if (StringUtils.isBlank(port) == true) {
       ctx.directError("serverPort", "Please provide a server port");
@@ -128,7 +135,7 @@ public class JettyConfigModel extends AbstractCompositLocalSettingsConfigModel
     if (StringUtils.isBlank(sslKeystorePath) == true) {
       ctx.directError("sslKeystorePath", "Please provide a keystore file");
     } else {
-      File keystorefile = new File(sslKeystorePath);
+      final File keystorefile = new File(sslKeystorePath);
       if (keystorefile.exists() == false) {
         ctx.directError("sslKeystorePath", "Cannot find keystore: " + keystorefile.getAbsolutePath());
       }
@@ -136,7 +143,7 @@ public class JettyConfigModel extends AbstractCompositLocalSettingsConfigModel
     if (StringUtils.isBlank(trustStorePath) == true) {
       ctx.directError("trustStorePath", "Please provide a trust store file");
     } else {
-      File keystorefile = new File(trustStorePath);
+      final File keystorefile = new File(trustStorePath);
       if (keystorefile.exists() == false) {
         ctx.directError("trustStorePath", "Cannot find trust store: " + keystorefile.getAbsolutePath());
       }
@@ -144,9 +151,9 @@ public class JettyConfigModel extends AbstractCompositLocalSettingsConfigModel
   }
 
   @Override
-  public void fromLocalSettings(LocalSettings localSettings)
+  public void fromLocalSettings(final LocalSettings localSettings)
   {
-    String cfgpuburl = localSettings.get("cfg.public.url");
+    final String cfgpuburl = localSettings.get("cfg.public.url");
     if (StringUtils.isBlank(localSettings.get(buildKey("publicUrl"))) == true &&
         StringUtils.isBlank(cfgpuburl) == false) {
       localSettings.getMap().put(buildKey("publicUrl"), cfgpuburl);
@@ -156,9 +163,9 @@ public class JettyConfigModel extends AbstractCompositLocalSettingsConfigModel
   }
 
   @Override
-  public LocalSettingsWriter toProperties(LocalSettingsWriter writer)
+  public LocalSettingsWriter toProperties(final LocalSettingsWriter writer)
   {
-    LocalSettingsWriter ret = super.toProperties(writer);
+    final LocalSettingsWriter ret = super.toProperties(writer);
     ret.put("cfg.public.url", publicUrl, "Alias to public url");
     return ret;
   }
@@ -173,7 +180,7 @@ public class JettyConfigModel extends AbstractCompositLocalSettingsConfigModel
     return Integer.parseInt(port);
   }
 
-  public void setPort(String serverPort)
+  public void setPort(final String serverPort)
   {
     this.port = serverPort;
   }
@@ -183,7 +190,7 @@ public class JettyConfigModel extends AbstractCompositLocalSettingsConfigModel
     return contextpath;
   }
 
-  public void setContextPath(String serverContextPath)
+  public void setContextPath(final String serverContextPath)
   {
     this.contextpath = serverContextPath;
   }
@@ -193,7 +200,7 @@ public class JettyConfigModel extends AbstractCompositLocalSettingsConfigModel
     return publicUrl;
   }
 
-  public void setPublicUrl(String publicUrl)
+  public void setPublicUrl(final String publicUrl)
   {
     this.publicUrl = publicUrl;
   }
@@ -203,7 +210,7 @@ public class JettyConfigModel extends AbstractCompositLocalSettingsConfigModel
     return sessionTimeout;
   }
 
-  public void setSessionTimeout(String sessionTimeout)
+  public void setSessionTimeout(final String sessionTimeout)
   {
     this.sessionTimeout = sessionTimeout;
   }
@@ -223,12 +230,12 @@ public class JettyConfigModel extends AbstractCompositLocalSettingsConfigModel
     return serverEnableJmx;
   }
 
-  public void setServerEnableJmx(String serverEnableJmx)
+  public void setServerEnableJmx(final String serverEnableJmx)
   {
     this.serverEnableJmx = serverEnableJmx;
   }
 
-  public void setServerEnableJmx(boolean serverEnableJmx)
+  public void setServerEnableJmx(final boolean serverEnableJmx)
   {
     this.serverEnableJmx = Boolean.toString(serverEnableJmx);
   }
@@ -238,12 +245,12 @@ public class JettyConfigModel extends AbstractCompositLocalSettingsConfigModel
     return serverRequestLoggingEnabled;
   }
 
-  public void setServerRequestLoggingEnabled(String serverRequestLoggingEnabled)
+  public void setServerRequestLoggingEnabled(final String serverRequestLoggingEnabled)
   {
     this.serverRequestLoggingEnabled = serverRequestLoggingEnabled;
   }
 
-  public void setServerRequestLoggingEnabled(boolean serverRequestLoggingEnabled)
+  public void setServerRequestLoggingEnabled(final boolean serverRequestLoggingEnabled)
   {
     this.serverRequestLoggingEnabled = Boolean.toString(serverRequestLoggingEnabled);
   }
@@ -263,12 +270,12 @@ public class JettyConfigModel extends AbstractCompositLocalSettingsConfigModel
     return "true".equals(sslEnabled);
   }
 
-  public void setSslEnabled(String sslEnabled)
+  public void setSslEnabled(final String sslEnabled)
   {
     this.sslEnabled = sslEnabled;
   }
 
-  public void setSslEnabled(boolean sslEnabled)
+  public void setSslEnabled(final boolean sslEnabled)
   {
     this.sslEnabled = Boolean.toString(sslEnabled);
   }
@@ -278,7 +285,7 @@ public class JettyConfigModel extends AbstractCompositLocalSettingsConfigModel
     return sslKeystorePath;
   }
 
-  public void setSslKeystorePath(String sslKeystorePath)
+  public void setSslKeystorePath(final String sslKeystorePath)
   {
     this.sslKeystorePath = sslKeystorePath;
   }
@@ -288,7 +295,7 @@ public class JettyConfigModel extends AbstractCompositLocalSettingsConfigModel
     return sslKeystorePassword;
   }
 
-  public void setSslKeystorePassword(String sslKeystorePassword)
+  public void setSslKeystorePassword(final String sslKeystorePassword)
   {
     this.sslKeystorePassword = sslKeystorePassword;
   }
@@ -298,7 +305,7 @@ public class JettyConfigModel extends AbstractCompositLocalSettingsConfigModel
     return sslKeyManagerPassword;
   }
 
-  public void setSslKeyManagerPassword(String sslKeyManagerPassword)
+  public void setSslKeyManagerPassword(final String sslKeyManagerPassword)
   {
     this.sslKeyManagerPassword = sslKeyManagerPassword;
   }
@@ -308,7 +315,7 @@ public class JettyConfigModel extends AbstractCompositLocalSettingsConfigModel
     return sslPort;
   }
 
-  public void setSslPort(String sslPort)
+  public void setSslPort(final String sslPort)
   {
     this.sslPort = sslPort;
   }
@@ -323,7 +330,7 @@ public class JettyConfigModel extends AbstractCompositLocalSettingsConfigModel
     return sslCertAlias;
   }
 
-  public void setSslCertAlias(String sslCertAlias)
+  public void setSslCertAlias(final String sslCertAlias)
   {
     this.sslCertAlias = sslCertAlias;
   }
@@ -333,7 +340,7 @@ public class JettyConfigModel extends AbstractCompositLocalSettingsConfigModel
     return contextpath;
   }
 
-  public void setContextpath(String contextpath)
+  public void setContextpath(final String contextpath)
   {
     this.contextpath = contextpath;
   }
@@ -343,7 +350,7 @@ public class JettyConfigModel extends AbstractCompositLocalSettingsConfigModel
     return trustStorePath;
   }
 
-  public void setTrustStorePath(String trustStore)
+  public void setTrustStorePath(final String trustStore)
   {
     this.trustStorePath = trustStore;
   }
@@ -353,7 +360,7 @@ public class JettyConfigModel extends AbstractCompositLocalSettingsConfigModel
     return trustStorePassword;
   }
 
-  public void setTrustStorePassword(String trustStorePassword)
+  public void setTrustStorePassword(final String trustStorePassword)
   {
     this.trustStorePassword = trustStorePassword;
   }
@@ -368,12 +375,12 @@ public class JettyConfigModel extends AbstractCompositLocalSettingsConfigModel
     return "true".equals(sslOnly);
   }
 
-  public void setSslOnly(String sslOnly)
+  public void setSslOnly(final String sslOnly)
   {
     this.sslOnly = sslOnly;
   }
 
-  public void setSslOnly(boolean sslOnly)
+  public void setSslOnly(final boolean sslOnly)
   {
     this.sslOnly = Boolean.toString(sslOnly);
   }
@@ -383,9 +390,35 @@ public class JettyConfigModel extends AbstractCompositLocalSettingsConfigModel
     return listenHost;
   }
 
-  public void setListenHost(String listenHost)
+  public void setListenHost(final String listenHost)
   {
     this.listenHost = listenHost;
+  }
+
+  public String getIdleTimeout()
+  {
+    return idleTimeout;
+  }
+  
+  public long getIdleTimeoutAsLong(){
+    return Long.parseLong(idleTimeout);
+  }
+
+  public void setIdleTimeout(final String httpIdleTimeout)
+  {
+    this.idleTimeout = httpIdleTimeout;
+  }
+
+  @Override
+  public String toString()
+  {
+    return "JettyConfigModel [prefix=" + prefix + ", port=" + port + ", listenHost=" + listenHost + ", contextpath="
+        + contextpath + ", publicUrl=" + publicUrl + ", sessionTimeout=" + sessionTimeout + ", serverEnableJmx="
+        + serverEnableJmx + ", serverRequestLoggingEnabled=" + serverRequestLoggingEnabled + ", sslEnabled="
+        + sslEnabled + ", sslPort=" + sslPort + ", sslOnly=" + sslOnly + ", sslKeystorePath=" + sslKeystorePath
+        + ", sslKeystorePassword=" + sslKeystorePassword + ", sslKeyManagerPassword=" + sslKeyManagerPassword
+        + ", trustStorePath=" + trustStorePath + ", trustStorePassword=" + trustStorePassword + ", sslCertAlias="
+        + sslCertAlias + ", idleTimeout=" + idleTimeout + "]";
   }
 
 }
