@@ -42,7 +42,7 @@ public abstract class DbRecordDO<PK extends Serializable> implements DbRecord<PK
   /**
    * The entity primary key.
    */
-  public final static String PK_PROP = "pk";
+  public final static String PK_PROP = "pk";  
   protected PK pk;
 
   @Override
