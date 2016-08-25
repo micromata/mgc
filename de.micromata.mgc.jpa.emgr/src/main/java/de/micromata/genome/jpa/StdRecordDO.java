@@ -61,6 +61,7 @@ public abstract class StdRecordDO<PK extends Serializable>extends DbRecordDO<PK>
   /**
    * Version info. timestamp this entity was created.
    */
+  public final static String CREATE_AT_PROP = "createdAt";
   protected Date createdAt;
 
   /**
