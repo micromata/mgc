@@ -113,14 +113,14 @@ public class PropertyEntityCopier implements EntityCopier
     }
     Object tvalue;
     try {
-      tvalue = PropertyDescriptorUtils.readProperty(source, pd);
+      tvalue = PropertyDescriptorUtils.readProperty(target, pd);
     } catch (PropertyAccessException ex) {
       /**
        * @logging
        * @reason Das interne Lesen einer Objekteigenschaft ist nicht möglich.
        * @action Interner Fehler. Entwickler / Support kontaktieren.
        */
-      GLog.warn(GenomeLogCategory.Jpa, "Cannot read bean property: " + source.getClass().getSimpleName() + DOT
+      GLog.warn(GenomeLogCategory.Jpa, "Cannot read bean property: " + target.getClass().getSimpleName() + DOT
           + pd.getName() + SEMICOLON_SPACE + ex.getMessage(), new LogExceptionAttribute(ex));
       return EntityCopyStatus.NONE;
     }
@@ -171,14 +171,14 @@ public class PropertyEntityCopier implements EntityCopier
     }
     Object backupValue = null;
     try {
-      backupValue = PropertyDescriptorUtils.readProperty(source, pd);
+      backupValue = PropertyDescriptorUtils.readProperty(target, pd);
     } catch (PropertyAccessException ex) {
       /**
        * @logging
        * @reason Das interne Lesen einer Objekteigenschaft ist nicht möglich.
        * @action Interner Fehler. Entwickler / Support kontaktieren.
        */
-      GLog.warn(GenomeLogCategory.Jpa, "Cannot read bean property: " + source.getClass().getSimpleName() + DOT
+      GLog.warn(GenomeLogCategory.Jpa, "Cannot read bean property: " + target.getClass().getSimpleName() + DOT
           + pd.getName() + SEMICOLON_SPACE + ex.getMessage(), new LogExceptionAttribute(ex));
       return EntityCopyStatus.NONE;
     }
