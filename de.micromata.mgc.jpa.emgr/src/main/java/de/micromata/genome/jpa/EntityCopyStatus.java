@@ -46,6 +46,9 @@ public enum EntityCopyStatus
 
   public EntityCopyStatus combine(EntityCopyStatus other)
   {
-    return status < other.status ? other : this;
+    if (status < other.status) {
+      return other;
+    }
+    return this;
   }
 }

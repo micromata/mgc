@@ -182,7 +182,11 @@ public class PropertyEntityCopier implements EntityCopier
           + pd.getName() + SEMICOLON_SPACE + ex.getMessage(), new LogExceptionAttribute(ex));
       return EntityCopyStatus.NONE;
     }
-    EntityCopyStatus ret = ObjectUtils.equals(value, backupValue) ? EntityCopyStatus.NONE : EntityCopyStatus.MAJOR;
+
+    EntityCopyStatus ret = EntityCopyStatus.NONE;
+    if (ObjectUtils.equals(value, backupValue) == false) {
+      ret = EntityCopyStatus.MAJOR;
+    }
     if (writeProperty(target, pd, value) == false) {
       return EntityCopyStatus.NONE;
     }
