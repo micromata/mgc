@@ -52,6 +52,11 @@ public class CombinedLogging extends BaseLogging
   {
     this.primary = primary;
     this.secondary = secondary;
+    if (primary instanceof BaseLogging) {
+      BaseLogging templlog = (BaseLogging) primary;
+      this.setMaxLogAttrLength(templlog.getMaxLogAttrLength());
+      this.setLogAttributeLimitMap(templlog.getLogAttributeLimitMap());
+    }
 
   }
 

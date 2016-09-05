@@ -566,7 +566,7 @@ public abstract class BaseLogging implements Logging
       return;
     }
     int size = la.getType().maxValueSize();
-    if (size == 0) {
+    if (size <= 0) {
       size = getMaxLogAttrLength();
       Integer maxi = getLogAttributeLimitMap().get(la.getType().name());
       if (maxi != null) {

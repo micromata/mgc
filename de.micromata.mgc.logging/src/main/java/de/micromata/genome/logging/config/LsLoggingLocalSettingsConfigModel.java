@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ServiceLoader;
 
+import de.micromata.genome.logging.BaseLogging;
 import de.micromata.genome.logging.Logging;
 import de.micromata.genome.logging.LoggingServiceManager;
 import de.micromata.genome.logging.config.LsLoggingService.LsLoggingDescription;
@@ -117,10 +118,22 @@ public class LsLoggingLocalSettingsConfigModel extends BaseLoggingLocalSettingsC
 
   }
 
+  private void propagateLoggingConfig(Logging logging)
+  {
+    if ((logging instanceof BaseLogging) == false) {
+      return;
+    }
+    BaseLogging baseLogging = (BaseLogging) logging;
+    baseLogging.setMaxLogAttrLength(getMaxLogAttrLengthAsInt());
+
+  }
+
   @Override
   public Logging createLogging()
   {
-    return nested.createLogging();
+    Logging ret = nested.createLogging();
+    propagateLoggingConfig(ret);
+    return ret;
   }
 
   public static List<LsLoggingDescription> getAvailableServices()

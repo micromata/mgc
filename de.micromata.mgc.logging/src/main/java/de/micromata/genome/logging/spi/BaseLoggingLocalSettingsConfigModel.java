@@ -16,6 +16,9 @@
 
 package de.micromata.genome.logging.spi;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
+
 import de.micromata.genome.logging.Logging;
 import de.micromata.genome.util.runtime.config.ALocalSettingsPath;
 import de.micromata.genome.util.runtime.config.AbstractLocalSettingsConfigModel;
@@ -33,6 +36,9 @@ public abstract class BaseLoggingLocalSettingsConfigModel extends AbstractLocalS
 
   @ALocalSettingsPath(defaultValue = "log4j", comment = "Type of the used logging")
   private String typeId;
+
+  @ALocalSettingsPath(defaultValue = "10241024", comment = "Default LogAttribute length. Default value is 1 MB")
+  private String maxLogAttrLength;
 
   public BaseLoggingLocalSettingsConfigModel()
   {
@@ -70,6 +76,12 @@ public abstract class BaseLoggingLocalSettingsConfigModel extends AbstractLocalS
   @Override
   public void validate(ValContext ctx)
   {
+    if (StringUtils.isBlank(maxLogAttrLength) == true) {
+      maxLogAttrLength = "10241024";
+    }
+    if (NumberUtils.isDigits(maxLogAttrLength) == false) {
+      ctx.directError("maxLogAttrLength", "maxLogAttrLength requires int");
+    }
   }
 
   public String getTypeId()
@@ -80,6 +92,21 @@ public abstract class BaseLoggingLocalSettingsConfigModel extends AbstractLocalS
   public void setTypeId(String typeId)
   {
     this.typeId = typeId;
+  }
+
+  public String getMaxLogAttrLength()
+  {
+    return maxLogAttrLength;
+  }
+
+  public int getMaxLogAttrLengthAsInt()
+  {
+    return Integer.parseInt(maxLogAttrLength);
+  }
+
+  public void setMaxLogAttrLength(String maxLogAttrLength)
+  {
+    this.maxLogAttrLength = maxLogAttrLength;
   }
 
 }
