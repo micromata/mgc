@@ -19,13 +19,18 @@ package de.micromata.genome.logging.spi;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
+import de.micromata.genome.logging.BaseLogging;
+import de.micromata.genome.logging.EndOfSearch;
 import de.micromata.genome.logging.LogAttribute;
 import de.micromata.genome.logging.LogAttributeType;
 import de.micromata.genome.logging.LogCategory;
 import de.micromata.genome.logging.LogEntryCallback;
+import de.micromata.genome.logging.LogFilter;
 import de.micromata.genome.logging.LogLevel;
 import de.micromata.genome.logging.LogWriteEntry;
+import de.micromata.genome.logging.LogWriteFilter;
 import de.micromata.genome.logging.Logging;
 import de.micromata.genome.util.types.Pair;
 
@@ -35,7 +40,7 @@ import de.micromata.genome.util.types.Pair;
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
  */
-public class LoggingWrapper implements Logging
+public class LoggingWrapper extends BaseLogging
 {
   protected Logging target;
 
@@ -168,6 +173,57 @@ public class LoggingWrapper implements Logging
   public void selectLogs(List<Object> logId, boolean masterOnly, LogEntryCallback callback)
   {
     target.selectLogs(logId, masterOnly, callback);
+  }
+
+  @Override
+  public List<LogWriteFilter> getWriteFilters()
+  {
+    if (target instanceof BaseLogging) {
+      return ((BaseLogging) target).getWriteFilters();
+    }
+    return super.getWriteFilters();
+  }
+
+  @Override
+  public List<LogFilter> getReadFilters()
+  {
+    if (target instanceof BaseLogging) {
+      return ((BaseLogging) target).getReadFilters();
+    }
+    return super.getReadFilters();
+  }
+
+  @Override
+  protected void selectLogsImpl(Timestamp start, Timestamp end, Integer loglevel, String category, String msg,
+      List<Pair<String, String>> logAttributes, int startRow, int maxRow, List<OrderBy> orderBy, boolean masterOnly,
+      LogEntryCallback callback) throws EndOfSearch
+  {
+
+  }
+
+  @Override
+  protected void selectLogsImpl(List<Object> logId, boolean masterOnly, LogEntryCallback callback) throws EndOfSearch
+  {
+
+  }
+
+  @Override
+  public int getMaxLogAttrLength()
+  {
+    if (target instanceof BaseLogging) {
+      return ((BaseLogging) target).getMaxLogAttrLength();
+    }
+    return super.getMaxLogAttrLength();
+  }
+
+  @Override
+  public Map<String, Integer> getLogAttributeLimitMap()
+  {
+    if (target instanceof BaseLogging) {
+      return ((BaseLogging) target).getLogAttributeLimitMap();
+    }
+
+    return super.getLogAttributeLimitMap();
   }
 
   @Override
