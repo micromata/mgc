@@ -113,23 +113,6 @@ public class ThreadContextClassLoaderScope
   }
 
   /**
-   * In most cases combines are not what you want.
-   *
-   * @param newClassLoader must not null
-
-   */
-  public ThreadContextClassLoaderScope(CombinedClassLoader newClassLoader)
-  {
-    previousClassLoader = Thread.currentThread().getContextClassLoader();
-    if (newClassLoader.getParents().size() == 1 && newClassLoader.getParents().get(0) == previousClassLoader) {
-      return;
-    }
-    this.newClassLoader = newClassLoader;
-    Thread.currentThread().setContextClassLoader(newClassLoader);
-    push(this);
-  }
-
-  /**
    * Restore.
    */
   public void restore()

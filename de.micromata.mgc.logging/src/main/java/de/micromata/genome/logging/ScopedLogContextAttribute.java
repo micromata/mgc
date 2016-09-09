@@ -16,10 +16,9 @@
 
 package de.micromata.genome.logging;
 
+import de.micromata.genome.util.types.Pair;
 import java.util.ArrayList;
 import java.util.List;
-
-import de.micromata.genome.util.types.Pair;
 
 /**
  * Fuer einen Scope pushed ein LogAttribute in den LoggingContext Wird vor einem try / finally block initialisiert und innerhalb des
@@ -30,7 +29,7 @@ import de.micromata.genome.util.types.Pair;
  * @author roger@micromata.de
  * @since 1.2.1 supports multiple pushes.
  */
-public class ScopedLogContextAttribute
+public class ScopedLogContextAttribute implements AutoCloseable
 {
 
   /**
@@ -127,5 +126,11 @@ public class ScopedLogContextAttribute
       return;
     }
     LoggingContext.pushLogAttribute(tlastLog);
+  }
+
+  @Override
+  public void close()
+  {
+    restore();
   }
 }

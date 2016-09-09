@@ -16,19 +16,16 @@
 
 package de.micromata.genome.db.jpa.tabattr.api;
 
-import java.util.Date;
-
 /**
- * @author Roger Kommer (r.kommer.extern@micromata.de)
- *
+ * Entity having configurable attributes.
  */
-public interface TimeableRow
+public interface EntityWithConfigurableAttr
 {
-  Date getStartTime();
 
-  void setStartTime(final Date startTime);
-
-  String getGroupName();
-
-  void setGroupName(final String groupName);
+  /**
+   * Name of the schema of the attributes.
+   *
+   * @return the attr schema name
+   */
+  String getAttrSchemaName();
 }

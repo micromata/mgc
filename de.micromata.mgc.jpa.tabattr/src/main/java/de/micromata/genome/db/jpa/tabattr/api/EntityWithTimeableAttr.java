@@ -36,11 +36,4 @@ public interface EntityWithTimeableAttr<PK extends Serializable, T extends Timea
    * @return the timeable attributes
    */
   List<T> getTimeableAttributes();
-
-  /**
-   * Name of the schema of the attributes.
-   *
-   * @return the attr schema name
-   */
-  String getAttrSchemaName();
 }

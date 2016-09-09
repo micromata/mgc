@@ -30,9 +30,9 @@ public class AttrSchema implements Serializable
 {
 
   /**
-   * The columns.
+   * The groups.
    */
-  private List<AttrDescription> columns;
+  private List<AttrGroup> groups;
 
   /**
    * Instantiates a new attr schema.
@@ -45,31 +45,30 @@ public class AttrSchema implements Serializable
   /**
    * Instantiates a new attr schema.
    *
-   * @param columns the columns
+   * @param groups the groups
    */
-  public AttrSchema(final List<AttrDescription> columns)
+  public AttrSchema(final List<AttrGroup> groups)
   {
-    this.columns = columns;
+    this.groups = groups;
   }
 
   /**
-   * Gets the columns.
+   * Gets the groups.
    *
-   * @return the columns
+   * @return the groups
    */
-  public List<AttrDescription> getColumns()
+  public List<AttrGroup> getGroups()
   {
-    return columns;
+    return groups;
   }
 
   /**
-   * Sets the columns.
+   * Sets the groups.
    *
-   * @param columns the new columns
+   * @param groups the new groups
    */
-  public void setColumns(final List<AttrDescription> columns)
+  public void setGroups(final List<AttrGroup> groups)
   {
-    this.columns = columns;
-
+    this.groups = groups;
   }
 }

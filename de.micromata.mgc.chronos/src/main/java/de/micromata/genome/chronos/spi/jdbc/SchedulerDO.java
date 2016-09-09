@@ -71,14 +71,14 @@ public class SchedulerDO extends ChronosStdRecordDO
   private int threadPoolSize = 1;
 
   /**
-   * The service retry time.
+   * The service retry time in seconds.
    */
-  private int serviceRetryTime = 60000;
+  private int serviceRetryTime = 60;
 
   /**
-   * The job retry time.
+   * The job retry time in seconds.
    */
-  private int jobRetryTime = 30000;
+  private int jobRetryTime = 30;
 
   /**
    * The job max retry count.

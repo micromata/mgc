@@ -34,7 +34,6 @@ public interface AttrSchemaService
   /**
    * Loads the meta description for the Entity.
    *
-   * @param attrMaster the attr master
    * @return the attr descriptions
    */
   AttrSchema getAttrSchema(String name);
@@ -49,5 +48,14 @@ public interface AttrSchemaService
    * @return the default value
    */
   <R> R getDefaultValue(String schemaName, String propertyName, Class<R> expectedClass);
+
+  /**
+   * Gets the AttrGroup for given entity and groupName.
+   * 
+   * @param entity
+   * @param groupName
+   * @return null, if not found
+   */
+  AttrGroup getAttrGroup(EntityWithConfigurableAttr entity, String groupName);
 
 }

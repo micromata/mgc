@@ -68,21 +68,19 @@ public class AttrDescription implements Serializable
    */
   private Object defaultValue;
 
-  private String wicketComponentFactoryClass;
+  private Object wicketComponentFactoryClass;
 
   /**
    * Bootstrap span for this column.
    */
-  private   int span = 2;
+  private int span = 2;
 
-
-
-  public String getWicketComponentFactoryClass()
+  public Object getWicketComponentFactoryClass()
   {
     return wicketComponentFactoryClass;
   }
 
-  public void setWicketComponentFactoryClass(final String wicketComponentFactoryClass)
+  public void setWicketComponentFactoryClass(final Object wicketComponentFactoryClass)
   {
     this.wicketComponentFactoryClass = wicketComponentFactoryClass;
   }
@@ -95,7 +93,6 @@ public class AttrDescription implements Serializable
   public void setPropertyName(final String propertyName)
   {
     this.propertyName = propertyName;
-
   }
 
   public Class<?> getType()
@@ -182,6 +179,7 @@ public class AttrDescription implements Serializable
   {
     return span;
   }
+
   public void setSpan(final int span)
   {
     this.span = span;

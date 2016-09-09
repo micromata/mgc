@@ -264,7 +264,7 @@ public abstract class JpaTabAttrBaseDO<M extends EntityWithAttributes, PK extend
    */
 
   @Override
-  @Column(name = "PROPERTYNAME", length = 255)
+  @Column(name = "PROPERTYNAME", nullable = false, length = 255)
   public String getPropertyName()
   {
     return propertyName;

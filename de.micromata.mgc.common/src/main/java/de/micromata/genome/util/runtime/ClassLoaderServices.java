@@ -18,12 +18,14 @@ package de.micromata.genome.util.runtime;
 
 /**
  * Some standard classLoader.
- * 
- * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
+ * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  */
 public class ClassLoaderServices
 {
+  /**
+   * The type Class for name loader service.
+   */
   public static class ClassForNameLoaderService implements ClassLoaderService
   {
 
@@ -34,6 +36,9 @@ public class ClassLoaderServices
     }
   }
 
+  /**
+   * The type Class loader class loader service.
+   */
   public static class ClassLoaderClassLoaderService implements ClassLoaderService
   {
     private ClassLoader classLoader;
@@ -51,21 +56,32 @@ public class ClassLoaderServices
 
   }
 
+  /**
+   * For name class loader service.
+   *
+   * @return the class loader service
+   */
   public ClassLoaderService forName()
   {
     return new ClassForNameLoaderService();
   }
 
+  /**
+   * By class loader class loader service.
+   *
+   * @param classLoader the class loader
+   * @return the class loader service
+   */
   public ClassLoaderService byClassLoader(ClassLoader classLoader)
   {
     return new ClassLoaderClassLoaderService(classLoader);
   }
 
-  public ClassLoaderService combined(ClassLoader... classLoaders)
-  {
-    return new ClassLoaderClassLoaderService(new CombinedClassLoader(classLoaders));
-  }
-
+  /**
+   * Thread context class loader service.
+   *
+   * @return the class loader service
+   */
   public ClassLoaderService threadContext()
   {
     return new ClassLoaderClassLoaderService(Thread.currentThread().getContextClassLoader());

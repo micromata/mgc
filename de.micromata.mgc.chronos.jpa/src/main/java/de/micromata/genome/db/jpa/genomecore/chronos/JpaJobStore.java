@@ -16,16 +16,6 @@
 
 package de.micromata.genome.db.jpa.genomecore.chronos;
 
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-
 import de.micromata.genome.chronos.ChronosServiceManager;
 import de.micromata.genome.chronos.Scheduler;
 import de.micromata.genome.chronos.State;
@@ -45,6 +35,16 @@ import de.micromata.genome.logging.LoggingServiceManager;
 import de.micromata.genome.util.bean.FieldMatchers;
 import de.micromata.genome.util.bean.PrivateBeanUtils;
 import de.micromata.genome.util.matcher.CommonMatchers;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
+import javax.persistence.TypedQuery;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * The Class JpaJobStore.
@@ -606,8 +606,12 @@ public class JpaJobStore extends AbstractJobStore
     }
     sql += " order by j.modifiedAt desc";
 
-    List<JpaTriggerJobDO> resl = emgr
-        .createQuery(JpaTriggerJobDO.class, sql, args).getResultList();
+    TypedQuery<JpaTriggerJobDO> query = emgr.createQuery(JpaTriggerJobDO.class, sql, args);
+    if(resultCount >= 1) {
+      query.setMaxResults(resultCount);
+    }
+    List<JpaTriggerJobDO> resl = query.getResultList();
+
 
     for (JpaTriggerJobDO jt : resl) {
       T nr = creator.create();
