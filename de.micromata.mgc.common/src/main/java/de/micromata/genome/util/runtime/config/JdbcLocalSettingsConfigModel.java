@@ -65,14 +65,15 @@ public class JdbcLocalSettingsConfigModel extends AbstractLocalSettingsConfigMod
   @ALocalSettingsPath(defaultValue = "0", comment = " Sets the minimum number of idle connections in the pool.")
   private String minIdle;
   @ALocalSettingsPath(defaultValue = "-1",
-      comment = "Max waiting while obtaining connection. Use -1 to make the pool wait indefinitely.")
+      comment = "Max milleseconds waiting while obtaining connection. Use -1 to make the pool wait indefinitely.")
   private String maxWait;
 
   @ALocalSettingsPath(defaultValue = "0", comment = "Sets the initial size of the connection pool.")
   private String intialSize;
   @ALocalSettingsPath(comment = "Sets the default catalog.")
   private String defaultCatalog;
-  @ALocalSettingsPath(defaultValue = "true", comment = "Sets default auto-commit state of connections returned by this datasource.")
+  @ALocalSettingsPath(defaultValue = "true",
+      comment = "Sets default auto-commit state of connections returned by this datasource.")
   private String defaultAutoCommit;
   @ALocalSettingsPath(comment = "Validation query to test if connection is valid.")
   private String validationQuery;
