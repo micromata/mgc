@@ -53,12 +53,12 @@ public class AttrDescription implements Serializable
   /**
    * In case of value integer, min value.
    */
-  private int minIntValue;
+  private int minIntValue = Integer.MIN_VALUE;
 
   /**
    * In case of Integer, max value.
    */
-  private int maxIntValue;
+  private int maxIntValue = Integer.MAX_VALUE;
   /**
    * Default Value in string rerpesentation.
    */
