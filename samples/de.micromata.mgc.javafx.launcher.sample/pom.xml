@@ -6,7 +6,7 @@
   <parent>
     <artifactId>de.micromata.mgc.samples</artifactId>
     <groupId>de.micromata.mgc</groupId>
-    <version>2.5.0-SNAPSHOT</version><!-- MGC -->
+    <version>2.5.0</version><!-- MGC -->
   </parent>
   <artifactId>de.micromata.mgc.javafx.launcher.sample</artifactId>
   <packaging>jar</packaging>
