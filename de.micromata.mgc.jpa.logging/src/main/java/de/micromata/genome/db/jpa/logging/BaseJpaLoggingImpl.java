@@ -356,31 +356,53 @@ public abstract class BaseJpaLoggingImpl<M extends BaseLogMasterDO<?>>extends Fa
     if (masterOnly == true) {
       return;
     }
+    appendLogAttributes(lwe, master);
+  }
 
-    Map<LogAttributeType, Pair<LogAttribute, StringBuilder>> contentAppenderMap = new HashMap<LogAttributeType, Pair<LogAttribute, StringBuilder>>();
-
+  private void appendLogAttributes(LogEntry lwe, M master)
+  {
     Collection<BaseLogAttributeDO<M>> attrs = (Collection) master.getAttributes();
-    for (BaseLogAttributeDO<M> attrDo : attrs) {
-      LogAttributeType type = getAttributeTypeByString(attrDo.getBaseLogAttribute());
-      if (type == null) {
-        log.warn("LogAttributeType '" + attrDo.getBaseLogAttribute() + "' is not registered");
+    List<BaseLogAttributeDO<M>> sortedAttrs = new ArrayList<>();
+    sortedAttrs.addAll(attrs);
+    sortedAttrs.sort((first, second) -> {
+      int c = first.getBaseLogAttribute().compareTo(second.getBaseLogAttribute());
+      if (c != 0) {
+        return c;
+      }
+      c = first.getDatarow().compareTo(second.getDatarow());
+      return c;
+    });
+    String lastAttr = null;
+    LogAttribute lastLogAttr = null;
+    String notFoundAttrType = null;
+    StringBuilder sb = new StringBuilder();
+    for (BaseLogAttributeDO<M> attrDo : sortedAttrs) {
+      if (StringUtils.equals(notFoundAttrType, attrDo.getBaseLogAttribute()) == true) {
         continue;
       }
-      Pair<LogAttribute, StringBuilder> pair = contentAppenderMap.get(type);
-      if (pair == null) {
-        pair = new Pair<LogAttribute, StringBuilder>();
-        pair.setFirst(new LogAttribute(type, ""));
-        pair.setSecond(new StringBuilder());
-        contentAppenderMap.put(type, pair);
-      }
-      StringBuilder sb = pair.getSecond();
-      sb.append(attrDo.getDatacol1());
-    }
+      if (StringUtils.equals(lastAttr, attrDo.getBaseLogAttribute()) == false) {
+        lastAttr = attrDo.getBaseLogAttribute();
+        if (lastLogAttr != null) {
+          lastLogAttr.setValue(sb.toString());
 
-    for (Pair<LogAttribute, StringBuilder> entry : contentAppenderMap.values()) {
-      LogAttribute attr = entry.getFirst();
-      attr.setValue(entry.getSecond().toString());
-      lwe.getAttributes().add(attr);
+        }
+        LogAttributeType type = getAttributeTypeByString(attrDo.getBaseLogAttribute());
+        if (type == null) {
+          log.warn("LogAttributeType '" + attrDo.getBaseLogAttribute() + "' is not registered");
+          notFoundAttrType = attrDo.getBaseLogAttribute();
+          continue;
+        }
+
+        lastLogAttr = new LogAttribute(type, "");
+        lwe.getAttributes().add(lastLogAttr);
+        sb.setLength(0);
+      }
+      sb.append(attrDo.getDatacol1());
+
+    }
+    if (lastLogAttr != null) {
+      lastLogAttr.setValue(sb.toString());
+      lastLogAttr = null;
     }
   }
 
