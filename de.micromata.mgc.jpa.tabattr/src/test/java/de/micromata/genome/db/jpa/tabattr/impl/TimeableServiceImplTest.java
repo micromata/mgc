@@ -16,7 +16,7 @@ import de.micromata.genome.db.jpa.tabattr.testentities.FooTimedDO;
 
 public class TimeableServiceImplTest
 {
-  private static final TimeableService timeableService = new TimeableServiceImpl();
+  private static final TimeableService<Integer, FooTimedDO> timeableService = new TimeableServiceImpl<>();
 
   private static final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
 

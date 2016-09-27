@@ -58,22 +58,4 @@ public interface AttrSchemaService
    */
   AttrGroup getAttrGroup(EntityWithConfigurableAttr entity, String groupName);
 
-  /**
-   * Gets the AttrDescription for given entity, groupName and descriptionName.
-   *
-   * @param entity
-   * @param groupName
-   * @param descriptionName
-   * @return null, if not found
-   */
-  AttrDescription getAttrDescription(EntityWithConfigurableAttr entity, String groupName, String descriptionName);
-
-  /**
-   * Gets the AttrDescription for given AttrGroup and descriptionName.
-   *
-   * @param attrGroup
-   * @param descriptionName
-   * @return null, if not found
-   */
-  AttrDescription getAttrDescription(AttrGroup attrGroup, String descriptionName);
 }
