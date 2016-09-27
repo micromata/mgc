@@ -132,8 +132,10 @@ public class TimeableServiceImpl implements TimeableService
   {
     return attrRows
         .stream()
-        .sorted((row1, row2) -> (row1.getStartTime() == null || row2.getStartTime() == null) ? 1
-            : row2.getStartTime().compareTo(row1.getStartTime()))
+        .sorted((row1, row2) ->
+            (row1.getStartTime() == null) ? -1 :
+                (row2.getStartTime() == null) ? 1 :
+                    row2.getStartTime().compareTo(row1.getStartTime()))
         .collect(Collectors.toList());
   }
 
