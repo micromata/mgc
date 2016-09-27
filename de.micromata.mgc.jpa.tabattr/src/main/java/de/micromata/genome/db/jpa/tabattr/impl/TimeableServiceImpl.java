@@ -22,7 +22,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import de.micromata.genome.db.jpa.tabattr.api.AttrGroup;
@@ -34,21 +33,38 @@ import de.micromata.genome.util.types.DateUtils;
 /**
  * Standard implementation for TimeableService.
  */
-public class TimeableServiceImpl<PK extends Serializable, T extends TimeableAttrRow<PK>>
-    implements TimeableService<PK, T>
+public class TimeableServiceImpl implements TimeableService
 {
   private static final org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(TimeableServiceImpl.class);
 
   @Override
-  public T getAttrRowForDate(final List<T> attrRows, final AttrGroup group, final Date date)
+  public <PK extends Serializable, T extends TimeableAttrRow<PK>>
+  T getAttrRowForDate(final EntityWithTimeableAttr<PK, T> entity, final String groupName, final Date date)
   {
-    Predicate<T> filterPredicate;
+    final List<T> timeableAttrRows = getTimeableAttrRowsForGroupName(entity, groupName);
+    return getAttrRowForDate(timeableAttrRows, date);
+  }
 
+  @Override
+  public <PK extends Serializable, T extends TimeableAttrRow<PK>>
+  T getAttrRowForDate(final List<T> attrRows, final Date date)
+  {
+    final List<T> rowsSorted = sortTimeableAttrRowsByDateDescending(attrRows);
+    return rowsSorted
+        .stream()
+        // filter all attrRows without a start time and where the given date is equal or after the rows date
+        .filter(row -> (row.getStartTime() == null || date.compareTo(row.getStartTime()) >= 0))
+        .findFirst()
+        .orElse(null);
+  }
+
+  @Override
+  public <PK extends Serializable, T extends TimeableAttrRow<PK>>
+  T getAttrRowForDate(final List<T> attrRows, final AttrGroup group, final Date date)
+  {
     switch (group.getType()) {
       case PERIOD:
-        // filter all attrRows without a start time and where the given date is equal or after the rows date
-        filterPredicate = row -> (row.getStartTime() == null || date.compareTo(row.getStartTime()) >= 0);
-        break;
+        return getAttrRowForDate(attrRows, date);
 
       case INSTANT_OF_TIME:
         // do not select a row by default
@@ -57,15 +73,11 @@ public class TimeableServiceImpl<PK extends Serializable, T extends TimeableAttr
       default:
         throw new IllegalArgumentException("The Type " + group.getType() + " is not supported.");
     }
-
-    return attrRows
-        .stream()
-        .filter(filterPredicate)
-        .findFirst()
-        .orElse(null);
   }
 
-  public T getAttrRowForSameMonth(final List<T> attrRows, final Date dateToSelectAttrRow)
+  @Override
+  public <PK extends Serializable, T extends TimeableAttrRow<PK>>
+  T getAttrRowForSameMonth(final List<T> attrRows, final Date dateToSelectAttrRow)
   {
     return attrRows
         .stream()
@@ -74,14 +86,18 @@ public class TimeableServiceImpl<PK extends Serializable, T extends TimeableAttr
         .orElse(null);
   }
 
-  public T getAttrRowForSameMonth(final EntityWithTimeableAttr<PK, T> entity, final AttrGroup group,
+  @Override
+  public <PK extends Serializable, T extends TimeableAttrRow<PK>>
+  T getAttrRowForSameMonth(final EntityWithTimeableAttr<PK, T> entity, final AttrGroup group,
       final Date dateToSelectAttrRow)
   {
     final List<T> timeableAttrRowsForGroup = getTimeableAttrRowsForGroup(entity, group);
     return getAttrRowForSameMonth(timeableAttrRowsForGroup, dateToSelectAttrRow);
   }
 
-  public T getAttrRowForSameMonth(final EntityWithTimeableAttr<PK, T> entity, final String groupName,
+  @Override
+  public <PK extends Serializable, T extends TimeableAttrRow<PK>>
+  T getAttrRowForSameMonth(final EntityWithTimeableAttr<PK, T> entity, final String groupName,
       final Date dateToSelectAttrRow)
   {
     final List<T> timeableAttrRowsForGroup = getTimeableAttrRowsForGroupName(entity, groupName);
@@ -89,13 +105,15 @@ public class TimeableServiceImpl<PK extends Serializable, T extends TimeableAttr
   }
 
   @Override
-  public List<T> getTimeableAttrRowsForGroup(final EntityWithTimeableAttr<PK, T> entity, final AttrGroup group)
+  public <PK extends Serializable, T extends TimeableAttrRow<PK>>
+  List<T> getTimeableAttrRowsForGroup(final EntityWithTimeableAttr<PK, T> entity, final AttrGroup group)
   {
     return getTimeableAttrRowsForGroupName(entity, group.getName());
   }
 
   @Override
-  public List<T> getTimeableAttrRowsForGroupName(final EntityWithTimeableAttr<PK, T> entity, final String groupName)
+  public <PK extends Serializable, T extends TimeableAttrRow<PK>>
+  List<T> getTimeableAttrRowsForGroupName(final EntityWithTimeableAttr<PK, T> entity, final String groupName)
   {
     if (groupName == null) {
       return Collections.emptyList();
@@ -109,7 +127,8 @@ public class TimeableServiceImpl<PK extends Serializable, T extends TimeableAttr
   }
 
   @Override
-  public List<T> sortTimeableAttrRowsByDateDescending(List<T> attrRows)
+  public <PK extends Serializable, T extends TimeableAttrRow<PK>>
+  List<T> sortTimeableAttrRowsByDateDescending(List<T> attrRows)
   {
     return attrRows
         .stream()
@@ -119,7 +138,8 @@ public class TimeableServiceImpl<PK extends Serializable, T extends TimeableAttr
   }
 
   @Override
-  public List<Integer> getAvailableStartTimeYears(final List<? extends EntityWithTimeableAttr<PK, T>> entityList)
+  public <PK extends Serializable, T extends TimeableAttrRow<PK>>
+  List<Integer> getAvailableStartTimeYears(final List<? extends EntityWithTimeableAttr<PK, T>> entityList)
   {
     return entityList
         .stream()
