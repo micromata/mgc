@@ -39,32 +39,32 @@ public class TimeableServiceImpl implements TimeableService
 
   @Override
   public <PK extends Serializable, T extends TimeableAttrRow<PK>>
-  T getAttrRowForDate(final EntityWithTimeableAttr<PK, T> entity, final String groupName, final Date date)
+  T getAttrRowValidAtDate(final EntityWithTimeableAttr<PK, T> entity, final String groupName, final Date date)
   {
     final List<T> timeableAttrRows = getTimeableAttrRowsForGroupName(entity, groupName);
-    return getAttrRowForDate(timeableAttrRows, date);
+    return getAttrRowValidAtDate(timeableAttrRows, date);
   }
 
   @Override
   public <PK extends Serializable, T extends TimeableAttrRow<PK>>
-  T getAttrRowForDate(final List<T> attrRows, final Date date)
+  T getAttrRowValidAtDate(final List<T> attrRows, final Date date)
   {
     final List<T> rowsSorted = sortTimeableAttrRowsByDateDescending(attrRows);
     return rowsSorted
         .stream()
-        // filter all attrRows without a start time and where the given date is equal or after the rows date
-        .filter(row -> (row.getStartTime() == null || date.compareTo(row.getStartTime()) >= 0))
+        // filter all attrRows without a start time and where the date is equal or before (not after) the given date
+        .filter(row -> (row.getStartTime() == null || !row.getStartTime().after(date)))
         .findFirst()
         .orElse(null);
   }
 
   @Override
   public <PK extends Serializable, T extends TimeableAttrRow<PK>>
-  T getAttrRowForDate(final List<T> attrRows, final AttrGroup group, final Date date)
+  T getAttrRowValidAtDate(final List<T> attrRows, final AttrGroup group, final Date date)
   {
     switch (group.getType()) {
       case PERIOD:
-        return getAttrRowForDate(attrRows, date);
+        return getAttrRowValidAtDate(attrRows, date);
 
       case INSTANT_OF_TIME:
         // do not select a row by default
@@ -73,6 +73,30 @@ public class TimeableServiceImpl implements TimeableService
       default:
         throw new IllegalArgumentException("The Type " + group.getType() + " is not supported.");
     }
+  }
+
+  @Override
+  public <PK extends Serializable, T extends TimeableAttrRow<PK>>
+  List<T> getAttrRowsWithinDateRange(final EntityWithTimeableAttr<PK, T> entity, final String groupName, final Date start, final Date end)
+  {
+    final List<T> timeableAttrRows = getTimeableAttrRowsForGroupName(entity, groupName);
+    return getAttrRowsWithinDateRange(timeableAttrRows, start, end);
+  }
+
+  @Override
+  public <PK extends Serializable, T extends TimeableAttrRow<PK>>
+  List<T> getAttrRowsWithinDateRange(final List<T> attrRows, final Date start, final Date end)
+  {
+    if (end.before(start)) {
+      throw new IllegalArgumentException(String.format("The parameter end (%s) must be equal or after the parameter start (%s).", end, start));
+    }
+
+    final List<T> rowsSorted = sortTimeableAttrRowsByDateDescending(attrRows);
+    return rowsSorted
+        .stream()
+        // filter all attrRows where the startTime is between the given start and end
+        .filter(row -> (row.getStartTime() != null && !row.getStartTime().before(start) && !row.getStartTime().after(end)))
+        .collect(Collectors.toList());
   }
 
   @Override
