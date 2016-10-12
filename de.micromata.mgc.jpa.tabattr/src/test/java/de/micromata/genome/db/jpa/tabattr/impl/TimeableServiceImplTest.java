@@ -16,7 +16,7 @@ import de.micromata.genome.db.jpa.tabattr.testentities.FooTimedDO;
 
 public class TimeableServiceImplTest
 {
-  private static final TimeableService<Integer, FooTimedDO> timeableService = new TimeableServiceImpl<>();
+  private static final TimeableService timeableService = new TimeableServiceImpl();
 
   private static final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
 
@@ -31,7 +31,7 @@ public class TimeableServiceImplTest
   }
 
   @Test
-  public void testGetAttrRowForDate() throws ParseException
+  public void testGetAttrRowValidAtDate() throws ParseException
   {
     final List<FooTimedDO> attrRows = Arrays.asList(
         createFooTimedDOWithDate("15.04.2047"), // 0
@@ -46,24 +46,24 @@ public class TimeableServiceImplTest
     );
 
     // group type period
-    Assert.assertEquals(attrRows.get(0), timeableService.getAttrRowForDate(attrRows, groupPeriod, sdf.parse("01.01.2048")));
-    Assert.assertEquals(attrRows.get(0), timeableService.getAttrRowForDate(attrRows, groupPeriod, sdf.parse("15.04.2047")));
-    Assert.assertEquals(attrRows.get(1), timeableService.getAttrRowForDate(attrRows, groupPeriod, sdf.parse("14.04.2047")));
-    Assert.assertEquals(attrRows.get(5), timeableService.getAttrRowForDate(attrRows, groupPeriod, sdf.parse("22.02.2016")));
-    Assert.assertEquals(attrRows.get(6), timeableService.getAttrRowForDate(attrRows, groupPeriod, sdf.parse("21.02.2016")));
-    Assert.assertEquals(attrRows.get(6), timeableService.getAttrRowForDate(attrRows, groupPeriod, sdf.parse("01.01.2016")));
-    Assert.assertEquals(attrRows.get(7), timeableService.getAttrRowForDate(attrRows, groupPeriod, sdf.parse("31.12.2015")));
-    Assert.assertEquals(attrRows.get(8), timeableService.getAttrRowForDate(attrRows, groupPeriod, sdf.parse("02.08.1995")));
-    Assert.assertEquals(null, timeableService.getAttrRowForDate(attrRows, groupPeriod, sdf.parse("01.08.1995")));
+    Assert.assertEquals(attrRows.get(0), timeableService.getAttrRowValidAtDate(attrRows, groupPeriod, sdf.parse("01.01.2048")));
+    Assert.assertEquals(attrRows.get(0), timeableService.getAttrRowValidAtDate(attrRows, groupPeriod, sdf.parse("15.04.2047")));
+    Assert.assertEquals(attrRows.get(1), timeableService.getAttrRowValidAtDate(attrRows, groupPeriod, sdf.parse("14.04.2047")));
+    Assert.assertEquals(attrRows.get(5), timeableService.getAttrRowValidAtDate(attrRows, groupPeriod, sdf.parse("22.02.2016")));
+    Assert.assertEquals(attrRows.get(6), timeableService.getAttrRowValidAtDate(attrRows, groupPeriod, sdf.parse("21.02.2016")));
+    Assert.assertEquals(attrRows.get(6), timeableService.getAttrRowValidAtDate(attrRows, groupPeriod, sdf.parse("01.01.2016")));
+    Assert.assertEquals(attrRows.get(7), timeableService.getAttrRowValidAtDate(attrRows, groupPeriod, sdf.parse("31.12.2015")));
+    Assert.assertEquals(attrRows.get(8), timeableService.getAttrRowValidAtDate(attrRows, groupPeriod, sdf.parse("02.08.1995")));
+    Assert.assertEquals(null, timeableService.getAttrRowValidAtDate(attrRows, groupPeriod, sdf.parse("01.08.1995")));
 
     // group type instant of time
-    Assert.assertEquals(null, timeableService.getAttrRowForDate(attrRows, groupInstantOfTime, sdf.parse("22.02.2016")));
-    Assert.assertEquals(null, timeableService.getAttrRowForDate(attrRows, groupInstantOfTime, sdf.parse("21.02.2016")));
+    Assert.assertEquals(null, timeableService.getAttrRowValidAtDate(attrRows, groupInstantOfTime, sdf.parse("22.02.2016")));
+    Assert.assertEquals(null, timeableService.getAttrRowValidAtDate(attrRows, groupInstantOfTime, sdf.parse("21.02.2016")));
 
     // group type not timeable
     boolean exceptionThrown = false;
     try {
-      timeableService.getAttrRowForDate(attrRows, groupNotTimeable, sdf.parse("22.02.2016"));
+      timeableService.getAttrRowValidAtDate(attrRows, groupNotTimeable, sdf.parse("22.02.2016"));
     } catch (IllegalArgumentException e) {
       exceptionThrown = true;
     }
@@ -71,7 +71,7 @@ public class TimeableServiceImplTest
   }
 
   @Test
-  public void testGetAttrRowForDateWithNullDate() throws ParseException
+  public void testGetAttrRowValidAtDateWithNullDate() throws ParseException
   {
     final List<FooTimedDO> attrRowsWithNullDate = Arrays.asList(
         createFooTimedDOWithDate(null),
@@ -80,8 +80,8 @@ public class TimeableServiceImplTest
     );
 
     // should always return the row with the null date
-    Assert.assertEquals(attrRowsWithNullDate.get(0), timeableService.getAttrRowForDate(attrRowsWithNullDate, groupPeriod, sdf.parse("31.12.2016")));
-    Assert.assertEquals(attrRowsWithNullDate.get(0), timeableService.getAttrRowForDate(attrRowsWithNullDate, groupPeriod, sdf.parse("01.01.2015")));
+    Assert.assertEquals(attrRowsWithNullDate.get(0), timeableService.getAttrRowValidAtDate(attrRowsWithNullDate, groupPeriod, sdf.parse("31.12.2016")));
+    Assert.assertEquals(attrRowsWithNullDate.get(0), timeableService.getAttrRowValidAtDate(attrRowsWithNullDate, groupPeriod, sdf.parse("01.01.2015")));
   }
 
   @Test
@@ -158,6 +158,45 @@ public class TimeableServiceImplTest
   {
     final List<FooTimedDO> shouldBeEmpty = timeableService.sortTimeableAttrRowsByDateDescending(Collections.emptyList());
     Assert.assertTrue(shouldBeEmpty.isEmpty());
+  }
+
+  @Test
+  public void testGetAttrRowsWithinDateRange() throws ParseException
+  {
+    final List<FooTimedDO> attrRows = Arrays.asList(
+        createFooTimedDOWithDate("15.09.2016"),
+        createFooTimedDOWithDate("22.02.2017"),
+        createFooTimedDOWithDate(null),
+        createFooTimedDOWithDate("01.09.2016"),
+        createFooTimedDOWithDate("30.09.2016"),
+        createFooTimedDOWithDate("01.01.2016"),
+        createFooTimedDOWithDate("28.02.2016"),
+        createFooTimedDOWithDate("02.08.1995"),
+        createFooTimedDOWithDate("22.02.2016"),
+        createFooTimedDOWithDate("31.12.2015")
+    );
+
+    Assert.assertEquals(attrRows.size() - 1, timeableService.getAttrRowsWithinDateRange(attrRows, sdf.parse("02.08.1995"), sdf.parse("22.02.2017")).size());
+    Assert.assertEquals(3, timeableService.getAttrRowsWithinDateRange(attrRows, sdf.parse("01.09.2016"), sdf.parse("30.09.2016")).size());
+    Assert.assertEquals(1, timeableService.getAttrRowsWithinDateRange(attrRows, sdf.parse("01.09.2016"), sdf.parse("01.09.2016")).size());
+    Assert.assertEquals(0, timeableService.getAttrRowsWithinDateRange(attrRows, sdf.parse("02.09.2016"), sdf.parse("02.09.2016")).size());
+    Assert.assertEquals(1, timeableService.getAttrRowsWithinDateRange(attrRows, sdf.parse("02.08.1995"), sdf.parse("02.08.1995")).size());
+    Assert.assertEquals(attrRows.get(7), timeableService.getAttrRowsWithinDateRange(attrRows, sdf.parse("02.08.1995"), sdf.parse("02.08.1995")).get(0));
+
+    boolean exceptionThrown = false;
+    try {
+      timeableService.getAttrRowsWithinDateRange(attrRows, sdf.parse("01.09.2016"), sdf.parse("01.09.2016"));
+    } catch (IllegalArgumentException e) {
+      exceptionThrown = true;
+    }
+    Assert.assertEquals(false, exceptionThrown);
+
+    try {
+      timeableService.getAttrRowsWithinDateRange(attrRows, sdf.parse("02.09.2016"), sdf.parse("01.09.2016"));
+    } catch (IllegalArgumentException e) {
+      exceptionThrown = true;
+    }
+    Assert.assertEquals(true, exceptionThrown);
   }
 
   private FooTimedDO createFooTimedDO(final String groupName)
