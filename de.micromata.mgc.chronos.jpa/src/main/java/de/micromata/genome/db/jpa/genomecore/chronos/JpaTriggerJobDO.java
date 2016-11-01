@@ -16,32 +16,21 @@
 
 package de.micromata.genome.db.jpa.genomecore.chronos;
 
-import java.util.Date;
-import java.util.Map;
+import de.micromata.genome.chronos.State;
+import de.micromata.genome.jpa.StdRecordDO;
+import org.apache.commons.lang.StringUtils;
+import org.hibernate.annotations.Index;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.MapKey;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Transient;
-
-import org.apache.commons.lang.StringUtils;
-import org.hibernate.annotations.Index;
-
-
-import de.micromata.genome.chronos.State;
-import de.micromata.genome.db.jpa.tabattr.entities.JpaTabAttrBaseDO;
-import de.micromata.genome.db.jpa.tabattr.entities.JpaTabAttrDataBaseDO;
-import de.micromata.genome.db.jpa.tabattr.entities.JpaTabMasterBaseDO;
+import java.util.Date;
 
 /**
  * The Class JpaTriggerJobDO.
@@ -58,7 +47,7 @@ import de.micromata.genome.db.jpa.tabattr.entities.JpaTabMasterBaseDO;
     @Index(name = "IX_TA_CHRONOS_JOB_MODAT", columnNames = { "MODIFIEDAT" }),
 }, appliesTo = "TB_TA_CHRONOS_JOB")
 @SequenceGenerator(name = "SQ_TA_CHRONOS_JOB", sequenceName = "SQ_TA_CHRONOS_JOB")
-public class JpaTriggerJobDO extends JpaTabMasterBaseDO<JpaTriggerJobDO, Long>
+public class JpaTriggerJobDO extends StdRecordDO<Long>
 {
 
   /**
@@ -253,64 +242,4 @@ public class JpaTriggerJobDO extends JpaTabMasterBaseDO<JpaTriggerJobDO, Long>
     this.state = state;
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  @OneToMany(cascade = CascadeType.ALL, mappedBy = "parent", targetEntity = JpaTriggerJobAttrDO.class,
-      orphanRemoval = true,
-      fetch = FetchType.EAGER)
-  @MapKey(name = "propertyName")
-  @Override
-  public Map<String, JpaTabAttrBaseDO<JpaTriggerJobDO, Long>> getAttributes()
-  {
-    return super.getAttributes();
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  @Transient
-  public Class<? extends JpaTabAttrBaseDO<JpaTriggerJobDO, Long>> getAttrEntityClass()
-  {
-    return JpaTriggerJobAttrDO.class;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  @Transient
-  public Class<? extends JpaTabAttrBaseDO<JpaTriggerJobDO, Long>> getAttrEntityWithDataClass()
-  {
-    return JpaTriggerJobAttrWithDataDO.class;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Transient
-  @Override
-  public Class<? extends JpaTabAttrDataBaseDO<? extends JpaTabAttrBaseDO<JpaTriggerJobDO, Long>, Long>> getAttrDataEntityClass()
-  {
-    return JpaTriggerJobAttrDataDO.class;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public JpaTabAttrBaseDO<JpaTriggerJobDO, Long> createAttrEntity(String key, char type, String value)
-  {
-    return new JpaTriggerJobAttrDO(this, key, type, value);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public JpaTabAttrBaseDO<JpaTriggerJobDO, Long> createAttrEntityWithData(String key, char type, String value)
-  {
-    return new JpaTriggerJobAttrWithDataDO(this, key, type, value);
-  }
 }
