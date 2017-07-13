@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.micromata.mgc</groupId>
   <artifactId>de.micromata.mgc.rootpom</artifactId>
@@ -56,7 +56,6 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
     <mgc.version>${project.version}</mgc.version><!-- MGCVERSION -->
-
 
 
     <log4j.version>1.2.17</log4j.version>
@@ -174,7 +173,9 @@
         <!-- use next part when locally installed sonar is running -->
         <!--<sonar.jdbc.url>jdbc:h2:tcp://localhost:9092/sonar</sonar.jdbc.url> <sonar.jdbc.username>sonar</sonar.jdbc.username> 
           <sonar.jdbc.password>sonar</sonar.jdbc.password> <sonar.host.url>http://localhost:9000/</sonar.host.url> -->
-        <sonar.exclusions>**/src-gen/**/*.java,**/genome-tools/**/*.java,**/plugins/umgmt/**/*,**/plugins/popstats/**/*,**/GenomeDaoManager.java,**/UmgmtDaoManager.java,**/Emgr.java,**/EmgrFactory.java</sonar.exclusions>
+        <sonar.exclusions>
+          **/src-gen/**/*.java,**/genome-tools/**/*.java,**/plugins/umgmt/**/*,**/plugins/popstats/**/*,**/GenomeDaoManager.java,**/UmgmtDaoManager.java,**/Emgr.java,**/EmgrFactory.java
+        </sonar.exclusions>
       </properties>
       <modules>
 
@@ -250,7 +251,6 @@
       </plugin>
     </plugins>
   </build>
-
 
 
   <scm>
