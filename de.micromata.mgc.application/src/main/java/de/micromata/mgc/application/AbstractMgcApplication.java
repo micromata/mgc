@@ -144,16 +144,15 @@ public abstract class AbstractMgcApplication<M extends LocalSettingsConfigModel>
   @Override
   public MgcApplicationStartStopStatus start(String[] args)
   {
-
-    ValContext ctx = new ValContext();
-    model.validate(ctx);
-    if (ctx.hasErrors() == true) {
-      GLog.error(GenomeLogCategory.Configuration, "Cannot start server, because configuration is not valid",
-          new ValMessageLogAttribute(ctx.getMessages()));
-      return MgcApplicationStartStopStatus.StartNoConfiguration;
-    }
-    GLog.note(GenomeLogCategory.System, "Start server: " + getClass().getSimpleName());
     try {
+      ValContext ctx = new ValContext();
+      model.validate(ctx);
+      if (ctx.hasErrors() == true) {
+        GLog.error(GenomeLogCategory.Configuration, "Cannot start server, because configuration is not valid",
+            new ValMessageLogAttribute(ctx.getMessages()));
+        return MgcApplicationStartStopStatus.StartNoConfiguration;
+      }
+      GLog.note(GenomeLogCategory.System, "Start server: " + getClass().getSimpleName());
       MgcApplicationStartStopStatus ret = startImpl(args);
 
       switch (ret) {
@@ -175,6 +174,8 @@ public abstract class AbstractMgcApplication<M extends LocalSettingsConfigModel>
       }
       return ret;
     } catch (Throwable ex) {
+      // make sure, at least shown on console.
+      ex.printStackTrace();
       MgcEventRegistries.getEventInstanceRegistry()
           .dispatchEvent(new MgcApplicationStartStopEvent(this, MgcApplicationStartStopStatus.StartError,
               new ValMessage(ValState.Info, "mgc.application.start.success.failed", ex)));

@@ -37,6 +37,7 @@ import de.micromata.genome.logging.LoggingServiceManager;
 import de.micromata.genome.logging.loghtmlwindow.LogJsonUtils;
 import de.micromata.genome.logging.spi.log4j.RoundList;
 import de.micromata.genome.util.types.Pair;
+import de.micromata.mgc.javafx.ControllerService;
 import netscape.javascript.JSObject;
 
 /**
@@ -113,10 +114,12 @@ public class LoggingLogViewAdapter
 
   public void refreshLogConfiguration()
   {
-    initLogConfiguration();
-    if (logView != null) {
-      logView.call("refreshForm");
-    }
+    ControllerService.get().runInToolkitThread(() -> {
+      initLogConfiguration();
+      if (logView != null) {
+        logView.call("refreshForm");
+      }
+    });
   }
 
   List<LogWriteEntry> getLogEntries(long lastPollTime)
