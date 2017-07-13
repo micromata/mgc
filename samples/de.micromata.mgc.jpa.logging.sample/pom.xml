@@ -1,0 +1,62 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>de.micromata.mgc.samples</groupId>
+  <artifactId>de.micromata.mgc.jpa.logging.sample</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>jar</packaging>
+  <description>
+    Sample to use jpa.
+  </description>
+  <properties>
+    <mgc.version>2.5.0</mgc.version>
+  </properties>
+
+
+  <dependencies>
+    <dependency>
+      <groupId>de.micromata.mgc</groupId>
+      <artifactId>de.micromata.mgc.jpa.logging</artifactId>
+      <version>${mgc.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.12</version>
+      <scope>test</scope>
+    </dependency>
+    <!--  if you have no container, which provide javax.mail.Session -->
+    <dependency>
+      <groupId>javax.mail</groupId>
+      <artifactId>mail</artifactId>
+      <version>1.5.0-b01</version>
+    </dependency>
+    <!--  the database driver -->
+    <dependency>
+      <groupId>org.apache.derby</groupId>
+      <artifactId>derby</artifactId>
+      <version>10.12.1.1</version>
+    </dependency>
+  </dependencies>
+  <repositories>
+    <repository>
+      <id>MGC</id>
+      <name>MGC</name>
+      <url>https://labs.micromata.de/nexus/content/repositories/MGC/</url>
+    </repository>
+    <!-- used for external libs -->
+    <repository>
+      <id>GWIKI</id>
+      <name>GWIKI</name>
+      <url>https://labs.micromata.de/nexus/content/repositories/GWIKI/</url>
+    </repository>
+    <repository>
+      <id>MGC-snapshot</id>
+      <name>MGC-snapshot</name>
+      <url>https://labs.micromata.de/nexus/content/repositories/MGC-snapshot/</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+</project>
