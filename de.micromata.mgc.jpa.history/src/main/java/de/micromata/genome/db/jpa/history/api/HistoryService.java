@@ -138,7 +138,7 @@ public interface HistoryService
    * @param stdRecord the std record
    * @return the history entries
    */
-  List<? extends HistoryEntry> getHistoryEntries(IEmgr<?> emgr, DbRecord<?> stdRecord);
+  List<? extends HistoryEntry<?>> getHistoryEntries(IEmgr<?> emgr, DbRecord<?> stdRecord);
 
   /**
    * Gets the history entries.
@@ -148,7 +148,7 @@ public interface HistoryService
    * @param entityId the entity id
    * @return the history entries
    */
-  List<? extends HistoryEntry> getHistoryEntries(IEmgr<?> emgr, String entityName, Serializable entityId);
+  List<? extends HistoryEntry<?>> getHistoryEntries(IEmgr<?> emgr, String entityName, Serializable entityId);
 
   /**
    * Find all history entries for given table.
@@ -157,7 +157,7 @@ public interface HistoryService
    * @param cls the cls
    * @return the history entries for entity class
    */
-  List<? extends HistoryEntry> getHistoryEntriesForEntityClass(IEmgr<?> emgr, Class<? extends DbRecord<?>> cls);
+  List<? extends HistoryEntry<?>> getHistoryEntriesForEntityClass(IEmgr<?> emgr, Class<? extends DbRecord<?>> cls);
 
   /**
    * Removes all history entry for given table.

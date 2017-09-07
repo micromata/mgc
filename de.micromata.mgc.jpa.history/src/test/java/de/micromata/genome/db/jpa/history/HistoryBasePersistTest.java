@@ -52,7 +52,8 @@ public class HistoryBasePersistTest extends GenomeTestCase
     HistoryTestEmgrFactory.get().runInTrans((emgr) -> {
       histservice.internalOnInsert(emgr, anotl, DummyHistEntityDO.class.getName(), 1L, dummy1);
 
-      List<? extends HistoryEntry> entries = histservice.getHistoryEntries(emgr, dummy1);
+      List<? extends HistoryEntry<?>> entries = histservice.getHistoryEntries(emgr, dummy1);
+      ReadWriteWithHistTest.printHistoryEntries(entries);
       return entries;
     });
 

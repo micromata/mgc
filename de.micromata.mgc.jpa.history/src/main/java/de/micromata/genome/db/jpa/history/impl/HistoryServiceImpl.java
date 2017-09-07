@@ -451,13 +451,13 @@ public class HistoryServiceImpl implements HistoryService
   }
 
   @Override
-  public List<? extends HistoryEntry> getHistoryEntries(IEmgr<?> emgr, DbRecord<?> stdRecord)
+  public List<? extends HistoryEntry<?>> getHistoryEntries(IEmgr<?> emgr, DbRecord<?> stdRecord)
   {
     return getHistoryEntries(emgr, stdRecord.getClass().getName(), stdRecord.getPk());
   }
 
   @Override
-  public List<? extends HistoryEntry> getHistoryEntries(IEmgr<?> emgr, String entityName, Serializable entityId)
+  public List<? extends HistoryEntry<?>> getHistoryEntries(IEmgr<?> emgr, String entityName, Serializable entityId)
   {
     Long extPk = castToLong(entityId);
     Class<? extends HistoryMasterBaseDO<?, ?>> masterClass = getHistoryMasterClass();
@@ -468,7 +468,8 @@ public class HistoryServiceImpl implements HistoryService
   }
 
   @Override
-  public List<? extends HistoryEntry> getHistoryEntriesForEntityClass(IEmgr<?> emgr, Class<? extends DbRecord<?>> cls)
+  public List<? extends HistoryEntry<?>> getHistoryEntriesForEntityClass(IEmgr<?> emgr,
+      Class<? extends DbRecord<?>> cls)
   {
     Class<? extends HistoryMasterBaseDO<?, ?>> masterClass = getHistoryMasterClass();
     return emgr.selectDetached(masterClass,
