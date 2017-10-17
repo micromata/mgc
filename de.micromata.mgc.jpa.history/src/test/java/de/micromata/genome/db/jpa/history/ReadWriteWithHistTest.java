@@ -84,6 +84,7 @@ public class ReadWriteWithHistTest extends GenomeTestCase
   public void testReadWrite()
   {
     cleanupTestTable();
+    // just standard insert operation
     DummyHistEntityDO ne = new DummyHistEntityDO();
     ne.setStringValue("The Created");
 
@@ -94,6 +95,7 @@ public class ReadWriteWithHistTest extends GenomeTestCase
     DummyHistEntityDO se = HistoryTestEmgrFactory.get().runWoTrans((emgr) -> {
       return emgr.selectByPkDetached(DummyHistEntityDO.class, ne.getPk());
     });
+    // just standard update operations
     se.setStringValue("The Mod");
     se.setLongValue(42L);
     HistoryTestEmgrFactory.get().runInTrans((emgr) -> {
