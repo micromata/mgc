@@ -18,7 +18,7 @@ package de.micromata.genome.db.jpa.genomecore.chronos;
 
 import de.micromata.genome.chronos.State;
 import de.micromata.genome.jpa.StdRecordDO;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.Index;
 
 import javax.persistence.Column;

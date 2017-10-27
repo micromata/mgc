@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.codec.Charsets;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import de.micromata.genome.util.collections.PropertiesReadWriter;
 import de.micromata.genome.util.runtime.RuntimeIOException;

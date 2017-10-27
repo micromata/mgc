@@ -16,7 +16,7 @@
 
 package de.micromata.genome.util.strings;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Collection of String utilities

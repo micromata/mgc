@@ -19,7 +19,7 @@ package de.micromata.mgc.jpa.hibernatesearch.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.search.SearchFactory;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.metadata.FieldDescriptor;

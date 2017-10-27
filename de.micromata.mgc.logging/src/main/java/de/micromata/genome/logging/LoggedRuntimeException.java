@@ -16,7 +16,7 @@
 
 package de.micromata.genome.logging;
 
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 
 /**
  * Exception, die strukturiert geloggt wird.

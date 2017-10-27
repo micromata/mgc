@@ -16,8 +16,8 @@
 
 package de.micromata.genome.logging.spi;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import de.micromata.genome.logging.Logging;
 import de.micromata.genome.util.runtime.config.ALocalSettingsPath;

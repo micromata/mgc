@@ -18,7 +18,7 @@ package de.micromata.genome.logging;
 
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import de.micromata.genome.util.validation.ValMessage;
 

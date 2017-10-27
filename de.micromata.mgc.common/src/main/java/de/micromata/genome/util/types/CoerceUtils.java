@@ -16,7 +16,7 @@
 
 package de.micromata.genome.util.types;
 
-import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang3.ObjectUtils;
 
 /**
  * Collection of methods to weak cast types.

@@ -16,7 +16,7 @@
 
 package de.micromata.genome.util.matcher;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Same as BooleanListRulesFactory, but support and, or and not as aliase to &amp;&amp; || !.

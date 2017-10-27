@@ -23,7 +23,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import de.micromata.genome.util.bean.PrivateBeanUtils;
 import de.micromata.genome.util.runtime.LocalSettings;

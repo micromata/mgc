@@ -19,7 +19,7 @@ package de.micromata.mgc.javafx.launcher.gui.generic;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import de.micromata.genome.logging.config.LoggingWithFallbackLocalSettingsConfigModel;
 import de.micromata.genome.logging.config.LsLoggingLocalSettingsConfigModel;

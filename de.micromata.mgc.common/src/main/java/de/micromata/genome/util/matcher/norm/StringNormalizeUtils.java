@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.codec.language.ColognePhonetic;
 import org.apache.commons.codec.language.Soundex;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Normalization of a String.

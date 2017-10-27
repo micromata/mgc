@@ -16,8 +16,8 @@
 
 package de.micromata.genome.logging;
 
-import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Java representation for a documented log entry.

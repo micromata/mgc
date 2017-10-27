@@ -19,9 +19,9 @@ package de.micromata.genome.logging;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
-import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Dumps a SQL prepared statement.
@@ -99,7 +99,8 @@ public class LogSqlAttribute extends LogAttribute
       return "NULL";
     }
     if (arg instanceof String) {
-      return '\'' + StringEscapeUtils.escapeSql((String) arg) + '\'';
+      // TODO replace with proper SQL escaping
+      return '\'' + StringUtils.replace((String) arg, "'", "''") + '\'';
     }
     if (arg instanceof java.util.Date) {
       return formatSqlDate((java.util.Date) arg);

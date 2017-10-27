@@ -37,7 +37,7 @@ import javax.naming.NoInitialContextException;
 import javax.naming.spi.InitialContextFactory;
 
 import org.apache.commons.dbcp.BasicDataSource;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.pool.impl.GenericObjectPool;
 import org.apache.log4j.Logger;
 

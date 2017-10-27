@@ -16,7 +16,7 @@
 
 package de.micromata.genome.db.jpa.history.impl;
 
-import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang3.ObjectUtils;
 
 import de.micromata.genome.jpa.metainf.ColumnMetadata;
 

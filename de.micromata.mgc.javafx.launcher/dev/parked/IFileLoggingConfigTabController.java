@@ -18,7 +18,7 @@ package de.micromata.mgc.javafx.launcher.gui.generic;
 
 import java.io.File;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import de.micromata.genome.logging.spi.ifiles.IFileLoggingLocalSettingsConfigModel;
 import de.micromata.mgc.javafx.launcher.gui.AbstractConfigTabController;

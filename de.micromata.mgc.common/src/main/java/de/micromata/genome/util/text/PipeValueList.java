@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Die PipeValueList verwendet | für den Trenner von einem Key-Value-Paar. Key und Value werden mittels = getrennt. Wenn

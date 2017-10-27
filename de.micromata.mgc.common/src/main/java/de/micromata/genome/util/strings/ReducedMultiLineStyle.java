@@ -16,8 +16,8 @@
 
 package de.micromata.genome.util.strings;
 
-import org.apache.commons.lang.SystemUtils;
-import org.apache.commons.lang.builder.ToStringStyle;
+import org.apache.commons.lang3.SystemUtils;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The Class ReducedMultiLineStyle.

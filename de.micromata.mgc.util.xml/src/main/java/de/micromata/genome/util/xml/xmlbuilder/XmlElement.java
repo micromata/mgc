@@ -19,7 +19,7 @@ package de.micromata.genome.util.xml.xmlbuilder;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.Validate;
 
 /**
  * Ein XML-Element (tag).

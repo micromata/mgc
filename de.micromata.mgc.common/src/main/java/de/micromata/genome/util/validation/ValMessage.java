@@ -19,9 +19,9 @@ package de.micromata.genome.util.validation;
 import java.io.Serializable;
 import java.text.MessageFormat;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import de.micromata.genome.util.i18n.I18NTranslationProvider;
 

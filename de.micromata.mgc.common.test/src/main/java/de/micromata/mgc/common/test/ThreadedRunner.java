@@ -16,7 +16,7 @@
 
 package de.micromata.mgc.common.test;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import de.micromata.genome.util.runtime.RuntimeCallable;
 
@@ -105,7 +105,7 @@ public class ThreadedRunner
             }
           } catch (Exception ex) {
             synchronized (ThreadedRunner.this) {
-              exeptions.append("\n\nThread " + Thread.currentThread().getId() + " faield:\n").append(ExceptionUtils.getFullStackTrace(ex));
+              exeptions.append("\n\nThread " + Thread.currentThread().getId() + " faield:\n").append(ExceptionUtils.getStackTrace(ex));
             }
           }
         }

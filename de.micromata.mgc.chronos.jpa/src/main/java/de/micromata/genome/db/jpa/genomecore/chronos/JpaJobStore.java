@@ -35,7 +35,7 @@ import de.micromata.genome.logging.LoggingServiceManager;
 import de.micromata.genome.util.bean.FieldMatchers;
 import de.micromata.genome.util.bean.PrivateBeanUtils;
 import de.micromata.genome.util.matcher.CommonMatchers;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import javax.persistence.TypedQuery;

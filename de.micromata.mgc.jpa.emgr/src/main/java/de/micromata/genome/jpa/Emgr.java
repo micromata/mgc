@@ -30,8 +30,8 @@ import javax.persistence.OptimisticLockException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
-import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.Validate;
 import org.apache.log4j.Logger;
 import org.hibernate.jpa.AvailableSettings;
 

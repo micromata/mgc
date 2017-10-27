@@ -19,7 +19,7 @@ package de.micromata.genome.util.types;
 import java.io.Serializable;
 import java.util.Map;
 
-import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang3.ObjectUtils;
 
 /**
  * Similar to c++ type pair.

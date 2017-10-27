@@ -18,7 +18,7 @@ package de.micromata.genome.util.i18n;
 
 import java.util.Set;
 
-import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang3.ObjectUtils;
 
 /**
  * Provides the translation for one language.

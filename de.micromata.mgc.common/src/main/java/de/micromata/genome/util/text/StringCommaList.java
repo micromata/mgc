@@ -19,7 +19,7 @@ package de.micromata.genome.util.text;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Utility to encode a List of string. If the one part of the list contains , it will be escpaped by backslash

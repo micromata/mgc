@@ -19,7 +19,7 @@ package de.micromata.genome.util.validation;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang3.ObjectUtils;
 
 import de.micromata.genome.util.i18n.I18NTranslationProvider;
 

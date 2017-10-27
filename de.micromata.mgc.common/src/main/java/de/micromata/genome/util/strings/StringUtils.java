@@ -23,7 +23,7 @@ package de.micromata.genome.util.strings;
  * 
  */
 @Deprecated
-public class StringUtils extends org.apache.commons.lang.StringUtils
+public class StringUtils extends org.apache.commons.lang3.StringUtils
 {
   /**
    * This was removed in later commons.lang

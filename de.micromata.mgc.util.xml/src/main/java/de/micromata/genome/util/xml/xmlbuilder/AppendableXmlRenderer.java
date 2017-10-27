@@ -18,7 +18,7 @@ package de.micromata.genome.util.xml.xmlbuilder;
 
 import java.io.IOException;
 
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
  * The Class AppendableXmlRenderer.

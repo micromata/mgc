@@ -16,7 +16,7 @@
 
 package de.micromata.genome.util.i18n;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * translates only, if key starts with %.

@@ -22,7 +22,7 @@ import java.util.List;
 
 import javax.persistence.PersistenceException;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import de.micromata.genome.logging.GenomeAttributeType;
 import de.micromata.genome.logging.LogAttribute;

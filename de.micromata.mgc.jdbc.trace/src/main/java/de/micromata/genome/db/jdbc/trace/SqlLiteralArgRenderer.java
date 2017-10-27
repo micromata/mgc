@@ -23,10 +23,11 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import de.micromata.genome.util.types.Converter;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Rendern eines SQL als Literal.
@@ -79,7 +80,8 @@ public class SqlLiteralArgRenderer implements SqlArgRenderer
   public String renderSqlArg(Object arg)
   {
     if (arg instanceof String) {
-      return "'" + StringEscapeUtils.escapeSql((String) arg) + "'";
+      // TODO replace with proper SQL escaping
+      return "'" + StringUtils.replace((String) arg, "'", "''") + "'";
     }
     if (arg instanceof Integer || arg instanceof Long || arg instanceof Short || arg instanceof Byte) {
       return ObjectUtils.toString(arg);

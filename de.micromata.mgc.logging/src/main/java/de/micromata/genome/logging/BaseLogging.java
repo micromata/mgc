@@ -25,7 +25,7 @@ import java.util.Map;
 
 import org.apache.commons.collections.map.AbstractReferenceMap;
 import org.apache.commons.collections15.map.ReferenceMap;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import de.micromata.genome.logging.events.LogRegisteredCategoryChangedEvent;
 import de.micromata.genome.logging.events.LogRegisteredLogAttributesChangedEvent;

@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import de.micromata.genome.util.bean.PrivateBeanUtils;
 
@@ -41,7 +41,7 @@ import de.micromata.genome.util.bean.PrivateBeanUtils;
  *
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  */
-public class ClassUtils extends org.apache.commons.lang.ClassUtils
+public class ClassUtils extends org.apache.commons.lang3.ClassUtils
 {
 
   /**
