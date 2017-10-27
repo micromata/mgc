@@ -37,6 +37,7 @@ import org.hibernate.annotations.Index;
 @Entity
 @Table(name = "TB_TA_LOG_ATTRIBUTE")
 @org.hibernate.annotations.Table(indexes = { //
+    @Index(name = "IX_TA_LOG_MASTER", columnNames = {"TA_LOG_MASTER"}),
     @Index(name = "IX_TA_LOGATTR_SVALUE", columnNames = { "BASE_LOG_ATTRIBUTE", "SHORT_VALUE" }), //
     @Index(name = "IX_TA_LOG_ATTRIBUTE_MODAT", columnNames = { "MODIFIEDAT" })
     //
