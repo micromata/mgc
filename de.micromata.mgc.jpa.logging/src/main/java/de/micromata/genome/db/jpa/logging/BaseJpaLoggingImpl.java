@@ -31,7 +31,7 @@ import java.util.Map;
 import javax.persistence.Column;
 import javax.persistence.Query;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;

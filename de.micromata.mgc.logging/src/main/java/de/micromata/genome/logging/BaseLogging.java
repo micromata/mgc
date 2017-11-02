@@ -16,22 +16,20 @@
 
 package de.micromata.genome.logging;
 
+import de.micromata.genome.logging.events.LogRegisteredCategoryChangedEvent;
+import de.micromata.genome.logging.events.LogRegisteredLogAttributesChangedEvent;
+import de.micromata.genome.logging.events.LogWriteEntryEvent;
+import de.micromata.genome.stats.Stats;
+import de.micromata.genome.util.types.Pair;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.collections.map.AbstractReferenceMap;
-import org.apache.commons.collections15.map.ReferenceMap;
+import org.apache.commons.collections4.map.AbstractReferenceMap;
+import org.apache.commons.collections4.map.ReferenceMap;
 import org.apache.commons.lang3.StringUtils;
-
-import de.micromata.genome.logging.events.LogRegisteredCategoryChangedEvent;
-import de.micromata.genome.logging.events.LogRegisteredLogAttributesChangedEvent;
-import de.micromata.genome.logging.events.LogWriteEntryEvent;
-import de.micromata.genome.stats.Stats;
-import de.micromata.genome.util.types.Pair;
 
 /**
  * Common base implementation.
@@ -105,7 +103,7 @@ public abstract class BaseLogging implements Logging
 
   protected static <V> Map<String, V> createNewCacheMap(Map<String, V> oldValues)
   {
-    ReferenceMap<String, V> ret = new ReferenceMap<>(AbstractReferenceMap.HARD, AbstractReferenceMap.WEAK);
+    ReferenceMap<String, V> ret = new ReferenceMap<>(AbstractReferenceMap.ReferenceStrength.HARD, AbstractReferenceMap.ReferenceStrength.WEAK);
     ret.putAll(oldValues);
     return ret;
   }

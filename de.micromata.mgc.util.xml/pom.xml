@@ -51,6 +51,11 @@
       <version>${mgc.version}</version>
     </dependency>
     <dependency>
+    <groupId>org.apache.commons</groupId>
+    <artifactId>commons-text</artifactId>
+    <version>${commons-text.version}</version>
+  </dependency>
+    <dependency>
       <artifactId>javax.servlet-api</artifactId>
       <groupId>javax.servlet</groupId>
       <version>${javax.servlet.api.version}</version>

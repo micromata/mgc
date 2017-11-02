@@ -18,10 +18,8 @@ package de.micromata.genome.logging;
 
 import java.util.Enumeration;
 import java.util.Map;
-
+import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -82,7 +80,7 @@ public class LogRequestParameterAttribute extends LogAttribute
     StringBuilder sb = new StringBuilder();
     for (Map.Entry<String, Object> me : request.entrySet()) {
       final String key = me.getKey();
-      String value = ObjectUtils.toString(me.getValue());
+      String value = Objects.toString(me.getValue(), StringUtils.EMPTY);
       for (String exKey : excludingKeys) {
         if (StringUtils.equals(key, exKey) == true) {
           value = "****";
@@ -90,7 +88,7 @@ public class LogRequestParameterAttribute extends LogAttribute
         }
       } // for
 
-      sb.append(key).append("=").append(value).append("\n");
+      sb.append(key).append('=').append(value).append('\n');
     }
     return sb.toString();
   }

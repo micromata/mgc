@@ -19,10 +19,10 @@ package de.micromata.genome.logging;
 import java.io.Serializable;
 import java.util.Map;
 
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringEscapeUtils;
+import java.util.Objects;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
+import org.apache.commons.text.StringEscapeUtils;
 
 /**
  * Ein Log-Attribute. Der Type wird durch LogAttributeType festgelegt.
@@ -100,7 +100,7 @@ public class LogAttribute implements Serializable
   @Override
   public int hashCode()
   {
-    return ObjectUtils.hashCode(type);// don't because has to be equals * 17 + ObjectUtils.hashCode(value);
+    return Objects.hashCode(type);// don't because has to be equals * 17 + Objects.hashCode(value);
   }
 
   /**
@@ -146,7 +146,7 @@ public class LogAttribute implements Serializable
 
   public String getEscapedValue()
   {
-    return StringEscapeUtils.escapeXml(value);
+    return StringEscapeUtils.escapeXml10(value);
   }
 
   public void setValue(String value)
@@ -170,7 +170,7 @@ public class LogAttribute implements Serializable
   {
     StringBuilder sb = new StringBuilder();
     for (Map.Entry<String, String> e : reqMap.entrySet()) {
-      sb.append("|").append(e.getKey()).append("=").append(e.getValue()).append("\n");
+      sb.append('|').append(e.getKey()).append('=').append(e.getValue()).append('\n');
     }
     return sb.toString();
   }

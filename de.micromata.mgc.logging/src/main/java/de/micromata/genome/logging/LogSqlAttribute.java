@@ -18,9 +18,7 @@ package de.micromata.genome.logging;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringEscapeUtils;
+import java.util.Objects;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -106,7 +104,7 @@ public class LogSqlAttribute extends LogAttribute
       return formatSqlDate((java.util.Date) arg);
     }
     // TODO (Rx) rrk (low) format Date, Timestamp und BigDecimal fuer sql log anzeige
-    return ObjectUtils.toString(arg);
+    return Objects.toString(arg, StringUtils.EMPTY);
   }
 
   /**

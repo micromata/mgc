@@ -16,7 +16,6 @@
 
 package de.micromata.genome.chronos.spi.jdbc;
 
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 
 /**

@@ -16,15 +16,13 @@
 
 package de.micromata.genome.util.runtime;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.CharEncoding;
-
 import groovy.lang.GroovyCodeSource;
 import groovy.lang.GroovyShell;
 import groovy.lang.Script;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import org.apache.commons.io.IOUtils;
 
 /**
  * Wrapper for Groovy. Encapsulate difference between 1.x and 2.x groovy
@@ -45,7 +43,7 @@ public class GroovyUtils
   public static String convertToString(InputStream is)
   {
     try {
-      return IOUtils.toString(is, CharEncoding.UTF_8);
+      return IOUtils.toString(is, StandardCharsets.UTF_8.name());
     } catch (IOException ex) {
       throw new RuntimeException(ex);
     }

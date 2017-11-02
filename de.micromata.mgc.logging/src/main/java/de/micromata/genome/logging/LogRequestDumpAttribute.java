@@ -18,9 +18,11 @@ package de.micromata.genome.logging;
 
 import java.util.Enumeration;
 
+import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Loggs all information for a Request.
@@ -56,15 +58,15 @@ public class LogRequestDumpAttribute extends LogAttribute
   {
     StringBuilder sb = new StringBuilder();
 
-    sb.append("requestURL: ").append(req.getRequestURL()).append("\n")//
-        .append("servletPath: ").append(req.getServletPath()).append("\n")//
-        .append("requestURI: ").append(req.getRequestURI()).append("\n") //
-        .append("queryString: ").append(req.getQueryString()).append("\n") //
-        .append("pathInfo: ").append(req.getPathInfo()).append("\n")//
-        .append("contextPath: ").append(req.getContextPath()).append("\n") //
-        .append("characterEncoding: ").append(req.getCharacterEncoding()).append("\n") //
-        .append("localName: ").append(req.getLocalName()).append("\n") //
-        .append("contentLength: ").append(req.getContentLength()).append("\n") //
+    sb.append("requestURL: ").append(req.getRequestURL()).append('\n')//
+        .append("servletPath: ").append(req.getServletPath()).append('\n')//
+        .append("requestURI: ").append(req.getRequestURI()).append('\n') //
+        .append("queryString: ").append(req.getQueryString()).append('\n') //
+        .append("pathInfo: ").append(req.getPathInfo()).append('\n')//
+        .append("contextPath: ").append(req.getContextPath()).append('\n') //
+        .append("characterEncoding: ").append(req.getCharacterEncoding()).append('\n') //
+        .append("localName: ").append(req.getLocalName()).append('\n') //
+        .append("contentLength: ").append(req.getContentLength()).append('\n') //
         ;
     sb.append("Header:\n");
     for (Enumeration<String> en = req.getHeaderNames(); en.hasMoreElements();) {
@@ -76,7 +78,7 @@ public class LogRequestDumpAttribute extends LogAttribute
     for (; en.hasMoreElements();) {
       String k = (String) en.nextElement();
       Object v = req.getAttribute(k);
-      sb.append("  ").append(k).append(": ").append(ObjectUtils.toString(v)).append("\n");
+      sb.append("  ").append(k).append(": ").append(Objects.toString(v, StringUtils.EMPTY)).append('\n');
     }
 
     return sb.toString();

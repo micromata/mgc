@@ -18,7 +18,7 @@ package de.micromata.genome.util.types;
 
 import java.io.Serializable;
 
-import org.apache.commons.lang3.ObjectUtils;
+import java.util.Objects;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -131,14 +131,14 @@ public class Triple<L, M, R> implements Serializable
       return false;
     }
     Triple ot = (Triple) obj;
-    return ObjectUtils.equals(left, ot.left) &&
-        ObjectUtils.equals(middle, ot.middle) &&
-        ObjectUtils.equals(right, ot.right);
+    return Objects.equals(left, ot.left) &&
+        Objects.equals(middle, ot.middle) &&
+        Objects.equals(right, ot.right);
   }
 
   @Override
   public int hashCode()
   {
-    return (ObjectUtils.hashCode(left) * 31 + ObjectUtils.hashCode(middle)) * 31 + ObjectUtils.hashCode(right);
+    return (Objects.hashCode(left) * 31 + Objects.hashCode(middle)) * 31 + Objects.hashCode(right);
   }
 }

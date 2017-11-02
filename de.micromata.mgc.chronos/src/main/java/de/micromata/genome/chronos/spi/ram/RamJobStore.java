@@ -24,7 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.collections15.ListUtils;
+import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.log4j.Logger;
@@ -140,7 +140,7 @@ public class RamJobStore extends AbstractJobStore
     if (scheduler != null) {
       tjobs = allJobs.get(scheduler.getId());
     } else {
-      tjobs = new HashMap<Long, TriggerJobDO>();
+      tjobs = new HashMap<>();
       for (Map<Long, TriggerJobDO> scheds : allJobs.values()) {
         synchronized (scheds) {
           tjobs.putAll(scheds);
@@ -150,7 +150,7 @@ public class RamJobStore extends AbstractJobStore
 
     }
     if (tjobs == null) {
-      return ListUtils.EMPTY_LIST;
+      return Collections.EMPTY_LIST;
     }
     List<TriggerJobDO> ret = new ArrayList<TriggerJobDO>();
 
@@ -264,7 +264,7 @@ public class RamJobStore extends AbstractJobStore
     if (maxResults >= tl.size()) {
       return tl;
     }
-    List<JobResultDO> ret = new ArrayList<JobResultDO>(maxResults);
+    List<JobResultDO> ret = new ArrayList<>(maxResults);
 
     for (int i = 0; i < maxResults; ++i) {
       ret.add(tl.get(i));
@@ -276,7 +276,7 @@ public class RamJobStore extends AbstractJobStore
   @Override
   public synchronized List<SchedulerDO> getSchedulers()
   {
-    List<SchedulerDO> ret = new ArrayList<SchedulerDO>();
+    List<SchedulerDO> ret = new ArrayList<>();
 
     ret.addAll(schedulersByPk.values());
 

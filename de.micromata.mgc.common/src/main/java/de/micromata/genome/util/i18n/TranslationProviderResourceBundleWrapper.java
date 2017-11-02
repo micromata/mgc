@@ -20,7 +20,7 @@ import java.util.Enumeration;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-import org.apache.commons.collections15.iterators.IteratorEnumeration;
+import org.apache.commons.collections4.iterators.IteratorEnumeration;
 
 /**
  * Wrapps a I18NTranslationProvider as a ResourceBundle.

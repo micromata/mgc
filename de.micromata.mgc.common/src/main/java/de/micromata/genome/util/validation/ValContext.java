@@ -16,12 +16,10 @@
 
 package de.micromata.genome.util.validation;
 
+import de.micromata.genome.util.i18n.I18NTranslationProvider;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.commons.lang3.ObjectUtils;
-
-import de.micromata.genome.util.i18n.I18NTranslationProvider;
+import java.util.Objects;
 
 /**
  * A Validation Context.
@@ -268,7 +266,7 @@ public class ValContext
   {
     boolean ret = messages.stream().anyMatch(msg -> {
       return msg.getReference() == message.getReference() &&
-          ObjectUtils.equals(msg.getProperty(), message.getProperty()) &&
+          Objects.equals(msg.getProperty(), message.getProperty()) &&
           compareValidationLevels(msg.getValState(), message.getValState()) >= 0;
     });
     return ret;

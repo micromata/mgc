@@ -16,18 +16,16 @@
 
 package de.micromata.genome.jpa;
 
-import java.beans.PropertyDescriptor;
-import java.util.List;
-
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.ObjectUtils;
-
 import de.micromata.genome.logging.GLog;
 import de.micromata.genome.logging.GenomeLogCategory;
 import de.micromata.genome.logging.LogExceptionAttribute;
 import de.micromata.genome.util.bean.PrivateBeanUtils;
 import de.micromata.genome.util.bean.PropertyAccessException;
 import de.micromata.genome.util.bean.PropertyDescriptorUtils;
+import java.beans.PropertyDescriptor;
+import java.util.List;
+import java.util.Objects;
+import org.apache.commons.lang3.ArrayUtils;
 
 /**
  * Copy from/to entities using Properties descriptors with standard annotations.
@@ -184,7 +182,7 @@ public class PropertyEntityCopier implements EntityCopier
     }
 
     EntityCopyStatus ret = EntityCopyStatus.NONE;
-    if (ObjectUtils.equals(value, backupValue) == false) {
+    if (Objects.equals(value, backupValue) == false) {
       ret = EntityCopyStatus.MAJOR;
     }
     if (writeProperty(target, pd, value) == false) {
@@ -197,7 +195,6 @@ public class PropertyEntityCopier implements EntityCopier
   /**
    * Write property.
    *
-   * @param proputils the proputils
    * @param entity the entity
    * @param pd the pd
    * @param value the value

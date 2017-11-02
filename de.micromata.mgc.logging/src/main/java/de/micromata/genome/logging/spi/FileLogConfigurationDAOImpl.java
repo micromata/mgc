@@ -16,20 +16,6 @@
 
 package de.micromata.genome.logging.spi;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
-
 import de.micromata.genome.logging.GLog;
 import de.micromata.genome.logging.GenomeAttributeType;
 import de.micromata.genome.logging.GenomeLogCategory;
@@ -39,6 +25,18 @@ import de.micromata.genome.logging.LogLevel;
 import de.micromata.genome.logging.LoggedRuntimeException;
 import de.micromata.genome.util.matcher.Matcher;
 import de.micromata.genome.util.types.Pair;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Properties;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Writes the logconfiguration in a file.
@@ -104,10 +102,10 @@ public class FileLogConfigurationDAOImpl extends PropLogConfigurationDAOBase
     if (p == null) {
       return;
     }
-    List<Pair<String, Integer>> npattern = new ArrayList<Pair<String, Integer>>();
+    List<Pair<String, Integer>> npattern = new ArrayList<>();
     for (Map.Entry<Object, Object> me : p.entrySet()) {
-      String pattern = ObjectUtils.toString(me.getKey());
-      String v = ObjectUtils.toString(me.getValue());
+      String pattern = Objects.toString(me.getKey(), StringUtils.EMPTY);
+      String v = Objects.toString(me.getValue(), StringUtils.EMPTY);
       LogLevel ll = LogLevel.valueOf(v);
       int ilev = ll.getLevel();
       if (pattern.equals(THRESHOLD_NAME) == true) {

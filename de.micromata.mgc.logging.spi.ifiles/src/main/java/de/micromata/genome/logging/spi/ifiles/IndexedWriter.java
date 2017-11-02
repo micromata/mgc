@@ -16,6 +16,11 @@
 
 package de.micromata.genome.logging.spi.ifiles;
 
+import de.micromata.genome.logging.LogAttribute;
+import de.micromata.genome.logging.LogAttributeType;
+import de.micromata.genome.logging.LogWriteEntry;
+import de.micromata.genome.util.runtime.RuntimeIOException;
+import de.micromata.genome.util.types.Pair;
 import java.io.BufferedOutputStream;
 import java.io.Closeable;
 import java.io.File;
@@ -26,6 +31,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -33,16 +39,8 @@ import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Locale;
-
-import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-
-import de.micromata.genome.logging.LogAttribute;
-import de.micromata.genome.logging.LogAttributeType;
-import de.micromata.genome.logging.LogWriteEntry;
-import de.micromata.genome.util.runtime.RuntimeIOException;
-import de.micromata.genome.util.types.Pair;
 
 /**
  * TODO enable reaattach into existant base name, if limit is not reached or searchkeys are not different.
@@ -55,7 +53,7 @@ public class IndexedWriter implements Closeable
   /**
    * if change this to utf-8 makes it a little bit more complicate.
    */
-  public static final Charset logCharset = Charsets.ISO_8859_1;
+  public static final Charset logCharset = StandardCharsets.ISO_8859_1;
   public static final String logFileDateFormatString = "yyyy-MM-dd'T'HH_mm_ss_SSS";
   /**
    * Standard date format according to ISO 8601.

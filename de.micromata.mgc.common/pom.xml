@@ -26,6 +26,11 @@
       <version>${commons-lang3.version}</version>
     </dependency>
     <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-collections4</artifactId>
+      <version>${commons-collections.version}</version>
+    </dependency>
+    <dependency>
       <groupId>org.codehaus.groovy</groupId>
       <artifactId>groovy-all</artifactId>
       <version>${org.codehaus.groovy.groovy-all.version}</version>
@@ -44,11 +49,6 @@
       <groupId>commons-beanutils</groupId>
       <artifactId>commons-beanutils</artifactId>
       <version>${commons-beanutils.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>net.sourceforge.collections</groupId>
-      <artifactId>collections-generic</artifactId>
-      <version>${net.sourceforge.collections_generic.version}</version>
     </dependency>
     <dependency>
       <groupId>javax.mail</groupId>
