@@ -17,7 +17,6 @@
 package de.micromata.genome.logging;
 
 import java.util.Objects;
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
 /**

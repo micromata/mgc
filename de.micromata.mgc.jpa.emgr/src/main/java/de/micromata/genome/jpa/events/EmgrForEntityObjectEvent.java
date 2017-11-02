@@ -17,7 +17,6 @@
 package de.micromata.genome.jpa.events;
 
 import de.micromata.genome.jpa.DbRecord;
-import de.micromata.genome.jpa.DbRecordDO;
 import de.micromata.genome.jpa.IEmgr;
 
 /**

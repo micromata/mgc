@@ -17,7 +17,6 @@
 package de.micromata.genome.util.i18n;
 
 import java.util.Objects;
-import org.apache.commons.lang3.ObjectUtils;
 
 import de.micromata.genome.util.text.PlaceHolderReplacer;
 import de.micromata.genome.util.text.StringResolver;
