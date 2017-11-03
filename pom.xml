@@ -97,7 +97,24 @@
     <minimal-json.version>0.9.4</minimal-json.version>
     <xstream.version>1.4.4</xstream.version>
 
-    <maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
+
+
+    <!-- MAVEN PLUGINS VERSIONS -->
+    <jacoco-maven-plugin.version>0.7.9</jacoco-maven-plugin.version>
+    <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
+    <license-maven-plugin.version>3.0</license-maven-plugin.version>
+    <maven-install-plugin.version>2.5.2</maven-install-plugin.version>
+    <maven-clean-plugin.version>3.0.0</maven-clean-plugin.version>
+    <maven-resources-plugin.version>3.0.2</maven-resources-plugin.version>
+    <maven-surefire-plugin.version>2.20.1</maven-surefire-plugin.version>
+    <maven-jar-plugin.version>3.0.2</maven-jar-plugin.version>
+    <maven-war-plugin.version>3.2.0</maven-war-plugin.version>
+    <maven-antrun-plugin.version>1.8</maven-antrun-plugin.version>
+    <maven-enforcer-plugin.version>1.4.1</maven-enforcer-plugin.version>
+    <exec-maven-plugin.version>1.5.0</exec-maven-plugin.version>
+    <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
+    <spring-boot-maven-plugin.version>${spring-boot.version}</spring-boot-maven-plugin.version>
+    <!-- EO MAVEN PLUGINS VERSIONS -->
 
 
   </properties>
@@ -174,7 +191,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.7.0</version>
+        <version>${maven-compiler-plugin.version}</version>
         <configuration>
           <source>1.8</source>
           <target>1.8</target>
@@ -184,8 +201,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
-        <version>3.0.1</version>
-
+        <version>${maven-source-plugin.version}</version>
         <executions>
           <execution>
             <inherited>true</inherited>
@@ -203,12 +219,12 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.20.1</version>
+        <version>${maven-surefire-plugin.version}</version>
         <dependencies>
           <dependency>
             <groupId>org.apache.maven.surefire</groupId>
             <artifactId>surefire-junit47</artifactId>
-            <version>2.20.1</version>
+            <version>${maven-surefire-plugin.version}</version>
           </dependency>
         </dependencies>
         <configuration>
@@ -220,7 +236,7 @@
         <!-- use license:format or license:update to patch java lisence header -->
         <groupId>com.mycila</groupId>
         <artifactId>license-maven-plugin</artifactId>
-        <version>3.0</version>
+        <version>${license-maven-plugin.version}</version>
         <configuration>
           <header>distribution/JavaHeader.txt</header>
           <properties>
@@ -234,6 +250,26 @@
             <include>**/*.java</include>
           </includes>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-install-plugin</artifactId>
+        <version>${maven-install-plugin.version}</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-clean-plugin</artifactId>
+        <version>${maven-clean-plugin.version}</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>${maven-resources-plugin.version}</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>${maven-jar-plugin.version}</version>
       </plugin>
     </plugins>
   </build>

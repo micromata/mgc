@@ -1,15 +1,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>de.micromata.mgc.samples</groupId>
+  <parent>
+    <artifactId>de.micromata.mgc.samples</artifactId>
+    <groupId>de.micromata.mgc</groupId>
+    <version>2.6.0-SNAPSHOT</version><!-- MGC -->
+  </parent>
   <artifactId>de.micromata.mgc.jpa.logging.sample</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <description>
     Sample to use jpa.
   </description>
   <properties>
-    <mgc.version>2.5.0</mgc.version>
+    <mgc.version>2.6.0-SNAPSHOT</mgc.version>
   </properties>
 
 
@@ -27,9 +30,9 @@
     </dependency>
     <!--  if you have no container, which provide javax.mail.Session -->
     <dependency>
-      <groupId>javax.mail</groupId>
-      <artifactId>mail</artifactId>
-      <version>1.5.0-b01</version>
+      <groupId>com.sun.mail</groupId>
+      <artifactId>javax.mail</artifactId>
+      <version>${javax.mail.version}</version>
     </dependency>
     <!--  the database driver -->
     <dependency>
