@@ -20,10 +20,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 
+import java.nio.charset.StandardCharsets;
 import org.apache.commons.io.IOUtils;
 
 import de.micromata.genome.util.runtime.RuntimeIOException;
-import groovy.json.internal.Charsets;
 
 /**
  * Parses property file and uses callback.
@@ -67,7 +67,7 @@ public class NewPropertiesLineReader
 
   public void read(InputStream is) throws RuntimeIOException
   {
-    read(is, Charsets.ISO_8859_1);
+    read(is, StandardCharsets.ISO_8859_1);
   }
 
   public void read(InputStream is, Charset charset) throws RuntimeIOException
