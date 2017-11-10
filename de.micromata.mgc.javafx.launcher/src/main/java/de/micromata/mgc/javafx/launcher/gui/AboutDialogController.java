@@ -115,9 +115,7 @@ public class AboutDialogController extends AbstractModelController<MgcApplicatio
 
   private void initLicenseText()
   {
-    try {
-
-      InputStream is = getClass().getClassLoader().getResourceAsStream("AppLicense.txt");
+    try (InputStream is = getClass().getClassLoader().getResourceAsStream("AppLicense.txt")) {
       if (is == null) {
         licenceTextArea.setMaxHeight(0.0);
         licenceTextArea.setVisible(false);
@@ -125,7 +123,6 @@ public class AboutDialogController extends AbstractModelController<MgcApplicatio
       }
       String text = IOUtils.toString(is, StandardCharsets.UTF_8);
       licenceTextArea.setText(text);
-      IOUtils.closeQuietly(is);
     } catch (IOException ex) {
 
     }

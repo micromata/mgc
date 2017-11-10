@@ -16,18 +16,16 @@
 
 package de.micromata.mgc.javafx.feedback;
 
+import de.micromata.genome.util.validation.ValMessage;
+import de.micromata.mgc.javafx.FXGuiUtils;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.ResourceBundle;
-
-import de.micromata.genome.util.validation.ValMessage;
-import de.micromata.mgc.javafx.FXGuiUtils;
 import javafx.beans.binding.DoubleBinding;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.geometry.InsetsBuilder;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -120,7 +118,7 @@ public class FeedbackPanel extends GridPane implements Initializable
     setMaxWidth(Region.USE_COMPUTED_SIZE);
 
     // move the messages a little bit to the center of the view.
-    final Insets padding = InsetsBuilder.create().left(PADDING).top(PADDING).right(PADDING).build();
+    final Insets padding = new Insets(PADDING, PADDING, 0.0d, PADDING);
     setPadding(padding);
 
     setId(CSS_CLASS_FEEDBACK);
@@ -285,7 +283,7 @@ public class FeedbackPanel extends GridPane implements Initializable
     row.setPrefHeight(hboxHeight);
     final HBox hbox = HBoxBuilder.create().alignment(Pos.CENTER_LEFT).minHeight(hboxHeight)
         .prefHeight(hboxHeight).maxHeight(hboxHeight).spacing(HBOX_SPACING).id("row")
-        .padding(InsetsBuilder.create().left(HBOX_PAD_LEFT).build()).id("message")
+        .padding(new Insets(0.0d, 0.0d, 0.0d, HBOX_PAD_LEFT)).id("message")
         .styleClass(message.getValState().name()).build();
 
     final DoubleBinding widthBinding = new DoubleBinding()

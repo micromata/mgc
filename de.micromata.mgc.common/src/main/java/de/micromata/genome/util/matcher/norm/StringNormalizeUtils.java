@@ -115,19 +115,19 @@ public class StringNormalizeUtils
   /**
    * The white chars.
    */
-  private static String WHITE_CHARS = "" /* dummy empty string for homogeneity */
+  private static final String WHITE_CHARS = "" /* dummy empty string for homogeneity */
       + "\\u0009" // CHARACTER TABULATION
       + "\\u000A" // LINE FEED (LF)
       + "\\u000B" // LINE TABULATION
       + "\\u000C" // FORM FEED (FF)
       + "\\u000D" // CARRIAGE RETURN (CR)
       + "\\u0020" // SPACE
-      + "\\u0085" // NEXT LINE (NEL) 
+      + "\\u0085" // NEXT LINE (NEL)
       + "\\u00A0" // NO-BREAK SPACE
       + "\\u1680" // OGHAM SPACE MARK
       + "\\u180E" // MONGOLIAN VOWEL SEPARATOR
-      + "\\u2000" // EN QUAD 
-      + "\\u2001" // EM QUAD 
+      + "\\u2000" // EN QUAD
+      + "\\u2001" // EM QUAD
       + "\\u2002" // EN SPACE
       + "\\u2003" // EM SPACE
       + "\\u2004" // THREE-PER-EM SPACE
