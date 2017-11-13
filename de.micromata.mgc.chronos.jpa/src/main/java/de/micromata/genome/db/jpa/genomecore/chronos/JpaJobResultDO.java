@@ -16,8 +16,9 @@
 
 package de.micromata.genome.db.jpa.genomecore.chronos;
 
+import de.micromata.genome.chronos.State;
+import de.micromata.genome.jpa.StdRecordDO;
 import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -25,26 +26,21 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.hibernate.annotations.Index;
-
-import de.micromata.genome.chronos.State;
-import de.micromata.genome.jpa.StdRecordDO;
 
 /**
  * The Class JpaJobResultDO.
  */
 @Entity
-@Table(name = "TB_TA_CHRONOS_RESULT")
-@org.hibernate.annotations.Table(indexes = { //
-    @Index(name = "IX_TA_CHRONOS__JOB", columnNames = { "TA_CHRONOS_JOB" }),
-    @Index(name = "IX_TA_CHRONOS_RES_MODAT", columnNames = { "MODIFIEDAT" }),
-    @Index(name = "IX_TA_CHRONOS_RESULT_CRTAT", columnNames = { "CREATEDAT" }),
-}, appliesTo = "TB_TA_CHRONOS_RESULT")
+@Table(name = "TB_TA_CHRONOS_RESULT", indexes = {
+    @Index(name = "IX_TA_CHRONOS__JOB", columnList = "TA_CHRONOS_JOB"),
+    @Index(name = "IX_TA_CHRONOS_RES_MODAT", columnList = "MODIFIEDAT"),
+    @Index(name = "IX_TA_CHRONOS_RESULT_CRTAT", columnList = "CREATEDAT")
+})
 @SequenceGenerator(name = "SQ_TA_CHRONOS_RESULT", sequenceName = "SQ_TA_CHRONOS_RESULT")
 public class JpaJobResultDO extends StdRecordDO<Long>
 {

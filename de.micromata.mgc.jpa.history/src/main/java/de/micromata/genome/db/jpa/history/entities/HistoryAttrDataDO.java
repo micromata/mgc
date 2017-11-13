@@ -16,21 +16,19 @@
 
 package de.micromata.genome.db.jpa.history.entities;
 
+import de.micromata.genome.db.jpa.tabattr.entities.JpaTabAttrDataBaseDO;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.Index;
-
-import de.micromata.genome.db.jpa.tabattr.entities.JpaTabAttrDataBaseDO;
 
 /**
  * JPA entity for TB_TA_GATTR_DATA.
@@ -39,14 +37,12 @@ import de.micromata.genome.db.jpa.tabattr.entities.JpaTabAttrDataBaseDO;
  */
 
 @Entity
-@Table(name = "TB_BASE_GHISTORY_ATTR_DATA")
+@Table(name = "TB_BASE_GHISTORY_ATTR_DATA", indexes = {
+    @Index(name = "IX_BASE_GHISTORY_A_D_MODAT", columnList = "MODIFIEDAT"),
+    @Index(name = "IX_BASE_GHISTORY_A_D_PARENT", columnList = "PARENT_PK")
+})
 @SequenceGenerator(name = "SQ_BASE_GHISTORY_ATTR_DATA_PK", sequenceName = "SQ_BASE_GHISTORY_ATTR_DATA_PK")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@org.hibernate.annotations.Table(//
-    indexes = { //
-        @Index(name = "IX_BASE_GHISTORY_A_D_MODAT", columnNames = { "MODIFIEDAT" }), //
-        @Index(name = "IX_BASE_GHISTORY_A_D_PARENT", columnNames = { "PARENT_PK" }),//
-    }, appliesTo = "TB_BASE_GHISTORY_ATTR_DATA")
 public class HistoryAttrDataDO extends JpaTabAttrDataBaseDO<HistoryAttrDO, Long>
 {
 
