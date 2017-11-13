@@ -70,7 +70,7 @@ public class EmgrTxNestedRequiredTest extends MgcTestCase
       return callInsert("testRequiredRollback");
     });
 
-    List<GenomeJpaTestTableDO> list = emfac.notx().go((emgr) -> emgr.select(GenomeJpaTestTableDO.class,
+    List<GenomeJpaTestTableDO> list = emfac.tx().go((emgr) -> emgr.select(GenomeJpaTestTableDO.class,
         "select e from " + GenomeJpaTestTableDO.class.getName() + " e where e.firstName = :firstName", "firstName",
         "testRequiredRollback"));
     Assert.assertEquals(0, list.size());

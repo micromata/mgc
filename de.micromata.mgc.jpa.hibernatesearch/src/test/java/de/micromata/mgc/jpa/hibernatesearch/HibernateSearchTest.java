@@ -43,7 +43,7 @@ public class HibernateSearchTest extends HibernateSearchTestBase
       emgr.insert(ment);
       return ment;
     });
-    List<MyEntityDO> found = HibernateSearchTestEmgrFactory.get().runWoTrans((emgr) -> {
+    List<MyEntityDO> found = HibernateSearchTestEmgrFactory.get().runInTrans((emgr) -> {
       FullTextEntityManager fullTextEntityManager = FullTextSearch.getFullTextEntityManager(emgr);
       org.hibernate.search.query.dsl.QueryBuilder qb = fullTextEntityManager.getSearchFactory()
           .buildQueryBuilder().forEntity(MyEntityDO.class).get();
@@ -58,7 +58,7 @@ public class HibernateSearchTest extends HibernateSearchTestBase
     });
     Assert.assertEquals(1, found.size());
 
-    found = HibernateSearchTestEmgrFactory.get().runWoTrans((emgr) -> {
+    found = HibernateSearchTestEmgrFactory.get().runInTrans((emgr) -> {
       FullTextEntityManager fullTextEntityManager = FullTextSearch.getFullTextEntityManager(emgr);
       org.hibernate.search.query.dsl.QueryBuilder qb = fullTextEntityManager.getSearchFactory()
           .buildQueryBuilder().forEntity(MyEntityDO.class).get();
@@ -76,7 +76,7 @@ public class HibernateSearchTest extends HibernateSearchTestBase
       return null;
     });
 
-    found = HibernateSearchTestEmgrFactory.get().runWoTrans((emgr) -> {
+    found = HibernateSearchTestEmgrFactory.get().runInTrans((emgr) -> {
       FullTextEntityManager fullTextEntityManager = FullTextSearch.getFullTextEntityManager(emgr);
       org.hibernate.search.query.dsl.QueryBuilder qb = fullTextEntityManager.getSearchFactory()
           .buildQueryBuilder().forEntity(MyEntityDO.class).get();

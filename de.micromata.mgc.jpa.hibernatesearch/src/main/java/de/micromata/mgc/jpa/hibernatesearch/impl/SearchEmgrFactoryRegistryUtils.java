@@ -79,7 +79,7 @@ public class SearchEmgrFactoryRegistryUtils
    */
   public static void initJpaMetadataRepostory(SearchEmgrFactory<?> emf)
   {
-    emf.runWoTrans((emgr) -> {
+    emf.runInTrans((emgr) -> {
 
       JpaMetadataRepostory repo = emf.getMetadataRepository();
       Map<Class<?>, SearchEntityMetadata> entitiesWithSearchFields = new HashMap<>();

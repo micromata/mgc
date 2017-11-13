@@ -266,32 +266,6 @@ public abstract class EmgrFactory<E extends IEmgr<?>>
     return new EmgrTx<E>(this);
   }
 
-   /**
-    * @deprecated Use the method {@link EmgrFactory#tx()}. To find out why, see GENOME-1910.
-    *
-    */
-   @Deprecated
-  public EmgrTx<E> notx()
-  {
-    return new EmgrTx<E>(this).noTx();
-  }
-
-  /**
-   * Run wo trans.
-   *
-   * @deprecated Use the method {@link EmgrFactory#runInTrans(de.micromata.genome.jpa.EmgrCallable)}. To find out why,
-   * see GENOME-1910.
-   *
-   * @param <R> the generic type
-   * @param call the call
-   * @return the r
-   */
-  @Deprecated
-  public <R> R runWoTrans(EmgrCallable<R, E> call)
-  {
-    return tx().noTx().go(call);
-  }
-
   /**
    * Run in trans.
    *

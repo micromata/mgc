@@ -592,7 +592,7 @@ public abstract class BaseJpaLoggingImpl<M extends BaseLogMasterDO<?>>extends Fa
   {
     EmgrFactory<DefaultEmgr> mgrfac = getEmgrFactory();
     for (final Object logId : logIds) {
-      LogEntry le = mgrfac.runWoTrans(new EmgrCallable<LogEntry, DefaultEmgr>()
+      LogEntry le = mgrfac.runInTrans(new EmgrCallable<LogEntry, DefaultEmgr>()
       {
         @Override
         public LogEntry call(DefaultEmgr mgr)

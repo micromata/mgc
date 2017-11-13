@@ -35,7 +35,7 @@ public class CriteriaUpdateTest extends MgcTestCase
           .set("firstName", "CriteriaUpdateTest");
       return emgr.update(cu);
     });
-    GenomeJpaTestTableDO dl = emfac.notx().go(emgr -> emgr.selectByPk(GenomeJpaTestTableDO.class, d.getPk()));
+    GenomeJpaTestTableDO dl = emfac.tx().go(emgr -> emgr.selectByPk(GenomeJpaTestTableDO.class, d.getPk()));
     Assert.assertTrue(dl.getCreatedAt().getTime() < dl.getModifiedAt().getTime());
   }
 }

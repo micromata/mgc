@@ -40,7 +40,7 @@ public class LuceneDebugUtils
   public String getIndexDescription(SearchEmgrFactory<?> emfac, Class<?> entityClass)
   {
     StringBuilder sb = new StringBuilder();
-    emfac.runWoTrans((emgr) -> {
+    emfac.runInTrans((emgr) -> {
       sb.append("class: ").append(entityClass.getName()).append("\n");
 
       FullTextEntityManager femg = emgr.getFullTextEntityManager();
@@ -76,7 +76,7 @@ public class LuceneDebugUtils
   {
     String[] ret = emfac.getSearchFieldsForEntity(entityClass).keySet().toArray(new String[] {});
 
-    List<String> list = emfac.runWoTrans((emgr) -> {
+    List<String> list = emfac.runInTrans((emgr) -> {
       FullTextEntityManager femg = emgr.getFullTextEntityManager();
       SearchFactory sf = femg.getSearchFactory();
       IndexedTypeDescriptor itd = sf.getIndexedTypeDescriptor(entityClass);

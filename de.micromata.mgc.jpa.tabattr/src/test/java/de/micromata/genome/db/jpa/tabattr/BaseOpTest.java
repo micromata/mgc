@@ -73,7 +73,7 @@ public class BaseOpTest extends GenomeTestCase
     JpaTabAttrBaseDO<TestMasterAttrDO, Long> key = master.getAttributeRow("Key No " + 1);
     final Long pk = key.getPk();
 
-    mgrfac.runWoTrans(new EmgrCallable<Void, TestTabAttrEntityMgr>()
+    mgrfac.runInTrans(new EmgrCallable<Void, TestTabAttrEntityMgr>()
     {
 
       @Override
