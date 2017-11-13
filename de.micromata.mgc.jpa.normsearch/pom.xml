@@ -47,37 +47,18 @@
       <artifactId>de.micromata.mgc.jpa.emgr</artifactId>
       <version>${mgc.version}</version>
     </dependency>
-    <!-- <dependency> <groupId>de.micromata.genome</groupId> <artifactId>genome-testbuilder</artifactId> <version>${genome.genome-testbuilder.version}</version> 
-      <scope>test</scope> </dependency> -->
     <dependency>
       <groupId>de.micromata.mgc</groupId>
       <artifactId>de.micromata.mgc.common.test</artifactId>
       <version>${mgc.version}</version>
       <scope>test</scope>
     </dependency>
-    <!-- 
-    <dependency>
-      <groupId>hsqldb</groupId>
-      <artifactId>hsqldb</artifactId>
-      <version>${hsqldb.version}</version>
-      <scope>test</scope>
-    </dependency>
-    -->
     <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derby</artifactId>
       <version>${org.apache.derby.version}</version>
       <scope>test</scope>
     </dependency>
-    <!-- you need a OTN account for this
-    <dependency>
-      <groupId>com.oracle</groupId>
-      <artifactId>ojdbc6</artifactId>
-      <version>${com.oracle.ojdbc6.version}</version>
-      <optional>true</optional>
-      <scope>test</scope>
-    </dependency>
-    -->
     <dependency>
       <groupId>com.sun.mail</groupId>
       <artifactId>javax.mail</artifactId>
@@ -96,6 +77,5 @@
       <version>${javax.servlet.api.version}</version>
       <scope>test</scope>
     </dependency>
-
   </dependencies>
 </project>
