@@ -119,7 +119,12 @@ public class ClassUtils extends org.apache.commons.lang.ClassUtils
     }
     // CHECKSTYLE.ON
     if (genericSuperclass instanceof ParameterizedType) {
-      return (Class<?>) ((ParameterizedType) genericSuperclass).getActualTypeArguments()[index];
+      Type o = ((ParameterizedType) genericSuperclass).getActualTypeArguments()[index];
+      if (o instanceof Class) {
+        return (Class<?>) o;
+      } else if (o instanceof ParameterizedType) {
+        return (Class<?>) ((ParameterizedType) o).getRawType();
+      }
     }
     return null;
   }
