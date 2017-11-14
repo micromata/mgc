@@ -332,7 +332,6 @@ public interface JobStore
    * @param pk the pk
    * @return the admin job by pk
    */
-  @Deprecated
   public TriggerJobDO getAdminJobByPk(long pk);
 
   /**

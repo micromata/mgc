@@ -451,17 +451,11 @@ public class LocalSettingsEnv
       return;
     }
     createSubContext("java:comp/env");
-    File genomeHome = new File(localSettings.get("genome.home", "."));
+    File genomeHome = new File(localSettings.getGenomeHome());
 
     bind("java:comp/env/log4jConfigLocation",
         new File(genomeHome, "dev/extrc/config/log4j.properties").getAbsolutePath());
     bind("java:comp/env/ProjectRoot", genomeHome.getPath());
-    bind("java:comp/env/ShortApplicationName", localSettings.getShortApplicationName());
-    bind("java:comp/env/ApplicationDevelopmentModus", localSettings.getApplicationDevelopmentModus());
-    String publicUrl = localSettings.getPublicUrl();
-    bind("java:comp/env/ApplicationPublicUrl", publicUrl);
-    bind("java:comp/env/DatabaseProvider", localSettings.getDatabaseProvider());
-    bind("java:comp/env/ApplicationEnvironment", localSettings.getApplicationEnvironment());
   }
 
   private void createSubContext(String context) throws NamingException

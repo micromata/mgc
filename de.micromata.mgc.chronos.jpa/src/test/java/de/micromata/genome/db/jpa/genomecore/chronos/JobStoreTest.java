@@ -82,7 +82,6 @@ public class JobStoreTest extends MgcTestCase
   {
     SchedulerDAO scheddao = ChronosServiceManager.get().getSchedulerDAO();
     JobStore jobStore = scheddao.getJobStore();
-    long id = jobStore.getNextJobId();
     jobStore.getResultsForJob(1L);
     jobStore.createOrGetScheduler("asdfasdf");
     jobStore.getAdminJobByPk(1L);

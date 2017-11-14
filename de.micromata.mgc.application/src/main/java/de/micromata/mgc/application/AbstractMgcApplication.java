@@ -137,7 +137,7 @@ public abstract class AbstractMgcApplication<M extends LocalSettingsConfigModel>
   @Override
   public String getPublicUrl()
   {
-    return LocalSettings.get().get("cfg.public.url");
+    return LocalSettings.get().getPublicUrl();
 
   }
 

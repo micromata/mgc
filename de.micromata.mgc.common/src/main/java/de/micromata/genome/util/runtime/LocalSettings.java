@@ -119,19 +119,6 @@ public class LocalSettings implements LocalSettingsService
     return localSettingsLoader;
   }
 
-  // TODO RK do somewhere
-  //  static {
-  //    defaultValues.put("env.ApplicationEnvironment", "SERVER");
-  //    defaultValues.put("env.ApplicationDevelopmentModus", "DEV");
-  //    defaultValues.put("env.ShortApplicationName", "GNM");
-  //    defaultValues.put("database.databaseProvider", "NONE");
-  //    defaultValues.put("cfg.public.url", "http://localhost:8080/genome");
-  //    defaultValues.put("test.TestApplicationContextXml", "src/test/resources/testApplicationContext.xml");
-  //    defaultValues.put("test.log4jproperties", "src/test/resources/log4j.properties");
-  //    defaultValues.put("test.email", "devnull@micromata.de");
-  //    defaultValues.put("ProjectRoot", "${cfg.projectroot.path}");
-  //  }
-
   /**
    * Gets the.
    * 
@@ -366,53 +353,14 @@ public class LocalSettings implements LocalSettingsService
 
   }
 
-  @Deprecated
   public String getGenomeHome()
   {
     return get("genome.home");
   }
 
-  @Deprecated
-  public String getApplicationEnvironment()
-  {
-    return get("env.ApplicationEnvironment");
-  }
-
-  @Deprecated
-  public String getApplicationDevelopmentModus()
-  {
-    return get("env.ApplicationDevelopmentModus");
-  }
-
-  @Deprecated
-  public String getShortApplicationName()
-  {
-    return get("env.ShortApplicationName");
-  }
-
-  @Deprecated
-  public String getDatabaseProvider()
-  {
-    return get("database.databaseProvider");
-  }
-
-  @Deprecated
   public String getPublicUrl()
   {
     return get("cfg.public.url");
 
   }
-
-  @Deprecated
-  public String getTestApplicationContextXml()
-  {
-    return get("test.TestApplicationContextXml");
-  }
-
-  @Deprecated
-  public String getTestLog4JProperties()
-  {
-    return get("test.log4jproperties");
-  }
-
 }
