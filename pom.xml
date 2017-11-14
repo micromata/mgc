@@ -70,7 +70,7 @@
     <commons-collections.version>4.1</commons-collections.version>
     <commons-text.version>1.1</commons-text.version>
     <commons-codec.version>1.11</commons-codec.version>
-    <commons-dbcp.version>1.4</commons-dbcp.version>
+    <commons-dbcp2.version>2.1.1</commons-dbcp2.version>
 
     <org.codehaus.groovy.groovy-all.version>2.4.12</org.codehaus.groovy.groovy-all.version>
 

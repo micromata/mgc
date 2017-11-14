@@ -136,10 +136,5 @@
       <artifactId>javax.mail</artifactId>
       <version>${javax.mail.version}</version>
     </dependency>
-    <dependency>
-      <groupId>commons-dbcp</groupId>
-      <artifactId>commons-dbcp</artifactId>
-      <version>${commons-dbcp.version}</version>
-    </dependency>
   </dependencies>
 </project>

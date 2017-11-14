@@ -21,7 +21,7 @@ import java.sql.SQLException;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
-import org.apache.commons.dbcp.BasicDataSource;
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.log4j.Logger;
 
 /**
@@ -41,7 +41,7 @@ public class TraceCreationBasicDataSource extends BasicDataSource
   public Connection getConnection() throws SQLException
   {
     if (LOG.isDebugEnabled() == true) {
-      LOG.debug("getConnection. max: " + getMaxActive() + "; act: " + getNumActive());
+      LOG.debug("getConnection. max: " + getMaxTotal() + "; act: " + getNumActive());
     }
     Connection con = super.getConnection();
     allocatedStacks.put(con, new Throwable().getStackTrace());
@@ -54,7 +54,7 @@ public class TraceCreationBasicDataSource extends BasicDataSource
         super.close();
         allocatedStacks.remove(getNestedConnection());
         if (LOG.isDebugEnabled() == true) {
-          LOG.debug("close. max: " + getMaxActive() + "; act: " + getNumActive());
+          LOG.debug("close. max: " + getMaxTotal() + "; act: " + getNumActive());
         }
       }
 
