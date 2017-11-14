@@ -111,8 +111,6 @@ public class MatchUtil
    * @return List of rules
    * @throws RuntimeException if the string can not be parsed
    */
-  @Deprecated
-  // use Factory
   public static List<Pair<Boolean, String>> parseWildcardRules(String ruleString)
   {
     if (StringUtils.isBlank(ruleString) == true) {
