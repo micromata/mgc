@@ -96,23 +96,6 @@ public abstract class AbstractJobStore implements JobStore
   /**
    * Fügt den einen neuen Job für den Scheduler ein und persistiert ihn.
    * 
-   * @see de.micromata.jchronos.JobStore#submit(de.micromata.jchronos.spi.Scheduler de.micromata.jchronos.JobDefinition, java.lang.Object,
-   *      de.micromata.jchronos.Trigger)
-   * @deprecated only used for test
-   */
-  @Override
-  @Deprecated
-  public TriggerJobDO submit(final Scheduler scheduler, final JobDefinition jobDefinition, final Object info,
-      final Trigger trigger,
-      final String hostName, State state)
-  {
-
-    return submit(scheduler, null, jobDefinition, info, trigger, hostName, state);
-  }
-
-  /**
-   * Fügt den einen neuen Job für den Scheduler ein und persistiert ihn.
-   * 
    * @see de.micromata.jchronos.JobStore#submit(de.micromata.jchronos.spi. Scheduler de.micromata.jchronos.JobDefinition, java.lang.Object,
    *      de.micromata.jchronos.Trigger)
    */

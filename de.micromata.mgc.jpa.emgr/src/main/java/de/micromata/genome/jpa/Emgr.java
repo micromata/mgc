@@ -370,21 +370,6 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
   }
 
   /**
-   * Select single.
-   *
-   * @param <R> the generic type
-   * @param cls the cls
-   * @param sql the sql
-   * @param values the values
-   * @return the r
-   */
-  @Deprecated
-  public <R> R selectSingle(final Class<R> cls, final String sql, final Map<String, Object> values)
-  {
-    return selectSingleAttached(cls, sql, values);
-  }
-
-  /**
    * Select single attached.
    *
    * @param <R> the generic type

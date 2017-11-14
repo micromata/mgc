@@ -498,7 +498,6 @@ public class TriggerJobDO extends ChronosStdRecordDO
     this.triggerDefintionString = triggerDefintionString;
   }
 
-  @Deprecated
   public Object getJobArgumentObject()
   {
     return jobArgumentObject;
