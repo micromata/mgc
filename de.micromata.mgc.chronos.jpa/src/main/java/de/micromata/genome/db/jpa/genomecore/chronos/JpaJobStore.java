@@ -319,20 +319,15 @@ public class JpaJobStore extends AbstractJobStore
     if (LOG.isDebugEnabled() == true) {
       LOG.debug("jobResultRemove: " + job + "; result: " + jobResult);
     }
-    emfac.runInTrans(new EmgrCallable<Void, DefaultEmgr>()
-    {
-      @Override
-      public Void call(DefaultEmgr emgr)
-      {
-        emgr.createUntypedQuery(
-            "update " + JpaTriggerJobDO.class.getSimpleName() + " j set j.currentResultPk = null where j.pk = :pk",
-            "pk", job.getPk())
-            .executeUpdate();
-        emgr.createUntypedQuery("delete from " + JpaJobResultDO.class.getSimpleName() + " r where r.jobPk = :pk",
-            "pk", job.getPk())
-            .executeUpdate();
-        return null;
-      }
+    emfac.runInTrans((EmgrCallable<Void, DefaultEmgr>) emgr -> {
+      emgr.createUntypedQuery(
+          "update " + JpaTriggerJobDO.class.getSimpleName() + " j set j.currentResultPk = null where j.pk = :pk",
+          "pk", job.getPk())
+          .executeUpdate();
+      emgr.createUntypedQuery("delete from " + JpaJobResultDO.class.getSimpleName() + " r where r.jobPk = :pk",
+          "pk", job.getPk())
+          .executeUpdate();
+      return null;
     });
 
   }
@@ -341,23 +336,17 @@ public class JpaJobStore extends AbstractJobStore
   public List<JobResultDO> getResults(final TriggerJobDO impl, final int maxResults)
   {
 
-    return emfac.runInTrans(new EmgrCallable<List<JobResultDO>, DefaultEmgr>()
-    {
-      @Override
-      public List<JobResultDO> call(DefaultEmgr emgr)
-      {
-        List<JpaJobResultDO> rl = emgr.createQuery(JpaJobResultDO.class,
-            "select r from " + JpaJobResultDO.class.getSimpleName() + " r where r.jobPk = :pk order by r.pk desc",
-            "pk", impl.getPk())
-            .setMaxResults(maxResults)
-            .getResultList();
-        List<JobResultDO> ret = new ArrayList<>(rl.size());
-        for (JpaJobResultDO jr : rl) {
-          ret.add(SchedJpaTypeConverter.fromDb(jr));
-        }
-        return ret;
+    return emfac.runInTrans(emgr -> {
+      List<JpaJobResultDO> rl = emgr.createQuery(JpaJobResultDO.class,
+          "select r from " + JpaJobResultDO.class.getSimpleName() + " r where r.jobPk = :pk order by r.pk desc",
+          "pk", impl.getPk())
+          .setMaxResults(maxResults)
+          .getResultList();
+      List<JobResultDO> ret = new ArrayList<>(rl.size());
+      for (JpaJobResultDO jr : rl) {
+        ret.add(SchedJpaTypeConverter.fromDb(jr));
       }
-
+      return ret;
     });
   }
 
@@ -441,17 +430,12 @@ public class JpaJobStore extends AbstractJobStore
   public TriggerJobDO getAdminJobByPk(final long pk)
   {
 
-    return emfac.runInTrans(new EmgrCallable<TriggerJobDO, DefaultEmgr>()
-    {
-      @Override
-      public TriggerJobDO call(DefaultEmgr emgr)
-      {
-        JpaTriggerJobDO tj = emgr.selectByPkDetached(JpaTriggerJobDO.class, pk);
-        //        Scheduler scheduler = ChronosServiceManager.get().getSchedulerDAO().getSchedulerByPk(tj.getScheduler());
-        TriggerJobDO ret = SchedJpaTypeConverter.fromDb(tj);
+    return emfac.runInTrans(emgr -> {
+      JpaTriggerJobDO tj = emgr.selectByPkDetached(JpaTriggerJobDO.class, pk);
+      //        Scheduler scheduler = ChronosServiceManager.get().getSchedulerDAO().getSchedulerByPk(tj.getScheduler());
+      TriggerJobDO ret = SchedJpaTypeConverter.fromDb(tj);
 
-        return ret;
-      }
+      return ret;
     });
 
   }
@@ -468,33 +452,28 @@ public class JpaJobStore extends AbstractJobStore
     if (LOG.isDebugEnabled() == true) {
       LOG.debug("setJobState: " + pk + "; new " + newState + "; old " + oldState);
     }
-    return emfac.runInTrans(new EmgrCallable<Integer, DefaultEmgr>()
-    {
-      @Override
-      public Integer call(DefaultEmgr emgr)
-      {
-        Map<String, Object> params = new HashMap<String, Object>();
-        final State ns = State.fromString(newState);
-        final State os = State.fromString(oldState);
-        params.put("jobPk", pk);
-        params.put("state", ns);
-        params.put("oldState", os);
-        params.put("modifiedBy", LoggingServiceManager.get().getLoggingContextService().getCurrentUserName());
-        if (ns == State.WAIT) {
-          params.put("retryCount", 0);
-        }
-
-        CriteriaUpdate<JpaTriggerJobDO> cu = CriteriaUpdate.createUpdate(JpaTriggerJobDO.class)
-            .addWhere(Clauses.and(
-                Clauses.equal("pk", pk),
-                Clauses.equal("state", os)))
-            .set("state", ns);
-        if (ns == State.WAIT) {
-          cu.set("retryCount", 0);
-        }
-        int count = emgr.update(cu);
-        return count;
+    return emfac.runInTrans(emgr -> {
+      Map<String, Object> params = new HashMap<String, Object>();
+      final State ns = State.fromString(newState);
+      final State os = State.fromString(oldState);
+      params.put("jobPk", pk);
+      params.put("state", ns);
+      params.put("oldState", os);
+      params.put("modifiedBy", LoggingServiceManager.get().getLoggingContextService().getCurrentUserName());
+      if (ns == State.WAIT) {
+        params.put("retryCount", 0);
       }
+
+      CriteriaUpdate<JpaTriggerJobDO> cu = CriteriaUpdate.createUpdate(JpaTriggerJobDO.class)
+          .addWhere(Clauses.and(
+              Clauses.equal("pk", pk),
+              Clauses.equal("state", os)))
+          .set("state", ns);
+      if (ns == State.WAIT) {
+        cu.set("retryCount", 0);
+      }
+      int count = emgr.update(cu);
+      return count;
     });
   }
 
@@ -646,60 +625,45 @@ public class JpaJobStore extends AbstractJobStore
   @Override
   public JobResultDO getResultByPk(final long resultId)
   {
-    return emfac.runInTrans(new EmgrCallable<JobResultDO, DefaultEmgr>()
-    {
-      @Override
-      public JobResultDO call(DefaultEmgr emgr)
-      {
-        List<JpaJobResultDO> resl = emgr
-            .createQuery(JpaJobResultDO.class,
-                "select r from " + JpaJobResultDO.class.getSimpleName() + " r where r.pk = :pk", "pk", resultId)
-            .getResultList();
-        if (resl.isEmpty() == true) {
-          // TODO RK unittest want null here?!
-          return null;// throw new RuntimeException("Failure in getResultById. message: Cannot find job result");
-        }
-        return SchedJpaTypeConverter.fromDb(resl.get(0));
+    return emfac.runInTrans(emgr -> {
+      List<JpaJobResultDO> resl = emgr
+          .createQuery(JpaJobResultDO.class,
+              "select r from " + JpaJobResultDO.class.getSimpleName() + " r where r.pk = :pk", "pk", resultId)
+          .getResultList();
+      if (resl.isEmpty() == true) {
+        // TODO RK unittest want null here?!
+        return null;// throw new RuntimeException("Failure in getResultById. message: Cannot find job result");
       }
+      return SchedJpaTypeConverter.fromDb(resl.get(0));
     });
   }
 
   @Override
   public List<SchedulerDisplayDO> getAdminSchedulers()
   {
-    return emfac.runInTrans(new EmgrCallable<List<SchedulerDisplayDO>, DefaultEmgr>()
-    {
-      @Override
-      public List<SchedulerDisplayDO> call(DefaultEmgr emgr)
-      {
-        List<JpaSchedulerDO> resl = emgr
-            .createQuery(JpaSchedulerDO.class, "select s from " + JpaSchedulerDO.class.getSimpleName() + " s")
-            .getResultList();
-        List<SchedulerDisplayDO> ret = new ArrayList<>(resl.size());
-        for (JpaSchedulerDO js : resl) {
-          ret.add(SchedJpaTypeConverter.displayFromDb(js));
-        }
-        return ret;
+    return emfac.runInTrans(emgr -> {
+      List<JpaSchedulerDO> resl = emgr
+          .createQuery(JpaSchedulerDO.class, "select s from " + JpaSchedulerDO.class.getSimpleName() + " s")
+          .getResultList();
+      List<SchedulerDisplayDO> ret = new ArrayList<>(resl.size());
+      for (JpaSchedulerDO js : resl) {
+        ret.add(SchedJpaTypeConverter.displayFromDb(js));
       }
+      return ret;
     });
   }
 
   @Override
   public long getJobCount(final State state)
   {
-    return emfac.runInTrans(new EmgrCallable<Long, DefaultEmgr>()
-    {
-      @Override
-      public Long call(DefaultEmgr emgr)
-      {
-        if (state != null) {
-          return emgr.selectSingleAttached(Long.class,
-              "select count(j) from " + JpaTriggerJobDO.class.getSimpleName() + " j where j.state = :state",
-              "state", state);
-        } else {
-          return emgr.selectSingleAttached(Long.class,
-              "select count(j) from " + JpaTriggerJobDO.class.getSimpleName() + " j");
-        }
+    return emfac.runInTrans(emgr -> {
+      if (state != null) {
+        return emgr.selectSingleAttached(Long.class,
+            "select count(j) from " + JpaTriggerJobDO.class.getSimpleName() + " j where j.state = :state",
+            "state", state);
+      } else {
+        return emgr.selectSingleAttached(Long.class,
+            "select count(j) from " + JpaTriggerJobDO.class.getSimpleName() + " j");
       }
     });
   }
@@ -727,17 +691,12 @@ public class JpaJobStore extends AbstractJobStore
   @Override
   public void deleteScheduler(final Long pk)
   {
-    emfac.runInTrans(new EmgrCallable<Void, DefaultEmgr>()
-    {
-      @Override
-      public Void call(DefaultEmgr emgr)
-      {
-        int deleted = emgr
-            .createUntypedQuery("delete from " + JpaSchedulerDO.class.getSimpleName() + " s where s.pk = :pk", "pk",
-                pk)
-            .executeUpdate();
-        return null;
-      }
+    emfac.runInTrans((EmgrCallable<Void, DefaultEmgr>) emgr -> {
+      emgr
+          .createUntypedQuery("delete from " + JpaSchedulerDO.class.getSimpleName() + " s where s.pk = :pk", "pk",
+              pk)
+          .executeUpdate();
+      return null;
     });
 
   }
@@ -759,8 +718,8 @@ public class JpaJobStore extends AbstractJobStore
                 pk)
             .executeUpdate();
 
-        deleted = emgr
-            .createUntypedQuery("delete from " + JpaTriggerJobDO.class.getSimpleName() + " j where s.job = :pk",
+        deleted += emgr
+            .createUntypedQuery("delete from " + JpaTriggerJobDO.class.getSimpleName() + " s where s.pk = :pk",
                 "pk",
                 pk)
             .executeUpdate();
@@ -773,15 +732,8 @@ public class JpaJobStore extends AbstractJobStore
   @Override
   public List<String> getJobNames()
   {
-    return emfac.runInTrans(new EmgrCallable<List<String>, DefaultEmgr>()
-    {
-      @Override
-      public List<String> call(DefaultEmgr emgr)
-      {
-        return emgr.createQuery(String.class,
-            "select distinct j.jobName from " + JpaTriggerJobDO.class.getSimpleName() + " j").getResultList();
-      }
-    });
+    return emfac.runInTrans(emgr -> emgr.createQuery(String.class,
+        "select distinct j.jobName from " + JpaTriggerJobDO.class.getSimpleName() + " j").getResultList());
   }
 
   @Override
