@@ -105,7 +105,7 @@
     <!-- old <hsqldb.version>1.8.0.10</hsqldb.version> -->
     <hsqldb.version>2.3.3</hsqldb.version>
     <com.oracle.ojdbc6.version>11.2.0.2.0</com.oracle.ojdbc6.version>
-    <genome.mvn.plugin.version>2.9.1</genome.mvn.plugin.version>
+    <genome.mvn.plugin.version>2.9.0</genome.mvn.plugin.version>
     <spring-boot.version>1.3.1.RELEASE</spring-boot.version>
     <spring-boot.jetty.version>9.2.14.v20151106</spring-boot.jetty.version>
     <minimal-json.version>0.9.4</minimal-json.version>
