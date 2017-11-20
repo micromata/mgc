@@ -17,8 +17,7 @@
 package de.micromata.genome.util.xml.xmlbuilder;
 
 import java.io.IOException;
-
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 
 /**
  * The Class AppendableXmlRenderer.
@@ -64,7 +63,7 @@ public class AppendableXmlRenderer implements XmlRenderer
   @Override
   public XmlRenderer text(String code) throws IOException
   {
-    appender.append(StringEscapeUtils.escapeXml(code));
+    appender.append(StringEscapeUtils.escapeXml10(code));
     return this;
   }
 

@@ -76,7 +76,7 @@ public class EmgrTxNestedRequiredNewTest extends MgcTestCase
     GenomeJpaTestTableDO d = emfac.tx().readOnly().go((emgr) -> {
       return callInsert("testRequiredParentRo", null);
     });
-    List<GenomeJpaTestTableDO> list = emfac.notx()
+    List<GenomeJpaTestTableDO> list = emfac.tx()
         .go((emgr) -> emgr.select(GenomeJpaTestTableDO.class,
             "select e from " + GenomeJpaTestTableDO.class.getName() + " e where e.firstName = :firstName", "firstName",
             "testRequiredParentRo"));
@@ -93,7 +93,7 @@ public class EmgrTxNestedRequiredNewTest extends MgcTestCase
       return callInsert("testRequiredParentRollback", null);
     });
 
-    List<GenomeJpaTestTableDO> list = emfac.notx()
+    List<GenomeJpaTestTableDO> list = emfac.tx()
         .go((emgr) -> emgr.select(GenomeJpaTestTableDO.class,
             "select e from " + GenomeJpaTestTableDO.class.getName() + " e where e.firstName = :firstName", "firstName",
             "testRequiredParentRollback"));

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.micromata.mgc</groupId>
   <artifactId>de.micromata.mgc.rootpom</artifactId>
-  <version>2.6.1-SNAPSHOT</version>
+  <version>3.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <organization>
@@ -64,54 +64,54 @@
     <junit.version>4.12</junit.version>
 
     <!-- COMMONS VERSIONS -->
-    <commons-digester.version>2.1</commons-digester.version>
-    <commons-lang.version>2.6</commons-lang.version>
-    <commons-io.version>2.4</commons-io.version>
-    <commons-beanutils.version>1.9.1</commons-beanutils.version>
-    <commons-collections.version>3.2.1</commons-collections.version>
-    <commons-codec.version>1.9</commons-codec.version>
-    <commons.exec.version>1.1</commons.exec.version>
-    <commons-dbcp.version>1.4</commons-dbcp.version>
-    <commons-net.version>3.1</commons-net.version>
-    <commons-vfs2.version>2.0</commons-vfs2.version>
-    <commons-httpclient.version>3.1</commons-httpclient.version>
-    <commons-dbcp.version>1.4</commons-dbcp.version>
-    <commons-fileupload.version>1.2.2</commons-fileupload.version>
+    <commons-lang3.version>3.7</commons-lang3.version>
+    <commons-io.version>2.6</commons-io.version>
+    <commons-beanutils.version>1.9.3</commons-beanutils.version>
+    <commons-collections.version>4.1</commons-collections.version>
+    <commons-text.version>1.1</commons-text.version>
+    <commons-codec.version>1.11</commons-codec.version>
+    <commons-dbcp2.version>2.1.1</commons-dbcp2.version>
 
-    <net.sourceforge.collections_generic.version>4.01</net.sourceforge.collections_generic.version>
-
-    <org.codehaus.groovy.groovy-all.version>2.4.4</org.codehaus.groovy.groovy-all.version>
+    <org.codehaus.groovy.groovy-all.version>2.4.12</org.codehaus.groovy.groovy-all.version>
 
     <!-- JAVAX VERSIONS -->
     <javax.servlet.api.version>3.1.0</javax.servlet.api.version>
-    <javax.servlet.jsp.api.version>2.2.1</javax.servlet.jsp.api.version>
-    <!-- <javax.mail.version>1.4.2</javax.mail.version> -->
-    <javax.mail.version>1.5.0-b01</javax.mail.version>
+    <javax.servlet.jsp.api.version>2.3.1</javax.servlet.jsp.api.version>
+    <javax.mail.version>1.6.0</javax.mail.version>
 
-    <javax.servlet.jstl.version>1.1.2</javax.servlet.jstl.version>
-    <javax.activation.version>1.1</javax.activation.version>
     <jetty.version>9.3.7.v20160115</jetty.version>
 
-    <org.hibernate.javax.persistence.hibernate-jpa-2.0-api.version>1.0.1.Final</org.hibernate.javax.persistence.hibernate-jpa-2.0-api.version>
-    <org.hibernate-search-orm.version>5.5.2.Final</org.hibernate-search-orm.version>
+    <org.hibernate-search-orm.version>5.5.7.Final</org.hibernate-search-orm.version>
     <org.apache.lucene.version>5.3.1</org.apache.lucene.version>
     <!-- old 4.1.9.Final -->
-    <org.hibernate.hibernate-entitymanager.version>5.0.7.Final</org.hibernate.hibernate-entitymanager.version>
+    <org.hibernate.hibernate-entitymanager.version>5.0.12.Final</org.hibernate.hibernate-entitymanager.version>
 
-    <spring.version>4.2.4.RELEASE</spring.version>
+    <spring.version>4.3.12.RELEASE</spring.version>
     <spring-boot.version>1.3.1.RELEASE</spring-boot.version>
 
     <org.apache.derby.version>10.12.1.1</org.apache.derby.version>
-    <!-- old <hsqldb.version>1.8.0.10</hsqldb.version> -->
+
     <hsqldb.version>2.3.3</hsqldb.version>
-    <com.oracle.ojdbc6.version>11.2.0.2.0</com.oracle.ojdbc6.version>
     <genome.mvn.plugin.version>2.9.0</genome.mvn.plugin.version>
-    <spring-boot.version>1.3.1.RELEASE</spring-boot.version>
     <spring-boot.jetty.version>9.2.14.v20151106</spring-boot.jetty.version>
     <minimal-json.version>0.9.4</minimal-json.version>
-    <xstream.version>1.4.4</xstream.version>
-    <!-- ARGLINE -->
-    <argLine>-XX:MaxPermSize=268m</argLine>
+    <xstream.version>1.4.10</xstream.version>
+    <javax.transaction-api.version>1.2</javax.transaction-api.version>
+    <activation.version>1.1.1</activation.version>
+
+
+
+    <!-- MAVEN PLUGINS VERSIONS -->
+    <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
+    <license-maven-plugin.version>3.0</license-maven-plugin.version>
+    <maven-install-plugin.version>2.5.2</maven-install-plugin.version>
+    <maven-clean-plugin.version>3.0.0</maven-clean-plugin.version>
+    <maven-resources-plugin.version>3.0.2</maven-resources-plugin.version>
+    <maven-surefire-plugin.version>2.20.1</maven-surefire-plugin.version>
+    <maven-jar-plugin.version>3.0.2</maven-jar-plugin.version>
+    <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
+    <spring-boot-maven-plugin.version>${spring-boot.version}</spring-boot-maven-plugin.version>
+    <!-- EO MAVEN PLUGINS VERSIONS -->
 
 
   </properties>
@@ -171,9 +171,11 @@
         <sonar.jdbc.password>vls_sonar</sonar.jdbc.password>
         <sonar.host.url>https://vls-its:8999/</sonar.host.url>
         <!-- use next part when locally installed sonar is running -->
-        <!--<sonar.jdbc.url>jdbc:h2:tcp://localhost:9092/sonar</sonar.jdbc.url> <sonar.jdbc.username>sonar</sonar.jdbc.username> 
+        <!--<sonar.jdbc.url>jdbc:h2:tcp://localhost:9092/sonar</sonar.jdbc.url> <sonar.jdbc.username>sonar</sonar.jdbc.username>
           <sonar.jdbc.password>sonar</sonar.jdbc.password> <sonar.host.url>http://localhost:9000/</sonar.host.url> -->
-        <sonar.exclusions>**/src-gen/**/*.java,**/genome-tools/**/*.java,**/plugins/umgmt/**/*,**/plugins/popstats/**/*,**/GenomeDaoManager.java,**/UmgmtDaoManager.java,**/Emgr.java,**/EmgrFactory.java</sonar.exclusions>
+        <sonar.exclusions>
+          **/src-gen/**/*.java,**/genome-tools/**/*.java,**/plugins/umgmt/**/*,**/plugins/popstats/**/*,**/GenomeDaoManager.java,**/UmgmtDaoManager.java,**/Emgr.java,**/EmgrFactory.java
+        </sonar.exclusions>
       </properties>
       <modules>
 
@@ -186,7 +188,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.3</version>
+        <version>${maven-compiler-plugin.version}</version>
         <configuration>
           <source>1.8</source>
           <target>1.8</target>
@@ -196,8 +198,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
-        <version>2.4</version>
-
+        <version>${maven-source-plugin.version}</version>
         <executions>
           <execution>
             <inherited>true</inherited>
@@ -215,12 +216,12 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.17</version>
+        <version>${maven-surefire-plugin.version}</version>
         <dependencies>
           <dependency>
             <groupId>org.apache.maven.surefire</groupId>
             <artifactId>surefire-junit47</artifactId>
-            <version>2.17</version>
+            <version>${maven-surefire-plugin.version}</version>
           </dependency>
         </dependencies>
         <configuration>
@@ -232,7 +233,7 @@
         <!-- use license:format or license:update to patch java lisence header -->
         <groupId>com.mycila</groupId>
         <artifactId>license-maven-plugin</artifactId>
-        <version>2.11</version>
+        <version>${license-maven-plugin.version}</version>
         <configuration>
           <header>distribution/JavaHeader.txt</header>
           <properties>
@@ -247,9 +248,28 @@
           </includes>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-install-plugin</artifactId>
+        <version>${maven-install-plugin.version}</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-clean-plugin</artifactId>
+        <version>${maven-clean-plugin.version}</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>${maven-resources-plugin.version}</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>${maven-jar-plugin.version}</version>
+      </plugin>
     </plugins>
   </build>
-
 
 
   <scm>

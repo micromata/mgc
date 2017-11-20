@@ -16,24 +16,23 @@
 
 package de.micromata.genome.util.runtime.config;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang.StringUtils;
-
 import de.micromata.genome.util.collections.NewPropertiesLineReader;
 import de.micromata.genome.util.collections.NewPropertiesLineReader.LineReaderCallback;
 import de.micromata.genome.util.collections.OrderedProperties;
 import de.micromata.genome.util.collections.PropertiesReadWriter;
 import de.micromata.genome.util.runtime.RuntimeIOException;
 import de.micromata.genome.util.types.Pair;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Read LocalSettings
@@ -78,7 +77,7 @@ public class OrderedPropertiesWithComments extends OrderedProperties
 
   List<Line> orginalLines = new ArrayList<>();
   Map<String, String> originalMap = new HashMap<>();
-  private Charset charset = org.apache.commons.io.Charsets.ISO_8859_1;
+  private Charset charset = StandardCharsets.ISO_8859_1;
 
   @Override
   public void load(InputStream inStream) throws RuntimeIOException

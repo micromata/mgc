@@ -4,7 +4,7 @@
   <parent>
     <artifactId>de.micromata.mgc.rootpom</artifactId>
     <groupId>de.micromata.mgc</groupId>
-    <version>2.6.1-SNAPSHOT</version><!-- MGC -->
+    <version>3.0.0-SNAPSHOT</version><!-- MGC -->
   </parent>
   <artifactId>de.micromata.mgc.jpa.normsearch</artifactId>
   <packaging>jar</packaging>
@@ -54,41 +54,28 @@
       <artifactId>de.micromata.mgc.jpa.emgr</artifactId>
       <version>${mgc.version}</version>
     </dependency>
-    <!-- <dependency> <groupId>de.micromata.genome</groupId> <artifactId>genome-testbuilder</artifactId> <version>${genome.genome-testbuilder.version}</version> 
-      <scope>test</scope> </dependency> -->
     <dependency>
       <groupId>de.micromata.mgc</groupId>
       <artifactId>de.micromata.mgc.common.test</artifactId>
       <version>${mgc.version}</version>
       <scope>test</scope>
     </dependency>
-    <!-- 
-    <dependency>
-      <groupId>hsqldb</groupId>
-      <artifactId>hsqldb</artifactId>
-      <version>${hsqldb.version}</version>
-      <scope>test</scope>
-    </dependency>
-    -->
     <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derby</artifactId>
       <version>${org.apache.derby.version}</version>
       <scope>test</scope>
     </dependency>
-    <!-- you need a OTN account for this
     <dependency>
-      <groupId>com.oracle</groupId>
-      <artifactId>ojdbc6</artifactId>
-      <version>${com.oracle.ojdbc6.version}</version>
-      <optional>true</optional>
-      <scope>test</scope>
-    </dependency>
-    -->
-    <dependency>
-      <groupId>javax.mail</groupId>
-      <artifactId>mail</artifactId>
+      <groupId>com.sun.mail</groupId>
+      <artifactId>javax.mail</artifactId>
       <version>${javax.mail.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>javax.activation</groupId>
+          <artifactId>activation</artifactId>
+        </exclusion>
+      </exclusions>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -103,6 +90,5 @@
       <version>${javax.servlet.api.version}</version>
       <scope>test</scope>
     </dependency>
-
   </dependencies>
 </project>

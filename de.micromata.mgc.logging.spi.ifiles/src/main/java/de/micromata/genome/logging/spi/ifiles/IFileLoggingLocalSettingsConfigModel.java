@@ -18,7 +18,7 @@ package de.micromata.genome.logging.spi.ifiles;
 
 import java.io.File;
 
-import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import de.micromata.genome.logging.Logging;
 import de.micromata.genome.logging.spi.BaseLoggingLocalSettingsConfigModel;

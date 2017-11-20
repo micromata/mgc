@@ -31,8 +31,8 @@
 /////////////////////////////////////////////////////////////////////////////
 package de.micromata.genome.chronos.spi.jdbc;
 
-import org.apache.commons.lang.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import de.micromata.genome.chronos.Scheduler;
 import de.micromata.genome.chronos.State;

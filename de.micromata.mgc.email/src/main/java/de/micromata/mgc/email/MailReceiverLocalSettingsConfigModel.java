@@ -16,7 +16,7 @@
 
 package de.micromata.mgc.email;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import de.micromata.genome.util.runtime.LocalSettings;
 import de.micromata.genome.util.runtime.config.ALocalSettingsPath;

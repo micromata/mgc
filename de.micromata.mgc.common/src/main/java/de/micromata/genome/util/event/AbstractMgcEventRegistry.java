@@ -18,7 +18,7 @@ package de.micromata.genome.util.event;
 
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Base class for Event registry.

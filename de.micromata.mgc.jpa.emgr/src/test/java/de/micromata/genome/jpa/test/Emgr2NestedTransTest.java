@@ -33,7 +33,7 @@ public class Emgr2NestedTransTest extends MgcTestCase
 
   private GenomeJpaTestTableDO selectAData(final Long pk)
   {
-    GenomeJpaTestTableDO table = mgr.runWoTrans(new EmgrCallable<GenomeJpaTestTableDO, JpaTestEntMgr>()
+    GenomeJpaTestTableDO table = mgr.runInTrans(new EmgrCallable<GenomeJpaTestTableDO, JpaTestEntMgr>()
     {
 
       @Override
@@ -93,7 +93,7 @@ public class Emgr2NestedTransTest extends MgcTestCase
   @Test
   public void testInsideNoTrans()
   {
-    mgr.runWoTrans(new EmgrCallable<Void, JpaTestEntMgr>()
+    mgr.runInTrans(new EmgrCallable<Void, JpaTestEntMgr>()
     {
 
       @Override
@@ -127,7 +127,7 @@ public class Emgr2NestedTransTest extends MgcTestCase
     table.setFirstName("EmgrNestedTransTest_testTrans3");
 
     final Long pk = insertData(table);
-    mgr.runWoTrans(new EmgrCallable<Void, JpaTestEntMgr>()
+    mgr.runInTrans(new EmgrCallable<Void, JpaTestEntMgr>()
     {
 
       @Override
@@ -168,7 +168,7 @@ public class Emgr2NestedTransTest extends MgcTestCase
     Assert.assertNotNull(result);
     Assert.assertNotNull(result.getPk());
 
-    GenomeJpaTestTableDO find = mgr.runWoTrans(new EmgrCallable<GenomeJpaTestTableDO, JpaTestEntMgr>()
+    GenomeJpaTestTableDO find = mgr.runInTrans(new EmgrCallable<GenomeJpaTestTableDO, JpaTestEntMgr>()
     {
 
       @Override

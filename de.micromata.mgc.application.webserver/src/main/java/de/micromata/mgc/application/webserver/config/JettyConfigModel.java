@@ -18,8 +18,8 @@ package de.micromata.mgc.application.webserver.config;
 
 import java.io.File;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import de.micromata.genome.util.runtime.LocalSettings;
 import de.micromata.genome.util.runtime.config.ALocalSettingsPath;

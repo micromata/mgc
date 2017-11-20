@@ -16,6 +16,9 @@
 
 package de.micromata.mgc.jpa.xmldump.entities;
 
+import de.micromata.genome.db.jpa.tabattr.entities.JpaTabAttrBaseDO;
+import de.micromata.genome.db.jpa.tabattr.entities.JpaTabAttrDataBaseDO;
+import de.micromata.genome.db.jpa.xmldump.api.JpaXmlPersist;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
@@ -24,6 +27,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
@@ -31,13 +35,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-
-import org.hibernate.annotations.Index;
 import org.junit.Ignore;
-
-import de.micromata.genome.db.jpa.tabattr.entities.JpaTabAttrBaseDO;
-import de.micromata.genome.db.jpa.tabattr.entities.JpaTabAttrDataBaseDO;
-import de.micromata.genome.db.jpa.xmldump.api.JpaXmlPersist;
 
 /**
  * JPA entity for TB_TA_GATTR.
@@ -48,14 +46,12 @@ import de.micromata.genome.db.jpa.xmldump.api.JpaXmlPersist;
 @JpaXmlPersist(noStore = true)
 @Ignore
 @Entity
-@Table(name = "TB_TST_ATTRMASTER_ATTR")
+@Table(name = "TB_TST_ATTRMASTER_ATTR", indexes = {
+    @Index(name = "IX_TST_ATTRMASTER_ATTR_MODAT", columnList = "MODIFIEDAT"),
+    @Index(name = "IX_TST_ATTRMASTER_ATTR_MST_FK", columnList = "MASTER_FK")
+})
 @SequenceGenerator(name = "SQ_TST_ATTRMASTER_ATTR_PK", sequenceName = "SQ_TST_ATTRMASTER_ATTR_PK")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@org.hibernate.annotations.Table(//
-    indexes = { //
-        @Index(name = "IX_TST_ATTRMASTER_ATTR_MODAT", columnNames = { "MODIFIEDAT" }), //
-        @Index(name = "IX_TST_ATTRMASTER_ATTR_MST_FK", columnNames = { "MASTER_FK" }),//
-    }, appliesTo = "TB_TST_ATTRMASTER_ATTR")
 @DiscriminatorColumn(name = "WITHDATA", discriminatorType = DiscriminatorType.CHAR)
 @DiscriminatorValue("0")
 public class TestTabAttrDO extends JpaTabAttrBaseDO<TestMasterAttrDO, Long>

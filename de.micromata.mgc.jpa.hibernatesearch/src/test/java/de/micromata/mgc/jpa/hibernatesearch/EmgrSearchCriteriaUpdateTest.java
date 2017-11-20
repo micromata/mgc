@@ -53,13 +53,13 @@ public class EmgrSearchCriteriaUpdateTest extends MgcTestCase
     net.setNotSearchable("NOTFOUND");
     emf.runInTrans((emgr) -> emgr.insert(net));
 
-    List<MyEntityDO> found = emf.runWoTrans((emgr) -> {
+    List<MyEntityDO> found = emf.runInTrans((emgr) -> {
       List<MyEntityDO> lret = emgr.searchAttached("XThisIsAName", MyEntityDO.class, "name");
       return lret;
     });
 
     Assert.assertEquals(1, found.size());
-    found = emf.runWoTrans((emgr) -> {
+    found = emf.runInTrans((emgr) -> {
       List<MyEntityDO> lret = emgr.searchAttached("YAnotherName", MyEntityDO.class, "name");
       return lret;
     });
@@ -72,12 +72,12 @@ public class EmgrSearchCriteriaUpdateTest extends MgcTestCase
     });
 
     // criteria update does not update index.
-    found = emf.runWoTrans((emgr) -> {
+    found = emf.runInTrans((emgr) -> {
       List<MyEntityDO> lret = emgr.searchAttached("XThisIsAName", MyEntityDO.class, "name");
       return lret;
     });
     Assert.assertEquals(1, found.size());
-    found = emf.runWoTrans((emgr) -> {
+    found = emf.runInTrans((emgr) -> {
       List<MyEntityDO> lret = emgr.searchAttached("YAnotherName", MyEntityDO.class, "name");
       return lret;
     });
@@ -89,13 +89,13 @@ public class EmgrSearchCriteriaUpdateTest extends MgcTestCase
       return null;
     });
     // now find the entities.
-    found = emf.runWoTrans((emgr) -> {
+    found = emf.runInTrans((emgr) -> {
       List<MyEntityDO> lret = emgr.searchAttached("XThisIsAName", MyEntityDO.class, "name");
       return lret;
     });
 
     Assert.assertEquals(0, found.size());
-    found = emf.runWoTrans((emgr) -> {
+    found = emf.runInTrans((emgr) -> {
       List<MyEntityDO> lret = emgr.searchAttached("YAnotherName", MyEntityDO.class, "name");
       return lret;
     });
@@ -113,13 +113,13 @@ public class EmgrSearchCriteriaUpdateTest extends MgcTestCase
 
     });
     Assert.assertEquals(1, aff);
-    found = emf.runWoTrans((emgr) -> {
+    found = emf.runInTrans((emgr) -> {
       List<MyEntityDO> lret = emgr.searchAttached("ThirdName", MyEntityDO.class, "name");
       return lret;
     });
     // no difference to JPA2.1 criteriaupdate, this also doesn't update ftindex.
     Assert.assertEquals(0, found.size());
-    found = emf.runWoTrans((emgr) -> {
+    found = emf.runInTrans((emgr) -> {
       List<MyEntityDO> lret = emgr.searchAttached("YAnotherName", MyEntityDO.class, "name");
       return lret;
     });

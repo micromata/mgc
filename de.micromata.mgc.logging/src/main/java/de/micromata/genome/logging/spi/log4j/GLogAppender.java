@@ -16,12 +16,18 @@
 
 package de.micromata.genome.logging.spi.log4j;
 
+import de.micromata.genome.logging.GLog;
+import de.micromata.genome.logging.LogAttribute;
+import de.micromata.genome.logging.LogCategory;
+import de.micromata.genome.logging.LogExceptionAttribute;
+import de.micromata.genome.logging.LogLevel;
+import de.micromata.genome.logging.adapter.GenomeLogAdapterHelper;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.lang.ObjectUtils;
+import java.util.Objects;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Appender;
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.Level;
@@ -29,13 +35,6 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
 import org.apache.log4j.spi.LocationInfo;
 import org.apache.log4j.spi.LoggingEvent;
-
-import de.micromata.genome.logging.GLog;
-import de.micromata.genome.logging.LogAttribute;
-import de.micromata.genome.logging.LogCategory;
-import de.micromata.genome.logging.LogExceptionAttribute;
-import de.micromata.genome.logging.LogLevel;
-import de.micromata.genome.logging.adapter.GenomeLogAdapterHelper;
 
 /**
  * Pass Log4J Logs into Genome Logging.
@@ -136,21 +135,7 @@ public class GLogAppender extends AppenderSkeleton
    */
   private String getMessage(Object lmsg, List<LogAttribute> logAttributes)
   {
-    String msg = ObjectUtils.toString(lmsg);
-    return msg;
-  }
-
-  /**
-   * Map mdc.
-   *
-   * @param diag the diag
-   * @param logAttributes the log attributes
-   */
-  private void mapMdc(Map<Object, Object> diag, List<LogAttribute> logAttributes)
-  {
-    if (diag != null && diag.isEmpty() == false) {
-
-    }
+    return Objects.toString(lmsg, StringUtils.EMPTY);
   }
 
   /**
@@ -215,7 +200,6 @@ public class GLogAppender extends AppenderSkeleton
       // String msg = event.getRenderedMessage();
       Map<Object, Object> diag = event.getProperties();
       // String ndc = event.getNDC();
-      mapMdc(diag, logAttributes);
       LogAttribute[] la = new LogAttribute[logAttributes.size()];
       la = logAttributes.toArray(la);
       GLog.doLog(logLevel, cat, msg, la);

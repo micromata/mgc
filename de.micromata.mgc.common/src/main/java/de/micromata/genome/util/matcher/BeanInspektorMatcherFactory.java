@@ -16,7 +16,7 @@
 
 package de.micromata.genome.util.matcher;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * A factory for creating BeanInspektorMatcher objects.

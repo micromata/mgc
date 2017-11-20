@@ -61,19 +61,16 @@ public interface JobStore
    * 
    * @return
    */
-  @Deprecated
-  public long getNextJobId();
+  long getNextJobId();
 
   /**
    * Liefert eine Sequenz fuer eine Scheduler (PK)
    * 
    * @return
    */
-  @Deprecated
-  public long getNextSchedulerId();
+  long getNextSchedulerId();
 
-  @Deprecated
-  public long getNextJobResultId();
+  long getNextJobResultId();
 
   /**
    * Build from the parameters a new TriggerJobDO, but does not safe the the job.
@@ -88,7 +85,7 @@ public interface JobStore
    * @param state the state
    * @return the trigger job do
    */
-  public TriggerJobDO buildTriggerJob(final Scheduler scheduler, final JobDefinition jobDefinition, final Object info,
+  TriggerJobDO buildTriggerJob(final Scheduler scheduler, final JobDefinition jobDefinition, final Object info,
       final Trigger trigger, final String hostName, State state);
 
   /**
@@ -105,7 +102,7 @@ public interface JobStore
    * @param state the state
    * @return the trigger job do
    */
-  public TriggerJobDO buildTriggerJob(final Scheduler scheduler, String jobName, final JobDefinition jobDefinition, final Object info,
+  TriggerJobDO buildTriggerJob(final Scheduler scheduler, String jobName, final JobDefinition jobDefinition, final Object info,
       final Trigger trigger, final String hostName, State state);
 
   /**
@@ -113,14 +110,14 @@ public interface JobStore
    *
    * @param job the job
    */
-  public void insertJob(TriggerJobDO job);
+  void insertJob(TriggerJobDO job);
 
   /**
    * Update job.
    *
    * @param job the job
    */
-  public void updateJob(TriggerJobDO job);
+  void updateJob(TriggerJobDO job);
 
   /**
    * Update the job with given result.
@@ -128,14 +125,14 @@ public interface JobStore
    * @param job the job
    * @param jobResult the job result
    */
-  public void updateJobWithResult(TriggerJobDO job, JobResultDO jobResult);
+  void updateJobWithResult(TriggerJobDO job, JobResultDO jobResult);
 
   /**
    * Insert result.
    *
    * @param result the result
    */
-  public void insertResult(JobResultDO result);
+  void insertResult(JobResultDO result);
 
   /**
    * Gibt maximal {@link Scheduler} Jobs des gegebenen Schedulers zurück, die im State Wait sind.
@@ -144,7 +141,7 @@ public interface JobStore
    * @param foreignJobs Sollen auch Jobs, mit einer anderen Node gesucht werden?
    * @return the next jobs
    */
-  public List<TriggerJobDO> getNextJobs(Scheduler scheduler, boolean foreignJobs);
+  List<TriggerJobDO> getNextJobs(Scheduler scheduler, boolean foreignJobs);
 
   /**
    * Alternative implementation for getting jobs to run for all schedulers.
@@ -152,7 +149,7 @@ public interface JobStore
    * @param minNodeBindTimeout (or backward) in milliseconds relativ to nextFireTime
    * @return the next jobs
    */
-  public List<TriggerJobDO> getNextJobs(long minNodeBindTimeout);
+  List<TriggerJobDO> getNextJobs(long minNodeBindTimeout);
 
   /**
    * Gibt alle Jobs mit dem Status zurueck.
@@ -165,7 +162,7 @@ public interface JobStore
    * @param state bezieht sich auf modifiedat kann null sein
    * @return List of Jobs
    */
-  public List<TriggerJobDO> getJobs(final Scheduler scheduler, final Date fromDate, final Date untilDate, final State state);
+  List<TriggerJobDO> getJobs(final Scheduler scheduler, final Date fromDate, final Date untilDate, final State state);
 
   /**
    * Gibt einen Scheduler aus der Datenbank zurück.
@@ -176,7 +173,7 @@ public interface JobStore
    * @param schedulerName the scheduler name
    * @return the scheduler do
    */
-  public SchedulerDO createOrGetScheduler(String schedulerName);
+  SchedulerDO createOrGetScheduler(String schedulerName);
 
   /**
    * Gets the scheduler by pk.
@@ -185,19 +182,6 @@ public interface JobStore
    * @return the scheduler by pk
    */
   Scheduler getSchedulerByPk(Long pk);
-
-  /**
-   * Fuegt einen Job ein.
-   *
-   * @param scheduler the scheduler
-   * @param executor the executor
-   * @param info the info
-   * @param trigger the trigger
-   * @param hostName the host name
-   * @param state the state
-   * @return the trigger job do
-   */
-  public TriggerJobDO submit(Scheduler scheduler, JobDefinition executor, Object info, Trigger trigger, String hostName, State state);
 
   /**
    * Submit.
@@ -211,7 +195,7 @@ public interface JobStore
    * @param state the state
    * @return the trigger job do
    */
-  public TriggerJobDO submit(Scheduler scheduler, String jobName, JobDefinition executor, Object info, Trigger trigger, String hostName,
+  TriggerJobDO submit(Scheduler scheduler, String jobName, JobDefinition executor, Object info, Trigger trigger, String hostName,
       State state);
 
   // public int getThreadPoolSize(Scheduler scheduler);
@@ -224,7 +208,7 @@ public interface JobStore
    * @param ex the ex
    * @param Scheduler the scheduler
    */
-  public void serviceRetry(TriggerJobDO job, JobResultDO resultInfo, ServiceUnavailableException ex, Scheduler Scheduler);
+  void serviceRetry(TriggerJobDO job, JobResultDO resultInfo, ServiceUnavailableException ex, Scheduler Scheduler);
 
   /**
    * Job started.
@@ -233,7 +217,7 @@ public interface JobStore
    * @param scheduler the scheduler
    * @return the job result do
    */
-  public JobResultDO jobStarted(TriggerJobDO job, Scheduler scheduler);
+  JobResultDO jobStarted(TriggerJobDO job, Scheduler scheduler);
 
   /**
    * Job retry.
@@ -243,7 +227,7 @@ public interface JobStore
    * @param ex the ex
    * @param Scheduler the scheduler
    */
-  public void jobRetry(TriggerJobDO job, JobResultDO resultInfo, Exception ex, Scheduler Scheduler);
+  void jobRetry(TriggerJobDO job, JobResultDO resultInfo, Exception ex, Scheduler Scheduler);
 
   /**
    * Job completed.
@@ -254,7 +238,7 @@ public interface JobStore
    * @param scheduler the scheduler
    * @param nextRun the next run
    */
-  public void jobCompleted(TriggerJobDO job, JobResultDO jobResult, Object result, Scheduler scheduler, Date nextRun);
+  void jobCompleted(TriggerJobDO job, JobResultDO jobResult, Object result, Scheduler scheduler, Date nextRun);
 
   /**
    * Aborts job. Set Jobresult and state State.STOP
@@ -264,7 +248,7 @@ public interface JobStore
    * @param ex the ex
    * @param scheduler the scheduler
    */
-  public void jobAborted(TriggerJobDO job, JobResultDO jobResult, Throwable ex, Scheduler scheduler);
+  void jobAborted(TriggerJobDO job, JobResultDO jobResult, Throwable ex, Scheduler scheduler);
 
   /**
    * Loescht job, aber nur wenn kein JobResult vorhanden ist.
@@ -273,7 +257,7 @@ public interface JobStore
    * @param jobResult may be null
    * @param scheduler the scheduler
    */
-  public void jobRemove(TriggerJobDO job, JobResultDO jobResult, Scheduler scheduler);
+  void jobRemove(TriggerJobDO job, JobResultDO jobResult, Scheduler scheduler);
 
   /**
    * Job result remove.
@@ -282,7 +266,7 @@ public interface JobStore
    * @param jobResult the job result
    * @param scheduler the scheduler
    */
-  public void jobResultRemove(TriggerJobDO job, JobResultDO jobResult, Scheduler scheduler);
+  void jobResultRemove(TriggerJobDO job, JobResultDO jobResult, Scheduler scheduler);
 
   /**
    * Gets the results.
@@ -291,14 +275,14 @@ public interface JobStore
    * @param maxResults the max results
    * @return the results
    */
-  public List<JobResultDO> getResults(TriggerJobDO impl, int maxResults);
+  List<JobResultDO> getResults(TriggerJobDO impl, int maxResults);
 
   /**
    * Shutdown.
    *
    * @throws InterruptedException the interrupted exception
    */
-  public void shutdown() throws InterruptedException;
+  void shutdown() throws InterruptedException;
 
   // public boolean setInactiveTriggerActive(Trigger trigger, Job job);
   /**
@@ -310,21 +294,21 @@ public interface JobStore
    * @param job the job
    * @return the trigger job do
    */
-  public TriggerJobDO reserveJob(TriggerJobDO job);
+  TriggerJobDO reserveJob(TriggerJobDO job);
 
   /**
    * Persist.
    *
    * @param scheduler the scheduler
    */
-  public void persist(SchedulerDO scheduler);
+  void persist(SchedulerDO scheduler);
 
   /**
    * Within transaction.
    *
    * @param runnable the runnable
    */
-  public void withinTransaction(final Runnable runnable);
+  void withinTransaction(final Runnable runnable);
 
   /**
    * mapping getAdminJobById.
@@ -332,8 +316,7 @@ public interface JobStore
    * @param pk the pk
    * @return the admin job by pk
    */
-  @Deprecated
-  public TriggerJobDO getAdminJobByPk(long pk);
+  TriggerJobDO getAdminJobByPk(long pk);
 
   /**
    * getJob.
@@ -341,7 +324,7 @@ public interface JobStore
    * @param pk the pk
    * @return the job by pk
    */
-  public TriggerJobDO getJobByPk(long pk);
+  TriggerJobDO getJobByPk(long pk);
 
   /**
    * ibatis: setJobState
@@ -353,7 +336,7 @@ public interface JobStore
    * @param oldState the old state
    * @return 0 if stored state is not oldState
    */
-  public int setJobState(long pk, String newState, String oldState);
+  int setJobState(long pk, String newState, String oldState);
 
   /**
    * Gets the admin jobs.
@@ -365,7 +348,7 @@ public interface JobStore
    * @param resultCount the result count
    * @return the admin jobs
    */
-  public List<TriggerJobDisplayDO> getAdminJobs(String hostName, String jobName, String state, String schedulerName, int resultCount);
+  List<TriggerJobDisplayDO> getAdminJobs(String hostName, String jobName, String state, String schedulerName, int resultCount);
 
   /**
    * Gets the admin jobs.
@@ -376,7 +359,7 @@ public interface JobStore
    * @param resultCount the result count
    * @return the admin jobs
    */
-  public List<TriggerJobDisplayDO> getAdminJobs(String hostName, String state, String schedulerName, int resultCount);
+  List<TriggerJobDisplayDO> getAdminJobs(String hostName, String state, String schedulerName, int resultCount);
 
   /**
    * Gets the admin jobs.
@@ -389,7 +372,7 @@ public interface JobStore
    * @param withLastResult the with last result
    * @return the admin jobs
    */
-  public List<TriggerJobDisplayDO> getAdminJobs(String hostName, String jobName, String state, String schedulerName,
+  List<TriggerJobDisplayDO> getAdminJobs(String hostName, String jobName, String state, String schedulerName,
       int resultCount,
       boolean withLastResult);
 
@@ -403,7 +386,7 @@ public interface JobStore
    * @param resultCount the result count
    * @return the list<? extends trigger job d o>
    */
-  public List< ? extends TriggerJobDO> findJobs(String hostName, String jobName, String state, String schedulerName,
+  List< ? extends TriggerJobDO> findJobs(String hostName, String jobName, String state, String schedulerName,
       int resultCount);
 
   /**
@@ -412,7 +395,7 @@ public interface JobStore
    * @param jobId the job id
    * @return the results for job
    */
-  public List<JobResultDO> getResultsForJob(long jobId);
+  List<JobResultDO> getResultsForJob(long jobId);
 
   /**
    * Return the job result for given pk.
@@ -420,9 +403,9 @@ public interface JobStore
    * @param resultId the result id
    * @return the result by pk
    */
-  public JobResultDO getResultByPk(long resultId);
+  JobResultDO getResultByPk(long resultId);
 
-  public List<SchedulerDisplayDO> getAdminSchedulers();
+  List<SchedulerDisplayDO> getAdminSchedulers();
 
   /**
    * Return number of jobs with given state.
@@ -430,7 +413,7 @@ public interface JobStore
    * @param state if state == null, return all
    * @return the job count
    */
-  public long getJobCount(State state);
+  long getJobCount(State state);
 
   /**
    * return number of all job results with given state inside the jobresult, not associated job.
@@ -440,14 +423,14 @@ public interface JobStore
    * @param state the state
    * @return the job result count
    */
-  public long getJobResultCount(State state);
+  long getJobResultCount(State state);
 
   /**
    * Löscht den angegebenen Scheduler.
    *
    * @param pk the pk
    */
-  public void deleteScheduler(Long pk);
+  void deleteScheduler(Long pk);
 
   /**
    * Delete a Job with optional JobResults.
@@ -455,9 +438,9 @@ public interface JobStore
    * @param pk pk of the job to delete.
    * @return true if job was deleted
    */
-  public boolean deleteJobWithResults(Long pk);
+  boolean deleteJobWithResults(Long pk);
 
-  public List<String> getJobNames();
+  List<String> getJobNames();
 
-  public List<String> getUniqueJobNames();
+  List<String> getUniqueJobNames();
 }

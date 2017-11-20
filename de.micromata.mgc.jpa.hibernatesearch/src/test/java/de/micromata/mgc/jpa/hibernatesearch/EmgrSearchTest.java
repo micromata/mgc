@@ -45,33 +45,33 @@ public class EmgrSearchTest extends HibernateSearchTestBase
     emf.runInTrans((emgr) -> emgr.insert(net));
 
     // now search 
-    List<MyEntityDO> found = emf.notx().go(emgr -> {
+    List<MyEntityDO> found = emf.tx().go(emgr -> {
       List<MyEntityDO> lret = emgr.searchAttached("bla", MyEntityDO.class, "name");
       return lret;
     });
 
     Assert.assertEquals(1, found.size());
 
-    found = emf.runWoTrans(emgr -> {
+    found = emf.runInTrans(emgr -> {
       List<MyEntityDO> lret = emgr.searchAttached("blub", MyEntityDO.class, "name");
       return lret;
     });
 
     Assert.assertEquals(0, found.size());
 
-    found = emf.runWoTrans((emgr) -> {
+    found = emf.runInTrans((emgr) -> {
       List<MyEntityDO> lret = emgr.searchAttached("blub", MyEntityDO.class);
       return lret;
     });
     Assert.assertEquals(1, found.size());
 
-    found = emf.runWoTrans((emgr) -> {
+    found = emf.runInTrans((emgr) -> {
       List<MyEntityDO> lret = emgr.searchAttached("bla", MyEntityDO.class);
       return lret;
     });
     Assert.assertEquals(1, found.size());
 
-    found = emf.runWoTrans((emgr) -> {
+    found = emf.runInTrans((emgr) -> {
       List<MyEntityDO> lret = emgr.searchAttached("NOTFOUND", MyEntityDO.class);
       return lret;
     });

@@ -18,9 +18,7 @@ package de.micromata.genome.db.jpa.genomecore.chronos;
 
 import de.micromata.genome.chronos.State;
 import de.micromata.genome.jpa.StdRecordDO;
-import org.apache.commons.lang.StringUtils;
-import org.hibernate.annotations.Index;
-
+import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -28,9 +26,10 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import java.util.Date;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * The Class JpaTriggerJobDO.
@@ -38,14 +37,13 @@ import java.util.Date;
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  */
 @Entity
-@Table(name = "TB_TA_CHRONOS_JOB")
-@org.hibernate.annotations.Table(indexes = { //
-    @Index(name = "IX_TA_JOB_NAME", columnNames = "JOB_NAME"),
-    @Index(name = "IX_TA_CHRONOS_JOB_STATE", columnNames = { "STATE" }), //
-    @Index(name = "IX_TA_JOB_NEXT_FIRE_TIME", columnNames = { "NEXT_FIRE_TIME" }), //
-    @Index(name = "IX_TA_CHRONOS_JOB_SCHEDULER", columnNames = { "TA_CHRONOS_SCHEDULER" }),
-    @Index(name = "IX_TA_CHRONOS_JOB_MODAT", columnNames = { "MODIFIEDAT" }),
-}, appliesTo = "TB_TA_CHRONOS_JOB")
+@Table(name = "TB_TA_CHRONOS_JOB", indexes = {
+    @Index(name = "IX_TA_JOB_NAME", columnList = "JOB_NAME"),
+    @Index(name = "IX_TA_CHRONOS_JOB_STATE", columnList = "STATE"),
+    @Index(name = "IX_TA_JOB_NEXT_FIRE_TIME", columnList = "NEXT_FIRE_TIME"),
+    @Index(name = "IX_TA_CHRONOS_JOB_SCHEDULER", columnList = "TA_CHRONOS_SCHEDULER"),
+    @Index(name = "IX_TA_CHRONOS_JOB_MODAT", columnList = "MODIFIEDAT")
+})
 @SequenceGenerator(name = "SQ_TA_CHRONOS_JOB", sequenceName = "SQ_TA_CHRONOS_JOB")
 public class JpaTriggerJobDO extends StdRecordDO<Long>
 {

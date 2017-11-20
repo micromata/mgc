@@ -31,11 +31,11 @@ import java.util.Map;
 import javax.persistence.Column;
 import javax.persistence.Query;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.time.StopWatch;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.StopWatch;
 import org.apache.log4j.Logger;
 
 import de.micromata.genome.db.jpa.logging.entities.BaseLogAttributeDO;
@@ -592,7 +592,7 @@ public abstract class BaseJpaLoggingImpl<M extends BaseLogMasterDO<?>>extends Fa
   {
     EmgrFactory<DefaultEmgr> mgrfac = getEmgrFactory();
     for (final Object logId : logIds) {
-      LogEntry le = mgrfac.runWoTrans(new EmgrCallable<LogEntry, DefaultEmgr>()
+      LogEntry le = mgrfac.runInTrans(new EmgrCallable<LogEntry, DefaultEmgr>()
       {
         @Override
         public LogEntry call(DefaultEmgr mgr)

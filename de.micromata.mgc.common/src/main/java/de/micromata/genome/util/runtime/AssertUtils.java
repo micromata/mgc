@@ -20,13 +20,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import de.micromata.genome.util.types.Converter;
 
@@ -79,7 +80,7 @@ public class AssertUtils
   {
     final StringWriter sout = new StringWriter();
     try {
-      IOUtils.copy(new FileInputStream(f), sout);
+      IOUtils.copy(new FileInputStream(f), sout, Charset.defaultCharset());
     } catch (final Exception ex) {
       return null;
     }

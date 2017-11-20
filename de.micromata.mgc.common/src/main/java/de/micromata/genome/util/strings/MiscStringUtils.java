@@ -16,7 +16,7 @@
 
 package de.micromata.genome.util.strings;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Collection of String utilities
@@ -36,7 +36,7 @@ public class MiscStringUtils
   public static String cutLeft(String s, int maxLength)
   {
     if (s == null)
-      return "";
+      return StringUtils.EMPTY;
     if (s.length() <= maxLength)
       return s;
     return s.substring(s.length() - maxLength);

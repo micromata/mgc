@@ -16,12 +16,10 @@
 
 package de.micromata.genome.util.collections;
 
-import java.util.AbstractMap;
-import java.util.Set;
-
-import org.apache.commons.lang.ObjectUtils;
-
 import de.micromata.genome.util.types.Pair;
+import java.util.AbstractMap;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * Map implemented on base of a ArrayList.
@@ -44,7 +42,7 @@ public class ArrayMap<K, V>extends AbstractMap<K, V>
   public boolean containsKey(Object key)
   {
     for (Entry<K, V> me : entries) {
-      if (ObjectUtils.equals(key, me.getKey())) {
+      if (Objects.equals(key, me.getKey())) {
         return true;
       }
     }
@@ -55,7 +53,7 @@ public class ArrayMap<K, V>extends AbstractMap<K, V>
   public boolean containsValue(Object value)
   {
     for (Entry<K, V> me : entries) {
-      if (ObjectUtils.equals(value, me.getValue())) {
+      if (Objects.equals(value, me.getValue())) {
         return true;
       }
     }
@@ -72,7 +70,7 @@ public class ArrayMap<K, V>extends AbstractMap<K, V>
   public V put(K key, V value)
   {
     for (Entry<K, V> me : entries) {
-      if (ObjectUtils.equals(me.getKey(), key) == true) {
+      if (Objects.equals(me.getKey(), key) == true) {
         V rv = me.getValue();
         me.setValue(value);
         return rv;

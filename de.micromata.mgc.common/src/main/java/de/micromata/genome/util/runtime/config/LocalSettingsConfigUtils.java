@@ -19,7 +19,7 @@ package de.micromata.genome.util.runtime.config;
 import java.lang.reflect.Field;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import de.micromata.genome.util.bean.FieldMatchers;
 import de.micromata.genome.util.bean.PrivateBeanUtils;

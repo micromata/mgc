@@ -16,13 +16,11 @@
 
 package de.micromata.genome.util.runtime;
 
+import de.micromata.genome.util.matcher.Matcher;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.collections15.ListUtils;
-
-import de.micromata.genome.util.matcher.Matcher;
 
 /**
  * Utils around Threads.
@@ -58,7 +56,7 @@ public class ThreadUtils
   public static List<Thread> findThreadsByNameMatcher(Matcher<String> matcher)
   {
     if (matcher == null) {
-      return ListUtils.EMPTY_LIST;
+      return Collections.EMPTY_LIST;
     }
     Map<Thread, StackTraceElement[]> allStacks = Thread.getAllStackTraces();
     List<Thread> ret = new ArrayList<Thread>();

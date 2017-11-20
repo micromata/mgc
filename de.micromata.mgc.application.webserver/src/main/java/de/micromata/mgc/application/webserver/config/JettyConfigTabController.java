@@ -24,7 +24,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import de.micromata.genome.util.validation.ValContext;
 import de.micromata.genome.util.validation.ValMessage;

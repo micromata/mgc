@@ -60,13 +60,13 @@ public class GenomeJpaTestDeleteTest extends MgcTestCase
     Assert.assertEquals(userName, ent.getModifiedBy());
     deleted = emf.runInTrans((emgr) -> emgr.markDeleted(ent));
     Assert.assertFalse(deleted);
-    GenomeJpaTestTableDO sent = emf.runWoTrans((emgr) -> emgr.selectByPk(GenomeJpaTestTableDO.class, ent.getPk()));
+    GenomeJpaTestTableDO sent = emf.runInTrans((emgr) -> emgr.selectByPk(GenomeJpaTestTableDO.class, ent.getPk()));
     Assert.assertTrue(sent.isDeleted());
     Assert.assertEquals(userName, sent.getModifiedBy());
 
     boolean undeleted = emf.runInTrans((emgr) -> emgr.markUndeleted(ent));
     Assert.assertTrue(undeleted);
-    sent = emf.runWoTrans((emgr) -> emgr.selectByPk(GenomeJpaTestTableDO.class, ent.getPk()));
+    sent = emf.runInTrans((emgr) -> emgr.selectByPk(GenomeJpaTestTableDO.class, ent.getPk()));
     Assert.assertFalse(sent.isDeleted());
   }
 }

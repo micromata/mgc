@@ -16,6 +16,11 @@
 
 package de.micromata.genome.util.runtime;
 
+import de.micromata.genome.util.runtime.config.MailSessionLocalSettingsConfigModel;
+import de.micromata.genome.util.runtime.jndi.JndiDumper;
+import de.micromata.genome.util.runtime.jndi.JndiMockupNamingContextBuilder;
+import de.micromata.genome.util.validation.ValContext;
+import de.micromata.genome.util.validation.ValMessage;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -23,7 +28,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
-
 import javax.mail.Session;
 import javax.naming.CompositeName;
 import javax.naming.Context;
@@ -35,17 +39,10 @@ import javax.naming.NameNotFoundException;
 import javax.naming.NamingException;
 import javax.naming.NoInitialContextException;
 import javax.naming.spi.InitialContextFactory;
-
-import org.apache.commons.dbcp.BasicDataSource;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.pool.impl.GenericObjectPool;
+import org.apache.commons.dbcp2.BasicDataSource;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 import org.apache.log4j.Logger;
-
-import de.micromata.genome.util.runtime.config.MailSessionLocalSettingsConfigModel;
-import de.micromata.genome.util.runtime.jndi.JndiDumper;
-import de.micromata.genome.util.runtime.jndi.JndiMockupNamingContextBuilder;
-import de.micromata.genome.util.validation.ValContext;
-import de.micromata.genome.util.validation.ValMessage;
 
 /**
  * The Class LocalSettingsEnv.
@@ -258,10 +255,10 @@ public class LocalSettingsEnv
       bd.setUrl(url);
       bd.setUsername(userName);
       bd.setPassword(password);
-      bd.setMaxActive(localSettings.getIntValue(dsn + ".maxActive", GenericObjectPool.DEFAULT_MAX_ACTIVE));
-      bd.setMaxIdle(localSettings.getIntValue(dsn + ".maxIdle", GenericObjectPool.DEFAULT_MAX_IDLE));
-      bd.setMinIdle(localSettings.getIntValue(dsn + ".minIdle", GenericObjectPool.DEFAULT_MIN_IDLE));
-      bd.setMaxWait(localSettings.getLongValue(dsn + ".maxWait", GenericObjectPool.DEFAULT_MAX_WAIT));
+      bd.setMaxTotal(localSettings.getIntValue(dsn + ".maxActive", GenericKeyedObjectPoolConfig.DEFAULT_MAX_TOTAL_PER_KEY));
+      bd.setMaxIdle(localSettings.getIntValue(dsn + ".maxIdle", GenericKeyedObjectPoolConfig.DEFAULT_MAX_IDLE_PER_KEY));
+      bd.setMinIdle(localSettings.getIntValue(dsn + ".minIdle", GenericKeyedObjectPoolConfig.DEFAULT_MIN_IDLE_PER_KEY));
+      bd.setMaxWaitMillis(localSettings.getLongValue(dsn + ".maxWait", GenericKeyedObjectPoolConfig.DEFAULT_MAX_WAIT_MILLIS));
       bd.setInitialSize(localSettings.getIntValue(dsn + ".intialSize", 0));
       bd.setDefaultCatalog(localSettings.get(dsn + ".defaultCatalog", null));
       bd.setDefaultAutoCommit(localSettings.getBooleanValue(dsn + ".defaultAutoCommit", true));
@@ -454,17 +451,11 @@ public class LocalSettingsEnv
       return;
     }
     createSubContext("java:comp/env");
-    File genomeHome = new File(localSettings.get("genome.home", "."));
+    File genomeHome = new File(localSettings.getGenomeHome());
 
     bind("java:comp/env/log4jConfigLocation",
         new File(genomeHome, "dev/extrc/config/log4j.properties").getAbsolutePath());
     bind("java:comp/env/ProjectRoot", genomeHome.getPath());
-    bind("java:comp/env/ShortApplicationName", localSettings.getShortApplicationName());
-    bind("java:comp/env/ApplicationDevelopmentModus", localSettings.getApplicationDevelopmentModus());
-    String publicUrl = localSettings.getPublicUrl();
-    bind("java:comp/env/ApplicationPublicUrl", publicUrl);
-    bind("java:comp/env/DatabaseProvider", localSettings.getDatabaseProvider());
-    bind("java:comp/env/ApplicationEnvironment", localSettings.getApplicationEnvironment());
   }
 
   private void createSubContext(String context) throws NamingException

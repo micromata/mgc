@@ -19,14 +19,14 @@ package de.micromata.mgc.javafx.launcher.gui;
 import java.io.IOException;
 import java.io.InputStream;
 
+import java.nio.charset.StandardCharsets;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import de.micromata.genome.util.validation.ValMessage;
 import de.micromata.mgc.application.MgcApplication;
 import de.micromata.mgc.application.MgcApplicationInfo;
 import de.micromata.mgc.javafx.SystemService;
-import groovy.json.internal.Charsets;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
@@ -115,17 +115,14 @@ public class AboutDialogController extends AbstractModelController<MgcApplicatio
 
   private void initLicenseText()
   {
-    try {
-
-      InputStream is = getClass().getClassLoader().getResourceAsStream("AppLicense.txt");
+    try (InputStream is = getClass().getClassLoader().getResourceAsStream("AppLicense.txt")) {
       if (is == null) {
         licenceTextArea.setMaxHeight(0.0);
         licenceTextArea.setVisible(false);
         return;
       }
-      String text = IOUtils.toString(is, Charsets.UTF_8);
+      String text = IOUtils.toString(is, StandardCharsets.UTF_8);
       licenceTextArea.setText(text);
-      IOUtils.closeQuietly(is);
     } catch (IOException ex) {
 
     }

@@ -23,7 +23,7 @@ import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import de.micromata.genome.util.matcher.Matcher;
 import de.micromata.genome.util.matcher.MatcherFactory;
@@ -111,8 +111,6 @@ public class MatchUtil
    * @return List of rules
    * @throws RuntimeException if the string can not be parsed
    */
-  @Deprecated
-  // use Factory
   public static List<Pair<Boolean, String>> parseWildcardRules(String ruleString)
   {
     if (StringUtils.isBlank(ruleString) == true) {

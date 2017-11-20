@@ -1,18 +1,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>de.micromata.mgc.samples</groupId>
+  <parent>
+    <artifactId>de.micromata.mgc.samples</artifactId>
+    <groupId>de.micromata.mgc</groupId>
+    <version>3.0.0-SNAPSHOT</version><!-- MGC -->
+  </parent>
   <artifactId>de.micromata.mgc.jpa.logging.sample</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <description>
     Sample to use jpa.
   </description>
-  <properties>
-    <mgc.version>2.5.0</mgc.version>
-  </properties>
-
-
   <dependencies>
     <dependency>
       <groupId>de.micromata.mgc</groupId>
@@ -22,20 +20,26 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.12</version>
+      <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
     <!--  if you have no container, which provide javax.mail.Session -->
     <dependency>
-      <groupId>javax.mail</groupId>
-      <artifactId>mail</artifactId>
-      <version>1.5.0-b01</version>
+      <groupId>com.sun.mail</groupId>
+      <artifactId>javax.mail</artifactId>
+      <version>${javax.mail.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>javax.activation</groupId>
+          <artifactId>activation</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <!--  the database driver -->
     <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derby</artifactId>
-      <version>10.12.1.1</version>
+      <version>${org.apache.derby.version}</version>
     </dependency>
   </dependencies>
   <repositories>

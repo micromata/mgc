@@ -18,7 +18,7 @@ package de.micromata.genome.util.validation;
 
 import java.util.List;
 
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.Validate;
 
 /**
  * Mesasge with a list of message.

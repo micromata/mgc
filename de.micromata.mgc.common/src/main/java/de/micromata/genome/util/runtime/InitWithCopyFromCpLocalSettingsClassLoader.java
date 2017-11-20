@@ -51,16 +51,13 @@ public class InitWithCopyFromCpLocalSettingsClassLoader implements Supplier<Loca
       return loader;
     }
     File f = loader.getLocalSettingsFile();
-    try {
-      InputStream is = getClass().getClassLoader().getResourceAsStream(f.getName());
+    try (InputStream is = getClass().getClassLoader().getResourceAsStream(f.getName())) {
       if (is != null) {
         FileUtils.copyInputStreamToFile(is, f);
-        IOUtils.closeQuietly(is);
         LOG.info("Copied from CP: " + f.getName() + " to " + f.getAbsolutePath());
       } else {
         LOG.warn("Cannot find localsettings in CP: " + f.getName());
       }
-
     } catch (IOException ex) {
       LOG.error("Failure to write local settings file: " + f.getAbsolutePath() + ": " + ex.getMessage(), ex);
     }

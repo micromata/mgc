@@ -19,7 +19,7 @@ package de.micromata.mgc.application.jetty;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import de.micromata.genome.util.event.MgcEventRegistries;
 import de.micromata.mgc.application.AbstractMgcApplicationStartStopListener;

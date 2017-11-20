@@ -4,7 +4,7 @@
   <parent>
     <artifactId>de.micromata.mgc.rootpom</artifactId>
     <groupId>de.micromata.mgc</groupId>
-    <version>2.6.1-SNAPSHOT</version><!-- MGC -->
+    <version>3.0.0-SNAPSHOT</version><!-- MGC -->
   </parent>
   <artifactId>de.micromata.mgc.email</artifactId>
   <packaging>jar</packaging>
@@ -20,9 +20,15 @@
       <version>${mgc.version}</version>
     </dependency>
     <dependency>
-      <groupId>javax.mail</groupId>
-      <artifactId>mail</artifactId>
+      <groupId>com.sun.mail</groupId>
+      <artifactId>javax.mail</artifactId>
       <version>${javax.mail.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>javax.activation</groupId>
+          <artifactId>activation</artifactId>
+        </exclusion>
+      </exclusions>
       <scope>provided</scope>
     </dependency>
     <dependency>

@@ -22,7 +22,7 @@ import java.util.Map;
 
 import javax.mail.Message;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  * Represents a mail. Mails can be received from a MailAccount or can be sent via SendMail.

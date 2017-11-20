@@ -16,8 +16,7 @@
 
 package de.micromata.genome.util.strings;
 
-import org.apache.commons.lang.SystemUtils;
-import org.apache.commons.lang.builder.ToStringStyle;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The Class ReducedMultiLineStyle.
@@ -39,9 +38,9 @@ public class ReducedMultiLineStyle extends ToStringStyle
   {
     super();
     this.setContentStart("[");
-    this.setFieldSeparator(SystemUtils.LINE_SEPARATOR + "  ");
+    this.setFieldSeparator(System.lineSeparator() + "  ");
     this.setFieldSeparatorAtStart(true);
-    this.setContentEnd(SystemUtils.LINE_SEPARATOR + "]");
+    this.setContentEnd(System.lineSeparator() + "]");
     this.setUseShortClassName(true);
   }
 
@@ -63,7 +62,7 @@ public class ReducedMultiLineStyle extends ToStringStyle
   @Override
   protected void appendFieldSeparator(StringBuffer buffer)
   {
-    buffer.append(SystemUtils.LINE_SEPARATOR);
+    buffer.append(System.lineSeparator());
     int level = ReducedReflectionToStringBuilder.getRegistryObject().level;
     for (int i = 0; i <= level; ++i) {
       buffer.append(" ");
@@ -74,7 +73,7 @@ public class ReducedMultiLineStyle extends ToStringStyle
   protected void appendContentEnd(StringBuffer buffer)
   {
     int level = ReducedReflectionToStringBuilder.getRegistryObject().level;
-    buffer.append(SystemUtils.LINE_SEPARATOR);
+    buffer.append(System.lineSeparator());
     for (int i = 0; i <= level; ++i) {
       buffer.append(" ");
     }

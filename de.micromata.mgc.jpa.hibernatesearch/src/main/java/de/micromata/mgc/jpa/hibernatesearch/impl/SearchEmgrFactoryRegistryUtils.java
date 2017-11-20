@@ -22,8 +22,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Field;
@@ -79,7 +79,7 @@ public class SearchEmgrFactoryRegistryUtils
    */
   public static void initJpaMetadataRepostory(SearchEmgrFactory<?> emf)
   {
-    emf.runWoTrans((emgr) -> {
+    emf.runInTrans((emgr) -> {
 
       JpaMetadataRepostory repo = emf.getMetadataRepository();
       Map<Class<?>, SearchEntityMetadata> entitiesWithSearchFields = new HashMap<>();

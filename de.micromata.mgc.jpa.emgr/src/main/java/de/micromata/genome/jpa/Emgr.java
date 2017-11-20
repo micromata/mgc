@@ -16,25 +16,6 @@
 
 package de.micromata.genome.jpa;
 
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityNotFoundException;
-import javax.persistence.LockModeType;
-import javax.persistence.NoResultException;
-import javax.persistence.OptimisticLockException;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
-
-import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.lang.Validate;
-import org.apache.log4j.Logger;
-import org.hibernate.jpa.AvailableSettings;
-
 import de.micromata.genome.jpa.events.EmgrAfterCopyForUpdateEvent;
 import de.micromata.genome.jpa.events.EmgrAfterDeletedEvent;
 import de.micromata.genome.jpa.events.EmgrAfterDetachEvent;
@@ -63,6 +44,22 @@ import de.micromata.genome.jpa.events.EmgrUpdateCriteriaUpdateFilterEvent;
 import de.micromata.genome.jpa.events.EmgrUpdateDbRecordFilterEvent;
 import de.micromata.genome.jpa.events.impl.EmgrEventQuery;
 import de.micromata.genome.jpa.events.impl.EmgrEventTypedQuery;
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.LockModeType;
+import javax.persistence.NoResultException;
+import javax.persistence.OptimisticLockException;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import org.apache.commons.lang3.Validate;
+import org.apache.log4j.Logger;
+import org.hibernate.jpa.AvailableSettings;
 
 /**
  * Main class to interact with JPA.
@@ -370,21 +367,6 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
     TypedQuery<R> q = createQuery(cls, sql, keyValues);
     return q.getSingleResult();
 
-  }
-
-  /**
-   * Select single.
-   *
-   * @param <R> the generic type
-   * @param cls the cls
-   * @param sql the sql
-   * @param values the values
-   * @return the r
-   */
-  @Deprecated
-  public <R> R selectSingle(final Class<R> cls, final String sql, final Map<String, Object> values)
-  {
-    return selectSingleAttached(cls, sql, values);
   }
 
   /**
@@ -802,7 +784,7 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
     if (overwrite == false && rec instanceof StdRecord && dbrec instanceof StdRecord) {
       Integer thisupc = ((StdRecord<?>) rec).getUpdateCounter();
       Integer dbupc = ((StdRecord<?>) dbrec).getUpdateCounter();
-      if (ObjectUtils.equals(thisupc, dbupc) == false) {
+      if (Objects.equals(thisupc, dbupc) == false) {
         throw new OptimisticLockException("Cannot delete " + dbrec.getClass().getName() + "(" + dbrec.getPk()
             + ") because version conflict: " + " old updatecounter: " + thisupc + "; new updatecounter: "
             + dbupc, null, dbrec);

@@ -19,7 +19,7 @@ package de.micromata.mgc.jpa.hibernatesearch.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.search.SearchFactory;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.metadata.FieldDescriptor;
@@ -40,7 +40,7 @@ public class LuceneDebugUtils
   public String getIndexDescription(SearchEmgrFactory<?> emfac, Class<?> entityClass)
   {
     StringBuilder sb = new StringBuilder();
-    emfac.runWoTrans((emgr) -> {
+    emfac.runInTrans((emgr) -> {
       sb.append("class: ").append(entityClass.getName()).append("\n");
 
       FullTextEntityManager femg = emgr.getFullTextEntityManager();
@@ -76,7 +76,7 @@ public class LuceneDebugUtils
   {
     String[] ret = emfac.getSearchFieldsForEntity(entityClass).keySet().toArray(new String[] {});
 
-    List<String> list = emfac.runWoTrans((emgr) -> {
+    List<String> list = emfac.runInTrans((emgr) -> {
       FullTextEntityManager femg = emgr.getFullTextEntityManager();
       SearchFactory sf = femg.getSearchFactory();
       IndexedTypeDescriptor itd = sf.getIndexedTypeDescriptor(entityClass);

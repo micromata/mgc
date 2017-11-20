@@ -16,7 +16,7 @@
 
 package de.micromata.genome.chronos.manager;
 
-import org.apache.commons.lang.time.StopWatch;
+import org.apache.commons.lang3.time.StopWatch;
 
 import de.micromata.genome.chronos.FutureJob;
 import de.micromata.genome.chronos.JobControlException;

@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 
 import javax.persistence.Query;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import de.micromata.genome.db.jpa.normsearch.entities.NormSearchDO;
 import de.micromata.genome.db.jpa.normsearch.eventlistener.NormSearchAfterDeleteListener;

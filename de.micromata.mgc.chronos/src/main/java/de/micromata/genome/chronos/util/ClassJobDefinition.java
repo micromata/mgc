@@ -19,7 +19,7 @@ package de.micromata.genome.chronos.util;
 import java.util.Map;
 
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import de.micromata.genome.chronos.FutureJob;
 import de.micromata.genome.chronos.JobDefinition;

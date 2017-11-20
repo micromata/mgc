@@ -16,8 +16,7 @@
 
 package de.micromata.genome.chronos.spi.jdbc;
 
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * A Job to display in GUI.

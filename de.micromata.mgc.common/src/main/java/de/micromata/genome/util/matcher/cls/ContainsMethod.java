@@ -19,7 +19,7 @@ package de.micromata.genome.util.matcher.cls;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import de.micromata.genome.util.matcher.MatcherBase;
 

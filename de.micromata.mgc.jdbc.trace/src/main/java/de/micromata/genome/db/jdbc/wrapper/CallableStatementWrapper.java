@@ -321,7 +321,7 @@ public class CallableStatementWrapper implements CallableStatement
   @Override
   public BigDecimal getBigDecimal(int parameterIndex, int scale) throws SQLException
   {
-    return nestedStatement.getBigDecimal(parameterIndex, scale);
+    return nestedStatement.getBigDecimal(parameterIndex).setScale(scale);
   }
 
   /**

@@ -16,7 +16,8 @@
 
 package de.micromata.genome.util.types;
 
-import org.apache.commons.lang.ObjectUtils;
+import java.util.Objects;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Collection of methods to weak cast types.
@@ -40,7 +41,7 @@ public class CoerceUtils
     if (o instanceof String) {
       return Double.parseDouble((String) o);
     }
-    throw new RuntimeException("Cannot coerce value to double: " + ObjectUtils.toString(o));
+    throw new RuntimeException("Cannot coerce value to double: " + Objects.toString(o, StringUtils.EMPTY));
   }
 
 }

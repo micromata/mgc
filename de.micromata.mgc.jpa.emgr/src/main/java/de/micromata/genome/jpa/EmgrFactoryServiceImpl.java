@@ -19,10 +19,9 @@ package de.micromata.genome.jpa;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-
-import org.apache.commons.collections15.list.SynchronizedList;
 
 /**
  * The Class EmgrFactoryServiceImpl.
@@ -31,7 +30,7 @@ public class EmgrFactoryServiceImpl implements EmgrFactoryService
 {
 
   /** The factories. */
-  private List<Reference<EmgrFactory<?>>> factories = SynchronizedList.decorate(new ArrayList<>());
+  private List<Reference<EmgrFactory<?>>> factories = Collections.synchronizedList(new ArrayList<>());
 
   /**
    * Gets the factories.

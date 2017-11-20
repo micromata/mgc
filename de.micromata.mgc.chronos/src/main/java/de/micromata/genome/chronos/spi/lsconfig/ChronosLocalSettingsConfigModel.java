@@ -18,7 +18,7 @@ package de.micromata.genome.chronos.spi.lsconfig;
 
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import de.micromata.genome.chronos.manager.JobBeanDefinition;
 import de.micromata.genome.chronos.manager.SchedulerManager;

@@ -16,7 +16,7 @@
 
 package de.micromata.genome.logging.config;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import de.micromata.genome.logging.Logging;
 import de.micromata.genome.logging.LoggingWithFallback;
