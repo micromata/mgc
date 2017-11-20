@@ -225,8 +225,7 @@
           </dependency>
         </dependencies>
         <configuration>
-          <testFailureIgnore>true</testFailureIgnore>
-          <!-- <forkCount>0</forkCount> <reuseForks>false</reuseForks> -->
+          <testFailureIgnore>false</testFailureIgnore>
         </configuration>
       </plugin>
       <plugin>
