@@ -124,7 +124,7 @@ public class JpaSelectForUpdateTest extends MgcTestCase
     final int threads = 5;
     ThreadedRunner trunner = new ThreadedRunner(loops, threads);
     trunner.run(run);
-    mgr.runWoTrans(new EmgrCallable<Object, JpaTestEntMgr>() {
+    mgr.runInTrans(new EmgrCallable<Object, JpaTestEntMgr>() {
       @Override
       public Object call(JpaTestEntMgr emgrr)
       {

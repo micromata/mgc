@@ -18,7 +18,7 @@ package de.micromata.genome.chronos.util;
 
 import java.util.Date;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import de.micromata.genome.chronos.JobCompletion;
 import de.micromata.genome.chronos.JobDebugUtils;

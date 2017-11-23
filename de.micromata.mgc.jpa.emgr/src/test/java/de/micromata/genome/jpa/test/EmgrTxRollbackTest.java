@@ -66,7 +66,7 @@ public class EmgrTxRollbackTest extends MgcTestCase
     GenomeJpaTestTableDO d = emfac.tx().go((emgr) -> {
       return callInsertRollback("testRollbackNested", null);
     });
-    List<GenomeJpaTestTableDO> list = emfac.notx()
+    List<GenomeJpaTestTableDO> list = emfac.tx()
         .go((emgr) -> emgr.select(GenomeJpaTestTableDO.class,
             "select e from " + GenomeJpaTestTableDO.class.getName() + " e where e.firstName = :firstName", "firstName",
             "testRollbackNested"));

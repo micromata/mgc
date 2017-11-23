@@ -17,10 +17,6 @@
 package de.micromata.genome.util.runtime;
 
 import de.micromata.genome.util.collections.OrderedProperties;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -30,6 +26,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.function.Function;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 
 /**
  * Standard implementation to load local-settings.properties.
@@ -174,18 +172,15 @@ public class StdLocalSettingsLoader implements LocalSettingsLoader
     if (LOG.isDebugEnabled() == true) {
       LOG.debug("Load localsettings: " + localSettingsFile.getAbsolutePath());
     }
-    FileInputStream fin = null;
-    try {
+
+    try (FileInputStream fin = new FileInputStream(localSettingsFile)) {
       OrderedProperties props = newProperties(originalLocalSettingsFile);
-      fin = new FileInputStream(localSettingsFile);
       props.load(fin, new LocalSettingsIncludeReplacer(ls, localSettingsFile.getAbsoluteFile().getParentFile()));
       for (String k : props.keySet()) {
         target.put(k, props.get(k));
       }
     } catch (IOException ex) {
       throw new RuntimeIOException(ex);
-    } finally {
-      IOUtils.closeQuietly(fin);
     }
     loadedFiles.add(localSettingsFile);
     return true;

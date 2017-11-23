@@ -16,9 +16,10 @@
 
 package de.micromata.genome.util.i18n;
 
+import java.util.Objects;
 import java.util.Set;
 
-import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Provides the translation for one language.
@@ -40,7 +41,7 @@ public interface I18NTranslationProvider
     if (ores == null) {
       return null;
     }
-    return ObjectUtils.toString(ores);
+    return Objects.toString(ores, StringUtils.EMPTY);
   }
 
   /**

@@ -18,9 +18,8 @@ package de.micromata.genome.util.jdbc;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import org.apache.commons.dbcp2.BasicDataSource;
 
-import org.apache.commons.dbcp.BasicDataSource;
-import org.apache.commons.dbcp.SQLNestedException;
 
 /**
  * Handles desktop database automatic creation.
@@ -37,9 +36,6 @@ public class LauncherDataSource extends BasicDataSource
       Connection con = super.getConnection();
       return con;
     } catch (SQLException ex) {
-      if (ex instanceof SQLNestedException && ex.getCause() instanceof SQLException) {
-        ex = (SQLException) ex.getCause();
-      }
       if ("XJ004".equals(ex.getSQLState()) == true) {
         String orgurl = getUrl();
         try {

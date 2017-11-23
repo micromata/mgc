@@ -16,7 +16,7 @@
 
 package de.micromata.mgc.jpa.hibernatesearch.bridges;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.LongField;

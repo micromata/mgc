@@ -29,7 +29,7 @@ import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
 import javax.persistence.QueryTimeoutException;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.PropertyValueException;
 import org.hibernate.exception.ConstraintViolationException;
@@ -264,32 +264,6 @@ public abstract class EmgrFactory<E extends IEmgr<?>>
   public EmgrTx<E> tx()
   {
     return new EmgrTx<E>(this);
-  }
-
-   /**
-    * @deprecated Use the method {@link EmgrFactory#tx()}. To find out why, see GENOME-1910.
-    *
-    */
-   @Deprecated
-  public EmgrTx<E> notx()
-  {
-    return new EmgrTx<E>(this).noTx();
-  }
-
-  /**
-   * Run wo trans.
-   *
-   * @deprecated Use the method {@link EmgrFactory#runInTrans(de.micromata.genome.jpa.EmgrCallable)}. To find out why,
-   * see GENOME-1910.
-   *
-   * @param <R> the generic type
-   * @param call the call
-   * @return the r
-   */
-  @Deprecated
-  public <R> R runWoTrans(EmgrCallable<R, E> call)
-  {
-    return tx().noTx().go(call);
   }
 
   /**

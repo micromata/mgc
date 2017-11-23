@@ -20,7 +20,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import javax.servlet.ServletException;
 
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 
 /**
  * Utility-Klasse für das Exception Framework.

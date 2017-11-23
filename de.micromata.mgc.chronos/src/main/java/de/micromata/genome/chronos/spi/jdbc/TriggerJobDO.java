@@ -18,8 +18,8 @@ package de.micromata.genome.chronos.spi.jdbc;
 
 import java.util.Date;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import de.micromata.genome.chronos.FutureJob;
 import de.micromata.genome.chronos.JobDebugUtils;
@@ -498,7 +498,6 @@ public class TriggerJobDO extends ChronosStdRecordDO
     this.triggerDefintionString = triggerDefintionString;
   }
 
-  @Deprecated
   public Object getJobArgumentObject()
   {
     return jobArgumentObject;

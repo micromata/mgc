@@ -4,7 +4,7 @@
   <parent>
     <artifactId>de.micromata.mgc.rootpom</artifactId>
     <groupId>de.micromata.mgc</groupId>
-    <version>2.6.0</version><!-- MGC -->
+    <version>3.0.0</version><!-- MGC -->
   </parent>
   <artifactId>de.micromata.mgc.util.xml</artifactId>
   <packaging>jar</packaging>
@@ -15,6 +15,13 @@
   <profiles>
     <profile>
       <id>genome</id>
+      <pluginRepositories>
+        <pluginRepository>
+          <id>genome-deploy</id>
+          <name>genome-deploy</name>
+          <url>https://repo.micromata.de/nexus/content/repositories/genome/</url>
+        </pluginRepository>
+	  </pluginRepositories>
       <build>
         <plugins>
           <plugin>
@@ -50,6 +57,17 @@
       <artifactId>de.micromata.mgc.common</artifactId>
       <version>${mgc.version}</version>
     </dependency>
+    <dependency>
+    <groupId>org.apache.commons</groupId>
+    <artifactId>commons-text</artifactId>
+    <version>${commons-text.version}</version>
+    <exclusions>
+      <exclusion>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+      </exclusion>
+    </exclusions>
+  </dependency>
     <dependency>
       <artifactId>javax.servlet-api</artifactId>
       <groupId>javax.servlet</groupId>

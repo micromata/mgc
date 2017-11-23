@@ -122,7 +122,7 @@ public class JpaXmlDumpServiceImpl implements JpaXmlDumpService, XmlJpaPersistSe
   @Override
   public void dumpToXml(EmgrFactory<?> fac, Writer writer)
   {
-    fac.runWoTrans((emgr) -> {
+    fac.runInTrans((emgr) -> {
       List<Object> all = getObjectsToDump((Emgr<?>) emgr);
       final XStream stream = initXStreamForMarshaling(false);
       // und schreiben

@@ -20,7 +20,7 @@ import java.sql.SQLException;
 import java.sql.Savepoint;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import de.micromata.genome.logging.GLog;
 import de.micromata.genome.logging.GenomeAttributeType;

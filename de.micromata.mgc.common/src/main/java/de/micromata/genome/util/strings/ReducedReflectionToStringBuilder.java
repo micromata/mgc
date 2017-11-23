@@ -22,9 +22,9 @@ import java.lang.reflect.Modifier;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
-import org.apache.commons.lang.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The Class ReducedReflectionToStringBuilder.
@@ -54,8 +54,8 @@ public class ReducedReflectionToStringBuilder extends ReflectionToStringBuilder
    * @param outputTransients the output transients
    * @param outputStatics the output statics
    */
-  public ReducedReflectionToStringBuilder(Object object, ToStringStyle style, StringBuffer buffer,
-      Class<?> reflectUpToClass,
+  public <T> ReducedReflectionToStringBuilder(T object, ToStringStyle style, StringBuffer buffer,
+      Class<? super T>  reflectUpToClass,
       boolean outputTransients, boolean outputStatics)
   {
     super(object, style, buffer, reflectUpToClass, outputTransients, outputStatics);

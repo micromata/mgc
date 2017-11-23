@@ -20,6 +20,7 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -28,14 +29,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.StringTokenizer;
-
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang.CharEncoding;
-import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
 
 /**
  * Collections of methods to convert types.
@@ -59,7 +58,7 @@ public class Converter
     }
 
     try {
-      return URLEncoder.encode(value, CharEncoding.UTF_8);
+      return URLEncoder.encode(value, StandardCharsets.UTF_8.name());
     } catch (UnsupportedEncodingException ex) {
       throw new RuntimeException(ex);
     }
@@ -168,7 +167,7 @@ public class Converter
    */
   public static String stringFromBytes(byte[] bytes)
   {
-    return stringFromBytes(bytes, CharEncoding.UTF_8);
+    return stringFromBytes(bytes, StandardCharsets.UTF_8.name());
   }
 
   /**
@@ -183,7 +182,7 @@ public class Converter
       return null;
     }
     try {
-      return str.getBytes(CharEncoding.UTF_8);
+      return str.getBytes(StandardCharsets.UTF_8.name());
     } catch (UnsupportedEncodingException ex) {
       return str.getBytes();
     }
@@ -662,7 +661,7 @@ public class Converter
     if (obj instanceof java.util.Date) {
       return dateToDebugString((java.util.Date) obj);
     }
-    return ObjectUtils.toString(obj);
+    return Objects.toString(obj, StringUtils.EMPTY);
   }
 
   /* !!!ACHTUNG !!! Die Formater Klassen sind nicht synchronisiert. Daher diese Methoden benutzen */

@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.WeakHashMap;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import de.micromata.genome.util.validation.ValMessage;

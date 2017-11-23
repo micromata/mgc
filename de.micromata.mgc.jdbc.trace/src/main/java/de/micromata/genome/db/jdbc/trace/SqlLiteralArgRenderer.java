@@ -16,17 +16,15 @@
 
 package de.micromata.genome.db.jdbc.trace;
 
+import de.micromata.genome.util.types.Converter;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.List;
-
-import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.lang.StringEscapeUtils;
-
-import de.micromata.genome.util.types.Converter;
+import java.util.Objects;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Rendern eines SQL als Literal.
@@ -79,28 +77,29 @@ public class SqlLiteralArgRenderer implements SqlArgRenderer
   public String renderSqlArg(Object arg)
   {
     if (arg instanceof String) {
-      return "'" + StringEscapeUtils.escapeSql((String) arg) + "'";
+      // TODO replace with proper SQL escaping
+      return "'" + StringUtils.replace((String) arg, "'", "''") + "'";
     }
     if (arg instanceof Integer || arg instanceof Long || arg instanceof Short || arg instanceof Byte) {
-      return ObjectUtils.toString(arg);
+      return Objects.toString(arg, StringUtils.EMPTY);
     }
     if (arg instanceof BigDecimal) {
-      return ObjectUtils.toString(arg); // TODO
+      return Objects.toString(arg, StringUtils.EMPTY); // TODO
     }
     if (arg instanceof Date) {
-      return "#" + sqlDateFormatter.get().format((Date) arg) + "#";
+      return '#' + sqlDateFormatter.get().format((Date) arg) + '#';
     }
     if (arg instanceof Time) {
-      return "#" + sqlTimeFormatter.get().format((Time) arg) + '#';
+      return '#' + sqlTimeFormatter.get().format((Time) arg) + '#';
     }
     if (arg instanceof Timestamp) {
-      return "#" + sqlTimestampFormatter.get().format((Timestamp) arg) + '#';
+      return '#' + sqlTimestampFormatter.get().format((Timestamp) arg) + '#';
     }
     if (arg instanceof java.util.Date) {
-      return "#" + sqlTimestampFormatter.get().format((java.util.Date) arg) + '#';
+      return '#' + sqlTimestampFormatter.get().format((java.util.Date) arg) + '#';
     }
     // TODO andere typen unterstuetzen
-    return ObjectUtils.toString(arg);
+    return Objects.toString(arg, StringUtils.EMPTY);
   }
 
   @Override
@@ -117,7 +116,7 @@ public class SqlLiteralArgRenderer implements SqlArgRenderer
         if (argIndex < args.length) {
           sb.append(renderSqlArg(args[argIndex++]));
         } else {
-          sb.append("?");
+          sb.append('?');
         }
       } else {
         sb.append(tk);

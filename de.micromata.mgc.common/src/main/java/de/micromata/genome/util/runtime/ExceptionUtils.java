@@ -21,7 +21,7 @@ package de.micromata.genome.util.runtime;
  *
  * @author Roger Rene Kommer (r.kommer@micromata.de)
  */
-public class ExceptionUtils extends org.apache.commons.lang.exception.ExceptionUtils
+public class ExceptionUtils extends org.apache.commons.lang3.exception.ExceptionUtils
 {
 
   /**

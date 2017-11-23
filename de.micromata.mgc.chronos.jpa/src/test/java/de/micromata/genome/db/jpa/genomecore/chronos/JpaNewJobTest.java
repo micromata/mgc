@@ -19,7 +19,7 @@ package de.micromata.genome.db.jpa.genomecore.chronos;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.lang.time.StopWatch;
+import org.apache.commons.lang3.time.StopWatch;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Before;

@@ -16,15 +16,6 @@
 
 package de.micromata.genome.logging.spi.ifiles;
 
-import java.io.File;
-import java.io.IOException;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.lang.StringUtils;
-
 import de.micromata.genome.logging.BaseLogging;
 import de.micromata.genome.logging.EndOfSearch;
 import de.micromata.genome.logging.LogEntry;
@@ -33,6 +24,13 @@ import de.micromata.genome.logging.LogWriteEntry;
 import de.micromata.genome.util.runtime.LocalSettings;
 import de.micromata.genome.util.runtime.RuntimeIOException;
 import de.micromata.genome.util.types.Pair;
+import java.io.File;
+import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * 
@@ -107,7 +105,7 @@ public class IndexFileLoggingImpl extends BaseLogging
   @Override
   public String formatLogId(Object logId)
   {
-    return ObjectUtils.toString(logId);
+    return Objects.toString(logId, StringUtils.EMPTY);
   }
 
   @Override

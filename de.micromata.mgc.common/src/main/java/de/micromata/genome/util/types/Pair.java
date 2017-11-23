@@ -18,8 +18,7 @@ package de.micromata.genome.util.types;
 
 import java.io.Serializable;
 import java.util.Map;
-
-import org.apache.commons.lang.ObjectUtils;
+import java.util.Objects;
 
 /**
  * Similar to c++ type pair.
@@ -152,7 +151,7 @@ public class Pair<K, V> implements Map.Entry<K, V>, Serializable
   {
     if (obj instanceof Pair) {
       Pair other = (Pair) obj;
-      return ObjectUtils.equals(key, other.key) && ObjectUtils.equals(value, other.value);
+      return Objects.equals(key, other.key) && Objects.equals(value, other.value);
 
     }
     return false;
@@ -161,6 +160,6 @@ public class Pair<K, V> implements Map.Entry<K, V>, Serializable
   @Override
   public int hashCode()
   {
-    return ObjectUtils.hashCode(key) * 31 + ObjectUtils.hashCode(value);
+    return Objects.hashCode(key) * 31 + Objects.hashCode(value);
   }
 }

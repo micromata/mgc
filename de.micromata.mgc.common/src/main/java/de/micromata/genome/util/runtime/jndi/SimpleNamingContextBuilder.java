@@ -18,14 +18,15 @@ package de.micromata.genome.util.runtime.jndi;
 
 import java.util.Hashtable;
 
+import java.util.Objects;
 import javax.naming.Context;
 import javax.naming.NamingException;
 import javax.naming.spi.InitialContextFactory;
 import javax.naming.spi.InitialContextFactoryBuilder;
 import javax.naming.spi.NamingManager;
 
-import org.apache.commons.dbcp.BasicDataSource;
-import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.dbcp2.BasicDataSource;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 /**
@@ -293,7 +294,7 @@ public class SimpleNamingContextBuilder implements InitialContextFactoryBuilder
       BasicDataSource bds = (BasicDataSource) obj;
       return "BasicDataSource: " + bds.getUsername() + "@" + bds.getUrl();
     } else {
-      return ObjectUtils.toString(obj);
+      return Objects.toString(obj, StringUtils.EMPTY);
     }
   }
 

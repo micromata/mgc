@@ -25,7 +25,7 @@ import java.io.Writer;
 import java.util.Date;
 import java.util.Map;
 
-import org.apache.commons.collections15.map.ListOrderedMap;
+import org.apache.commons.collections4.map.ListOrderedMap;
 
 import de.micromata.genome.util.runtime.RuntimeIOException;
 import de.micromata.genome.util.types.Pair;

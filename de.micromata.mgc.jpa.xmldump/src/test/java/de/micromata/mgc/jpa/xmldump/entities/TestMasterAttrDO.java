@@ -16,9 +16,11 @@
 
 package de.micromata.mgc.jpa.xmldump.entities;
 
+import de.micromata.genome.db.jpa.tabattr.entities.JpaTabAttrBaseDO;
+import de.micromata.genome.db.jpa.tabattr.entities.JpaTabAttrDataBaseDO;
+import de.micromata.genome.db.jpa.tabattr.entities.JpaTabMasterBaseDO;
 import java.util.Date;
 import java.util.Map;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -26,6 +28,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.MapKey;
@@ -33,37 +36,27 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-
-import org.hibernate.annotations.Index;
 import org.junit.Ignore;
-
-import de.micromata.genome.db.jpa.tabattr.entities.JpaTabAttrBaseDO;
-import de.micromata.genome.db.jpa.tabattr.entities.JpaTabAttrDataBaseDO;
-import de.micromata.genome.db.jpa.tabattr.entities.JpaTabMasterBaseDO;
 
 @Ignore
 @Entity
-@Table(name = "TB_TST_ATTRMASTER")
+@Table(name = "TB_TST_ATTRMASTER", indexes = {
+    @Index(name = "IX_TST_ATTRMASTER_MODAT", columnList = "MODIFIEDAT"),
+    @Index(name = "IX_TST_ATTRMASTER_EKPT", columnList = "EKP"),
+    @Index(name = "IX_TST_ATTRMASTER_ABRN", columnList = "ABRN"),
+    @Index(name = "IX_TST_ATTRMASTER_SHPNR", columnList = "shipmentNumber"),
+    @Index(name = "IX_TST_ATTRMASTER_GP", columnList = "groupProfile"),
+    @Index(name = "IX_TST_ATTRMASTER_SHMST", columnList = "shipmentStatus"),
+    @Index(name = "IX_TST_ATTRMASTER_SN1", columnList = "senderName1"),
+    @Index(name = "IX_TST_ATTRMASTER_SN2", columnList = "senderName2"),
+    @Index(name = "IX_TST_ATTRMASTER_RN1", columnList = "recvName1"),
+    @Index(name = "IX_TST_ATTRMASTER_SN2", columnList = "senderName2"),
+    @Index(name = "IX_TST_ATTRMASTER_RSTR", columnList = "recvStreet"),
+    @Index(name = "IX_TST_ATTRMASTER_RPLZ", columnList = "recvPlz"),
+    @Index(name = "IX_TST_ATTRMASTER_RREF", columnList = "recvReference")
+})
 @SequenceGenerator(name = "SQ_TST_ATTRMASTER_PK", sequenceName = "SQ_TST_ATTRMASTER_PK")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@org.hibernate.annotations.Table(//
-    indexes = { //
-        @Index(name = "IX_TST_ATTRMASTER_MODAT", columnNames = { "MODIFIEDAT" }), //
-        @Index(name = "IX_TST_ATTRMASTER_EKPT", columnNames = { "EKP" }), //
-        @Index(name = "IX_TST_ATTRMASTER_ABRN", columnNames = { "ABRN" }), //
-        @Index(name = "IX_TST_ATTRMASTER_SHPNR", columnNames = { "shipmentNumber" }), //
-        @Index(name = "IX_TST_ATTRMASTER_GP", columnNames = { "groupProfile" }), //
-        @Index(name = "IX_TST_ATTRMASTER_SHMST", columnNames = { "shipmentStatus" }), //
-        @Index(name = "IX_TST_ATTRMASTER_SN1", columnNames = { "senderName1" }), //
-        @Index(name = "IX_TST_ATTRMASTER_SN2", columnNames = { "senderName2" }), //
-        @Index(name = "IX_TST_ATTRMASTER_RN1", columnNames = { "recvName1" }), //
-        @Index(name = "IX_TST_ATTRMASTER_SN2", columnNames = { "senderName2" }), //
-        @Index(name = "IX_TST_ATTRMASTER_RSTR", columnNames = { "recvStreet" }), //
-        @Index(name = "IX_TST_ATTRMASTER_RPLZ", columnNames = { "recvPlz" }), //
-        @Index(name = "IX_TST_ATTRMASTER_RREF", columnNames = { "recvReference" }),//
-
-}, appliesTo = "TB_TST_ATTRMASTER")
-
 public class TestMasterAttrDO extends JpaTabMasterBaseDO<TestMasterAttrDO, Long>
 {
 

@@ -24,8 +24,8 @@ import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.Reference;
 import javax.sql.DataSource;
+import org.apache.commons.dbcp2.BasicDataSource;
 
-import org.apache.commons.dbcp.BasicDataSource;
 
 /**
  * Utility to dump a JNDI context.

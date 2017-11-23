@@ -18,6 +18,7 @@ package de.micromata.genome.logging.loghtmlwindow;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -33,8 +34,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.log4j.Logger;
 
 import com.eclipsesource.json.JsonArray;
@@ -291,7 +292,7 @@ public abstract class LogHtmlWindowServlet extends HttpServlet
   public static String getClassResource(String name)
   {
     try (InputStream is = LogHtmlWindowServlet.class.getResourceAsStream(name)) {
-      return IOUtils.toString(is);
+      return IOUtils.toString(is, Charset.defaultCharset());
     } catch (IOException ex) {
       throw new RuntimeIOException(ex);
     }

@@ -18,7 +18,7 @@ package de.micromata.genome.jpa.events.impl;
 
 import java.util.Date;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import de.micromata.genome.jpa.ComplexEntity;
 import de.micromata.genome.jpa.ComplexEntityVisitor;

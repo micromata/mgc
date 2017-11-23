@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
-import org.apache.commons.collections15.map.ReferenceMap;
+import org.apache.commons.collections4.map.ReferenceMap;
 import org.apache.log4j.Logger;
 
 import de.micromata.genome.util.bean.PrivateBeanUtils;
@@ -76,8 +76,8 @@ public class SimpleEventClassRegistry extends AbstractMgcEventRegistry implement
   protected void addListener(Class<? extends MgcEvent> event, Class<? extends MgcEventListener<?>> listener)
   {
     Map<Class<? extends MgcEvent>, List<Reference<Class<? extends MgcEventListener<?>>>>> nmp = new ReferenceMap<>(
-        ReferenceMap.WEAK,
-        ReferenceMap.HARD);
+        ReferenceMap.ReferenceStrength.WEAK,
+        ReferenceMap.ReferenceStrength.HARD);
     nmp.putAll(listenerMap);
     List<Reference<Class<? extends MgcEventListener<?>>>> list = nmp.get(event);
     if (list == null) {
@@ -122,8 +122,8 @@ public class SimpleEventClassRegistry extends AbstractMgcEventRegistry implement
   protected void removeListener(Class<? extends MgcEvent> event, Class<? extends MgcEventListener<?>> listener)
   {
     Map<Class<? extends MgcEvent>, List<Reference<Class<? extends MgcEventListener<?>>>>> nmp = new ReferenceMap<>(
-        ReferenceMap.WEAK,
-        ReferenceMap.HARD);
+        ReferenceMap.ReferenceStrength.WEAK,
+        ReferenceMap.ReferenceStrength.HARD);
     nmp.putAll(listenerMap);
     List<Reference<Class<? extends MgcEventListener<?>>>> list = nmp.get(event);
     if (list == null) {

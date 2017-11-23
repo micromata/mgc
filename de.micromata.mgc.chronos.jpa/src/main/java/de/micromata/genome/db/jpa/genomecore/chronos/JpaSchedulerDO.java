@@ -16,18 +16,16 @@
 
 package de.micromata.genome.db.jpa.genomecore.chronos;
 
+import de.micromata.genome.jpa.StdRecordDO;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-
-import org.hibernate.annotations.Index;
-
-import de.micromata.genome.jpa.StdRecordDO;
 
 /**
  * The Class JpaSchedulerDO.
@@ -37,10 +35,8 @@ import de.micromata.genome.jpa.StdRecordDO;
 @Entity
 @Table(name = "TB_TA_CHRONOS_SCHEDULER",
     uniqueConstraints = { @UniqueConstraint(columnNames = { "NAME" },
-        name = "IX_TA_CHRONOS_SCHEDULER_NAME") })
-@org.hibernate.annotations.Table(indexes = { //
-    @Index(name = "IX_TA_CHRONOS_SCHEDULER_MODAT", columnNames = { "MODIFIEDAT" }),
-}, appliesTo = "TB_TA_CHRONOS_SCHEDULER")
+        name = "IX_TA_CHRONOS_SCHEDULER_NAME") },
+    indexes = @Index(name = "IX_TA_CHRONOS_SCHEDULER_MODAT", columnList = "MODIFIEDAT"))
 @SequenceGenerator(name = "SQ_TA_CHRONOS_SCHEDULER", sequenceName = "SQ_TA_CHRONOS_SCHEDULER")
 public class JpaSchedulerDO extends StdRecordDO<Long>
 {

@@ -18,7 +18,7 @@ package de.micromata.genome.util.matcher;
 
 import java.util.Set;
 
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.Validate;
 
 /**
  * Matches agains a set via contains.

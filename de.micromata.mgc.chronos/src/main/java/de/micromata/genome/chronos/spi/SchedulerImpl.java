@@ -23,7 +23,7 @@ import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.Validate;
 import org.apache.log4j.Logger;
 
 import de.micromata.genome.chronos.ChronosServiceManager;
@@ -326,7 +326,7 @@ public class SchedulerImpl implements Scheduler, RejectedExecutionHandler
           new LogExceptionAttribute(ex),
           new LogJobEventAttribute(new JobEventImpl(jobToExecute, null, null, State.SCHEDULED, this)));
       JobResultDO result = new JobResultDO();
-      // result.setResultObject(ExceptionUtils.getFullStackTrace(ex));
+      // result.setResultObject(ExceptionUtils.getStackTrace(ex));
       jobStore.jobAborted(jobToExecute, result, ex, this);
     }
   }

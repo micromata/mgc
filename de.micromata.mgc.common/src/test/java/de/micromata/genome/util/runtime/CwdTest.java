@@ -19,6 +19,7 @@ package de.micromata.genome.util.runtime;
 import java.io.File;
 import java.io.IOException;
 
+import java.nio.charset.Charset;
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -37,7 +38,7 @@ public class CwdTest
     String oldpwd = System.getProperty("user.dir");
     try {
       File curFile = new File("pom.xml");
-      String pom1 = FileUtils.readFileToString(curFile);
+      String pom1 = FileUtils.readFileToString(curFile, Charset.defaultCharset());
       // Ausgabe: ./pom.xml: C:\Users\roger\d\micromata\genome\genome-commons\pom.xml
       System.out.println("./pom.xml: " + curFile.getAbsolutePath());
       File parentDir = new File("./..");
@@ -49,11 +50,11 @@ public class CwdTest
       System.out.println("new cwd: (..)./pom.xml: " + pafile.getAbsolutePath());
       // !!!!!!
       // das liest trotzdem das pom1 aus!!!
-      String pom2 = FileUtils.readFileToString(pafile);
+      String pom2 = FileUtils.readFileToString(pafile, Charset.defaultCharset());
       Assert.assertEquals(pom1, pom2);
       // das fixt das: 
       File pafile2 = pafile.getAbsoluteFile();
-      String pom3 = FileUtils.readFileToString(pafile2);
+      String pom3 = FileUtils.readFileToString(pafile2, Charset.defaultCharset());
       // jetzt tatsaechlich das parent pom
       Assert.assertNotEquals(pom1, pom3);
     } catch (IOException ex) {

@@ -19,7 +19,7 @@ package de.micromata.mgc.javafx.launcher.gui.generic;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import de.micromata.genome.util.runtime.config.JdbcLocalSettingsConfigModel;
 import de.micromata.genome.util.runtime.config.jdbc.JdbProviderService;

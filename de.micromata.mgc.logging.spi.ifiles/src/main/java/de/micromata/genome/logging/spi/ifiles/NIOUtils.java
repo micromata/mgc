@@ -83,7 +83,7 @@ public class NIOUtils
   /**
    * reads from current position.
    * 
-   * @param channel
+   * @param input
    * @param length
    * @param charset
    * @return

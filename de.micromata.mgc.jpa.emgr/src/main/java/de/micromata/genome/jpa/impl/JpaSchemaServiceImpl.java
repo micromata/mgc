@@ -132,7 +132,7 @@ public class JpaSchemaServiceImpl implements JpaSchemaService
 
   private void checkAllTablesEmpty(List<EntityMetadata> sortedTables)
   {
-    emfac.runWoTrans((emgr) -> {
+    emfac.runInTrans((emgr) -> {
       long count = 0;
       for (EntityMetadata em : sortedTables) {
         long tableres = emgr

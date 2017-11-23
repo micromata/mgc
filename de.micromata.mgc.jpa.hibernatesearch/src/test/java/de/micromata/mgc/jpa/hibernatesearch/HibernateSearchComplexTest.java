@@ -59,7 +59,7 @@ public class HibernateSearchComplexTest extends HibernateSearchTestBase
         emgr.insertAttached(ent);
         return null;
       });
-      emf.runWoTrans((emgr) -> {
+      emf.runInTrans((emgr) -> {
         // Search on all fields
 
         List<MyEntityDO> sa = emgr.searchAttached("THISNAME", MyEntityDO.class);

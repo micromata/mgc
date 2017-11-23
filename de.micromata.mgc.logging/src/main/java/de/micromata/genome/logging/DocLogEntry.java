@@ -16,8 +16,8 @@
 
 package de.micromata.genome.logging;
 
-import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.lang.StringUtils;
+import java.util.Objects;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Java representation for a documented log entry.
@@ -128,7 +128,7 @@ public class DocLogEntry
       return false;
     }
     DocLogEntry dle = (DocLogEntry) other;
-    return level.equals(dle.level) && ObjectUtils.equals(domain, dle.domain) && category.equals(dle.category);
+    return level.equals(dle.level) && Objects.equals(domain, dle.domain) && category.equals(dle.category);
   }
 
   @Override

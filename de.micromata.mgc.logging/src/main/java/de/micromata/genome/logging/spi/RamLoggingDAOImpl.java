@@ -16,18 +16,17 @@
 
 package de.micromata.genome.logging.spi;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import org.apache.commons.lang.ObjectUtils;
-
 import de.micromata.genome.logging.BaseLogging;
 import de.micromata.genome.logging.EndOfSearch;
 import de.micromata.genome.logging.LogEntryCallback;
 import de.micromata.genome.logging.LogWriteEntry;
 import de.micromata.genome.util.types.Pair;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Very basic Logging, collecting log entries into a List.
@@ -106,7 +105,7 @@ public class RamLoggingDAOImpl extends BaseLogging
   @Override
   public String formatLogId(Object logId)
   {
-    return ObjectUtils.toString(logId);
+    return Objects.toString(logId, StringUtils.EMPTY);
   }
 
   @Override

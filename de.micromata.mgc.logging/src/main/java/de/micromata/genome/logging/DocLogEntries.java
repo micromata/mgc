@@ -22,9 +22,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
-
-import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Java representation for a documented log entries.
@@ -106,12 +106,12 @@ public class DocLogEntries
     int i;
     for (i = 0; props.get("" + i + ".level") != null; ++i) {
       DocLogEntry dl = new DocLogEntry();
-      dl.setLevel(ObjectUtils.toString(props.get("" + i + ".level")));
-      dl.setDomain(ObjectUtils.toString(props.get("" + i + ".domain")));
-      dl.setCategory(ObjectUtils.toString(props.get("" + i + ".category")));
-      dl.setConstMessage(ObjectUtils.toString(props.get("" + i + ".message")));
-      dl.setReason(ObjectUtils.toString(props.get("" + i + ".reason")));
-      dl.setAction(ObjectUtils.toString(props.get("" + i + ".action")));
+      dl.setLevel(Objects.toString(props.get("" + i + ".level"), StringUtils.EMPTY));
+      dl.setDomain(Objects.toString(props.get("" + i + ".domain"), StringUtils.EMPTY));
+      dl.setCategory(Objects.toString(props.get("" + i + ".category"), StringUtils.EMPTY));
+      dl.setConstMessage(Objects.toString(props.get("" + i + ".message"), StringUtils.EMPTY));
+      dl.setReason(Objects.toString(props.get("" + i + ".reason"), StringUtils.EMPTY));
+      dl.setAction(Objects.toString(props.get("" + i + ".action"), StringUtils.EMPTY));
       // log4jlog.debug("dl: " + dl.hashCode() + ": " + dl.toString());
       DocLogEntryKey dlek = new DocLogEntryKey(dl);
       List<DocLogEntry> ldel = dle.entries.get(dlek);

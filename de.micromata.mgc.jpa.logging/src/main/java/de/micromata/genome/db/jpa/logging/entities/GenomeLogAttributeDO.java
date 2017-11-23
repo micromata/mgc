@@ -21,12 +21,13 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Index;
+
 
 /**
  * A logging Attribute entity.
@@ -35,13 +36,11 @@ import org.hibernate.annotations.Index;
  *
  */
 @Entity
-@Table(name = "TB_TA_LOG_ATTRIBUTE")
-@org.hibernate.annotations.Table(indexes = { //
-    @Index(name = "IX_TA_LOG_MASTER", columnNames = {"TA_LOG_MASTER"}),
-    @Index(name = "IX_TA_LOGATTR_SVALUE", columnNames = { "BASE_LOG_ATTRIBUTE", "SHORT_VALUE" }), //
-    @Index(name = "IX_TA_LOG_ATTRIBUTE_MODAT", columnNames = { "MODIFIEDAT" })
-    //
-}, appliesTo = "TB_TA_LOG_ATTRIBUTE")
+@Table(name = "TB_TA_LOG_ATTRIBUTE", indexes = {
+    @Index(name = "IX_TA_LOG_MASTER", columnList = "TA_LOG_MASTER"),
+    @Index(name = "IX_TA_LOGATTR_SVALUE", columnList = "BASE_LOG_ATTRIBUTE,SHORT_VALUE"),
+    @Index(name = "IX_TA_LOG_ATTRIBUTE_MODAT", columnList = "MODIFIEDAT")
+})
 @SequenceGenerator(name = "SQ_TA_LOG_ATTRIBUTE", sequenceName = "SQ_TA_LOG_ATTRIBUTE")
 public class GenomeLogAttributeDO extends BaseLogAttributeDO<GenomeLogMasterDO>
 {

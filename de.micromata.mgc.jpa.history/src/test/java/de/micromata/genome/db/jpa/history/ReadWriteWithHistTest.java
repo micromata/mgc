@@ -92,7 +92,7 @@ public class ReadWriteWithHistTest extends GenomeTestCase
       emgr.insert(ne);
       return null;
     });
-    DummyHistEntityDO se = HistoryTestEmgrFactory.get().runWoTrans((emgr) -> {
+    DummyHistEntityDO se = HistoryTestEmgrFactory.get().runInTrans((emgr) -> {
       return emgr.selectByPkDetached(DummyHistEntityDO.class, ne.getPk());
     });
     // just standard update operations

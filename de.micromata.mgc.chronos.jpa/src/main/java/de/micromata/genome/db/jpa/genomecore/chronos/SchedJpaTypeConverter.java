@@ -16,7 +16,7 @@
 
 package de.micromata.genome.db.jpa.genomecore.chronos;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import de.micromata.genome.chronos.spi.jdbc.ChronosStdRecordDO;
 import de.micromata.genome.chronos.spi.jdbc.JobResultDO;

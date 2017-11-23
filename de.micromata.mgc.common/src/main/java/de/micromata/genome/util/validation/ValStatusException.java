@@ -16,7 +16,7 @@
 
 package de.micromata.genome.util.validation;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Base class on ValMessage related exceptions.

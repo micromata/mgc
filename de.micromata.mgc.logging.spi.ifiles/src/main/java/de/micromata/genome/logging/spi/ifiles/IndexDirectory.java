@@ -22,15 +22,14 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-
-import groovy.json.internal.Charsets;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * 
@@ -172,7 +171,7 @@ public class IndexDirectory implements Closeable
       if (StringUtils.equalsIgnoreCase(trimmed, fnt) == true) {
         String lwwrite = fileToStoredName(newFile);
         indexByteBuffer.position(indexByteBuffer.position() - LOG_FILE_NAME_SIZE);
-        indexByteBuffer.put(lwwrite.getBytes(Charsets.US_ASCII));
+        indexByteBuffer.put(lwwrite.getBytes(StandardCharsets.US_ASCII));
         break;
       }
 

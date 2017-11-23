@@ -51,11 +51,11 @@ public class JpaDemoTest extends MgcTestCase
     });
     Assert.assertNotNull(pk);
     // select the entity by pk
-    GenomeJpaTestTableDO readed = emfac.notx().go((emgr) -> emgr.selectByPkAttached(GenomeJpaTestTableDO.class, pk));
+    GenomeJpaTestTableDO readed = emfac.tx().go((emgr) -> emgr.selectByPkAttached(GenomeJpaTestTableDO.class, pk));
     Assert.assertNotNull(readed);
 
     // select entities by criterias
-    List<GenomeJpaTestTableDO> list = emfac.notx().go((emgr) -> {
+    List<GenomeJpaTestTableDO> list = emfac.tx().go((emgr) -> {
       return emgr.selectDetached(GenomeJpaTestTableDO.class,
           "select e from " + GenomeJpaTestTableDO.class.getName() + " e where e.firstName = :firstName",
           "firstName", "Roger");
@@ -71,7 +71,7 @@ public class JpaDemoTest extends MgcTestCase
       return emgr.createQuery("delete  from " + GenomeJpaTestTableDO.class.getName() + " e").executeUpdate();
     });
     List<GenomeJpaTestTableDO> list;
-    list = emfac.runWoTrans((emgr) -> {
+    list = emfac.runInTrans((emgr) -> {
       TypedQuery<GenomeJpaTestTableDO> query = emgr.createQueryDetached(GenomeJpaTestTableDO.class,
           "select e from " + GenomeJpaTestTableDO.class.getName() + " e where e.firstName = :firstName");
       query.setParameter("firstName", "Roger");
@@ -85,7 +85,7 @@ public class JpaDemoTest extends MgcTestCase
   public void testSelectSimplified()
   {
     List<GenomeJpaTestTableDO> list;
-    list = emfac.runWoTrans((emgr) -> {
+    list = emfac.runInTrans((emgr) -> {
       return emgr.selectDetached(GenomeJpaTestTableDO.class,
           "select e from " + GenomeJpaTestTableDO.class.getName() + " e where e.firstName = :firstName",
           "firstName", "Roger");

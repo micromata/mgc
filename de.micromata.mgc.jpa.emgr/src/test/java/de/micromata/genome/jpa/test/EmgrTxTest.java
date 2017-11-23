@@ -47,7 +47,7 @@ public class EmgrTxTest extends MgcTestCase
       emgr.update(tdr);
       return null;
     });
-    GenomeJpaTestTableDO ntd = emfac.notx()
+    GenomeJpaTestTableDO ntd = emfac.tx()
         .go((emgr) -> emgr.selectByPkDetached(GenomeJpaTestTableDO.class, td.getPk()));
     Assert.assertEquals("Roger", ntd.getFirstName());
   }

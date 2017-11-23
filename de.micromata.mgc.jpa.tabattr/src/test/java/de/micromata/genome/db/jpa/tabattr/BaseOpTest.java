@@ -22,7 +22,7 @@ import java.io.InputStream;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -73,7 +73,7 @@ public class BaseOpTest extends GenomeTestCase
     JpaTabAttrBaseDO<TestMasterAttrDO, Long> key = master.getAttributeRow("Key No " + 1);
     final Long pk = key.getPk();
 
-    mgrfac.runWoTrans(new EmgrCallable<Void, TestTabAttrEntityMgr>()
+    mgrfac.runInTrans(new EmgrCallable<Void, TestTabAttrEntityMgr>()
     {
 
       @Override

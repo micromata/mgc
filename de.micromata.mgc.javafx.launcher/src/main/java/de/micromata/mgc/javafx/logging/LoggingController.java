@@ -19,6 +19,7 @@ package de.micromata.mgc.javafx.logging;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
@@ -180,7 +181,7 @@ public class LoggingController implements Initializable
   String loadCpResource(String name)
   {
     try (InputStream is = getClass().getResourceAsStream(name)) {
-      return IOUtils.toString(is);
+      return IOUtils.toString(is, Charset.defaultCharset());
     } catch (IOException ex) {
       throw new RuntimeIOException(ex);
     }
@@ -190,7 +191,7 @@ public class LoggingController implements Initializable
   {
     StringBuilder sb = new StringBuilder();
     try (InputStream is = LoggingController.class.getResourceAsStream("/loggingweb.css")) {
-      String css = IOUtils.toString(is);
+      String css = IOUtils.toString(is, Charset.defaultCharset());
       sb.append("\n<style>\n").append(css).append("\n</style>\n");
     } catch (IOException ex) {
       throw new RuntimeIOException(ex);

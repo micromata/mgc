@@ -16,7 +16,7 @@
 
 package de.micromata.mgc.javafx.launcher.sample;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import de.micromata.genome.util.runtime.config.ALocalSettingsPath;
 import de.micromata.genome.util.runtime.config.AbstractLocalSettingsConfigModel;

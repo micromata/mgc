@@ -16,7 +16,7 @@
 
 package de.micromata.genome.util.matcher;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import de.micromata.genome.util.runtime.RuntimeCallable;
 
@@ -63,7 +63,7 @@ public class GenomeCommonsThreadedRunner
             }
           } catch (Exception ex) {
             synchronized (GenomeCommonsThreadedRunner.this) {
-              exeptions.append("\n\nThread " + Thread.currentThread().getId() + " faield:\n").append(ExceptionUtils.getFullStackTrace(ex));
+              exeptions.append("\n\nThread ").append(Thread.currentThread().getId()).append(" faield:\n").append(ExceptionUtils.getStackTrace(ex));
             }
           }
         }

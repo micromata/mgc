@@ -19,7 +19,7 @@ package de.micromata.genome.util.runtime;
 import java.io.File;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import de.micromata.genome.util.collections.OrderedProperties;
 import de.micromata.genome.util.types.Pair;

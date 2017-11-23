@@ -4,7 +4,7 @@
   <parent>
     <artifactId>de.micromata.mgc.rootpom</artifactId>
     <groupId>de.micromata.mgc</groupId>
-    <version>2.6.0</version><!-- MGC -->
+    <version>3.0.0</version><!-- MGC -->
   </parent>
   <artifactId>de.micromata.mgc.jpa.emgr</artifactId>
   <packaging>jar</packaging>
@@ -16,6 +16,13 @@
   <profiles>
     <profile>
       <id>genome</id>
+      <pluginRepositories>
+        <pluginRepository>
+          <id>genome-deploy</id>
+          <name>genome-deploy</name>
+          <url>https://repo.micromata.de/nexus/content/repositories/genome/</url>
+        </pluginRepository>
+	  </pluginRepositories>
       <build>
         <plugins>
           <plugin>
@@ -61,12 +68,10 @@
       <artifactId>log4j</artifactId>
       <version>${log4j.version}</version>
     </dependency>
-    <!-- <dependency> <groupId>org.hibernate.javax.persistence</groupId> <artifactId>hibernate-jpa-2.0-api</artifactId> <version>${org.hibernate.javax.persistence.hibernate-jpa-2.0-api.version}</version> 
-      </dependency> -->
     <dependency>
       <groupId>javax.transaction</groupId>
       <artifactId>javax.transaction-api</artifactId>
-      <version>1.2</version>
+      <version>${javax.transaction-api.version}</version>
     </dependency>
     <dependency>
       <groupId>org.hibernate</groupId>
@@ -86,6 +91,12 @@
       <artifactId>de.micromata.mgc.common.test</artifactId>
       <version>${mgc.version}</version>
       <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-collections4</artifactId>
+      <version>${commons-collections.version}</version>
     </dependency>
 
     <dependency>
