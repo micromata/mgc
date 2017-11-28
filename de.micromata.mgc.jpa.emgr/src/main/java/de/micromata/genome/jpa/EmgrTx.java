@@ -42,7 +42,6 @@ public class EmgrTx<E extends IEmgr<?>>
    */
   private EmgrFactory<E> emfac;
 
-  boolean noTx = false;
   /**
    * The requires new.
    */
@@ -95,9 +94,7 @@ public class EmgrTx<E extends IEmgr<?>>
 
   private void startTransaction(E emgr)
   {
-    if (noTx == true) {
-      return;
-    }
+
     setTransactionTimeOut(emgr);
     tx.begin();
     if (rollback == true) {
@@ -107,9 +104,6 @@ public class EmgrTx<E extends IEmgr<?>>
 
   private void finalTransaction(E emgr)
   {
-    if (noTx == true) {
-      return;
-    }
     emgr.getEntityManager().flush();
     if (rollback == true) {
       tx.rollback();
@@ -181,9 +175,7 @@ public class EmgrTx<E extends IEmgr<?>>
     if (parentTx.rollback != true && rollback == true) {
       reqNew = true;
     }
-    if (parentTx.noTx == true && noTx == false) {
-      reqNew = true;
-    }
+
     if (reqNew == true) {
       return createNewEmgr();
     }
@@ -233,16 +225,6 @@ public class EmgrTx<E extends IEmgr<?>>
     return this;
   }
 
-  /**
-   * Run without transaction.
-   * 
-   * @return
-   */
-  public EmgrTx<E> noTx()
-  {
-    noTx = true;
-    return this;
-  }
 
   /**
    * Rollback at the end of the transaction.
