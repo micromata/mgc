@@ -31,14 +31,16 @@ public class SerializationUtil
 {
 
   /**
-   * The Constant domDriver.
-   */
-  private static final DomDriver domDriver = new DomDriver();
-
-  /**
    * The Constant xstream.
    */
-  private static final XStream xstream = new XStream(domDriver);
+  private static final XStream xstream;
+
+  static {
+    final DomDriver domDriver = new DomDriver();
+    xstream = new XStream(domDriver);
+    XStream.setupDefaultSecurity(xstream); // can be removed with XStream 1.5
+    xstream.allowTypesByWildcard(new String[] {"de.micromata.genome.**"});
+  }
 
   /**
    * Deserialize with x stream.
