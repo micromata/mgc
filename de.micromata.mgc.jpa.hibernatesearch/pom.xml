@@ -4,7 +4,7 @@
   <parent>
     <artifactId>de.micromata.mgc.rootpom</artifactId>
     <groupId>de.micromata.mgc</groupId>
-    <version>3.0.2</version><!-- MGC -->
+    <version>3.0.3</version><!-- MGC -->
   </parent>
   <artifactId>de.micromata.mgc.jpa.hibernatesearch</artifactId>
   <packaging>jar</packaging>
