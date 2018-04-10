@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.micromata.mgc</groupId>
   <artifactId>de.micromata.mgc.rootpom</artifactId>
-  <version>3.0.3</version>
+  <version>3.0.4</version>
   <packaging>pom</packaging>
 
   <organization>
@@ -86,7 +86,7 @@
     <!-- old 4.1.9.Final -->
     <org.hibernate.hibernate-entitymanager.version>5.0.12.Final</org.hibernate.hibernate-entitymanager.version>
 
-    <spring.version>4.3.15.RELEASE</spring.version>
+    <spring.version>4.3.16.RELEASE</spring.version>
     <spring-boot.version>1.3.1.RELEASE</spring-boot.version>
 
     <org.apache.derby.version>10.12.1.1</org.apache.derby.version>
