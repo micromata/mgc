@@ -16,11 +16,11 @@
 
 package de.micromata.genome.logging;
 
+import de.micromata.genome.util.types.Pair;
+
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.List;
-
-import de.micromata.genome.util.types.Pair;
 
 /**
  * Basic abstract class for Logging.
@@ -253,5 +253,29 @@ public interface Logging
    * @param lwe wenn lwe.timestamp != 0 muss dieser uebernommen werden.
    */
   void logLwe(LogWriteEntry lwe);
+
+  /**
+   * When returning true this means the underlying client like the elasticsearch client,
+   * is handling reading/writing in an async manner.
+   *
+   * @return true when the client is async / false when not
+   */
+  default boolean underlyingClientIsAsync() {
+    return false;
+  }
+
+  /**
+   * This must be called by a {@link Logging} implementation which has {@link Logging#underlyingClientIsAsync()}  true.
+   * This tells the {@link java.util.concurrent.CompletableFuture} in {@link LogEntryFilterAsyncCallback} to be done.
+   * @param callback the callback which is passed to {@link Logging#selectLogs(List, boolean, LogEntryCallback)}
+   *                 and {@link Logging#selectLogs(Timestamp, Timestamp, Integer, String, String, List, int, int, List, boolean, LogEntryCallback)}
+   */
+  default void asynClientDone(final LogEntryCallback callback) {
+      if(LogEntryFilterAsyncCallback.class.isAssignableFrom(callback.getClass()) == false) {
+        return;
+      }
+
+    ((LogEntryFilterAsyncCallback) callback).done();
+  }
 
 }
