@@ -35,6 +35,10 @@ public class Escape
    */
   public static String forLog(String untrustedData)
   {
+    if(untrustedData == null){
+      return null;
+    }
+
     String escapedData = untrustedData
       .replace("\n" , "\\n")
       .replace("\r" , "\\r")
