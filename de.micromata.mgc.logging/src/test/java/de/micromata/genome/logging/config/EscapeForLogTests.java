@@ -27,7 +27,7 @@ import java.util.Collection;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(Parameterized.class)
-public class EscapeTests
+public class EscapeForLogTests
 {
   @Parameterized.Parameters
   public static Collection<Object[]> data() {
@@ -37,7 +37,10 @@ public class EscapeTests
       { "MyValue\n", "MyValue\\n" },
       { "MyValue\r\n", "MyValue\\r\\n" },
       { "My\r\nValue", "My\\r\\nValue" },
-      { "My\tValue", "My\\tValue" }
+      { "My\tValue", "My\\tValue" },
+      { "My\tVa\rlu\ne", "My\\tVa\\rlu\\ne" },
+      { "", "" },
+      { null, null },
     });
   }
 

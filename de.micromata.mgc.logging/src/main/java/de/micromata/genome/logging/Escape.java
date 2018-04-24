@@ -16,6 +16,8 @@
 
 package de.micromata.genome.logging;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * Escapes untrusted data for writing it safely into a log file.
  */
@@ -35,15 +37,25 @@ public class Escape
    */
   public static String forLog(String untrustedData)
   {
-    if(untrustedData == null){
-      return null;
-    }
+    String escapedData = untrustedData;
 
-    String escapedData = untrustedData
-      .replace("\n" , "\\n")
-      .replace("\r" , "\\r")
-      .replace("\t" , "\\t");
+    escapedData = StringUtils.replace(escapedData, "\n", "\\n");
+    escapedData = StringUtils.replace(escapedData, "\r", "\\r");
+    escapedData = StringUtils.replace(escapedData, "\t", "\\t");
 
     return escapedData;
+  }
+
+
+  /**
+   * Replaces all Null-Bytes in the value
+   * This is required, because i.e. Postgres fails with exception "invalid byte sequence 0x00"
+   *
+   * @param value
+   * @return
+   */
+  public static String nullBytes(String value)
+  {
+    return StringUtils.replace(value, "\u0000", "\\0");
   }
 }
