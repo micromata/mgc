@@ -23,6 +23,7 @@ import de.micromata.genome.jpa.DefaultEmgr;
 import de.micromata.genome.jpa.EmgrCallable;
 import de.micromata.genome.jpa.EmgrFactory;
 import de.micromata.genome.logging.EndOfSearch;
+import de.micromata.genome.logging.Escape;
 import de.micromata.genome.logging.FallbackLogging;
 import de.micromata.genome.logging.GLog;
 import de.micromata.genome.logging.GenomeLogCategory;
@@ -277,8 +278,11 @@ public abstract class BaseJpaLoggingImpl<M extends BaseLogMasterDO<?>>extends Fa
     master.setPk((Long) lwe.getLogEntryIndex());
     master.setCategory(lwe.getCategory());
     master.setLoglevel((short) lwe.getLevel().getLevel());
-    master.setMessage(lwe.getMessage());
-    master.setShortmessage(lwe.getMessage());
+
+    String message = escapeNullBytes(lwe.getMessage());
+    master.setMessage(message);
+    master.setShortmessage(message);
+
     if (lwe.getTimestamp() != 0) {
       master.setCreatedAt(new Date(lwe.getTimestamp()));
     }
@@ -288,7 +292,7 @@ public abstract class BaseJpaLoggingImpl<M extends BaseLogMasterDO<?>>extends Fa
     for (LogAttribute attr : lwe.getAttributes()) {
       boolean handled = false;
 
-      final String normalizedValue = getLengthNormalizedValue(lwe, attr);
+      final String normalizedValue = escapeNullBytes(getLengthNormalizedValue(lwe, attr));
       if (attr.getType().isSearchKey() == true) {
         SearchColumnDesc colDesc = searchableAttributeProperties.get(attr.getType().name());
         if (colDesc != null) {
@@ -320,6 +324,17 @@ public abstract class BaseJpaLoggingImpl<M extends BaseLogMasterDO<?>>extends Fa
       }
     }
 
+  }
+
+  /**
+   * Replaces all Null-Bytes in the value
+   * This is required, because i.e. Postgres fails with exception "invalid byte sequence 0x00"
+   *
+   * @param value
+   * @return
+   */
+  private  String escapeNullBytes(String value){
+    return Escape.nullBytes(value);
   }
 
   /**
