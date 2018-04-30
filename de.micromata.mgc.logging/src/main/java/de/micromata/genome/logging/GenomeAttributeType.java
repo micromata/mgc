@@ -114,6 +114,11 @@ public enum GenomeAttributeType implements LogAttributeType
   HttpRequestDump,
 
   /**
+   * A dump of the request body.
+   */
+  HttpRequestBodyDump,
+
+  /**
    * A complete Dump of a response.
    */
   HttpResponseDump,
