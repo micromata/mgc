@@ -15,8 +15,6 @@
 //
 package de.micromata.genome.logging.web;
 
-import org.apache.commons.codec.Charsets;
-
 import javax.servlet.ServletInputStream;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +22,7 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.Enumeration;
 import java.util.Map;
 
@@ -31,7 +30,7 @@ import java.util.Map;
  * This wrapper caches the read content into a ByteArray.
  * You can retrieve the content AFTER it was read with the getCacheAsString() Method.
  *
- * The cache can be limited by the ctor parameter maxCacheSize. Null means unlimited.
+ * The cache can be limited by the ctor parameter maxCacheSize.
  * If the body is accessed by the HttpServletRequest.getParameter* Methods. This
  * class recognize it and return the parametermap as from url encoded.
  *
@@ -41,7 +40,7 @@ import java.util.Map;
 public class MultipleReadRequestWrapper extends HttpServletRequestWrapper {
 
   private static final String CONTENT_TYPE_FORM_URL_ENCODED = "application/x-www-form-urlencoded";
-  private Integer maxCacheSize = null;
+  private int maxCacheSize;
   private CacheSizeExceededHandler cacheSizeExceededHandler = null;
   private CachedInputStream cachedInputStream;
   private String cachedRequestParameters;
@@ -53,7 +52,7 @@ public class MultipleReadRequestWrapper extends HttpServletRequestWrapper {
    */
   public MultipleReadRequestWrapper(HttpServletRequest request)
   {
-    this(request, null, null);
+    this(request, Integer.MAX_VALUE, null);
   }
 
   /**
@@ -61,7 +60,7 @@ public class MultipleReadRequestWrapper extends HttpServletRequestWrapper {
    * @param request the request
    * @param maxCacheSize bytes that are cached
    */
-  public MultipleReadRequestWrapper(HttpServletRequest request, Integer maxCacheSize)
+  public MultipleReadRequestWrapper(HttpServletRequest request, int maxCacheSize)
   {
     this(request, maxCacheSize, null);
   }
@@ -72,7 +71,7 @@ public class MultipleReadRequestWrapper extends HttpServletRequestWrapper {
    * @param maxCacheSize bytes that are cached
    * @param cacheSizeExceededHandler handler that fires if max cache bytes reached
    */
-  public MultipleReadRequestWrapper(HttpServletRequest request, Integer maxCacheSize, CacheSizeExceededHandler cacheSizeExceededHandler)
+  public MultipleReadRequestWrapper(HttpServletRequest request, int maxCacheSize, CacheSizeExceededHandler cacheSizeExceededHandler)
   {
     super(request);
     this.maxCacheSize = maxCacheSize;
@@ -88,7 +87,7 @@ public class MultipleReadRequestWrapper extends HttpServletRequestWrapper {
   {
     ServletRequest currentRequest = req;
     while(currentRequest instanceof HttpServletRequestWrapper){
-      HttpServletRequestWrapper wrapper = (HttpServletRequestWrapper)req;
+      HttpServletRequestWrapper wrapper = (HttpServletRequestWrapper)currentRequest;
 
       if(wrapper instanceof MultipleReadRequestWrapper){
         return (MultipleReadRequestWrapper)wrapper;
@@ -111,9 +110,6 @@ public class MultipleReadRequestWrapper extends HttpServletRequestWrapper {
   private int getCacheSize()
   {
     int requestContentLength = Math.max(0, getRequest().getContentLength());
-    if(maxCacheSize == null){
-      return requestContentLength;
-    }
 
     if(maxCacheSize >= requestContentLength){
       return requestContentLength;
@@ -126,7 +122,7 @@ public class MultipleReadRequestWrapper extends HttpServletRequestWrapper {
   public String getCharacterEncoding()
   {
     String enc = super.getCharacterEncoding();
-    return (enc != null ? enc : Charsets.ISO_8859_1.name());
+    return (enc != null ? enc : Charset.defaultCharset().name());
   }
 
   @Override
@@ -146,7 +142,7 @@ public class MultipleReadRequestWrapper extends HttpServletRequestWrapper {
     return super.getParameter(name);
   }
 
-  private boolean shouldWriteRequestParametersToCachedContent(){
+  protected boolean shouldWriteRequestParametersToCachedContent(){
     return isCacheEmpty() && isFormPostUrlEncoded();
   }
 

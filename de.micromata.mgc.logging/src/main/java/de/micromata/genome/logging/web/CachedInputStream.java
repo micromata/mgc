@@ -16,6 +16,7 @@
 package de.micromata.genome.logging.web;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.Validate;
 
 import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
@@ -27,10 +28,18 @@ import java.io.IOException;
  */
 public class CachedInputStream extends ServletInputStream
 {
+  // Wraps the original input stream
   private final ServletInputStream wrappedInputStream;
+
+  // Read content is written to that cache until cacheSize exceeds
   private final ByteArrayOutputStream cache;
-  private final Integer cacheSize;
+
+  // maximal size of cache
+  private final int cacheSize;
+
+  // handler that is invoked if the cacheSize is exceeded
   private final CacheSizeExceededHandler cacheSizeExceededHandler;
+
   private boolean cacheSizeReached = false;
 
   /**
@@ -38,7 +47,7 @@ public class CachedInputStream extends ServletInputStream
    * @param wrappedInputStream the wrapped InputStream
    * @param cacheSize the maximal cacheSize
    */
-  public CachedInputStream(ServletInputStream wrappedInputStream, Integer cacheSize)
+  public CachedInputStream(ServletInputStream wrappedInputStream, int cacheSize)
   {
     this(wrappedInputStream, cacheSize, null);
   }
@@ -49,15 +58,9 @@ public class CachedInputStream extends ServletInputStream
    * @param cacheSize the maximal cacheSize
    * @param cacheSizeExceededHandler handler that is invoked if the cacheSize is exceeded
    */
-  public CachedInputStream(ServletInputStream wrappedInputStream, Integer cacheSize, CacheSizeExceededHandler cacheSizeExceededHandler)
+  public CachedInputStream(ServletInputStream wrappedInputStream, int cacheSize, CacheSizeExceededHandler cacheSizeExceededHandler)
   {
-    if(wrappedInputStream == null) {
-      throw new IllegalArgumentException("wrappedInputStream is null");
-    }
-
-    if(cacheSize == null) {
-      throw new IllegalArgumentException("cacheSize is null");
-    }
+    Validate.notNull(wrappedInputStream, "wrappedInputStream is null");
 
     this.wrappedInputStream = wrappedInputStream;
     this.cache = new ByteArrayOutputStream(cacheSize);

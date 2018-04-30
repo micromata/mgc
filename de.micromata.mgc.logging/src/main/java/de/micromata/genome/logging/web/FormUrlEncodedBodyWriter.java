@@ -16,6 +16,7 @@
 package de.micromata.genome.logging.web;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -40,13 +41,8 @@ public class FormUrlEncodedBodyWriter
    */
   public FormUrlEncodedBodyWriter(Map<String, String[]> parameterMap, String characterEncoding)
   {
-    if(parameterMap == null) {
-      throw new IllegalArgumentException("parameterMap is null");
-    }
-
-    if(characterEncoding == null) {
-      throw new IllegalArgumentException("characterEncoding is null");
-    }
+    Validate.notNull(parameterMap, "parameterMap is null");
+    Validate.notNull(characterEncoding, "characterEncoding is null");
 
     this.parameterMap = parameterMap;
     this.characterEncoding = characterEncoding;
@@ -69,7 +65,7 @@ public class FormUrlEncodedBodyWriter
   {
     return Arrays
       .stream(parameters)
-      .filter(p -> !StringUtils.isBlank(key) && !StringUtils.isBlank(p))
+      .filter(p -> StringUtils.isBlank(key) == false && StringUtils.isBlank(p) == false)
       .map(p -> urlEncode(key) + "=" + urlEncode(p));
   }
 
@@ -78,7 +74,7 @@ public class FormUrlEncodedBodyWriter
     try{
       return URLEncoder.encode(value, characterEncoding);
     }catch (UnsupportedEncodingException e){
-      throw new RuntimeException(e);
+      throw new IllegalArgumentException("UnsupportedEncoding", e);
     }
   }
 }

@@ -27,5 +27,5 @@ public interface CacheSizeExceededHandler
    * @param cache the current cache
    * @param cacheSize the cacheSize
    */
-  void cacheSizeExceeded(byte[] cache, Integer cacheSize);
+  void cacheSizeExceeded(byte[] cache, int cacheSize);
 }

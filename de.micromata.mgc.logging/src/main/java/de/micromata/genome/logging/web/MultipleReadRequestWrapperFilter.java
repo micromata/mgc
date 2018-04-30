@@ -44,6 +44,8 @@ public class MultipleReadRequestWrapperFilter implements Filter
     String param = filterConfig.getInitParameter("maxCachedContentInBytes");
     if(StringUtils.isBlank(param) == false){
       maxCacheSize = Integer.parseInt(param);
+    }else{
+      maxCacheSize = Integer.MAX_VALUE;
     }
   }
 

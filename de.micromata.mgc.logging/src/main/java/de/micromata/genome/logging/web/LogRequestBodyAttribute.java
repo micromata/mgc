@@ -27,26 +27,40 @@ import java.io.StringWriter;
  */
 public class LogRequestBodyAttribute extends LogAttribute
 {
-    /**
-     * Instantiates a new log request body attribute.
-     *
-     * @param req the req
-     */
-    public LogRequestBodyAttribute(HttpServletRequest req)
-    {
-      super(GenomeAttributeType.HttpRequestBodyDump, generateHttpRequestDump(req));
-    }
+  private HttpServletRequest request;
+  private boolean httpRequestDumpGenerated = false;
+  private String generatedHttpRequestDump;
 
   /**
-   * Generated http body dump.
+   * Instantiates a new log request body attribute.
    *
    * @param req the req
-   * @return the string
    */
-  public static String generateHttpRequestDump(HttpServletRequest req)
+  public LogRequestBodyAttribute(HttpServletRequest req)
+  {
+    super(GenomeAttributeType.HttpRequestBodyDump,"");
+    request = req;
+  }
+
+  @Override
+  public String getValue()
+  {
+    if(httpRequestDumpGenerated == false){
+      generatedHttpRequestDump = generateHttpRequestDump();
+      httpRequestDumpGenerated = true;
+    }
+    return generatedHttpRequestDump;
+  }
+
+  /**
+   * Generate http body dump.
+   *
+   * @return the dumped request body
+   */
+  public String generateHttpRequestDump()
   {
     try{
-      MultipleReadRequestWrapper multiReadRequest = MultipleReadRequestWrapper.findMultipleReadRequestInWrappedRequests(req);
+      MultipleReadRequestWrapper multiReadRequest = MultipleReadRequestWrapper.findMultipleReadRequestInWrappedRequests(request);
       if(multiReadRequest == null){
         return "Can not dump request body, because the request must be wrapped by a MultipleReadRequestWrapper";
       }
