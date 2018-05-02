@@ -4,7 +4,7 @@
   <parent>
     <artifactId>de.micromata.mgc.rootpom</artifactId>
     <groupId>de.micromata.mgc</groupId>
-    <version>3.0.4</version><!-- MGC -->
+    <version>3.0.5</version><!-- MGC -->
   </parent>
   <artifactId>de.micromata.mgc.logging.spi.ifiles</artifactId>
   <packaging>jar</packaging>

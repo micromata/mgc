@@ -16,28 +16,6 @@
 
 package de.micromata.genome.db.jpa.logging;
 
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.persistence.Column;
-import javax.persistence.Query;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.StopWatch;
-import org.apache.log4j.Logger;
-
 import de.micromata.genome.db.jpa.logging.entities.BaseLogAttributeDO;
 import de.micromata.genome.db.jpa.logging.entities.BaseLogMasterDO;
 import de.micromata.genome.db.jpa.logging.entities.EntityLogSearchAttribute;
@@ -45,6 +23,7 @@ import de.micromata.genome.jpa.DefaultEmgr;
 import de.micromata.genome.jpa.EmgrCallable;
 import de.micromata.genome.jpa.EmgrFactory;
 import de.micromata.genome.logging.EndOfSearch;
+import de.micromata.genome.logging.Escape;
 import de.micromata.genome.logging.FallbackLogging;
 import de.micromata.genome.logging.GLog;
 import de.micromata.genome.logging.GenomeLogCategory;
@@ -56,6 +35,25 @@ import de.micromata.genome.logging.LogLevel;
 import de.micromata.genome.logging.LogWriteEntry;
 import de.micromata.genome.util.types.Converter;
 import de.micromata.genome.util.types.Pair;
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.persistence.Column;
+import javax.persistence.Query;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.StopWatch;
+import org.apache.log4j.Logger;
 
 /**
  * Logging implementation based on JPA.
@@ -280,8 +278,11 @@ public abstract class BaseJpaLoggingImpl<M extends BaseLogMasterDO<?>>extends Fa
     master.setPk((Long) lwe.getLogEntryIndex());
     master.setCategory(lwe.getCategory());
     master.setLoglevel((short) lwe.getLevel().getLevel());
-    master.setMessage(lwe.getMessage());
-    master.setShortmessage(lwe.getMessage());
+
+    String message = escapeNullBytes(lwe.getMessage());
+    master.setMessage(message);
+    master.setShortmessage(message);
+
     if (lwe.getTimestamp() != 0) {
       master.setCreatedAt(new Date(lwe.getTimestamp()));
     }
@@ -291,7 +292,7 @@ public abstract class BaseJpaLoggingImpl<M extends BaseLogMasterDO<?>>extends Fa
     for (LogAttribute attr : lwe.getAttributes()) {
       boolean handled = false;
 
-      final String normalizedValue = getLengthNormalizedValue(lwe, attr);
+      final String normalizedValue = escapeNullBytes(getLengthNormalizedValue(lwe, attr));
       if (attr.getType().isSearchKey() == true) {
         SearchColumnDesc colDesc = searchableAttributeProperties.get(attr.getType().name());
         if (colDesc != null) {
@@ -323,6 +324,17 @@ public abstract class BaseJpaLoggingImpl<M extends BaseLogMasterDO<?>>extends Fa
       }
     }
 
+  }
+
+  /**
+   * Replaces all Null-Bytes in the value
+   * This is required, because i.e. Postgres fails with exception "invalid byte sequence 0x00"
+   *
+   * @param value
+   * @return
+   */
+  private  String escapeNullBytes(String value){
+    return Escape.nullBytes(value);
   }
 
   /**
@@ -360,23 +372,26 @@ public abstract class BaseJpaLoggingImpl<M extends BaseLogMasterDO<?>>extends Fa
     appendLogAttributes(lwe, master);
   }
 
+  protected int sort(final BaseLogAttributeDO<M> first, final BaseLogAttributeDO<M> second)
+  {
+    int c = first.getBaseLogAttribute().compareTo(second.getBaseLogAttribute());
+    if (c != 0) {
+      return c;
+    }
+    c = ObjectUtils.compare(first.getDatarow(), second.getDatarow());
+    return c;
+  }
+
   private void appendLogAttributes(LogEntry lwe, M master)
   {
-    Collection<BaseLogAttributeDO<M>> attrs = (Collection) master.getAttributes();
+    final Collection<BaseLogAttributeDO<M>> attrs = (Collection) master.getAttributes();
     List<BaseLogAttributeDO<M>> sortedAttrs = new ArrayList<>();
     sortedAttrs.addAll(attrs);
-    sortedAttrs.sort((first, second) -> {
-      int c = first.getBaseLogAttribute().compareTo(second.getBaseLogAttribute());
-      if (c != 0) {
-        return c;
-      }
-      c = ObjectUtils.compare(first.getDatarow(), second.getDatarow());
-      return c;
-    });
+    sortedAttrs.sort((first, second) -> sort(first, second));
     String lastAttr = null;
     LogAttribute lastLogAttr = null;
     String notFoundAttrType = null;
-    StringBuilder sb = new StringBuilder();
+    final StringBuilder sb = new StringBuilder();
     for (BaseLogAttributeDO<M> attrDo : sortedAttrs) {
       if (StringUtils.equals(notFoundAttrType, attrDo.getBaseLogAttribute()) == true) {
         continue;

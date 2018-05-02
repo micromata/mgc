@@ -4,8 +4,12 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.micromata.mgc</groupId>
   <artifactId>de.micromata.mgc.rootpom</artifactId>
-  <version>3.0.4</version>
+  <version>3.0.5</version>
   <packaging>pom</packaging>
+
+  <prerequisites>
+    <maven>3.3.3</maven>
+  </prerequisites>
 
   <organization>
     <name>Micromata GmbH</name>
@@ -77,7 +81,7 @@
     <!-- JAVAX VERSIONS -->
     <javax.servlet.api.version>3.1.0</javax.servlet.api.version>
     <javax.servlet.jsp.api.version>2.3.1</javax.servlet.jsp.api.version>
-    <javax.mail.version>1.6.0</javax.mail.version>
+    <javax.mail.version>1.6.1</javax.mail.version>
 
     <jetty.version>9.3.23.v20180228</jetty.version>
 
@@ -92,9 +96,9 @@
     <org.apache.derby.version>10.12.1.1</org.apache.derby.version>
 
     <hsqldb.version>2.3.3</hsqldb.version>
-    <genome.mvn.plugin.version>2.9.0</genome.mvn.plugin.version>
+    <genome.mvn.plugin.version>3.0.2</genome.mvn.plugin.version>
     <spring-boot.jetty.version>9.2.14.v20151106</spring-boot.jetty.version>
-    <minimal-json.version>0.9.4</minimal-json.version>
+    <minimal-json.version>0.9.5</minimal-json.version>
     <xstream.version>1.4.10</xstream.version>
     <javax.transaction-api.version>1.2</javax.transaction-api.version>
     <activation.version>1.1.1</activation.version>
@@ -105,12 +109,14 @@
     <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
     <license-maven-plugin.version>3.0</license-maven-plugin.version>
     <maven-install-plugin.version>2.5.2</maven-install-plugin.version>
-    <maven-clean-plugin.version>3.0.0</maven-clean-plugin.version>
-    <maven-resources-plugin.version>3.0.2</maven-resources-plugin.version>
+    <maven-clean-plugin.version>3.1.0</maven-clean-plugin.version>
+    <maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
     <maven-surefire-plugin.version>2.21.0</maven-surefire-plugin.version>
-    <maven-jar-plugin.version>3.0.2</maven-jar-plugin.version>
+    <maven-jar-plugin.version>3.1.0</maven-jar-plugin.version>
     <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
     <spring-boot-maven-plugin.version>${spring-boot.version}</spring-boot-maven-plugin.version>
+    <maven-enforcer-plugin.version>1.4.1</maven-enforcer-plugin.version>
+    <import-enforcer-plugin.version>0.8.0</import-enforcer-plugin.version>
     <!-- EO MAVEN PLUGINS VERSIONS -->
 
 
@@ -266,6 +272,61 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
         <version>${maven-jar-plugin.version}</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>${maven-enforcer-plugin.version}</version>
+        <dependencies>
+          <dependency>
+            <groupId>de.skuzzle.enforcer</groupId>
+            <artifactId>restrict-imports-enforcer-rule</artifactId>
+            <version>${import-enforcer-plugin.version}</version>
+          </dependency>
+        </dependencies>
+        <executions>
+          <execution>
+            <id>check-imports</id>
+            <phase>process-sources</phase>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <restrictImports implementation="de.skuzzle.enforcer.restrictimports.RestrictImports">
+                  <reason>we don't want StringUtils other than those from commons-lang3</reason>
+                  <bannedImport>org.springframework.util.StringUtils</bannedImport>
+                </restrictImports>
+
+                <restrictImports implementation="de.skuzzle.enforcer.restrictimports.RestrictImports">
+                  <reason>we don't want commons-lang -- use commons-lang3</reason>
+                  <bannedImport>org.apache.commons.lang.**</bannedImport>
+                </restrictImports>
+
+                <restrictImports implementation="de.skuzzle.enforcer.restrictimports.RestrictImports">
+                  <reason>we don't want commons-collections -- use commons-collections4</reason>
+                  <bannedImport>org.apache.commons.collections.**</bannedImport>
+                </restrictImports>
+              </rules>
+            </configuration>
+          </execution>
+          <execution>
+            <id>enforce-java</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireJavaVersion>
+                  <version>1.8.0-151</version>
+                </requireJavaVersion>
+                <requireMavenVersion>
+                  <version>3.3.3</version>
+                </requireMavenVersion>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

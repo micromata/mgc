@@ -38,6 +38,19 @@ public class GLog
   public static Logging fallBackLogging = new Log4JLogging();
 
   /**
+   * Do log and escape the message for writing it safely into a log file
+   *
+   * @param logLevel the log level
+   * @param cat the cat
+   * @param msg the msg (will be escaped for writing it safely into a log file)
+   * @param attributes the attributes (will NOT be escaped)
+   */
+  public static void doLog(LogLevel logLevel, LogCategory cat, String msg, LogAttribute... attributes)
+  {
+    doLogUnescaped(logLevel, cat, Escape.forLog(msg), attributes);
+  }
+
+  /**
    * Do log.
    *
    * @param logLevel the log level
@@ -45,7 +58,7 @@ public class GLog
    * @param msg the msg
    * @param attributes the attributes
    */
-  public static void doLog(LogLevel logLevel, LogCategory cat, String msg, LogAttribute... attributes)
+  public static void doLogUnescaped(LogLevel logLevel, LogCategory cat, String msg, LogAttribute... attributes)
   {
     try {
       LoggingServiceManager.get().getLogging().doLog(logLevel, cat, msg, attributes);
@@ -55,13 +68,25 @@ public class GLog
   }
 
   /**
+   * Debug and escape the message for writing it safely into a log file.
+   *
+   * @param cat the cat
+   * @param msg the msg (will be escaped for writing it safely into a log file)
+   * @param attributes the attributes (will NOT be escaped)
+   */
+  public static void debug(LogCategory cat, String msg, LogAttribute... attributes)
+  {
+    debugUnescaped(cat, Escape.forLog(msg), attributes);
+  }
+
+  /**
    * Debug.
    *
    * @param cat the cat
    * @param msg the msg
    * @param attributes the attributes
    */
-  public static void debug(LogCategory cat, String msg, LogAttribute... attributes)
+  public static void debugUnescaped(LogCategory cat, String msg, LogAttribute... attributes)
   {
     try {
       LoggingServiceManager.get().getLogging().debug(cat, msg, attributes);
@@ -71,13 +96,25 @@ public class GLog
   }
 
   /**
+   * Trace and escape the message for writing it safely into a log file.
+   *
+   * @param cat the cat
+   * @param msg the msg (will be escaped for writing it safely into a log file)
+   * @param attributes the attributes (will NOT be escaped)
+   */
+  public static void trace(LogCategory cat, String msg, LogAttribute... attributes)
+  {
+    traceUnescaped(cat, Escape.forLog(msg), attributes);
+  }
+
+  /**
    * Trace.
    *
    * @param cat the cat
    * @param msg the msg
    * @param attributes the attributes
    */
-  public static void trace(LogCategory cat, String msg, LogAttribute... attributes)
+  public static void traceUnescaped(LogCategory cat, String msg, LogAttribute... attributes)
   {
     try {
       LoggingServiceManager.get().getLogging().trace(cat, msg, attributes);
@@ -87,13 +124,25 @@ public class GLog
   }
 
   /**
+   * Info and escape the message for writing it safely into a log file.
+   *
+   * @param cat the cat
+   * @param msg the msg (will be escaped for writing it safely into a log file)
+   * @param attributes the attributes (will NOT be escaped)
+   */
+  public static void info(LogCategory cat, String msg, LogAttribute... attributes)
+  {
+    infoUnescaped(cat, Escape.forLog(msg), attributes);
+  }
+
+  /**
    * Info.
    *
    * @param cat the cat
    * @param msg the msg
    * @param attributes the attributes
    */
-  public static void info(LogCategory cat, String msg, LogAttribute... attributes)
+  public static void infoUnescaped(LogCategory cat, String msg, LogAttribute... attributes)
   {
     try {
       LoggingServiceManager.get().getLogging().info(cat, msg, attributes);
@@ -103,13 +152,25 @@ public class GLog
   }
 
   /**
+   * Note and escape the message for writing it safely into a log file.
+   *
+   * @param cat the cat
+   * @param msg the msg (will be escaped for writing it safely into a log file)
+   * @param attributes the attributes (will NOT be escaped)
+   */
+  public static void note(LogCategory cat, String msg, LogAttribute... attributes)
+  {
+    noteUnescaped(cat, Escape.forLog(msg), attributes);
+  }
+
+  /**
    * Note.
    *
    * @param cat the cat
    * @param msg the msg
    * @param attributes the attributes
    */
-  public static void note(LogCategory cat, String msg, LogAttribute... attributes)
+  public static void noteUnescaped(LogCategory cat, String msg, LogAttribute... attributes)
   {
     try {
       LoggingServiceManager.get().getLogging().note(cat, msg, attributes);
@@ -119,13 +180,25 @@ public class GLog
   }
 
   /**
+   * Warn and escape the message for writing it safely into a log file.
+   *
+   * @param cat the cat
+   * @param msg the msg (will be escaped for writing it safely into a log file)
+   * @param attributes the attributes (will NOT be escaped)
+   */
+  public static void warn(LogCategory cat, String msg, LogAttribute... attributes)
+  {
+    warnUnescaped(cat, Escape.forLog(msg), attributes);
+  }
+
+  /**
    * Warn.
    *
    * @param cat the cat
    * @param msg the msg
    * @param attributes the attributes
    */
-  public static void warn(LogCategory cat, String msg, LogAttribute... attributes)
+  public static void warnUnescaped(LogCategory cat, String msg, LogAttribute... attributes)
   {
     try {
       LoggingServiceManager.get().getLogging().warn(cat, msg, attributes);
@@ -135,13 +208,25 @@ public class GLog
   }
 
   /**
+   * Error and escape the message for writing it safely into a log file.
+   *
+   * @param cat the cat
+   * @param msg the msg (will be escaped for writing it safely into a log file)
+   * @param attributes the attributes (will NOT be escaped)
+   */
+  public static void error(LogCategory cat, String msg, LogAttribute... attributes)
+  {
+    errorUnescaped(cat, Escape.forLog(msg), attributes);
+  }
+
+  /**
    * Error.
    *
    * @param cat the cat
    * @param msg the msg
    * @param attributes the attributes
    */
-  public static void error(LogCategory cat, String msg, LogAttribute... attributes)
+  public static void errorUnescaped(LogCategory cat, String msg, LogAttribute... attributes)
   {
     try {
       LoggingServiceManager.get().getLogging().error(cat, msg, attributes);
@@ -151,13 +236,25 @@ public class GLog
   }
 
   /**
+   * Fatal and escape the message for writing it safely into a log file.
+   *
+   * @param cat the cat
+   * @param msg the msg (will be escaped for writing it safely into a log file)
+   * @param attributes the attributes (will NOT be escaped)
+   */
+  public static void fatal(LogCategory cat, String msg, LogAttribute... attributes)
+  {
+    fatalUnescaped(cat, Escape.forLog(msg), attributes);
+  }
+
+  /**
    * Fatal.
    *
    * @param cat the cat
    * @param msg the msg
    * @param attributes the attributes
    */
-  public static void fatal(LogCategory cat, String msg, LogAttribute... attributes)
+  public static void fatalUnescaped(LogCategory cat, String msg, LogAttribute... attributes)
   {
     try {
       LoggingServiceManager.get().getLogging().fatal(cat, msg, attributes);

@@ -24,10 +24,17 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * Loggs all information for a Request.
+ * Logs all information for a Request except the body
+ *
+ * Deprecation Reason: Logs more than just the http request.
+ * Alternative: For better separation use
+ * - {@link LogHttpRequestDumpAttribute}
+ * - {@link LogHttpRequestBodyDumpAttribute}
+ * - {@link LogHttpRequestHeaderDumpAttribute}
  *
  * @author roger@micromata.de
  */
+@Deprecated
 public class LogRequestDumpAttribute extends LogAttribute
 {
 
@@ -57,7 +64,8 @@ public class LogRequestDumpAttribute extends LogAttribute
   {
     StringBuilder sb = new StringBuilder();
 
-    sb.append("requestURL: ").append(req.getRequestURL()).append('\n')//
+    sb.append("method: ").append(req.getMethod()).append('\n')//
+        .append("requestURL: ").append(req.getRequestURL()).append('\n')//
         .append("servletPath: ").append(req.getServletPath()).append('\n')//
         .append("requestURI: ").append(req.getRequestURI()).append('\n') //
         .append("queryString: ").append(req.getQueryString()).append('\n') //
