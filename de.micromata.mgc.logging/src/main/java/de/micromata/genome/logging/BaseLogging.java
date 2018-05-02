@@ -21,21 +21,22 @@ import de.micromata.genome.logging.events.LogRegisteredLogAttributesChangedEvent
 import de.micromata.genome.logging.events.LogWriteEntryEvent;
 import de.micromata.genome.stats.Stats;
 import de.micromata.genome.util.types.Pair;
+import org.apache.commons.collections4.map.AbstractReferenceMap;
+import org.apache.commons.collections4.map.ReferenceMap;
+import org.apache.commons.lang3.StringUtils;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.apache.commons.collections4.map.AbstractReferenceMap;
-import org.apache.commons.collections4.map.ReferenceMap;
-import org.apache.commons.lang3.StringUtils;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Common base implementation.
- * 
+ *
  * @author roger
- * 
  */
 public abstract class BaseLogging implements Logging
 {
@@ -53,12 +54,12 @@ public abstract class BaseLogging implements Logging
   /**
    * The pre start logs.
    */
-  protected static List<LogWriteEntry> preStartLogs = new ArrayList<LogWriteEntry>();
+  protected static List<LogWriteEntry> preStartLogs = new ArrayList<>();
 
   /**
    * do not call any modifable access to these. But constructes new copy and asign.
    */
-  protected static Map<String, LogCategory> registerdLogCategories = new HashMap<String, LogCategory>();
+  protected static Map<String, LogCategory> registerdLogCategories = new HashMap<>();
 
   /**
    * do not call any modifable access to these. But constructes new copy and asign.
@@ -73,7 +74,7 @@ public abstract class BaseLogging implements Logging
   /**
    * do not call any modifable access to these. But constructes new copy and asign.
    */
-  protected static Map<String, LogAttributeType> searchLogAttributes = new HashMap<String, LogAttributeType>();
+  protected static Map<String, LogAttributeType> searchLogAttributes = new HashMap<>();
 
   /**
    * Default Einstellung fuer Maximalen Logattribute 1MB.
@@ -87,7 +88,7 @@ public abstract class BaseLogging implements Logging
 
   /**
    * Name des LogAttributeType zu maximaler Groesse des Logeintrags.
-   * 
+   *
    * Ueberschreibt maxLogAttrLength.
    */
   private Map<String, Integer> logAttributeLimitMap = new HashMap<String, Integer>();
@@ -126,7 +127,7 @@ public abstract class BaseLogging implements Logging
 
   /**
    * Um die zu Anwendung neu gekommene(z.B. durch ein Plugin) {@link LogCategory} s zu registreren.
-   * 
+   *
    * @param cats beliebige Menge an {@link LogCategory}
    */
   public static void registerLogCategories(LogCategory... cats)
@@ -140,15 +141,15 @@ public abstract class BaseLogging implements Logging
          * @action Entwickler kontaktieren
          */
         throw new LoggedRuntimeException(LogLevel.Error, GenomeLogCategory.Configuration,
-            "LogCategory to long (30 chars max): "
-                + c.getFqName());
+          "LogCategory to long (30 chars max): "
+            + c.getFqName());
       }
       ncats.put(c.getFqName(), new LogCategoryWrapper(c));
     }
 
     registerdLogCategories = ncats;
     LoggingServiceManager.get().getLoggingEventListenerRegistryService()
-        .submitEvent(new LogRegisteredCategoryChangedEvent(registerdLogCategories));
+      .submitEvent(new LogRegisteredCategoryChangedEvent(registerdLogCategories));
   }
 
   /**
@@ -182,8 +183,8 @@ public abstract class BaseLogging implements Logging
          * @action Entwickler kontaktieren
          */
         throw new LoggedRuntimeException(LogLevel.Error, GenomeLogCategory.Configuration,
-            "LogAttributeType name to long (30 chars max): "
-                + c.name());
+          "LogAttributeType name to long (30 chars max): "
+            + c.name());
       }
       if (c.isSearchKey() == true) {
         LogAttributeTypeWrapper wat = new LogAttributeTypeWrapper(c, true);
@@ -208,7 +209,7 @@ public abstract class BaseLogging implements Logging
       searchLogAttributes = createNewMap(searchLogAttributes, nsearchKeys);
     }
     LoggingServiceManager.get().getLoggingEventListenerRegistryService()
-        .submitEvent(new LogRegisteredLogAttributesChangedEvent(registerdLogAttributes));
+      .submitEvent(new LogRegisteredLogAttributesChangedEvent(registerdLogAttributes));
   }
 
   /**
@@ -246,7 +247,7 @@ public abstract class BaseLogging implements Logging
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see de.micromata.genome.logging.Logging#logPreStart(de.micromata.genome.logging.LogLevel,
    * de.micromata.genome.logging.LogCategory, java.lang.String, de.micromata.genome.logging.LogAttribute[])
    */
@@ -260,7 +261,7 @@ public abstract class BaseLogging implements Logging
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see de.micromata.genome.logging.Logging#debug(de.micromata.genome.logging.LogCategory, java.lang.String,
    * de.micromata.genome.logging.LogAttribute[])
    */
@@ -272,7 +273,7 @@ public abstract class BaseLogging implements Logging
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see de.micromata.genome.logging.Logging#trace(de.micromata.genome.logging.LogCategory, java.lang.String,
    * de.micromata.genome.logging.LogAttribute[])
    */
@@ -284,7 +285,7 @@ public abstract class BaseLogging implements Logging
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see de.micromata.genome.logging.Logging#info(de.micromata.genome.logging.LogCategory, java.lang.String,
    * de.micromata.genome.logging.LogAttribute[])
    */
@@ -296,7 +297,7 @@ public abstract class BaseLogging implements Logging
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see de.micromata.genome.logging.Logging#note(de.micromata.genome.logging.LogCategory, java.lang.String,
    * de.micromata.genome.logging.LogAttribute[])
    */
@@ -308,7 +309,7 @@ public abstract class BaseLogging implements Logging
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see de.micromata.genome.logging.Logging#warn(de.micromata.genome.logging.LogCategory, java.lang.String,
    * de.micromata.genome.logging.LogAttribute[])
    */
@@ -320,7 +321,7 @@ public abstract class BaseLogging implements Logging
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see de.micromata.genome.logging.Logging#error(de.micromata.genome.logging.LogCategory, java.lang.String,
    * de.micromata.genome.logging.LogAttribute[])
    */
@@ -332,7 +333,7 @@ public abstract class BaseLogging implements Logging
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see de.micromata.genome.logging.Logging#fatal(de.micromata.genome.logging.LogCategory, java.lang.String,
    * de.micromata.genome.logging.LogAttribute[])
    */
@@ -345,9 +346,9 @@ public abstract class BaseLogging implements Logging
   /**
    * Do log.
    *
-   * @param ll the ll
-   * @param cat the cat
-   * @param msg the msg
+   * @param ll         the ll
+   * @param cat        the cat
+   * @param msg        the msg
    * @param attributes the attributes
    */
   public void doLog(LogLevel ll, LogCategory cat, String msg, List<LogAttribute> attributes)
@@ -359,7 +360,7 @@ public abstract class BaseLogging implements Logging
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see de.micromata.genome.logging.Logging#doLog(de.micromata.genome.logging.LogLevel,
    * de.micromata.genome.logging.LogCategory, java.lang.String, de.micromata.genome.logging.LogAttribute[])
    */
@@ -402,7 +403,7 @@ public abstract class BaseLogging implements Logging
    * Push attribute.
    *
    * @param attributes the attributes
-   * @param le the le
+   * @param le         the le
    */
   public static void pushAttribute(List<LogAttribute> attributes, LogAttribute le)
   {
@@ -420,14 +421,14 @@ public abstract class BaseLogging implements Logging
   /**
    * Ensure an attribute list contains no duplicates with the same LogAttributeType Duplicates are removed for the list
    * starting at the head. Therefore were there is a duplicate the entry nearest the end of the list will survive.
-   * 
+   *
    * The algoritem has N^2 complexity and should only be used on short lists
    *
    * @param attributes the attributes
    */
   public static void ensureUniqueAttributes(List<LogAttribute> attributes)
   {
-    for (int i = 0; i < attributes.size();) {
+    for (int i = 0; i < attributes.size(); ) {
       LogAttribute la = attributes.get(i);
       boolean duplicate = false;
       for (int j = 0; j < i; ++j) {
@@ -480,7 +481,7 @@ public abstract class BaseLogging implements Logging
    * Durchsucht <code>src</code> nach <code>WithLogAttributes</code> und fügt diese <code>dest</code> hinzu.
    *
    * @param dest the dest
-   * @param src Kann <code>null</code> sein.
+   * @param src  Kann <code>null</code> sein.
    */
   protected void pushContainedAttributes(List<LogAttribute> dest, Collection<LogAttribute> src)
   {
@@ -533,7 +534,8 @@ public abstract class BaseLogging implements Logging
    */
   private void writePreStartLogs(List<LogWriteEntry> clwe)
   {
-    nextLogEntry: for (LogWriteEntry lwe : clwe) {
+    nextLogEntry:
+    for (LogWriteEntry lwe : clwe) {
       reworkLog(lwe);
       List<LogWriteFilter> filters = getWriteFilters();
       if (filters != null) {
@@ -555,7 +557,7 @@ public abstract class BaseLogging implements Logging
    * Shorten log attribute.
    *
    * @param lwe the lwe
-   * @param la the la
+   * @param la  the la
    */
   protected void shortenLogAttribute(LogWriteEntry lwe, LogAttribute la)
   {
@@ -595,9 +597,9 @@ public abstract class BaseLogging implements Logging
   /**
    * Do log.
    *
-   * @param ll the ll
-   * @param cat the cat
-   * @param msg the msg
+   * @param ll         the ll
+   * @param cat        the cat
+   * @param msg        the msg
    * @param attributes the attributes
    */
   public void doLog(LogLevel ll, String cat, String msg, LogAttribute... attributes)
@@ -665,21 +667,21 @@ public abstract class BaseLogging implements Logging
     Stats.addLogging(lwe);
     boolean enabled = ll.getLevel() >= LogLevel.Note.getLevel();
     enabled = LoggingServiceManager.get().getLogConfigurationDAO().isLogEnabled(lwe.getLevel(), lwe.getCategory(),
-        lwe.getMessage());
+      lwe.getMessage());
     if (enabled == false) {
       return;
     }
     ensureUniqueAttributes(lwe.getAttributes());
     shortenLogAttributes(lwe);
     LoggingServiceManager.get().getLoggingEventListenerRegistryService().filterEvent(
-        new LogWriteEntryEvent(lwe),
-        event -> doLogImpl(event.getResult()));
+      new LogWriteEntryEvent(lwe),
+      event -> doLogImpl(event.getResult()));
 
   }
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see de.micromata.genome.logging.Logging#doLogImpl(de.micromata.genome.logging.LogWriteEntry)
    */
   @Override
@@ -687,19 +689,45 @@ public abstract class BaseLogging implements Logging
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see de.micromata.genome.logging.Logging#selectLogs(java.sql.Timestamp, java.sql.Timestamp, java.lang.Integer,
    * java.lang.String, java.lang.String, java.util.List, int, int, java.util.List,
    * de.micromata.genome.logging.LogEntryCallback)
    */
   @Override
-  public void selectLogs(Timestamp start, Timestamp end, Integer loglevel, String category, String msg,
-      List<Pair<String, String>> logAttributes, int startRow, int maxRow, List<OrderBy> orderBy, boolean masterOnly,
-      LogEntryCallback callback)
+  public void selectLogs(final Timestamp start, final Timestamp end, final Integer loglevel, final String category, final String msg,
+    final List<Pair<String, String>> logAttributes, final int startRow, final int maxRow, final List<OrderBy> orderBy, final boolean masterOnly,
+    final LogEntryCallback callback)
   {
+    if (this.underlyingClientIsAsync() == false) {
+      selectLogsSync(start, end, loglevel, category, msg, logAttributes, startRow, maxRow, orderBy, masterOnly, callback);
+    } else {
+      selectLogsAsync(start, end, loglevel, category, msg, logAttributes, startRow, maxRow, orderBy, masterOnly, callback);
+    }
 
-    LogEntryFilterCallback filter = new LogEntryFilterCallback(callback,
-        LoggingServiceManager.get().getLogConfigurationDAO(), maxRow);
+  }
+
+  /**
+   * When the {@link Logging#underlyingClientIsAsync()}  is false this is called
+   *
+   * @param start         start time
+   * @param end           end time
+   * @param loglevel      the log level to select
+   * @param category      the category to select
+   * @param msg           the message to filter on
+   * @param logAttributes the log attribute to filter on
+   * @param startRow      where to start from
+   * @param maxRow        how many entries to select
+   * @param orderBy       how to order the logs
+   * @param masterOnly    if to select the master only
+   * @param callback      the callback which contains the returning logs
+   */
+  public void selectLogsSync(final Timestamp start, final Timestamp end, final Integer loglevel, final String category, final String msg,
+    final List<Pair<String, String>> logAttributes, final int startRow, final int maxRow, final List<OrderBy> orderBy, final boolean masterOnly,
+    final LogEntryCallback callback)
+  {
+    final LogEntryFilterCallback filter = new LogEntryFilterCallback(callback,
+      LoggingServiceManager.get().getLogConfigurationDAO(), maxRow);
     try {
       selectLogsImpl(start, end, loglevel, category, msg, logAttributes, startRow, maxRow, orderBy, masterOnly, filter);
     } catch (EndOfSearch ex) {
@@ -708,31 +736,78 @@ public abstract class BaseLogging implements Logging
   }
 
   /**
+   * When the {@link Logging#underlyingClientIsAsync()}  is true this is called
+   *
+   * @param start         start time
+   * @param end           end time
+   * @param loglevel      the log level to select
+   * @param category      the category to select
+   * @param msg           the message to filter on
+   * @param logAttributes the log attribute to filter on
+   * @param startRow      where to start from
+   * @param maxRow        how many entries to select
+   * @param orderBy       how to order the logs
+   * @param masterOnly    if to select the master only
+   * @param callback      the callback which contains the returning logs
+   */
+  public void selectLogsAsync(final Timestamp start, final Timestamp end, final Integer loglevel, final String category, final String msg,
+    final List<Pair<String, String>> logAttributes, final int startRow, final int maxRow, final List<OrderBy> orderBy, final boolean masterOnly,
+    final LogEntryCallback callback)
+  {
+
+    final LogEntryFilterAsyncCallback filter = new LogEntryFilterAsyncCallback(callback,
+      LoggingServiceManager.get().getLogConfigurationDAO(), maxRow);
+
+    try {
+      selectLogsImpl(start, end, loglevel, category, msg, logAttributes, startRow, maxRow, orderBy, masterOnly, filter);
+      filter.doGet();
+    } catch (EndOfSearch  | InterruptedException  | ExecutionException ex) {
+      // just terminate the search
+    }
+  }
+
+  /**
    * Select logs impl.
    *
-   * @param start the start
-   * @param end the end
-   * @param loglevel the loglevel
-   * @param category the category
-   * @param msg the msg
+   * @param start         the start
+   * @param end           the end
+   * @param loglevel      the loglevel
+   * @param category      the category
+   * @param msg           the msg
    * @param logAttributes the log attributes
-   * @param startRow the start row
-   * @param maxRow the max row
-   * @param orderBy the order by
-   * @param masterOnly the master only
-   * @param callback the callback
+   * @param startRow      the start row
+   * @param maxRow        the max row
+   * @param orderBy       the order by
+   * @param masterOnly    the master only
+   * @param callback      the callback
    * @throws EndOfSearch the end of search
    */
   protected abstract void selectLogsImpl(Timestamp start, Timestamp end, Integer loglevel, String category, String msg,
-      List<Pair<String, String>> logAttributes, int startRow, int maxRow, List<OrderBy> orderBy, boolean masterOnly,
-      LogEntryCallback callback) throws EndOfSearch;
+    List<Pair<String, String>> logAttributes, int startRow, int maxRow, List<OrderBy> orderBy, boolean masterOnly,
+    LogEntryCallback callback) throws EndOfSearch;
 
   @Override
-  public void selectLogs(List<Object> logId, boolean masterOnly, LogEntryCallback callback)
+  public void selectLogs(final List<Object> logId, final boolean masterOnly, final LogEntryCallback callback)
   {
-    LogEntryFilterCallback filter = new LogEntryFilterCallback(callback,
-        LoggingServiceManager.get().getLogConfigurationDAO(),
-        Integer.MAX_VALUE);
+    if (underlyingClientIsAsync() == false) {
+      selectLogsSync(logId, masterOnly, callback);
+    } else {
+      selectLogsAsync(logId, masterOnly, callback);
+    }
+  }
+
+  /**
+   * When the {@link Logging#underlyingClientIsAsync()}  is false this is called
+   * @param logId the ids of the log entries to select
+   * @param masterOnly if to select the master only
+   * @param callback the callback containing the log entries when done
+   */
+  public void selectLogsSync(final List<Object> logId, final boolean masterOnly, final LogEntryCallback callback)
+  {
+    final LogEntryFilterCallback filter = new LogEntryFilterCallback(callback,
+      LoggingServiceManager.get().getLogConfigurationDAO(),
+      Integer.MAX_VALUE);
+
     try {
       selectLogsImpl(logId, masterOnly, filter);
     } catch (EndOfSearch ex) {
@@ -741,19 +816,40 @@ public abstract class BaseLogging implements Logging
   }
 
   /**
+   * When the {@link Logging#underlyingClientIsAsync()}  is true this is called
+   * @param logId the ids of the log entries to select
+   * @param masterOnly if to select the master only
+   * @param callback the callback containing the log entries when done
+   */
+  public void selectLogsAsync(final List<Object> logId, final boolean masterOnly, final LogEntryCallback callback)
+  {
+
+    final LogEntryFilterAsyncCallback filter = new LogEntryFilterAsyncCallback(callback,
+      LoggingServiceManager.get().getLogConfigurationDAO(),
+      Integer.MAX_VALUE);
+
+    try {
+      selectLogsImpl(logId, masterOnly, filter);
+      filter.doGet();
+    } catch (EndOfSearch | InterruptedException | ExecutionException ex) {
+      // just terminate the search
+    }
+  }
+
+  /**
    * Select logs impl.
    *
-   * @param logId the log id
+   * @param logId      the log id
    * @param masterOnly the master only
-   * @param callback the callback
+   * @param callback   the callback
    * @throws EndOfSearch the end of search
    */
   protected abstract void selectLogsImpl(List<Object> logId, boolean masterOnly, LogEntryCallback callback)
-      throws EndOfSearch;
+    throws EndOfSearch;
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see de.micromata.genome.logging.Logging#getConfigMinLogLevel()
    */
   @Override
@@ -764,7 +860,7 @@ public abstract class BaseLogging implements Logging
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see de.micromata.genome.logging.Logging#getRegisteredAttributes()
    */
   @Override
@@ -775,7 +871,7 @@ public abstract class BaseLogging implements Logging
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see de.micromata.genome.logging.Logging#getRegisteredCategories()
    */
   @Override
@@ -786,7 +882,7 @@ public abstract class BaseLogging implements Logging
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see de.micromata.genome.logging.Logging#getSearchAttributes()
    */
   @Override
