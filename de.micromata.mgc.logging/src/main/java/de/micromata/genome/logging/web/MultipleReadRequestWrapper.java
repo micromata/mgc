@@ -142,6 +142,11 @@ public class MultipleReadRequestWrapper extends HttpServletRequestWrapper {
     return super.getParameter(name);
   }
 
+  /**
+   * Indicates if the parameter map should be returned as cached content on arbitrary access of one getParameter* Method.
+   *
+   * @return true if parameter map should be returned as cached content
+   */
   protected boolean shouldWriteRequestParametersToCachedContent(){
     return isCacheEmpty() && isFormPostUrlEncoded();
   }
@@ -187,6 +192,11 @@ public class MultipleReadRequestWrapper extends HttpServletRequestWrapper {
     return super.getParameterValues(name);
   }
 
+  /**
+   * Returns the cached body as string
+   * @return the cached body
+   * @throws IOException
+   */
   public String getCacheAsString() throws IOException
   {
     if(isCacheEmpty()){

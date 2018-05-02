@@ -28,16 +28,24 @@ import java.io.IOException;
  */
 public class CachedInputStream extends ServletInputStream
 {
-  // Wraps the original input stream
+  /**
+   * Wraps the original input stream
+   */
   private final ServletInputStream wrappedInputStream;
 
-  // Read content is written to that cache until cacheSize exceeds
+  /**
+   * Read content is written to that cache until cacheSize exceeds
+   */
   private final ByteArrayOutputStream cache;
 
-  // maximal size of cache
+  /**
+   * maximal size of cache
+   */
   private final int cacheSize;
 
-  // handler that is invoked if the cacheSize is exceeded
+  /**
+   * handler that is invoked if the cacheSize is exceeded
+    */
   private final CacheSizeExceededHandler cacheSizeExceededHandler;
 
   private boolean cacheSizeReached = false;

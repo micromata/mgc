@@ -36,7 +36,7 @@ import java.io.IOException;
  */
 public class MultipleReadRequestWrapperFilter implements Filter
 {
-  private Integer maxCacheSize;
+  private Integer maxCacheSize = Integer.MAX_VALUE;
 
   @Override
   public void init(FilterConfig filterConfig) throws ServletException
@@ -44,8 +44,6 @@ public class MultipleReadRequestWrapperFilter implements Filter
     String param = filterConfig.getInitParameter("maxCachedContentInBytes");
     if(StringUtils.isBlank(param) == false){
       maxCacheSize = Integer.parseInt(param);
-    }else{
-      maxCacheSize = Integer.MAX_VALUE;
     }
   }
 

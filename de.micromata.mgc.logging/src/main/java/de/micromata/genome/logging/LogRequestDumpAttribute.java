@@ -24,8 +24,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * Loggs all information for a Request except the body
- * To log th body see {@link de.micromata.genome.logging.web.LogRequestBodyAttribute}.
+ * Logs all information for a Request except the body
+ * To log the body see {@link de.micromata.genome.logging.web.LogRequestBodyAttribute}.
  *
  * @author roger@micromata.de
  */
