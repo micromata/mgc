@@ -24,7 +24,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * Loggs all information for a Request.
+ * Logs all information for a Request except the body
+ * To log the body see {@link de.micromata.genome.logging.web.LogRequestBodyAttribute}.
  *
  * @author roger@micromata.de
  */
@@ -57,7 +58,8 @@ public class LogRequestDumpAttribute extends LogAttribute
   {
     StringBuilder sb = new StringBuilder();
 
-    sb.append("requestURL: ").append(req.getRequestURL()).append('\n')//
+    sb.append("method: ").append(req.getMethod()).append('\n')//
+        .append("requestURL: ").append(req.getRequestURL()).append('\n')//
         .append("servletPath: ").append(req.getServletPath()).append('\n')//
         .append("requestURI: ").append(req.getRequestURI()).append('\n') //
         .append("queryString: ").append(req.getQueryString()).append('\n') //
