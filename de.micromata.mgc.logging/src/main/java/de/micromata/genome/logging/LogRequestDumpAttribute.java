@@ -25,10 +25,16 @@ import org.apache.commons.lang3.StringUtils;
 
 /**
  * Logs all information for a Request except the body
- * To log the body see {@link de.micromata.genome.logging.web.LogRequestBodyAttribute}.
+ *
+ * Deprecation Reason: Logs more than just the http request.
+ * Alternative: For better separation use
+ * - {@link LogHttpRequestDumpAttribute}
+ * - {@link LogHttpRequestBodyDumpAttribute}
+ * - {@link LogHttpRequestHeaderDumpAttribute}
  *
  * @author roger@micromata.de
  */
+@Deprecated
 public class LogRequestDumpAttribute extends LogAttribute
 {
 
