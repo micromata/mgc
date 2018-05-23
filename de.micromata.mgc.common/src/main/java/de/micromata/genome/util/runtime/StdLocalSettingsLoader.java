@@ -195,7 +195,7 @@ public class StdLocalSettingsLoader implements LocalSettingsLoader
   protected void loadDefaultProperties(LocalSettings ls)
   {
     try {
-      Enumeration<URL> res = getClass().getClassLoader().getResources("local-settings-default.properties");
+      Enumeration<URL> res = getClass().getClassLoader().getResources("local-settings-defaults.properties");
       while (res.hasMoreElements()) {
         URL fs = res.nextElement();
         try (InputStream is = fs.openStream()) {
