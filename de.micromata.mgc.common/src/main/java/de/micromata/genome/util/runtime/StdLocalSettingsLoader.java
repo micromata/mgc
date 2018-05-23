@@ -16,18 +16,23 @@
 
 package de.micromata.genome.util.runtime;
 
-import de.micromata.genome.util.collections.OrderedProperties;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.function.Function;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+
+import de.micromata.genome.util.collections.OrderedProperties;
 
 /**
  * Standard implementation to load local-settings.properties.
@@ -129,6 +134,7 @@ public class StdLocalSettingsLoader implements LocalSettingsLoader
     loadOptionalDev(ls);
     loadSystemEnv(ls);
     loadSystemProperties(ls);
+    loadDefaultProperties(ls);
   }
 
   protected void loadOptionalDev(LocalSettings ls)
@@ -184,6 +190,30 @@ public class StdLocalSettingsLoader implements LocalSettingsLoader
     }
     loadedFiles.add(localSettingsFile);
     return true;
+  }
+
+  protected void loadDefaultProperties(LocalSettings ls)
+  {
+    try {
+      Enumeration<URL> res = getClass().getClassLoader().getResources("local-settings-default.properties");
+      while (res.hasMoreElements()) {
+        URL fs = res.nextElement();
+        try (InputStream is = fs.openStream()) {
+          Properties p = new Properties();
+          p.load(is);
+          for (Object k : p.keySet()) {
+            String key = (String) k;
+            if (ls.getMap().containsKey(key) == true) {
+              continue;
+            }
+            String v = p.getProperty((String) k);
+            ls.getMap().put(key, v);
+          }
+        }
+      }
+    } catch (IOException ex) {
+      throw new RuntimeIOException(ex);
+    }
   }
 
   protected OrderedProperties newProperties(boolean originalLocalSettingsFile)
