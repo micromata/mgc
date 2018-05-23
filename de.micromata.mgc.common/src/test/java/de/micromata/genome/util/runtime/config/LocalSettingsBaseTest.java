@@ -56,4 +56,26 @@ public class LocalSettingsBaseTest
     Assert.assertEquals("testvaluedev", ls.get("test.entry.one"));
 
   }
+
+  @Test
+  public void testWithDefault()
+  {
+
+    StdLocalSettingsLoader loader = new StdLocalSettingsLoader();
+    loader.setWorkingDirectory(new File("dev/extrc/test/properties"));
+    LocalSettings ls = loader.loadSettings();
+    String val = ls.get("mgc.common.test.mydefaultKey1", "ShouldNot");
+    Assert.assertEquals("ValueDefault1", val);
+    val = ls.get("mgc.common.test.mydefaultKey2", "ShouldNot");
+    Assert.assertEquals("ExlicitValue2", val);
+
+    System.setProperty("mgc.common.test.mydefaultKey3", "ViaProps");
+    loader = new StdLocalSettingsLoader();
+    loader.setWorkingDirectory(new File("dev/extrc/test/properties"));
+    ls = loader.loadSettings();
+    val = ls.get("mgc.common.test.mydefaultKey3", "ShouldNot");
+    Assert.assertEquals("ViaProps", val);
+
+  }
+
 }
