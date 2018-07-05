@@ -16,11 +16,11 @@
 
 package de.micromata.genome.util.text;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * Die PipeValueList verwendet | für den Trenner von einem Key-Value-Paar. Key und Value werden mittels = getrennt. Wenn
@@ -150,7 +150,9 @@ public class PipeValueList
     State state = State.ParseKey;
     for (int i = 0; i < tlist.size(); ++i) {
       String t = tlist.get(i);
-      if ("\\".equals(t) == true) {
+      if ("null".equals(t)) {
+        //skip because null
+      } else if ("\\".equals(t) == true) {
         ++i;
         t = tlist.get(i);
         sb.append(t);
