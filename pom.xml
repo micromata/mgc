@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.micromata.mgc</groupId>
   <artifactId>de.micromata.mgc.rootpom</artifactId>
-  <version>3.0.6</version>
+  <version>3.0.7</version>
   <packaging>pom</packaging>
 
   <prerequisites>
@@ -162,6 +162,29 @@
         <activeByDefault>false</activeByDefault>
       </activation>
       <modules>
+      </modules>
+    </profile>
+
+    <!--Code quality. -->
+    <profile>
+      <id>sonar</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <properties>
+        <sonar.jdbc.url>jdbc:oracle:thin:@192.168.76.31/vlsits</sonar.jdbc.url>
+        <sonar.jdbc.username>VLS_SONAR</sonar.jdbc.username>
+        <sonar.jdbc.password>vls_sonar</sonar.jdbc.password>
+        <sonar.host.url>https://vls-its:8999/</sonar.host.url>
+        <!-- use next part when locally installed sonar is running -->
+        <!--<sonar.jdbc.url>jdbc:h2:tcp://localhost:9092/sonar</sonar.jdbc.url> <sonar.jdbc.username>sonar</sonar.jdbc.username>
+          <sonar.jdbc.password>sonar</sonar.jdbc.password> <sonar.host.url>http://localhost:9000/</sonar.host.url> -->
+        <sonar.exclusions>
+          **/src-gen/**/*.java,**/genome-tools/**/*.java,**/plugins/umgmt/**/*,**/plugins/popstats/**/*,**/GenomeDaoManager.java,**/UmgmtDaoManager.java,**/Emgr.java,**/EmgrFactory.java
+        </sonar.exclusions>
+      </properties>
+      <modules>
+
       </modules>
     </profile>
   </profiles>
