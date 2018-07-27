@@ -36,7 +36,6 @@ import de.micromata.genome.chronos.Scheduler;
 import de.micromata.genome.chronos.ServiceUnavailableException;
 import de.micromata.genome.chronos.State;
 import de.micromata.genome.chronos.manager.SchedulerDAO;
-import de.micromata.genome.chronos.manager.SchedulerManager;
 import de.micromata.genome.chronos.spi.AbstractFutureJob;
 import de.micromata.genome.chronos.spi.jdbc.JobResultDO;
 import de.micromata.genome.chronos.spi.jdbc.SchedulerDO;
@@ -105,11 +104,6 @@ public class JpaNewJobTest extends JpaBaseSchedulerTestCase
    */
   public static class SimpleJob extends AbstractFutureJob
   {
-
-    /**
-     * {@inheritDoc}
-     *
-     */
 
     @Override
     public Object call(Object argument) throws Exception
@@ -221,11 +215,6 @@ public class JpaNewJobTest extends JpaBaseSchedulerTestCase
   public static class FailJob extends AbstractFutureJob
   {
 
-    /**
-     * {@inheritDoc}
-     *
-     */
-
     @Override
     public Object call(Object argument) throws Exception
     {
@@ -261,11 +250,6 @@ public class JpaNewJobTest extends JpaBaseSchedulerTestCase
    */
   public static class ServiceUnavilableJob extends AbstractFutureJob
   {
-
-    /**
-     * {@inheritDoc}
-     *
-     */
 
     @Override
     public Object call(Object argument) throws Exception
@@ -312,11 +296,6 @@ public class JpaNewJobTest extends JpaBaseSchedulerTestCase
       RetryJob.retries = retries;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     */
-
     @Override
     public Object call(Object argument) throws Exception
     {
@@ -335,11 +314,6 @@ public class JpaNewJobTest extends JpaBaseSchedulerTestCase
    */
   public static class RetryNextJob extends AbstractFutureJob
   {
-
-    /**
-     * {@inheritDoc}
-     *
-     */
 
     @Override
     public Object call(Object argument) throws Exception
@@ -363,7 +337,6 @@ public class JpaNewJobTest extends JpaBaseSchedulerTestCase
     SchedulerDAO scheddao = ChronosServiceManager.get().getSchedulerDAO();
     try {
 
-      long oldJobCount = getJobCount();
       final String testname = "testRetryNextRun";
 
       Scheduler scheduler = scheddao.getScheduler(testname);
@@ -438,9 +411,7 @@ public class JpaNewJobTest extends JpaBaseSchedulerTestCase
     SchedulerDAO scheddao = ChronosServiceManager.get().getSchedulerDAO();
     final String testname = "testSchedulerRestart";
     long oldJobCount = getJobCount();
-    long oldJobResultCount = getJobResultCount();
 
-    final Scheduler sched = scheddao.getScheduler(testname);
     // keine Threads
     scheddao.denyNewJobs(testname);
 
@@ -465,11 +436,6 @@ public class JpaNewJobTest extends JpaBaseSchedulerTestCase
    */
   public static class JobWithResultJob extends AbstractFutureJob
   {
-
-    /**
-     * {@inheritDoc}
-     *
-     */
 
     @Override
     public Object call(Object argument) throws Exception
@@ -518,21 +484,11 @@ public class JpaNewJobTest extends JpaBaseSchedulerTestCase
      */
     public static String stringified = SimpleSingletonJob.class.getName() + ":bla";
 
-    /**
-     * {@inheritDoc}
-     *
-     */
-
     @Override
     public Object call(Object argument) throws Exception
     {
       return null;
     }
-
-    /**
-     * {@inheritDoc}
-     *
-     */
 
     @Override
     public String asString()
@@ -551,11 +507,6 @@ public class JpaNewJobTest extends JpaBaseSchedulerTestCase
       return job;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     */
-
     @Override
     public FutureJob getInstance()
     {
@@ -570,7 +521,6 @@ public class JpaNewJobTest extends JpaBaseSchedulerTestCase
   {
     SchedulerDAO scheddao = ChronosServiceManager.get().getSchedulerDAO();
     long oldJobCount = getJobCount();
-    long oldJobResultCount = getJobResultCount();
     final String testSched = "testMassSchedulerRestart";
     int schedThreadCount = 2;
     int jc = 1000;
@@ -680,7 +630,6 @@ public class JpaNewJobTest extends JpaBaseSchedulerTestCase
     final Date now = new Date();
     final Date untilDate = new Date(24 * 60 * 10000 + now.getTime());
 
-    final SchedulerManager manager = SchedulerManager.get();
     SchedulerDAO scheddao = ChronosServiceManager.get().getSchedulerDAO();
     final Scheduler sched = scheddao.getScheduler(schedulerName);
     scheddao.submit(schedulerName, new ClassJobDefinition(JobWithResultJob.class), null, createTriggerDefinition("+1"));
@@ -713,10 +662,7 @@ public class JpaNewJobTest extends JpaBaseSchedulerTestCase
   {
     final String schedulerName = "testJobRemove";
     long oldJobCount = getJobCount(schedulerName, State.FINISHED);
-    final Date now = new Date();
-    final Date untilDate = new Date(24 * 60 * 10000 + now.getTime());
 
-    final SchedulerManager manager = SchedulerManager.get();
     SchedulerDAO scheddao = ChronosServiceManager.get().getSchedulerDAO();
     final Scheduler sched = scheddao.getScheduler(schedulerName);
     final long ref = scheddao.submit(schedulerName, new ClassJobDefinition(JobWithResultJob.class), null,
