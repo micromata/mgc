@@ -83,6 +83,26 @@
           <groupId>jaxme</groupId>
           <artifactId>jaxme-api</artifactId>
         </exclusion>
+        <exclusion>
+          <!-- ancient xalan version with CVE (not referenced by genome modules either)-->
+          <groupId>xalan</groupId>
+          <artifactId>xalan</artifactId>
+        </exclusion>
+        <exclusion>
+          <!-- xml-apis is part of the historical xerces jar hell -->
+          <groupId>xml-apis</groupId>
+          <artifactId>xml-apis</artifactId>
+        </exclusion>
+        <exclusion>
+          <!-- version too old anyway -->
+          <groupId>xerces</groupId>
+          <artifactId>xmlParserAPIs</artifactId>
+        </exclusion>
+        <exclusion>
+          <!-- version too old anyway -->
+          <groupId>xerces</groupId>
+          <artifactId>xercesImpl</artifactId>
+        </exclusion>
       </exclusions>
     </dependency>
 
