@@ -33,7 +33,7 @@
               <archive>
                 <manifestEntries>
                   <Genome-Import-Library>
-                    hibernate-entitymanager-${org.hibernate.hibernate-entitymanager.version};reexport:=true,
+                    hibernate-entitymanager-${org.hibernate.hibernate-entitymanager.version}-noxalan;reexport:=true,
                     javax.transaction-api-1.2;reexport:=true
                   </Genome-Import-Library>
                 </manifestEntries>
