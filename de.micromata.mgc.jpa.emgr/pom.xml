@@ -4,7 +4,7 @@
   <parent>
     <artifactId>de.micromata.mgc.rootpom</artifactId>
     <groupId>de.micromata.mgc</groupId>
-    <version>3.0.7</version><!-- MGC -->
+    <version>3.0.8</version><!-- MGC -->
   </parent>
   <artifactId>de.micromata.mgc.jpa.emgr</artifactId>
   <packaging>jar</packaging>
@@ -33,7 +33,7 @@
               <archive>
                 <manifestEntries>
                   <Genome-Import-Library>
-                    hibernate-entitymanager-${org.hibernate.hibernate-entitymanager.version};reexport:=true,
+                    hibernate-entitymanager-${org.hibernate.hibernate-entitymanager.version}-noxalan;reexport:=true,
                     javax.transaction-api-1.2;reexport:=true
                   </Genome-Import-Library>
                 </manifestEntries>
@@ -82,6 +82,26 @@
         <exclusion>
           <groupId>jaxme</groupId>
           <artifactId>jaxme-api</artifactId>
+        </exclusion>
+        <exclusion>
+          <!-- ancient xalan version with CVE (not referenced by genome modules either)-->
+          <groupId>xalan</groupId>
+          <artifactId>xalan</artifactId>
+        </exclusion>
+        <exclusion>
+          <!-- xml-apis is part of the historical xerces jar hell -->
+          <groupId>xml-apis</groupId>
+          <artifactId>xml-apis</artifactId>
+        </exclusion>
+        <exclusion>
+          <!-- version too old anyway -->
+          <groupId>xerces</groupId>
+          <artifactId>xmlParserAPIs</artifactId>
+        </exclusion>
+        <exclusion>
+          <!-- version too old anyway -->
+          <groupId>xerces</groupId>
+          <artifactId>xercesImpl</artifactId>
         </exclusion>
       </exclusions>
     </dependency>

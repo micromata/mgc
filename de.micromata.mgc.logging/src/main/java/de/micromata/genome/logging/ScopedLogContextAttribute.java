@@ -73,7 +73,7 @@ public class ScopedLogContextAttribute implements AutoCloseable
    */
   public ScopedLogContextAttribute(LogAttribute attribute)
   {
-    lastLog = LoggingContext.getEnsureContext().getAttributes().get(attribute.getType().name());
+    lastLog = LoggingContext.getEnsureContext().getAttributes().get(attribute.getType());
     lastType = attribute.getType();
     LoggingContext.pushLogAttribute(attribute);
   }
@@ -88,7 +88,7 @@ public class ScopedLogContextAttribute implements AutoCloseable
     if (morePushed == null) {
       morePushed = new ArrayList<Pair<LogAttribute, LogAttributeType>>();
     }
-    LogAttribute llastLog = LoggingContext.getEnsureContext().getAttributes().get(attribute.getType().name());
+    LogAttribute llastLog = LoggingContext.getEnsureContext().getAttributes().get(attribute.getType());
     morePushed.add(Pair.make(llastLog, attribute.getType()));
     LoggingContext.pushLogAttribute(attribute);
   }
