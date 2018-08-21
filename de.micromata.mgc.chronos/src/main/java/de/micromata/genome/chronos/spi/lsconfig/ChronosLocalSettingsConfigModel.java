@@ -42,7 +42,7 @@ public class ChronosLocalSettingsConfigModel extends AbstractLocalSettingsConfig
   private ValContext parseValContext;
   @ALocalSettingsPath(comment = "Virtual Hostname used by chronos")
   private String virtualHostName;
-  @ALocalSettingsPath(comment = "Node binding time in milliseconds", defaultValue = "60000")
+  @ALocalSettingsPath(comment = "Node binding time in milliseconds", defaultValue = "3600000")
   private String minNodeBindTime;
 
   public ChronosLocalSettingsConfigModel()

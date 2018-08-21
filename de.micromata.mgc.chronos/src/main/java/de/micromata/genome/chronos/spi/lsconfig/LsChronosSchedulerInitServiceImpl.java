@@ -33,23 +33,10 @@ import de.micromata.genome.util.validation.ValContext;
  */
 public class LsChronosSchedulerInitServiceImpl implements ChronosSchedulerInitService
 {
-  private static boolean mgcApplicationPresent()
-  {
-    try {
-      Class.forName("de.micromata.mgc.application.MgcApplication");
-      return true;
-    } catch (ClassNotFoundException e) {
-      // not catching.
-      return false;
-    }
-  }
 
   @Override
   public void initSchedulerManager(SchedulerManager schedManager)
   {
-    if (mgcApplicationPresent() == false) {
-      return;
-    }
     ChronosLocalSettingsConfigModel cm = new ChronosLocalSettingsConfigModel();
     try {
       cm.fromLocalSettings(LocalSettings.get());
