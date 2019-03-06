@@ -33,14 +33,14 @@ public @interface EntityDependencies {
   /**
    * This entity references other entities.
    * 
-   * @return
+   * @return the referenced class
    */
   Class<?>[] references() default {};
 
   /**
    * This entity is referenced by other.
    * 
-   * @return
+   * @return the class which referenced
    */
   Class<?>[] referencedBy() default {};
 }

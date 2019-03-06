@@ -38,14 +38,14 @@ public interface LogCategory
    * 
    * Common implementation is getClass.getSimpleName() + "." + getName()
    * 
-   * @return
+   * @return the fully qualified name
    */
   public String getFqName();
 
   /**
    * A short prefix
    * 
-   * @return
+   * @return the current prefix
    */
   public String getPrefix();
 

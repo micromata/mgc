@@ -36,8 +36,8 @@ public class FormUrlEncodedBodyWriter
 
   /**
    * Instantiates a new FormUrlEncodedBodyWriter.
-   * @param parameterMap
-   * @param characterEncoding
+   * @param parameterMap map of parameters when null a {@link NullPointerException} is thrown
+   * @param characterEncoding the character encoding when null a {@link NullPointerException} is thrown
    */
   public FormUrlEncodedBodyWriter(Map<String, String[]> parameterMap, String characterEncoding)
   {

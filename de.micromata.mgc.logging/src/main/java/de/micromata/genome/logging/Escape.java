@@ -32,7 +32,7 @@ public class Escape
    *
    * Used Example Code from here: http://www.baeldung.com/jvm-log-forging
    *
-   * @param untrustedData
+   * @param untrustedData the data we want to escape so we can trust it.
    * @return escaped data that could be safely written to a log file
    */
   public static String forLog(String untrustedData)
@@ -51,8 +51,8 @@ public class Escape
    * Replaces all Null-Bytes in the value
    * This is required, because i.e. Postgres fails with exception "invalid byte sequence 0x00"
    *
-   * @param value
-   * @return
+   * @param value the value where to replace the null values in
+   * @return the modified value
    */
   public static String nullBytes(String value)
   {

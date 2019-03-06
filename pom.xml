@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.micromata.mgc</groupId>
@@ -8,7 +8,8 @@
   <packaging>pom</packaging>
 
   <name>${project.groupId}:${project.artifactId}</name>
-  <description>Micromata Genome Commons is a set of Java libraries to build mostly webserver based applications.</description>
+  <description>Micromata Genome Commons is a set of Java libraries to build mostly webserver based applications.
+  </description>
   <url>https://github.com/micromata/mgc</url>
 
   <prerequisites>
@@ -19,7 +20,7 @@
     <name>Micromata GmbH</name>
     <url>https://labs.micromata.de</url>
   </organization>
-  
+
   <inceptionYear>2016</inceptionYear>
 
   <developers>
@@ -48,7 +49,7 @@
     </developer>
   </developers>
 
-  
+
   <contributors>
   </contributors>
 
@@ -73,28 +74,28 @@
   </issueManagement>
 
   <distributionManagement>
-    <repository>
-      <id>MGC</id>
-      <name>MGC</name>
-      <url>https://labs.micromata.de/nexus/content/repositories/MGC/</url>
-    </repository>
     <snapshotRepository>
-      <id>MGC-snapshot</id>
-      <name>MGC-snapshot</name>
-      <url>https://labs.micromata.de/nexus/content/repositories/MGC-snapshot/</url>
-      <uniqueVersion>false</uniqueVersion>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
     </snapshotRepository>
+    <repository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
   </distributionManagement>
 
 
   <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-    <mgc.version>${project.version}</mgc.version><!-- MGCVERSION -->
+    <!-- BUILD CONFIGURATION -->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.build.sourceVersion>1.8</project.build.sourceVersion>
+    <project.build.targetVersion>1.8</project.build.targetVersion>
+
+    <mgc.version>${project.version}</mgc.version>
 
 
     <log4j.version>1.2.17</log4j.version>
-
 
     <junit.version>4.12</junit.version>
 
@@ -134,7 +135,6 @@
     <activation.version>1.1.1</activation.version>
 
 
-
     <!-- MAVEN PLUGINS VERSIONS -->
     <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
     <license-maven-plugin.version>3.0</license-maven-plugin.version>
@@ -147,52 +147,77 @@
     <spring-boot-maven-plugin.version>${spring-boot.version}</spring-boot-maven-plugin.version>
     <maven-enforcer-plugin.version>1.4.1</maven-enforcer-plugin.version>
     <import-enforcer-plugin.version>0.8.0</import-enforcer-plugin.version>
+    <maven-javadoc-plugin.version>3.1.0</maven-javadoc-plugin.version>
     <!-- EO MAVEN PLUGINS VERSIONS -->
 
 
   </properties>
 
+
+  <modules>
+    <module>de.micromata.mgc.common</module>
+    <module>de.micromata.mgc.common.test</module>
+    <module>de.micromata.mgc.util.xml</module>
+    <module>de.micromata.mgc.logging</module>
+    <module>de.micromata.mgc.logging.spi.ifiles</module>
+    <module>de.micromata.mgc.jdbc.trace</module>
+    <module>de.micromata.mgc.jpa.emgr</module>
+    <module>de.micromata.mgc.jpa.tabattr</module>
+    <module>de.micromata.mgc.jpa.history</module>
+    <module>de.micromata.mgc.jpa.normsearch</module>
+    <module>de.micromata.mgc.jpa.hibernatesearch</module>
+    <module>de.micromata.mgc.jpa.spring</module>
+    <module>de.micromata.mgc.jpa.xmldump</module>
+    <module>de.micromata.mgc.jpa.logging</module>
+    <module>de.micromata.mgc.email</module>
+    <module>de.micromata.mgc.application</module>
+    <module>de.micromata.mgc.application.webserver</module>
+    <module>de.micromata.mgc.application.jetty</module>
+    <module>de.micromata.mgc.application.springboot</module>
+    <module>de.micromata.mgc.javafx.launcher</module>
+    <module>de.micromata.mgc.chronos</module>
+    <module>de.micromata.mgc.chronos.jpa</module>
+    <module>samples</module>
+  </modules>
+
   <profiles>
     <profile>
-      <id>default</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-      </activation>
-      <modules>
-        <module>de.micromata.mgc.common</module>
-        <module>de.micromata.mgc.common.test</module>
-        <module>de.micromata.mgc.util.xml</module>
-        <module>de.micromata.mgc.logging</module>
-        <module>de.micromata.mgc.logging.spi.ifiles</module>
-        <module>de.micromata.mgc.jdbc.trace</module>
-        <module>de.micromata.mgc.jpa.emgr</module>
-        <module>de.micromata.mgc.jpa.tabattr</module>
-        <module>de.micromata.mgc.jpa.history</module>
-        <module>de.micromata.mgc.jpa.normsearch</module>
-        <module>de.micromata.mgc.jpa.hibernatesearch</module>
-        <module>de.micromata.mgc.jpa.spring</module>
-        <module>de.micromata.mgc.jpa.xmldump</module>
-        <module>de.micromata.mgc.jpa.logging</module>
-        <module>de.micromata.mgc.email</module>
-        <module>de.micromata.mgc.application</module>
-        <module>de.micromata.mgc.application.webserver</module>
-        <module>de.micromata.mgc.application.jetty</module>
-        <module>de.micromata.mgc.application.springboot</module>
-        <module>de.micromata.mgc.javafx.launcher</module>
-        <module>de.micromata.mgc.chronos</module>
-        <module>de.micromata.mgc.chronos.jpa</module>
-
-        <module>samples</module>
-      </modules>
-    </profile>
-
-    <profile>
-      <id>empty</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-      </activation>
-      <modules>
-      </modules>
+      <id>release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <version>${maven-source-plugin.version}</version>
+            <executions>
+              <execution>
+                <inherited>true</inherited>
+                <id>attach-sources</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <attach>true</attach>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>${maven-javadoc-plugin.version}</version>
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
   </profiles>
 
@@ -203,29 +228,12 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${maven-compiler-plugin.version}</version>
         <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
-          <encoding>utf-8</encoding>
+          <source>${project.build.sourceVersion}</source>
+          <target>${project.build.targetVersion}</target>
+          <encoding>${project.build.sourceEncoding}</encoding>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <version>${maven-source-plugin.version}</version>
-        <executions>
-          <execution>
-            <inherited>true</inherited>
-            <id>attach-sources</id>
-            <phase>verify</phase>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <attach>true</attach>
-        </configuration>
-      </plugin>
+      
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>

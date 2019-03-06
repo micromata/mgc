@@ -26,14 +26,14 @@ public interface LoggingWithFallback extends Logging
   /**
    * get the fallback logging
    * 
-   * @return
+   * @return the secondary {@link Logging}
    */
   Logging getSecondary();
 
   /**
    * sets the fallback.
    * 
-   * @param secondary
+   * @param secondary the {@link Logging} which is to set as the secondary {@link Logging}
    */
   void setSecondary(Logging secondary);
 }

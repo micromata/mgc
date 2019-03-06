@@ -282,8 +282,8 @@ public class GLog
   /**
    * The message has to be translated before
    * 
-   * @param cat
-   * @param msg
+   * @param cat the log category
+   * @param msg the message
    */
   public static void logValMessage(LogCategory cat, ValMessage msg)
   {

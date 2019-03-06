@@ -217,7 +217,7 @@ public class StatsDAOImpl implements StatsDAO
   /**
    * Liefert eine Kopie der aktuellen LogStats
    * 
-   * @return
+   * @return a clone of the stats do
    */
   public static StatsDO getStats()
   {

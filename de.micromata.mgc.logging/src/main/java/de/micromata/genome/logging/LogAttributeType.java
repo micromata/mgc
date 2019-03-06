@@ -64,7 +64,7 @@ public interface LogAttributeType
   /**
    * Renderer for this Attribute Type. Return DefaultLogAttributeRenderer.INSTANCE if no customized renderer should be used.
    * 
-   * @return
+   * @return the current {@link LogAttributeRenderer}
    */
   public LogAttributeRenderer getRenderer();
 }
