@@ -37,8 +37,7 @@ public interface JobStore
 {
   /**
    * Prefix für die Job/Schedulernamen um mehrerer JobStores auf einer gemeinsamen betreiben zu können.
-   * 
-   * @param prefix Der Prefix, muss nicht notwendigerweise gesetzt sein. In einer Mehrbenutzerentwicklerdatenbank sollte dies der User sein.
+   * @return returns the dispatcher
    */
   Dispatcher getDispatcher();
 
@@ -384,7 +383,7 @@ public interface JobStore
    * @param state the state
    * @param schedulerName the scheduler name
    * @param resultCount the result count
-   * @return the list<? extends trigger job d o>
+   * @return the list ? extends trigger job d o
    */
   List< ? extends TriggerJobDO> findJobs(String hostName, String jobName, String state, String schedulerName,
       int resultCount);

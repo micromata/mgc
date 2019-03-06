@@ -37,13 +37,9 @@ import de.micromata.genome.logging.GenomeLogCategory;
 
 /**
  * Zentrale Klasse (Singleton) für die Job-Verteilung.
- * <p>
- * Pollt die Datenbank nach neuen {@link Scheduler} und {@link Job} ab und versucht diese zu Starten.
- * </p>
- * <p>
+ * Pollt die Datenbank nach neuen {@link Scheduler} und {@link com.sun.javaws.ui.JavawsSysRun.Job} ab und versucht diese zu Starten.
  * Hier werden die Runtime-Instanzen von Schedulern und Jobs verwaltet.
- * </p>
- * 
+ *
  */
 public abstract class DispatcherImpl implements Runnable, Dispatcher
 {

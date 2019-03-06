@@ -33,6 +33,8 @@ public interface FutureJobStatusListener
    * This call back will be called after the job is already stopped on the jobstore
    * 
    * @param jobRunner get Access to job, jobStore and scheduler
+   * @param ex exception
+   * @param resultInfo the result of the job
    */
   public void finalFail(JobRunner jobRunner, final JobResultDO resultInfo, final Exception ex);
 }

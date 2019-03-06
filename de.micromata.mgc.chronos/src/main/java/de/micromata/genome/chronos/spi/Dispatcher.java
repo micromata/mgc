@@ -51,7 +51,7 @@ public interface Dispatcher
    * Shutdown.
    *
    * @throws InterruptedException the interrupted exception
-   * @see de.micromata.genome.chronos.spi.Dispatcher.shutdown(long)
+   * @see de.micromata.genome.chronos.spi.Dispatcher#shutdown(long) 
    */
   public void shutdown() throws InterruptedException;
 
@@ -63,7 +63,7 @@ public interface Dispatcher
   /**
    * Shutdown.
    *
-   * @param waitForShutdown time to wait for shutdown. <= 0 means wait forever.
+   * @param waitForShutdown time to wait for shutdown. &lt;= 0 means wait forever.
    * @throws InterruptedException the interrupted exception
    */
   public void shutdown(final long waitForShutdown) throws InterruptedException;
@@ -102,7 +102,6 @@ public interface Dispatcher
    *
    * @param schedulerDO the scheduler do
    * @return the scheduler
-   * @see #schedulerByPk
    */
   public Scheduler createOrGetScheduler(final SchedulerDO schedulerDO);
 

@@ -208,7 +208,6 @@ public interface SchedulerDAO
    *
    * @param jobId the job id
    * @param args the args
-   * @param trigger the trigger
    * @return the long
    */
   public long submitStdAdminJob(String jobId, final Map<String, String> args);
@@ -242,6 +241,7 @@ public interface SchedulerDAO
    * @param arg may be null
    * @param trigger must not be null
    * @param hostName if null, uses the current hostname
+   * @param jobName the name of the job
    * @return Job reference (pk)
    * @throws SchedulerConfigurationException wenn ein nicht registrierter Scheduler angesprochen wird
    */
@@ -351,6 +351,7 @@ public interface SchedulerDAO
 
   /**
    * Internal callbackback to intialize with configuration
+   * @param manager the manger for the scheduler
    */
   void init(SchedulerManager manager);
 

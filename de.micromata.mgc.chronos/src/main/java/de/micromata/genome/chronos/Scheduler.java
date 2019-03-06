@@ -83,7 +83,7 @@ public interface Scheduler
 
   /**
    * return the db pk of the scheduler.
-   * 
+   * @return the id of the scheduler
    */
   public long getId();
 

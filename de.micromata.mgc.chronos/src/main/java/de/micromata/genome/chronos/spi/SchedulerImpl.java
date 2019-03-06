@@ -138,7 +138,7 @@ public class SchedulerImpl implements Scheduler, RejectedExecutionHandler
   }
 
   /**
-   * Ruft {@link #initThreadPool(int)} und {@link #initProperties(SchedulerDO)} auf.
+   * Ruft {@link #initThreadPool(int, String)} und {@link #initProperties(SchedulerDO)} auf.
    *
    * @param schedulerDO the scheduler do
    * @param dispatcher the dispatcher
@@ -264,13 +264,10 @@ public class SchedulerImpl implements Scheduler, RejectedExecutionHandler
 
   /**
    * Führ einen Job aus.
-   * <p>
-   * <ul>
-   * <li>Versucht den Job in der Datenbank für sich zu reservieren {@link JobStore#reserveJob(Long)} und</li>
-   * <li>führt ihn dann mit dem {@link ThreadPoolExecutor#execute(Runnable)} aus.</li>
-   * </ul>
-   * 
-   * @see de.micromata.genome.chronos.Scheduler#executeJob(java.lang.Long, de.micromata.genome.chronos.JobStore)
+   * Versucht den Job in der Datenbank für sich zu reservieren {@link JobStore#reserveJob(TriggerJobDO)} und
+   * führt ihn dann mit dem {@link ThreadPoolExecutor#execute(Runnable)} aus.
+   *
+   * @see de.micromata.genome.chronos.Scheduler#executeJob(TriggerJobDO, JobStore)
    */
   @Override
   public synchronized boolean executeJob(final TriggerJobDO job, JobStore jobStore)

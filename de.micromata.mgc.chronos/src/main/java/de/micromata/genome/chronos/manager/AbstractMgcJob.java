@@ -40,7 +40,6 @@ public abstract class AbstractMgcJob extends AbstractFutureJob
    * Call the job.
    *
    * @param argument the argument
-   * @param configTime the config time
    * @return the object
    * @throws Exception the exception
    */
