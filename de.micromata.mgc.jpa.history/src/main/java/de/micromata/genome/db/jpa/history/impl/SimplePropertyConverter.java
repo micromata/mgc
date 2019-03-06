@@ -50,6 +50,7 @@ public class SimplePropertyConverter implements HistoryPropertyConverter
    * Convert.
    *
    * @param value the value
+   * @param pd the coulmn metadata
    * @return the string
    */
   protected HistProp convertInternal(Object value, ColumnMetadata pd)

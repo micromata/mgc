@@ -30,7 +30,7 @@ import de.micromata.genome.jpa.events.EmgrUpdateCopyFilterEvent;
 /**
  * The listener interface for receiving historyUpdateCopyFilterEvent events. The class that is interested in processing
  * a historyUpdateCopyFilterEvent event implements this interface, and the object created with that class is registered
- * with a component using the component's <code>addHistoryUpdateCopyFilterEventListener<code> method. When the
+ * with a component using the component's addHistoryUpdateCopyFilterEventListener  method. When the
  * historyUpdateCopyFilterEvent event occurs, that object's appropriate method is invoked.
  *
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)

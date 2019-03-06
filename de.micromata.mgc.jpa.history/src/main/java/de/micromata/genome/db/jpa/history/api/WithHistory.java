@@ -38,7 +38,7 @@ public @interface WithHistory {
   /**
    * Which code should be used to retrieve properties.
    *
-   * @return the class<? extends history property provider>[]
+   * @return the class ? extends history property provider []
    */
   Class<? extends HistoryPropertyProvider>[] propertyProvider() default { DefaultHistoryPropertyProvider.class };
 

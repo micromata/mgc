@@ -29,7 +29,7 @@ import de.micromata.mgc.jpa.hibernatesearch.impl.SearchEmgrFactoryRegistryUtils;
  * 
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
- * @param <EMGR>
+ * @param <EMGR> the type of the entiry manager
  */
 public abstract class SearchEmgrFactory<EMGR extends ISearchEmgr<?>> extends EmgrFactory<EMGR>
 {

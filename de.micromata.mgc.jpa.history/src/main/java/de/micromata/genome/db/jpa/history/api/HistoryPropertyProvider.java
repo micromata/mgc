@@ -32,6 +32,9 @@ public interface HistoryPropertyProvider
 
   /**
    * A Map of properties to make history diff.
+   * @param historyMetaInfo the historyMetaInfo
+   * @param emgr the emgr
+   * @param map the map
    *
    * @param entity the entity
    */

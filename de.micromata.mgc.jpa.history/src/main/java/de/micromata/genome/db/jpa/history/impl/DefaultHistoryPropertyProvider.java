@@ -92,6 +92,7 @@ public class DefaultHistoryPropertyProvider implements HistoryPropertyProvider
    *
    * @param entity the entity
    * @param pd the pd
+   * @param emgr the entity manager
    * @return the property converter
    */
   protected HistoryPropertyConverter getPropertyConverter(IEmgr<?> emgr, Object entity, ColumnMetadata pd)

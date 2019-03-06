@@ -325,6 +325,7 @@ public class HistoryServiceImpl implements HistoryService
   /**
    * Insert.
    *
+   * @param emgr the entity manager
    * @param hm the hm
    */
   protected void insert(IEmgr<?> emgr, HistoryMasterBaseDO<?, ?> hm)
@@ -337,6 +338,7 @@ public class HistoryServiceImpl implements HistoryService
    *
    * @param prevMap the prev map
    * @param nextMap the next map
+   *
    * @return the list
    */
   protected List<DiffEntry> calculateDiff(Map<String, HistProp> prevMap, Map<String, HistProp> nextMap)
@@ -361,8 +363,8 @@ public class HistoryServiceImpl implements HistoryService
   /**
    * Calculate diff.
    *
-   * @param oldVal the old val
-   * @param newVal the new val
+   * @param oldProp the old val
+   * @param newProp the new val
    * @return the diff entry
    */
   protected DiffEntry calculateDiff(HistProp oldProp, HistProp newProp)
