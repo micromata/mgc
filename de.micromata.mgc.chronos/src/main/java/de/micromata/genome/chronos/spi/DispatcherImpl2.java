@@ -44,7 +44,7 @@ import de.micromata.genome.util.runtime.LocalSettings;
 
 /**
  * Zentrale Klasse (Singleton) für die Job-Verteilung.
- * Pollt die Datenbank nach neuen {@link Scheduler} und {@link com.sun.javaws.ui.JavawsSysRun.Job} ab und versucht diese zu Starten.
+ * Pollt die Datenbank nach neuen {@link Scheduler} und Job ab und versucht diese zu Starten.
  * Diese Implementierung geht davon aus, dass es eine implizite minimale Nodebindtimeout gibt, so dass ein lokaler Cache
  * der zu startenden Jobs verwaltet werden kann und damit die Anzahl der selects reduziert werden kann.
  * Hier werden die Runtime-Instanzen von Schedulern und Jobs verwaltet.
