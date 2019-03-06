@@ -40,14 +40,14 @@ public interface MgcApplication<M extends LocalSettingsConfigModel>
   /**
    * get the current configuration model
    * 
-   * @return
+   * @return the model
    */
   M getConfigModel();
 
   /**
    * Loads a new Configuration model from persistence.
    * 
-   * @return
+   * @return the model
    */
   M loadConfigModel();
 
@@ -59,7 +59,7 @@ public interface MgcApplication<M extends LocalSettingsConfigModel>
   /**
    * Check the configuration, if it is valid.
    * 
-   * @return
+   * @return true when the conf is valid
    */
   boolean checkConfiguration();
 
@@ -67,7 +67,7 @@ public interface MgcApplication<M extends LocalSettingsConfigModel>
    * If the configuraiton is valid, call initialize the applications configuration, but without starting the
    * application.
    * 
-   * @return
+   * @return true when no error happen
    */
   boolean initWithConfig();
 
@@ -83,8 +83,8 @@ public interface MgcApplication<M extends LocalSettingsConfigModel>
    * 
    * Calls inside startImpl.
    * 
-   * @param args
-   * @return
+   * @param args the arguments
+   * @return the mgc application start stop status
    */
   MgcApplicationStartStopStatus start(String[] args);
 
@@ -98,8 +98,8 @@ public interface MgcApplication<M extends LocalSettingsConfigModel>
 
   /**
    * Public method to stop an application.
-   * 
-   * @return
+   *
+   * @return the mgc application start stop status
    */
   MgcApplicationStartStopStatus stop();
 

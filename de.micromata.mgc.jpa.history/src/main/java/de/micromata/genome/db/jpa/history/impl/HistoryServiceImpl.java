@@ -481,8 +481,8 @@ public class HistoryServiceImpl implements HistoryService
   /**
    * return null if not an Hist
    * 
-   * @param entity
-   * @return
+   * @param entity the entity
+   * @return List of {@link WithHistory}
    */
 
   @Override

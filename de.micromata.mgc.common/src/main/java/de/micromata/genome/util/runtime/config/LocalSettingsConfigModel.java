@@ -38,7 +38,7 @@ public interface LocalSettingsConfigModel
   /**
    * When store into properties.
    * 
-   * @return
+   * @return the comment of the section
    */
   String getSectionComment();
 

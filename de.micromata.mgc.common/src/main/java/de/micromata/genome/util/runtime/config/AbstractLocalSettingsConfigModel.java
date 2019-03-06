@@ -83,7 +83,7 @@ public abstract class AbstractLocalSettingsConfigModel implements LocalSettingsC
   /**
    * load the configuration from local settings.
    * 
-   * @param localSettings
+   * @param localSettings the localsettings 
    */
   @Override
   public void fromLocalSettings(LocalSettings localSettings)
@@ -108,7 +108,7 @@ public abstract class AbstractLocalSettingsConfigModel implements LocalSettingsC
   /**
    * Used for prefix map frm ALocalSettingsPath key.
    * 
-   * @return
+   * @return an empty String
    */
   public String getKeyPrefix()
   {

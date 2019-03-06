@@ -179,8 +179,8 @@ public interface IEmgr<EMGR extends IEmgr<?>>
    *
    * Be carfull, use it only for adminstrational usses.
    *
-   * @param cls
-   * @return
+   * @param cls the class
+   * @return a list of attached entities matching to the given class
    */
   <R> List<R> selectAllAttached(Class<R> cls);
 
@@ -194,7 +194,6 @@ public interface IEmgr<EMGR extends IEmgr<?>>
    * @param sql the sql
    * @param values the values
    * @return the typed query
-   * @events EmgrCreateTypedQueryFilterEvent, EmgrTypedQueryGetResultListFilterEvent, EmgrBeforeDetachEvent,
    *         EmgrAfterDetachEvent
    */
   <R> TypedQuery<R> createQueryDetached(final Class<R> cls, final String sql, final Map<String, Object> values);
@@ -207,7 +206,6 @@ public interface IEmgr<EMGR extends IEmgr<?>>
    * @param sql the sql
    * @param keyValues the key values
    * @return the typed query
-   * @events EmgrCreateTypedQueryFilterEvent, EmgrTypedQueryGetResultListFilterEvent
    */
   <R> TypedQuery<R> createQueryAttached(final Class<R> cls, final String sql, final Object... keyValues);
 
@@ -219,7 +217,6 @@ public interface IEmgr<EMGR extends IEmgr<?>>
    * @param sql the sql
    * @param values the values
    * @return the typed query
-   * @events EmgrCreateTypedQueryFilterEvent, EmgrTypedQueryGetResultListFilterEvent
    */
   <R> TypedQuery<R> createQueryAttached(final Class<R> cls, final String sql, final Map<String, Object> values);
 
@@ -233,8 +230,6 @@ public interface IEmgr<EMGR extends IEmgr<?>>
    * @param sql the sql
    * @param keyValues the key values
    * @return the typed query
-   * @events EmgrCreateTypedQueryFilterEvent, EmgrTypedQueryGetResultListFilterEvent, EmgrBeforeDetachEvent,
-   *         EmgrAfterDetachEvent
    */
   <R> TypedQuery<R> createQueryDetached(final Class<R> cls, final String sql, final Object... keyValues);
 
@@ -252,7 +247,6 @@ public interface IEmgr<EMGR extends IEmgr<?>>
    *
    * @param query the query
    * @param lockTimetimeInMs the lock timetime in ms
-   * @return the emgr
    */
   void setSelectForUpdate(Query query, int lockTimetimeInMs);
 
@@ -261,7 +255,6 @@ public interface IEmgr<EMGR extends IEmgr<?>>
    *
    * @param query the query
    * @param timeOutInMs the time out in ms
-   * @return the emgr
    */
   void setQueryTimeout(Query query, int timeOutInMs);
 
@@ -300,7 +293,6 @@ public interface IEmgr<EMGR extends IEmgr<?>>
    * Update an already attached object.
    *
    * @param rec the rec
-   * @return the emgr
    */
   void updateAttached(final DbRecord<?> rec);
 
@@ -369,7 +361,6 @@ public interface IEmgr<EMGR extends IEmgr<?>>
    * Delete an already attached entity.
    *
    * @param rec the rec
-   * @return the emgr
    * @throws IllegalArgumentException if the instance is not an entity or is a detached entity
    */
   void deleteAttached(DbRecord<?> rec) throws IllegalArgumentException;
@@ -397,7 +388,6 @@ public interface IEmgr<EMGR extends IEmgr<?>>
    *
    * @param rec the rec
    * @return true, if record was found and it was previously marked as deleted.
-   * @events EmgrMarkUndeletedCriteriaUpdateFilterEvent
    */
   <T extends MarkDeletableRecord<?>> boolean markUndeleted(T rec);
 
@@ -405,8 +395,6 @@ public interface IEmgr<EMGR extends IEmgr<?>>
    * Detach.
    *
    * @param entity the entity
-   * @return the emgr
-   * @events EmgrBeforeDetachEvent, EmgrAfterDetachEvent
    */
   void detach(final Object entity);
 
@@ -415,8 +403,6 @@ public interface IEmgr<EMGR extends IEmgr<?>>
    *
    * @param <R> the generic type
    * @param result the result
-   * @return the emgr
-   * @events EmgrBeforeDetachEvent, EmgrAfterDetachEvent for each entity
    */
   <R> void detach(List<R> result);
 

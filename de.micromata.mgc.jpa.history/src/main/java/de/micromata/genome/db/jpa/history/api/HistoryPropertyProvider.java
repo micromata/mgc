@@ -34,7 +34,6 @@ public interface HistoryPropertyProvider
    * A Map of properties to make history diff.
    *
    * @param entity the entity
-   * @return the properties
    */
   void getProperties(IEmgr<?> emgr, HistoryMetaInfo historyMetaInfo, Object entity, Map<String, HistProp> map);
 }

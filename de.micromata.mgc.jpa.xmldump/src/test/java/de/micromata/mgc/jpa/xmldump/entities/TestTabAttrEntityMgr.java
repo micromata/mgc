@@ -34,7 +34,7 @@ public class TestTabAttrEntityMgr extends Emgr<TestTabAttrEntityMgr>
 {
 
   /**
-   * @param entityManager
+   * @param entityManager the entity manager to use
    */
   public TestTabAttrEntityMgr(EntityManager entityManager, TestTabAttrEntityMgrFactory emgrFactory,
       EmgrTx<TestTabAttrEntityMgr> emgrTx)

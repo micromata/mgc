@@ -83,10 +83,10 @@ public class NIOUtils
   /**
    * reads from current position.
    * 
-   * @param input
-   * @param length
-   * @param charset
-   * @return
+   * @param input the input
+   * @param length the length to read
+   * @param charset the charset to use
+   * @return the String
    */
   public static String readString(DataInput input, int length, Charset charset) throws IOException
   {

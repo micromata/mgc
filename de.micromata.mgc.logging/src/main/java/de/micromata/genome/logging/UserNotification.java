@@ -38,7 +38,7 @@ public interface UserNotification
   /**
    * I18N-Key for user
    * 
-   * @return
+   * @return the i18n key
    */
   public String getI18NKey();
 
@@ -52,7 +52,7 @@ public interface UserNotification
   /**
    * For web frameworks, etc. Place to show notification
    * 
-   * @return
+   * @return the name of the form
    */
   public String getFormName();
 }

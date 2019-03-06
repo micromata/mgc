@@ -31,7 +31,7 @@ public interface I18NTranslationProvider
   /**
    * Get all keys for a language.
    *
-   * @return
+   * @return the key set
    */
   Set<String> keySet();
 
@@ -47,7 +47,7 @@ public interface I18NTranslationProvider
   /**
    * get the translation for a i18n key.
    *
-   * @param key
+   * @param key the key we want the translation for.
    * @return null if not found
    */
   Object getTranslationForKey(String key);
@@ -55,7 +55,7 @@ public interface I18NTranslationProvider
   /**
    * The id of the underlying genome config resource.
    *
-   * @return
+   * @return the id of the resource
    */
   String getId();
 

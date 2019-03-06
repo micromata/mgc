@@ -32,37 +32,37 @@ public interface SqlTracer
   /**
    * Execute a statement.
    * 
-   * @param sqlTraced
-   * @param sql
-   * @param callable
-   * @return
-   * @throws SQLException
+   * @param sqlTraced the traced sql
+   * @param sql the sql as string
+   * @param callable the callable
+   * @return the sql result
+   * @throws SQLException when a sql error happened
    */
   public <T> T executeWrapped(SqlTraced sqlTraced, String sql, CallableX<T, SQLException> callable) throws SQLException;
 
   /**
    * Execute a prepareStatement/Call
-   * 
-   * @param sqlTraced
-   * @param sql
-   * @param callable
-   * @return
-   * @throws SQLException
+   *
+   * @param sqlTraced the traced sql
+   * @param sql the sql as string
+   * @param callable the callable
+   * @return the sql result
+   * @throws SQLException when a sql error happened
    */
   public <T> T executePreparedWrapped(SqlTraced sqlTraced, String sql, CallableX<T, SQLException> callable) throws SQLException;
 
   /**
    * Doing a rollback.
    * 
-   * @param connection
-   * @param savepoint
+   * @param connection the connection
+   * @param savepoint the save point to rollback to
    */
   public void rollback(TraceConnection connection, Savepoint savepoint);
 
   /**
    * Doing a commit.
    * 
-   * @param connection
+   * @param connection the connection
    */
   public void commit(TraceConnection connection) throws SQLException;
 

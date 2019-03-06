@@ -33,7 +33,7 @@ public @interface JpaXmlPersist {
   /**
    * A listener before an entity should be persistet.
    * 
-   * @return
+   * @return the class
    */
   Class<? extends JpaXmlBeforePersistListener>[] beforePersistListener() default {};
 
@@ -49,7 +49,7 @@ public @interface JpaXmlPersist {
   /**
    * The listed classes should be persisted before this class.
    * 
-   * @return
+   * @return the array of classes
    */
   Class<?>[] persistAfter() default {};
 }

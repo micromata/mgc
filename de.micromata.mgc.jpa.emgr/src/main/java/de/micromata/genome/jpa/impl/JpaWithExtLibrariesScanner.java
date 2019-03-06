@@ -162,8 +162,8 @@ public class JpaWithExtLibrariesScanner implements Scanner
   /**
    * A jar may have also declared more deps in manifest (like surefire).
    * 
-   * @param url
-   * @param collector
+   * @param url the url
+   * @param collector the collector to use
    */
   @SuppressWarnings("deprecation")
   private void handleClassManifestClassPath(URL url, ScanResultCollector collector, Matcher<String> urlMatcher)

@@ -27,8 +27,8 @@ public interface HistoryMetaInfo
   /**
    * should property ignored for history.
    * 
-   * @param property
-   * @return
+   * @param property the property to ignore
+   * @return true
    */
   boolean ignoreProperty(String property);
 

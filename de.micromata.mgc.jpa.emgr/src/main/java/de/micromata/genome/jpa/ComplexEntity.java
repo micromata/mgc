@@ -27,7 +27,7 @@ public interface ComplexEntity
   /**
    * Should be called for each entity
    * 
-   * @param visitor
+   * @param visitor the visitor to use to visit the entity
    */
   public void visit(ComplexEntityVisitor visitor);
 }

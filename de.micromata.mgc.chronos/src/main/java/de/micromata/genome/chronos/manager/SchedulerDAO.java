@@ -127,8 +127,8 @@ public interface SchedulerDAO
    * Dies ist die Anzahl der Thread des zugehörigen Thread-Pools.
    * </p>
    * 
-   * @param size
-   * @param name
+   * @param size the size of jopbs
+   * @param schedulerName the name of the scheduler
    */
   public void setJobCount(final int size, final String schedulerName);
 
@@ -216,9 +216,9 @@ public interface SchedulerDAO
   /**
    * Submits a job defined by standard Job ID from ContextChronos.
    * 
-   * @param jobId
-   * @param arg
-   * @return
+   * @param jobId the id of the job
+   * @param arg the argument for the job
+   * @return the database pk of the job
    */
   public long submitStdJob(String jobId, final Object arg);
 
@@ -378,14 +378,14 @@ public interface SchedulerDAO
    * 
    * Used only internally.
    * 
-   * @return
+   * @return the {@link Dispatcher} for the scheduler
    */
   Dispatcher getDispatcher();
 
   /**
    * defaults to MGC
    * 
-   * @return
+   * @return the name of the application
    */
   String getShortApplicationName();
 }

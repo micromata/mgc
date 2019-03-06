@@ -91,7 +91,7 @@ public class HostUtils
   /**
    * This method should only be called in test code
    * 
-   * @param hostname
+   * @param hostname the hostname to set
    */
   public static void setThisHostName(String hostname)
   {

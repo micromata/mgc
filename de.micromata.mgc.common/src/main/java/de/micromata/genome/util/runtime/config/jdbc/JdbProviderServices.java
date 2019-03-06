@@ -53,9 +53,9 @@ public class JdbProviderServices
   }
 
   /**
-   * Give availabe (with existant jdbc driver in classpath) jdbc services.
+   * Give available (with existant jdbc driver in classpath) jdbc services.
    * 
-   * @return
+   * @return a {@link List} of the available {@link JdbProviderService}
    */
   public static List<JdbProviderService> getAvailableJdbcServices()
   {
@@ -72,7 +72,7 @@ public class JdbProviderServices
   /**
    * Give all jdbc services.
    * 
-   * @return
+   * @return a {@link List} of all {@link JdbProviderService}
    */
   public static List<JdbProviderService> getAllJdbcServices()
   {

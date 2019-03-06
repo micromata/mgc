@@ -48,7 +48,7 @@ public class NewPropertiesLineReader
     /**
      * Neither empty, nor comment, keyvalue.
      * 
-     * @param line
+     * @param line the line
      */
     default void onGarbage(String line)
     {

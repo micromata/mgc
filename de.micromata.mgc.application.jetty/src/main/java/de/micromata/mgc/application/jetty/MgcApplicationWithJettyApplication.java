@@ -91,7 +91,6 @@ public abstract class MgcApplicationWithJettyApplication<M extends LocalSettings
   /**
    * Gets the creates the jetty server.
    *
-   * @return the creates the jetty server
    */
   protected void getCreateJettyServer()
   {

@@ -134,7 +134,6 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    * Detach an entity.
    *
    * @param entity the entity
-   * @return the t
    */
   @Override
   public void detach(final Object entity)
@@ -152,7 +151,6 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    *
    * @param <E> the element type
    * @param result the result
-   * @return the t
    */
   @Override
   public <R> void detach(List<R> result)
@@ -703,7 +701,6 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    *
    * @param query the query
    * @param lockTimetimeInMs the lock timetime in ms
-   * @return the t
    */
   @Override
   public void setSelectForUpdate(Query query, int lockTimetimeInMs)
@@ -725,7 +722,6 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
   /**
    * flushes the underlying entitymanager.
    *
-   * @return this
    */
   public void flush()
   {
@@ -736,7 +732,6 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    * Persists the given {@link DbRecord}.
    *
    * @param rec the rec
-   * @return the t
    */
   public void persist(DbRecord<?> rec)
   {
@@ -747,7 +742,6 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    * Inits the for update.
    *
    * @param rec the rec
-   * @return the t
    */
   public void initForUpdate(DbRecord<?> rec)
   {
@@ -769,7 +763,6 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    * alias to remove.
    *
    * @param rec the rec
-   * @return the t
    */
   @Override
   public void deleteAttached(DbRecord<?> rec)
@@ -797,7 +790,6 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    * Removes the.
    *
    * @param rec the rec
-   * @return the t
    */
   public void remove(final DbRecord<?> rec)
   {
@@ -818,8 +810,8 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
   /**
    * Execute the criteria update
    *
-   * @param update
-   * @return
+   * @param update the criteria to perform the update with
+   * @return the updated entity
    */
   private <E> int internalExecuteCriteriaUpdate(CriteriaUpdate<E> update)
   {
@@ -928,7 +920,6 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    *
    *
    * @param rec the rec
-   * @return the t
    */
   @Override
   public void updateAttached(final DbRecord<?> rec)
@@ -1082,7 +1073,6 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    * Inits the for create.
    *
    * @param rec the rec
-   * @return the t
    */
   public void initForCreate(DbRecord<?> rec)
   {

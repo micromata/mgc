@@ -30,7 +30,7 @@ public interface LoggingEventListenerRegistryService
   /**
    * Register a class, which should be called in Logging.
    * 
-   * @param listenerClass
+   * @param listenerClass the class to listen to
    */
   <EVENT extends LoggingEvent, LISTENER extends MgcEventListener<EVENT>> void registerListener(
       Class<LISTENER> listenerClass);

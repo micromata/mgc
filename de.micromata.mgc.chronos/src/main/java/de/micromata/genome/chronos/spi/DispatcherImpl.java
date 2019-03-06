@@ -263,8 +263,8 @@ public abstract class DispatcherImpl implements Runnable, Dispatcher
   /**
    * Hält den Dispatcher-Thread an mit {@link Thread#join()}.
    * 
-   * @param waitForShutdown
-   * @throws InterruptedException
+   * @param waitForShutdown how long to wait until the shutdown
+   * @throws InterruptedException is thrown when an error happened 
    */
   @Override
   public void shutdown(final long waitForShutdown) throws InterruptedException
@@ -351,8 +351,8 @@ public abstract class DispatcherImpl implements Runnable, Dispatcher
    * benutzen.
    * </p>
    * 
-   * @param name
-   * @return
+   * @param name the name of the scheduler
+   * @return the scheduler
    */
   @Override
   public Scheduler getScheduler(final String name)

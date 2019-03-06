@@ -27,14 +27,14 @@ public interface LoggingContextService
   /**
    * Current users id for logging.
    * 
-   * @return
+   * @return the current user name
    */
   String getCurrentUserName();
 
   /**
    * The current runcontext like session id.
    * 
-   * @return
+   * @return the id of the current context
    */
   String getRunContextId();
 }

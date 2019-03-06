@@ -181,7 +181,7 @@ public class SchedulerImpl implements Scheduler, RejectedExecutionHandler
   /**
    * Erzeugt ein neues DO als Kopie der eigenen Attribute.
    * 
-   * @return
+   * @return the {@link SchedulerDO}
    */
   @Override
   public SchedulerDO getDO()
@@ -200,7 +200,7 @@ public class SchedulerImpl implements Scheduler, RejectedExecutionHandler
   /**
    * Reinitialisiert den Scheduler und adjustiert ggf. den Thread-Pool neu.
    * 
-   * @param schedulerDO
+   * @param schedulerDO the do
    * @see #initProperties(SchedulerDO)
    * @see #initThreadPool(int, String)
    */

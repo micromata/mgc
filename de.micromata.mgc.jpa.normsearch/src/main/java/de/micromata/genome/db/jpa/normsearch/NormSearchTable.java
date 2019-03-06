@@ -35,7 +35,7 @@ public @interface NormSearchTable {
   /**
    * Which Entity should be used to store norm search.
    * 
-   * @return
+   * @return the table class
    */
   Class<? extends NormSearchDO> normSearchTable();
 

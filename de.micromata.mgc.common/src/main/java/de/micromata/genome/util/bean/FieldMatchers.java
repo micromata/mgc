@@ -42,7 +42,7 @@ public class FieldMatchers
    * Matches against a field name.
    * 
    * @param pattern which will be parsed by BooleanListRulesFactory.
-   * @return
+   * @return the matcher for the field
    */
   public static Matcher<Field> fieldName(String pattern)
   {
@@ -62,8 +62,8 @@ public class FieldMatchers
   /**
    * Only matches, if field does not have Modifier
    * 
-   * @param modifier
-   * @return
+   * @param modifier the modifier count
+   * @return the matcher for the field
    */
   public static Matcher<Field> hasNotModifier(final int modifier)
   {
@@ -82,8 +82,8 @@ public class FieldMatchers
   /**
    * Only matches, if field does have Modifier
    * 
-   * @param modifier
-   * @return
+   * @param modifier the modifier count
+   * @return the matcher of the field
    */
   public static Matcher<Field> hasModifier(final int modifier)
   {
@@ -101,8 +101,8 @@ public class FieldMatchers
   /**
    * Matches only, if field has excact given type.
    * 
-   * @param type
-   * @return
+   * @param type the class type
+   * @return the matcher for the field
    */
   public static Matcher<Field> hasType(final Class<?> type)
   {
@@ -120,8 +120,8 @@ public class FieldMatchers
   /**
    * Matches only, if field has type, which is assignable to given type.
    * 
-   * @param type
-   * @return
+   * @param type the class type
+   * @return the matcher for the field
    */
   public static Matcher<Field> assignableTo(final Class<?> type)
   {

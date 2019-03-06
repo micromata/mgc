@@ -369,8 +369,8 @@ public class DispatcherImpl2 extends DispatcherImpl
    * Ein neu angelegter Scheduler wird unmittelbar persisitiert und unter dem Namen inklusive Prefix abgespeichert.
    * </p>
    * 
-   * @param schedulerDO
-   * @return
+   * @param schedulerDO the scheduler to get or to create
+   * @return the {@link SchedulerDO} which was found or newly created
    * @see #schedulerByPk
    */
   @Override
@@ -425,10 +425,10 @@ public class DispatcherImpl2 extends DispatcherImpl
 
   /**
    * 
-   * @param schedulerName
-   * @param jobDefinition
-   * @param arg
-   * @param trigger
+   * @param schedulerName the new name of the scheduler
+   * @param jobDefinition the definition of the job
+   * @param arg the arguments for the job
+   * @param trigger the cron expression
    * @return Job reference (pk)
    * @throws SchedulerConfigurationException wenn ein nicht registrierter Scheduler angesprochen wird
    * @throws SchedulerException wenn der Job im JobStore nicht angelegt werden kann.

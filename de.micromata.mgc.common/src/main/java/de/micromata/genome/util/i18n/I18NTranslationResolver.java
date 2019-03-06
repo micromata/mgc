@@ -28,8 +28,8 @@ public interface I18NTranslationResolver
   /**
    * For the locale get the translation proder.
    * 
-   * @param locale
-   * @return
+   * @param locale the locale
+   * @return the translation for the given locale
    */
   I18NTranslationProvider getTranslationFor(Locale locale);
 }

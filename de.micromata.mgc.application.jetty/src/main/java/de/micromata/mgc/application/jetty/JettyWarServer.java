@@ -41,7 +41,7 @@ public class JettyWarServer extends JettyServer
   /**
    * Create a ServletContextHandler or WebAppContext.
    * 
-   * @return
+   * @return the handler 
    */
 
   protected ServletContextHandler createDirWarContextHandler(JettyConfigModel config)

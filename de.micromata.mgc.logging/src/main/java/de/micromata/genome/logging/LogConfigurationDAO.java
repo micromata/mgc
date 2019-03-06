@@ -35,7 +35,7 @@ public interface LogConfigurationDAO
   /**
    * Sets the threshold for LogLevel
    * 
-   * @param level
+   * @param level the level to set as threschold
    */
   public void setThreshold(LogLevel level);
 

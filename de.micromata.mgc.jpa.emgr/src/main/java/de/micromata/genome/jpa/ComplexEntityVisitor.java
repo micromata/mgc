@@ -27,7 +27,7 @@ public interface ComplexEntityVisitor
   /**
    * Visit one entity. Internal nested entities should be visited to
    * 
-   * @param rec
+   * @param rec the database record to visit
    */
   public void visit(DbRecord rec);
 }

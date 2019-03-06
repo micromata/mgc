@@ -66,7 +66,7 @@ public abstract class SchedulerBaseDAO implements SchedulerDAO
   /**
    * Get the global Scheduler manager.
    * 
-   * @return
+   * @return the {@link SchedulerManager}
    */
   @Override
   public SchedulerManager getSchedulerManager()

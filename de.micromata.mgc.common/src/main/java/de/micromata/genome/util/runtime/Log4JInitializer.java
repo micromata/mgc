@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Properties;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -32,12 +31,11 @@ import org.apache.log4j.helpers.FileWatchdog;
 
 /**
  * Initializes with LocalSettings the log4j.
- * 
- * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
+ * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  */
-public class Log4JInitializer
-{
+public class Log4JInitializer {
+
   private static Logger LOG = Logger.getLogger(Log4JInitializer.class);
 
   public static final String LOG4J_PROPERTY_FILE = "log4j.properties";
@@ -46,19 +44,17 @@ public class Log4JInitializer
 
   private static boolean log4jInitialized = false;
 
-  public static void reinit()
-  {
+  public static void reinit() {
     log4jInitialized = false;
     initializeLog4J();
   }
 
   /**
    * If not already intialized log4j, try to read log4j-dev.properties, log4j.properties or log43
-   * 
-   * @return
+   *
+   * @return true when the log4j was initialized
    */
-  public static boolean initializeLog4J()
-  {
+  public static boolean initializeLog4J() {
     if (log4jInitialized == true) {
       return true;
     }
@@ -71,16 +67,14 @@ public class Log4JInitializer
    *
    * @return true, if is log4 j initialized
    */
-  public static boolean isLog4JInitialized()
-  {
+  public static boolean isLog4JInitialized() {
     return log4jInitialized;
   }
 
   /**
    * Copies the log4j.properties load from cp into file defined in localsettings if not exists
    */
-  public static void copyLogConfigFileFromCp()
-  {
+  public static void copyLogConfigFileFromCp() {
     LocalSettings ls = LocalSettings.get();
     File log4jfile = new File(ls.get(LOG4J_PROPERTY_FILE, LOG4J_PROPERTY_FILE));
     if (log4jfile.exists() == true) {
@@ -98,8 +92,7 @@ public class Log4JInitializer
 
   }
 
-  private static boolean initializeLog4JIntern()
-  {
+  private static boolean initializeLog4JIntern() {
     LocalSettings ls = LocalSettings.get();
     File log4jfile = new File(ls.get(LOG4J_PROPERTY_FILE, LOG4J_PROPERTY_FILE));
     if (log4jfile.exists() == true && log4jfile.canRead() == true) {
@@ -110,11 +103,9 @@ public class Log4JInitializer
 
   }
 
-  public static class PropertyWatchdog extends FileWatchdog
-  {
+  public static class PropertyWatchdog extends FileWatchdog {
 
-    public PropertyWatchdog(String filename, long delay)
-    {
+    public PropertyWatchdog(String filename, long delay) {
       super(filename);
       setDelay(delay);
     }
@@ -123,8 +114,7 @@ public class Log4JInitializer
      * Call {@link PropertyConfigurator#configure(String)} with the <code>filename</code> to reconfigure log4j.
      */
     @Override
-    public void doOnChange()
-    {
+    public void doOnChange() {
       new PropertyConfigurator().doConfigure(filename,
           LogManager.getLoggerRepository());
     }
@@ -133,8 +123,7 @@ public class Log4JInitializer
   static PropertyWatchdog propWatchDoc = null;
   static PropertyWatchdog propDevWatchDoc = null;
 
-  private static boolean initViaFile(File log4jfile)
-  {
+  private static boolean initViaFile(File log4jfile) {
     File devFile = findDevFile(log4jfile);
 
     Properties props = new Properties();
@@ -168,12 +157,11 @@ public class Log4JInitializer
 
   /**
    * Try to find a log4j-dev.properies file.
-   * 
-   * @param log4jfile
-   * @return
+   *
+   * @param log4jfile the file for the log4j settings
+   * @return the file
    */
-  private static File findDevFile(File log4jfile)
-  {
+  private static File findDevFile(File log4jfile) {
     File dir = log4jfile.getParentFile();
     String name = log4jfile.getName();
     int lidx = name.lastIndexOf('.');
@@ -188,8 +176,7 @@ public class Log4JInitializer
     return null;
   }
 
-  private static boolean initViaCp()
-  {
+  private static boolean initViaCp() {
     final ClassLoader cLoader = Log4JInitializer.class.getClassLoader();
     final InputStream is = cLoader.getResourceAsStream(LOG4J_PROPERTY_FILE);
     if (is == null) {

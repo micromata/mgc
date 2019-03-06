@@ -43,7 +43,7 @@ public interface Trigger
   /**
    * sets the internal next fire time
    * 
-   * @param nextFireTime
+   * @param nextFireTime when to fire the trigger the next time
    */
   public void setNextFireTime(Date nextFireTime);
 

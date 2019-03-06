@@ -211,7 +211,7 @@ public class ReceivedMail
   /**
    * If given, then the content type of the message will be set (e. g. "text/html").
    * 
-   * @return
+   * @return the type of the content
    */
   public String getContentType()
   {

@@ -296,7 +296,7 @@ public class TriggerJobDO extends ChronosStdRecordDO
   /**
    * Used to be shown in UI.
    *
-   * @return
+   * @return the arguments of the job
    */
   public String getJobArgumentsForDisplay()
   {

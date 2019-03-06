@@ -30,14 +30,14 @@ public interface JdbProviderService
   /**
    * Name for Display in dropdowns.
    * 
-   * @return
+   * @return the name
    */
   String getName();
 
   /**
    * Internal id.
    * 
-   * @return
+   * @return the id
    */
   default String getId()
   {
@@ -47,15 +47,15 @@ public interface JdbProviderService
   /**
    * Class name of the jdbc driver.
    * 
-   * @return
+   * @return the name oif the jdbc driver
    */
   String getJdbcDriver();
 
   /**
    * Build a sample url by given appname.
    * 
-   * @param appName
-   * @return
+   * @param appName the name of the app
+   * @return the url of the app
    */
   String getSampleUrl(String appName);
 

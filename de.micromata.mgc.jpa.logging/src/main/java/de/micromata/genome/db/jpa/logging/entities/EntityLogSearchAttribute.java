@@ -30,7 +30,7 @@ public @interface EntityLogSearchAttribute {
   /**
    * name of the LogAttributeType.
    * 
-   * @return
+   * @return the names of the enum
    */
   String[] enumName();
 }

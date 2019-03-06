@@ -59,7 +59,7 @@ public @interface WithHistory {
   /**
    * A class, which have nested history entities.
    * 
-   * @return
+   * @return the nested entities
    */
   Class<?>[] nestedEntities() default {};
 

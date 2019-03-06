@@ -58,8 +58,8 @@ public abstract class SearchEmgrFactory<EMGR extends ISearchEmgr<?>> extends Emg
   /**
    * Get all the lucene columns for the enetity.
    * 
-   * @param entityClass
-   * @return
+   * @param entityClass the class
+   * @return map of the search fields
    */
   @SuppressWarnings("unchecked")
   public Map<String, SearchColumnMetadata> getSearchFieldsForEntity(Class<?> entityClass)

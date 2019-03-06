@@ -68,8 +68,8 @@ public class MailAccount implements AutoCloseable
 
   /**
    * 
-   * @param write
-   * @param callback
+   * @param write if to write
+   * @param callback the callback
    * @return null if not connected, otherwise return value of callback.
    */
   public <T> T runWithFolder(boolean write, Supplier<T> callback)
@@ -303,7 +303,7 @@ public class MailAccount implements AutoCloseable
   /**
    * Disconnects the folder and store if given and is opened yet.
    * 
-   * @return
+   * @return true when success
    */
   public boolean disconnect()
   {

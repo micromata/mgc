@@ -35,7 +35,7 @@ public @interface HibernateSearchInfo {
   /**
    * String encoded parameter passed to HibernateSearchFieldInfoProvider.
    * 
-   * @return
+   * @return an empty String
    */
   String param() default "";
 

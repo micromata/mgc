@@ -32,22 +32,22 @@ public interface MgcEventRegistry
   /**
    * Submit an event.
    * 
-   * @param event
+   * @param event the event to submit
    */
   void submitEvent(MgcEvent event);
 
   /**
    * Submit and immediatelly dispatch event.
    * 
-   * @param event
+   * @param event the event to dispatch
    */
   void dispatchEvent(MgcEvent event);
 
   /**
    * Invoke events on filter. in nested, call execute.
    * 
-   * @param event
-   * @param execute
+   * @param event the event to filter
+   * @param execute the listener
    * @return
    */
   <R, E extends MgcFilterEvent<R>> R filterEvent(E event, MgcEventListener<E> execute);
