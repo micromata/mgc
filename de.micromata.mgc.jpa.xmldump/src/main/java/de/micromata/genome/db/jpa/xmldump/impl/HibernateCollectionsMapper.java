@@ -62,9 +62,6 @@ public class HibernateCollectionsMapper extends XmlFriendlyMapper// MapperWrappe
     super(wrapped);
   }
 
-  /**
-   * @see com.thoughtworks.xstream.alias.ClassMapper#mapNameToXML(java.lang.String)
-   */
   @Override
   public String mapNameToXML(final String javaName)
   {

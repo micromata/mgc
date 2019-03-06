@@ -32,6 +32,7 @@ public interface XmlJpaPersistService
    *
    * @param ctx the ctx
    * @param data the data
+   * @return the stored attached object
    */
   Object persist(XmlDumpRestoreContext ctx, Object data);
 

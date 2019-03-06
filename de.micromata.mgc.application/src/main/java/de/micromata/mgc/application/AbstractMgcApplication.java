@@ -38,7 +38,7 @@ import de.micromata.genome.util.validation.ValState;
  * 
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
- * @param <M>
+ * @param <M> the model
  */
 public abstract class AbstractMgcApplication<M extends LocalSettingsConfigModel> implements MgcApplication<M>
 {

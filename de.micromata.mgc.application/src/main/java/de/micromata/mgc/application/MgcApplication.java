@@ -53,6 +53,9 @@ public interface MgcApplication<M extends LocalSettingsConfigModel>
 
   /**
    * Persist configuration.
+   *
+   * @param ctx the context
+   * @param config the config
    */
   void storeConfig(ValContext ctx, M config);
 
@@ -93,6 +96,8 @@ public interface MgcApplication<M extends LocalSettingsConfigModel>
    *
    * @param args the args
    * @return the mgc application start stop status
+   *
+   * @throws Exception when an error happened when starting the application
    */
   MgcApplicationStartStopStatus startImpl(String[] args) throws Exception;
 
@@ -107,6 +112,8 @@ public interface MgcApplication<M extends LocalSettingsConfigModel>
    * Stop the application.
    *
    * @return the mgc application start stop status
+   *
+   * @throws Exception when an error happened when stopping the application
    */
   MgcApplicationStartStopStatus stopImpl() throws Exception;
 
