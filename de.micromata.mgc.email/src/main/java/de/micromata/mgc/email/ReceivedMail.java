@@ -72,6 +72,8 @@ public class ReceivedMail
 
   /**
    * Message from the mail server (for messages received).
+   *
+   * @return the message
    */
   public Message getMessage()
   {
@@ -85,6 +87,7 @@ public class ReceivedMail
 
   /**
    * The unique message number from the mail server (for received messages only).
+   * @return the number of the message
    */
   public int getMessageNumber()
   {
@@ -98,6 +101,7 @@ public class ReceivedMail
 
   /**
    * For received messages only.
+   * @return the date
    */
   public Date getDate()
   {
@@ -111,6 +115,7 @@ public class ReceivedMail
 
   /**
    * Flag of the message (flag from the mail server for received messages only).
+   * @return if the mail is deleted
    */
   public boolean isDeleted()
   {
@@ -124,6 +129,7 @@ public class ReceivedMail
 
   /**
    * Flag of the message (flag from the mail server for received messages only).
+   * @return if the mail is recent
    */
   public boolean isRecent()
   {
@@ -137,6 +143,7 @@ public class ReceivedMail
 
   /**
    * Flag of the message (flag from the mail server for received messages only).
+   * @return  if the mail is seen
    */
   public boolean isSeen()
   {
