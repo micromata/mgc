@@ -23,14 +23,11 @@ import javafx.event.EventType;
 
 /**
  * trigger launcher events.
- * 
- * 
- * 
- * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
+ * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  */
-public class MgcLauncherEvent extends Event
-{
+public class MgcLauncherEvent extends Event {
+
   public static final EventType<MgcLauncherEvent> APP_STARTED = new EventType<>("mgcLaucherAppStarted");
   public static final EventType<MgcLauncherEvent> APP_STOPPED = new EventType<>("mgcLaucherAppStopped");
 
@@ -39,24 +36,23 @@ public class MgcLauncherEvent extends Event
 
   /**
    * Constructor.
-   * 
+   *
    * @param message the message.
+   * @param eventType the type of the event
+   * @param status the status of the application
    */
   public MgcLauncherEvent(EventType<MgcLauncherEvent> eventType, MgcApplicationStartStopStatus status,
-      ValMessage message)
-  {
+      ValMessage message) {
     super(eventType);
     this.status = status;
     this.message = message;
   }
 
-  public MgcApplicationStartStopStatus getStatus()
-  {
+  public MgcApplicationStartStopStatus getStatus() {
     return status;
   }
 
-  public ValMessage getMessage()
-  {
+  public ValMessage getMessage() {
     return message;
   }
 

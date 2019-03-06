@@ -60,6 +60,7 @@ public class FXEvents
    * @param handler the event handler to append
    * @param type event type
    * @param controller the controller
+   * @param <E> the type of the event
    */
   public <E extends Event> void addEventHandler(AbstractModelController<?> controller, Node node, EventType<E> type,
       EventHandler<E> handler)

@@ -24,7 +24,7 @@ import de.micromata.mgc.javafx.launcher.gui.AbstractMainWindow;
  * 
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
- * @param <M>
+ * @param <M> the type of the {@link CastableLocalSettingsConfigModel}
  */
 public class GenericMainWindow<M extends CastableLocalSettingsConfigModel>
     extends AbstractMainWindow<CastableLocalSettingsConfigModel>

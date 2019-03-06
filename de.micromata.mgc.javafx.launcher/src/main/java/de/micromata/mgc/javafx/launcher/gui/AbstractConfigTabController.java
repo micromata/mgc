@@ -44,7 +44,7 @@ import javafx.scene.layout.Pane;
  * 
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
- * @param <M>
+ * @param <M> the type of the model controller
  */
 public abstract class AbstractConfigTabController<M extends LocalSettingsConfigModel>extends AbstractModelController<M>
     implements Initializable, ModelController<M>
