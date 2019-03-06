@@ -23,14 +23,16 @@ import java.util.List;
 /**
  * Methods to manage/validate Timeable DOs.
  */
-public interface TimeableService
-{
+public interface TimeableService {
+
   /**
    * Returns the attrRow which is valid at the given Date or null.
    *
-   * @param entity    The entity with timeable attrRows.
+   * @param entity The entity with timeable attrRows.
    * @param groupName The group name.
-   * @param date      The date to find a row for.
+   * @param date The date to find a row for.
+   * @param <PK> the type of he pk
+   * @param <T> the type of the entity
    * @return The attrRow or null.
    */
   <PK extends Serializable, T extends TimeableAttrRow<PK>>
@@ -40,7 +42,10 @@ public interface TimeableService
    * Returns the attrRow which is valid at the given Date or null.
    *
    * @param attrRows The attrRows.
-   * @param date     The date to find a row for.
+   * @param date The date to find a row for.
+   * @param <PK> the type of he pk
+   * @param <T> the type of the entity
+   * 
    * @return The attrRow or null.
    */
   <PK extends Serializable, T extends TimeableAttrRow<PK>>
@@ -52,6 +57,9 @@ public interface TimeableService
    * @param attrRows The attrRows.
    * @param group The group.
    * @param date The date to find a row for.
+   * @param <PK> the type of he pk
+   * @param <T> the type of the entity
+   *
    * @return The attrRow or null.
    */
   <PK extends Serializable, T extends TimeableAttrRow<PK>>
@@ -60,21 +68,28 @@ public interface TimeableService
   /**
    * Returns a List of attrRows whose startTime is within the given range.
    *
-   * @param entity    The entity with timeable attrRows.
+   * @param entity The entity with timeable attrRows.
    * @param groupName The group name.
-   * @param start     The start date of the range.
-   * @param end       The end date of the range.
+   * @param start The start date of the range.
+   * @param end The end date of the range.
+   * @param <PK> the type of he pk
+   * @param <T> the type of the entity
+   * 
    * @return The attrRows.
    */
   <PK extends Serializable, T extends TimeableAttrRow<PK>>
-  List<T> getAttrRowsWithinDateRange(final EntityWithTimeableAttr<PK, T> entity, final String groupName, final Date start, final Date end);
+  List<T> getAttrRowsWithinDateRange(final EntityWithTimeableAttr<PK, T> entity, final String groupName,
+      final Date start, final Date end);
 
   /**
    * Returns a List of attrRows whose startTime is within the given range.
    *
    * @param attrRows The attrRows to filter.
-   * @param start    The start date of the range.
-   * @param end      The end date of the range.
+   * @param start The start date of the range.
+   * @param end The end date of the range.
+   * @param <PK> the type of he pk
+   * @param <T> the type of the entity
+   * 
    * @return The attrRows.
    */
   <PK extends Serializable, T extends TimeableAttrRow<PK>>
@@ -86,6 +101,9 @@ public interface TimeableService
    *
    * @param attrRows The attrRows to look for.
    * @param dateToSelectAttrRow The date to find a row for in the same month.
+   * @param <PK> the type of he pk
+   * @param <T> the type of the entity
+   * 
    * @return The attrRow or null.
    */
   <PK extends Serializable, T extends TimeableAttrRow<PK>>
@@ -98,6 +116,9 @@ public interface TimeableService
    * @param entity The entity with timeable attrRows.
    * @param group The group.
    * @param dateToSelectAttrRow The date to find a row for in the same month.
+   * @param <PK> the type of he pk
+   * @param <T> the type of the entity
+   * 
    * @return The attrRow or null.
    */
   <PK extends Serializable, T extends TimeableAttrRow<PK>>
@@ -111,6 +132,9 @@ public interface TimeableService
    * @param entity The entity with timeable attrRows.
    * @param groupName The group name.
    * @param dateToSelectAttrRow The date to find a row for in the same month.
+   * @param <PK> the type of he pk
+   * @param <T> the type of the entity
+   *
    * @return The attrRow or null.
    */
   <PK extends Serializable, T extends TimeableAttrRow<PK>>
@@ -122,6 +146,9 @@ public interface TimeableService
    *
    * @param entity The entity with timeable attrRows
    * @param group The group to find attrRows for.
+   * @param <PK> the type of he pk
+   * @param <T> the type of the entity
+   *
    * @return The attrRows belonging to the given group.
    */
   <PK extends Serializable, T extends TimeableAttrRow<PK>>
@@ -132,6 +159,9 @@ public interface TimeableService
    *
    * @param entity The entity with timeable attrRows
    * @param groupName The group name to find attrRows for.
+   * @param <PK> the type of he pk
+   * @param <T> the type of the entity
+   * 
    * @return The attrRows belonging to the given group.
    */
   <PK extends Serializable, T extends TimeableAttrRow<PK>>
@@ -142,6 +172,9 @@ public interface TimeableService
    * the list.
    *
    * @param attrRows The TimeableAttrRows to sort.
+   * @param <PK> the type of he pk
+   * @param <T> the type of the entity
+   * 
    * @return The sorted TimeableAttrRow.
    */
   <PK extends Serializable, T extends TimeableAttrRow<PK>>
@@ -151,6 +184,9 @@ public interface TimeableService
    * Get a set of available years in timeable attr data.
    *
    * @param entityList The list of entities with timeable attrRows
+   * @param <PK> the type of he pk
+   * @param <T> the type of the entity
+   * 
    * @return the list of available years
    */
   <PK extends Serializable, T extends TimeableAttrRow<PK>>
