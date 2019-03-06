@@ -23,7 +23,7 @@ import java.io.Serializable;
  * 
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
- * @param <PK>
+ * @param <PK> the type of the pk
  */
 public interface MarkDeletableRecord<PK extends Serializable>extends DbRecord<PK>
 {

@@ -124,8 +124,6 @@ public abstract class EmgrFactory<E extends IEmgr<?>>
 
   /**
    * Instantiates a new emgr factory.
-   *
-   * @param unitName the unit name
    */
   protected EmgrFactory()
   {
@@ -187,6 +185,7 @@ public abstract class EmgrFactory<E extends IEmgr<?>>
    * Creates a new specific Emgr .
    *
    * @param entityManager the entity manager
+   * @param emgrTx the emgrTx
    * @return the e
    */
   abstract protected E createEmgr(EntityManager entityManager, EmgrTx<E> emgrTx);
@@ -420,7 +419,7 @@ public abstract class EmgrFactory<E extends IEmgr<?>>
    * Find copier for bean.
    *
    * @param beanClass the bean class
-   * @return the class<? extends entity copier>
+   * @return the class ? extends entity copier
    */
   public List<Class<? extends EntityCopier>> getRegisteredCopierForBean(Class<?> beanClass)
   {

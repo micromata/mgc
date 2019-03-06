@@ -31,7 +31,8 @@ public @interface EntityCopy {
   /**
    * List of EntityCopier, which should be applied.
    *
-   * @return the class<? extends entity copier>[]
+   * @return the class ? extends entity copier []
+   * @return the Class of the copier
    */
   Class<? extends EntityCopier>[] copier() default { PropertyEntityCopier.class };
 

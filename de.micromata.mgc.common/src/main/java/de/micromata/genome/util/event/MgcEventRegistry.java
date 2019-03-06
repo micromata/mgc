@@ -48,7 +48,7 @@ public interface MgcEventRegistry
    * 
    * @param event the event to filter
    * @param execute the listener
-   * @return
+   * @return the filter event
    */
   <R, E extends MgcFilterEvent<R>> R filterEvent(E event, MgcEventListener<E> execute);
 }

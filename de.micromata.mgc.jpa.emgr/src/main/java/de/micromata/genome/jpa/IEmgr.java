@@ -179,6 +179,7 @@ public interface IEmgr<EMGR extends IEmgr<?>>
    *
    * Be carfull, use it only for adminstrational usses.
    *
+   * @param  <R> the type of the entity
    * @param cls the class
    * @return a list of attached entities matching to the given class
    */
@@ -323,6 +324,7 @@ public interface IEmgr<EMGR extends IEmgr<?>>
    * @param entityClass the entity class
    * @param newE the new e
    * @param overwrite the overwrite
+   * @param ignoreCopyFields ignore copy fields
    * @return the emgr
    */
   <R extends DbRecord<?>> EntityCopyStatus update(Class<? extends R> iface, Class<? extends R> entityClass, R newE,
@@ -379,6 +381,7 @@ public interface IEmgr<EMGR extends IEmgr<?>>
    * Mark deleted.
    *
    * @param rec the rec
+   * @param <T> the type of the record
    * @return true, if record was found and it was previously not marked as deleted.
    */
   <T extends MarkDeletableRecord<?>> boolean markDeleted(T rec);
@@ -387,6 +390,7 @@ public interface IEmgr<EMGR extends IEmgr<?>>
    * Mark undeleted.
    *
    * @param rec the rec
+   * @param <T> the type of the record
    * @return true, if record was found and it was previously marked as deleted.
    */
   <T extends MarkDeletableRecord<?>> boolean markUndeleted(T rec);

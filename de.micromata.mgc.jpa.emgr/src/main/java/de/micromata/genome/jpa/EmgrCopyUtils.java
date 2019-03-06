@@ -42,6 +42,9 @@ public class EmgrCopyUtils
    * @param iface the iface
    * @param dest the dest
    * @param orig the orig
+   * @param emgr the entitiy manager
+   * @param ignoreCopyFields ignore copy fields
+   * @return the {@link EntityCopyStatus}
    */
   public static <T> EntityCopyStatus copyTo(IEmgr<?> emgr, Class<? extends T> iface, T dest, T orig,
       String... ignoreCopyFields)
@@ -77,6 +80,8 @@ public class EmgrCopyUtils
    * @param dest the dest
    * @param orig the orig
    * @param entcopiers the entcopiers
+   * @param emgr  the entity manager
+   * @return the {@link EntityCopyStatus}
    */
   public static <T> EntityCopyStatus copyTo(IEmgr<?> emgr, Class<? extends T> iface, T dest, T orig,
       List<EntityCopy> entcopiers)

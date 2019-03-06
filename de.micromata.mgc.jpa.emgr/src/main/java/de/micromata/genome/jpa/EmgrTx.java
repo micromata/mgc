@@ -251,6 +251,7 @@ public class EmgrTx<E extends IEmgr<?>>
   /**
    * Read only.
    *
+   * @param timeout the timeout to set
    * @return the tx info
    */
   public EmgrTx<E> timeOut(long timeout)

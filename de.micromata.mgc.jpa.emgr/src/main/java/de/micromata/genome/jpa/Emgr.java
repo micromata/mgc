@@ -98,6 +98,7 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    *
    * @param entityManager the entity manager
    * @param emgrFactory the emgr factory
+   * @param emgrTx the entity manager transcation
    */
   public Emgr(EntityManager entityManager, EmgrFactory<EMGR> emgrFactory, EmgrTx<EMGR> emgrTx)
   {
@@ -149,7 +150,7 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
   /**
    * detaches a list of entities.
    *
-   * @param <E> the element type
+   * @param <R> the element type
    * @param result the result
    */
   @Override
@@ -458,6 +459,7 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    * Select by pk with detached objects.
    *
    * @param <R> the generic type
+   * @param <PK> the type of the pk
    * @param cls the cls
    * @param pk the pk
    * @return the r
@@ -494,6 +496,7 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    * Find entity by name.
    *
    * @param <R> the generic type
+   * @param <PK> the type of the pk
    * @param cls the cls
    * @param pk the pk
    * @return the r. May be null
@@ -902,6 +905,7 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    * Insert.
    *
    * @param rec the rec
+   * @param <PK> the type of the pk
    * @return the t
    */
 
@@ -1003,7 +1007,7 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
   /**
    * Merge.
    *
-   * @param <E> the element type
+   * @param <R> the element type
    * @param rec the rec
    * @return the t
    */
@@ -1029,7 +1033,7 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
   /**
    * Execute an update with a criteriaupdate.
    *
-   * @param <E> the element type
+   * @param <R> the element type
    * @param update the update
    * @return number or rows updated.
    */
@@ -1055,7 +1059,6 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
 
   /**
    * Creates an untyped query.
-   * <p/>
    * This is necessary for JPA-based executeUpdate() statements, as for example in the deletion of shipments (which is
    * done * without the entity manager's delete method).
    *

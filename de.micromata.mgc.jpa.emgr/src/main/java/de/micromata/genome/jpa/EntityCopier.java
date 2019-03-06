@@ -18,12 +18,10 @@ package de.micromata.genome.jpa;
 
 /**
  * Copies an entity from orig to dest using given interface class as type template.
- * 
- * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
+ * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  */
-public interface EntityCopier
-{
+public interface EntityCopier {
 
   /**
    * Copy to orig to dest using getter/setter.
@@ -32,6 +30,9 @@ public interface EntityCopier
    * @param iface the iface
    * @param dest the dest
    * @param orig the orig
+   * @param ignoreCopyFields ignore copy fields
+   * @param emgr the entity manager
+   * @return the {@link EntityCopyStatus}
    */
   <T> EntityCopyStatus copyTo(IEmgr<?> emgr, Class<? extends T> iface, T dest, T orig, String... ignoreCopyFields);
 }

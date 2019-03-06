@@ -60,7 +60,6 @@ public class FXEvents
    * @param handler the event handler to append
    * @param type event type
    * @param controller the controller
-   * @return list of controller nodes that want to be notified in case of an event fired by fireEvent.
    */
   public <E extends Event> void addEventHandler(AbstractModelController<?> controller, Node node, EventType<E> type,
       EventHandler<E> handler)
