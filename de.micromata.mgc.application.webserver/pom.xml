@@ -9,9 +9,7 @@
   <artifactId>de.micromata.mgc.application.webserver</artifactId>
   <packaging>jar</packaging>
   <description>Configuration for embedded werservices.</description>
-  <build>
-
-  </build>
+  
   <dependencies>
     <dependency>
       <groupId>de.micromata.mgc</groupId>

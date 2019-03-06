@@ -7,15 +7,21 @@
   <version>3.0.9-SNAPSHOT</version>
   <packaging>pom</packaging>
 
+  <name>${project.groupId}:${project.artifactId}</name>
+  <description>Micromata Genome Commons is a set of Java libraries to build mostly webserver based applications.</description>
+  <url>https://github.com/micromata/mgc</url>
+
   <prerequisites>
     <maven>3.3.3</maven>
   </prerequisites>
 
   <organization>
     <name>Micromata GmbH</name>
-    <url>https://labs.micromata.de/mgc</url>
+    <url>https://labs.micromata.de</url>
   </organization>
+  
   <inceptionYear>2016</inceptionYear>
+
   <developers>
     <developer>
       <id>r.kommer</id>
@@ -29,7 +35,20 @@
       </roles>
       <timezone>-1</timezone>
     </developer>
+    <developer>
+      <id>s.hardt</id>
+      <name>Sebastian Hardt</name>
+      <email>s.hardt@micromata.de</email>
+      <organization>Micromata GmbH</organization>
+      <organizationUrl>http://www.micromata.com</organizationUrl>
+      <roles>
+        <role>developer</role>
+      </roles>
+      <timezone>-1</timezone>
+    </developer>
   </developers>
+
+  
   <contributors>
   </contributors>
 
@@ -41,6 +60,18 @@
       <distribution>manual</distribution>
     </license>
   </licenses>
+
+  <scm>
+    <url>https://github.com/micromata/mgc/tree/master</url>
+    <connection>scm:git:git://github.com/micromata/mgc.git</connection>
+    <developerConnection>scm:git:ssh://github.com:micromata/mgc.git</developerConnection>
+  </scm>
+
+  <issueManagement>
+    <system>GITHUB</system>
+    <url>https://github.com/micromata/mgc/issues</url>
+  </issueManagement>
+
   <distributionManagement>
     <repository>
       <id>MGC</id>
@@ -96,7 +127,6 @@
     <org.apache.derby.version>10.12.1.1</org.apache.derby.version>
 
     <hsqldb.version>2.3.3</hsqldb.version>
-    <genome.mvn.plugin.version>3.0.2</genome.mvn.plugin.version>
     <spring-boot.jetty.version>9.2.14.v20151106</spring-boot.jetty.version>
     <minimal-json.version>0.9.5</minimal-json.version>
     <xstream.version>1.4.10</xstream.version>
@@ -308,14 +338,4 @@
     </plugins>
   </build>
 
-
-  <scm>
-    <url>https://github.com/micromata/mgc.git</url>
-    <developerConnection>Roger Rene Kommer</developerConnection>
-  </scm>
-  <issueManagement>
-    <system>JIRA</system>
-    <url>https://labs.micromata.de/jira/projects/MGC</url>
-  </issueManagement>
-  <url>https://labs.micromata.de/mgc</url>
 </project>
