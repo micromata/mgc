@@ -42,7 +42,7 @@ public interface MgcFilterEvent<R>extends MgcEvent
   /**
    * Used internal
    * 
-   * @param eventHandlerList
+   * @param eventHandlerList the list of event listeners
    */
   void setEventHandlerChain(List<MgcEventListener> eventHandlerList);
 }

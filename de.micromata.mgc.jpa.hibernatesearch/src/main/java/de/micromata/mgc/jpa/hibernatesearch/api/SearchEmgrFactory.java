@@ -29,7 +29,7 @@ import de.micromata.mgc.jpa.hibernatesearch.impl.SearchEmgrFactoryRegistryUtils;
  * 
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
- * @param <EMGR>
+ * @param <EMGR> the type of the entiry manager
  */
 public abstract class SearchEmgrFactory<EMGR extends ISearchEmgr<?>> extends EmgrFactory<EMGR>
 {
@@ -58,8 +58,8 @@ public abstract class SearchEmgrFactory<EMGR extends ISearchEmgr<?>> extends Emg
   /**
    * Get all the lucene columns for the enetity.
    * 
-   * @param entityClass
-   * @return
+   * @param entityClass the class
+   * @return map of the search fields
    */
   @SuppressWarnings("unchecked")
   public Map<String, SearchColumnMetadata> getSearchFieldsForEntity(Class<?> entityClass)

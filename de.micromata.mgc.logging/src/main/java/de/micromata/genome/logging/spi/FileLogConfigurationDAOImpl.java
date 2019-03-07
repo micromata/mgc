@@ -119,9 +119,9 @@ public class FileLogConfigurationDAOImpl extends PropLogConfigurationDAOBase
     {
 
       /**
-       * @param o1
-       * @param o2
-       * @return
+       * @param o1 the object1
+       * @param o2 the object2
+       * @return the compare result
        */
       @Override
       public int compare(Pair<String, Integer> o1, Pair<String, Integer> o2)

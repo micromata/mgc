@@ -87,7 +87,7 @@ public class LocalSettings implements LocalSettingsService
   /**
    * Check if local settings file exists.;
    * 
-   * @return
+   * @return true when the file exists
    */
   public static boolean localSettingsExists()
   {
@@ -312,7 +312,7 @@ public class LocalSettings implements LocalSettingsService
   /**
    * Gets only LocalSettings from LocalSettings.properties-File, without the System's environment
    * 
-   * @return
+   * @return the map of local settings
    */
   public Map<String, String> getFromFile()
   {

@@ -46,7 +46,7 @@ public class MultipleDispThreadTest extends JpaBaseSchedulerTestCase
    * Manual Test only. Test with 2 Scheduler which are runing on same node name and fight for the jobs to execute. With
    * this test GENOME-1768 was to be reproduced.
    * 
-   * @throws IOException
+   * @throws IOException when an error happened
    */
   //@Test
   @Ignore

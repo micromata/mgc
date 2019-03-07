@@ -30,7 +30,6 @@ public interface JpaXmlBeforePersistListener
   /**
    * Prepare persist.
    *
-   * @param emgr the emgr
    * @param entityMetadata the entity metadata
    * @param entity the entity
    * @param ctx the ctx

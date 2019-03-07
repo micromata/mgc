@@ -27,13 +27,14 @@ public interface AttrSchemaService
   /**
    * Initialize an set of Attribute. Rules how to initialize attrs will be loaded by configurat.
    *
-   * @param attrMaster
+   * @param attrMaster the master of the attributes to analyze
    */
   void initializeAttrSet(EntityWithAttributes attrMaster);
 
   /**
    * Loads the meta description for the Entity.
    *
+   * @param name the name of the schema
    * @return the attr descriptions
    */
   AttrSchema getAttrSchema(String name);
@@ -52,8 +53,8 @@ public interface AttrSchemaService
   /**
    * Gets the AttrGroup for given entity and groupName.
    * 
-   * @param entity
-   * @param groupName
+   * @param entity the entity
+   * @param groupName the name of the group to find
    * @return null, if not found
    */
   AttrGroup getAttrGroup(EntityWithConfigurableAttr entity, String groupName);
@@ -61,9 +62,9 @@ public interface AttrSchemaService
   /**
    * Gets the AttrDescription for given entity, groupName and descriptionName.
    *
-   * @param entity
-   * @param groupName
-   * @param descriptionName
+   * @param entity the entity
+   * @param groupName the name of the group to find
+   * @param descriptionName the description to find
    * @return null, if not found
    */
   AttrDescription getAttrDescription(EntityWithConfigurableAttr entity, String groupName, String descriptionName);
@@ -71,8 +72,8 @@ public interface AttrSchemaService
   /**
    * Gets the AttrDescription for given AttrGroup and descriptionName.
    *
-   * @param attrGroup
-   * @param descriptionName
+   * @param attrGroup the attribute group
+   * @param descriptionName the name of the description
    * @return null, if not found
    */
   AttrDescription getAttrDescription(AttrGroup attrGroup, String descriptionName);

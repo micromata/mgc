@@ -37,13 +37,9 @@ import de.micromata.genome.logging.GenomeLogCategory;
 
 /**
  * Zentrale Klasse (Singleton) für die Job-Verteilung.
- * <p>
- * Pollt die Datenbank nach neuen {@link Scheduler} und {@link Job} ab und versucht diese zu Starten.
- * </p>
- * <p>
+ * Pollt die Datenbank nach neuen {@link Scheduler} und Job ab und versucht diese zu Starten.
  * Hier werden die Runtime-Instanzen von Schedulern und Jobs verwaltet.
- * </p>
- * 
+ *
  */
 public abstract class DispatcherImpl implements Runnable, Dispatcher
 {
@@ -263,8 +259,8 @@ public abstract class DispatcherImpl implements Runnable, Dispatcher
   /**
    * Hält den Dispatcher-Thread an mit {@link Thread#join()}.
    * 
-   * @param waitForShutdown
-   * @throws InterruptedException
+   * @param waitForShutdown how long to wait until the shutdown
+   * @throws InterruptedException is thrown when an error happened 
    */
   @Override
   public void shutdown(final long waitForShutdown) throws InterruptedException
@@ -351,8 +347,8 @@ public abstract class DispatcherImpl implements Runnable, Dispatcher
    * benutzen.
    * </p>
    * 
-   * @param name
-   * @return
+   * @param name the name of the scheduler
+   * @return the scheduler
    */
   @Override
   public Scheduler getScheduler(final String name)

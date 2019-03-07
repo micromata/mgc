@@ -31,15 +31,15 @@ public interface MgcEventClassRegistry extends MgcEventRegistry
   /**
    * Register an event listener.
    * 
-   * @param listenerClass
+   * @param listenerClass the listener class
    */
   <EVENT extends MgcEvent, LISTENER extends MgcEventListener<EVENT>> void registerListener(
       Class<LISTENER> listenerClass);
 
   /**
    * Removes a listener class.
-   * 
-   * @param listenerClass
+   *
+   * @param listenerClass the listener class
    */
   public <EVENT extends MgcEvent, LISTENER extends MgcEventListener<EVENT>> void removeListener(
       Class<LISTENER> listenerClass);

@@ -80,8 +80,8 @@ public class MailReceiveServiceImpl implements MailReceiveService
 
   /**
    * 
-   * @param onlyRecentMails If true then only unseen mail will be got from the mail server and afterwards they will be
-   *          set as seen.
+   * @param searchTerm the term to search for
+   * @param markRecentMailsAsSeen mark the mail as seen
    * @return Number of new imported messages.
    */
   @Override

@@ -41,9 +41,7 @@ public abstract class AttrSchemaServiceBaseImpl implements AttrSchemaService
 {
   private final StringConverter stringConverter = StandardStringConverter.get();
 
-  /**
-   * @see org.projectforge.framework.persistence.attr.impl.GuiAttrSchemaService#initializeAttrSet(org.projectforge.framework.persistence.attr.api.EntityWithAttributes)
-   */
+
   @Override
   public void initializeAttrSet(final EntityWithAttributes attrMaster)
   {

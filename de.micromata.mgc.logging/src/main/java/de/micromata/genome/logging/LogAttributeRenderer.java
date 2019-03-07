@@ -26,12 +26,9 @@ public interface LogAttributeRenderer
 {
 
   /**
-   * Rendert eine HTML Darestellung des {@link LogAttribute} Wertes. Optional kann {@link HttpContext} übergeben werden,
-   * z.B, richige Links zu rendern, etc.
+   * Rendert eine HTML Darestellung des {@link LogAttribute} Wertes.
    * 
-   * @param attr {@link LogAttribute}
-   * @param ctx HttpContext optionales Element. Die Implementierung sorgt dafür ob die es optinal braucht oder
-   *          pflicht ist
+   * @param attr {@link LogAttribute}   *
    * @return {@link String} Html Representation des {@link LogAttribute} Wert
    */
   public String renderHtml(LogAttribute attr);

@@ -48,7 +48,7 @@ public interface ISearchEmgr<EMGR extends ISearchEmgr<?>>extends IEmgr<EMGR>
    * 
    * Events: SearchEmgrReindexEventFilterEvent
    * 
-   * @param entity
+   * @param entity the entity to reindex for the search
    */
   void reindex(Object entity);
 

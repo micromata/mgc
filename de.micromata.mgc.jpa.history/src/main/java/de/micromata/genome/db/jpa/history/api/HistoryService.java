@@ -73,6 +73,7 @@ public interface HistoryService
    * Return a set of property names, which are marked with @NoHistory.
    *
    * @param entity the entity
+   * @param emgr  the entity manager
    * @return the non history properties
    */
   Set<String> getNoHistoryProperties(EmgrFactory<?> emgr, Class<?> entity);
@@ -108,6 +109,7 @@ public interface HistoryService
    * @param name the name
    * @param entPk the ent pk
    * @param ent the ent
+   * @param opType the operation type
    */
   void internalOnMarkUnmarkDeleted(IEmgr<?> emgr, EntityOpType opType, List<WithHistory> whanots, String name,
       Serializable entPk, Object ent);

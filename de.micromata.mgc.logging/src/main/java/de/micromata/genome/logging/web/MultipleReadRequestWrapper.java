@@ -195,7 +195,7 @@ public class MultipleReadRequestWrapper extends HttpServletRequestWrapper {
   /**
    * Returns the cached body as string
    * @return the cached body
-   * @throws IOException
+   * @throws IOException is thrown when an error happened when getting the character encoding.
    */
   public String getCacheAsString() throws IOException
   {

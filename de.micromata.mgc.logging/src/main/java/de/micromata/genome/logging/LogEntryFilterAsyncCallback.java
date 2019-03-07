@@ -37,8 +37,8 @@ public class LogEntryFilterAsyncCallback extends LogEntryFilterCallback
 
   /**
    * This is called when the {@link Logging#underlyingClientIsAsync()}  is true
-   * @throws ExecutionException
-   * @throws InterruptedException
+   * @throws ExecutionException when an error happened by the execution
+   * @throws InterruptedException  when an error happened while interrupting
    */
   public void doGet() throws ExecutionException, InterruptedException
   {

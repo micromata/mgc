@@ -503,7 +503,7 @@ public abstract class BaseLogging implements Logging
   }
 
   /**
-   * @return
+   * @return a list of filters
    */
   @SuppressWarnings("unchecked")
   public List<LogWriteFilter> getWriteFilters()

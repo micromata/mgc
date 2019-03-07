@@ -16,32 +16,9 @@
 
 package de.micromata.genome.logging.loghtmlwindow;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
-import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-
-import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
-import org.apache.log4j.Logger;
-
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
-
 import de.micromata.genome.logging.LogAttributeType;
 import de.micromata.genome.logging.LogCategory;
 import de.micromata.genome.logging.LogConfigurationDAO;
@@ -53,54 +30,68 @@ import de.micromata.genome.logging.LoggingServiceManager;
 import de.micromata.genome.logging.spi.log4j.RoundList;
 import de.micromata.genome.util.runtime.RuntimeIOException;
 import de.micromata.genome.util.types.Pair;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.log4j.Logger;
 
 /**
  * Service to work with glogviewer.js.
- * 
- * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
+ * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  */
-public abstract class LogHtmlWindowServlet extends HttpServlet
-{
+public abstract class LogHtmlWindowServlet extends HttpServlet {
+
   private static final Logger LOG = Logger.getLogger(LogHtmlWindowServlet.class);
   private RoundList<LogWriteEntry> logWriteEntries = new RoundList<>(2000);
   static LogHtmlWindowServlet INSTANCE;
 
   /**
    * Will be called by doPost.
-   * 
+   *
    * If a valid user to show logs, call the execute method.
-   * 
-   * @param req
-   * @param resp
-   * @throws ServletException
-   * @throws IOException
+   *
+   * @param req the servlet request
+   * @param resp the servlet response
+   * @throws ServletException exception thrown when an error happened while executing this method
+   * @throws IOException exception thrown when an error happened while executing this method
    */
   protected abstract void executeWithAuthentifcation(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException, IOException;
 
   @Override
-  public void init()
-  {
+  public void init() {
     INSTANCE = this;
     LoggingServiceManager.get().getLoggingEventListenerRegistryService().registerListener(LogHtmlLiveBuffer.class);
   }
 
-  public void addLogEntry(LogWriteEntry le)
-  {
+  public void addLogEntry(LogWriteEntry le) {
     synchronized (logWriteEntries) {
       logWriteEntries.add(le);
     }
   }
 
   @Override
-  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
-  {
+  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     executeWithAuthentifcation(req, resp);
   }
 
-  protected void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
-  {
+  protected void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     String cmd = req.getParameter("cmd");
     if ("poll".equals(cmd) == true) {
       poll(req, resp);
@@ -117,8 +108,7 @@ public abstract class LogHtmlWindowServlet extends HttpServlet
 
   }
 
-  private void logSelectAttributes(HttpServletRequest req, HttpServletResponse resp) throws IOException
-  {
+  private void logSelectAttributes(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     Logging logging = LoggingServiceManager.get().getLogging();
     String id = req.getParameter("id");
     Object logid = logging.parseLogId(id);
@@ -130,8 +120,7 @@ public abstract class LogHtmlWindowServlet extends HttpServlet
     sendResponse(resp, arr);
   }
 
-  protected void getConfiguration(HttpServletRequest req, HttpServletResponse resp) throws IOException
-  {
+  protected void getConfiguration(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     JsonObject ret = new JsonObject();
     Logging logging = LoggingServiceManager.get().getLogging();
     ret.add("supportsSearch", logging.supportsSearch());
@@ -160,8 +149,7 @@ public abstract class LogHtmlWindowServlet extends HttpServlet
     sendResponse(resp, ret);
   }
 
-  List<LogWriteEntry> getLogEntries(long lastPollTime)
-  {
+  List<LogWriteEntry> getLogEntries(long lastPollTime) {
     synchronized (logWriteEntries) {
       List<LogWriteEntry> ret = new ArrayList<>();
       for (LogWriteEntry le : logWriteEntries) {
@@ -174,8 +162,7 @@ public abstract class LogHtmlWindowServlet extends HttpServlet
     }
   }
 
-  protected void poll(HttpServletRequest req, HttpServletResponse resp) throws IOException
-  {
+  protected void poll(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     String lastLog = req.getParameter("lt");
     long lastPollTime = NumberUtils.toLong(lastLog, 0L);
     List<LogWriteEntry> buffer = getLogEntries(lastPollTime);
@@ -186,8 +173,7 @@ public abstract class LogHtmlWindowServlet extends HttpServlet
     sendResponse(resp, ret);
   }
 
-  protected void filter(HttpServletRequest req, HttpServletResponse resp) throws IOException
-  {
+  protected void filter(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     String logMessage = req.getParameter("logMessage");
     Integer level = null;
     String logLevel = req.getParameter("logLevel");
@@ -254,8 +240,7 @@ public abstract class LogHtmlWindowServlet extends HttpServlet
     sendResponse(resp, ret);
   }
 
-  private void sendResponse(HttpServletResponse resp, JsonValue val) throws IOException
-  {
+  private void sendResponse(HttpServletResponse resp, JsonValue val) throws IOException {
     resp.setContentType("application/json");
     String sr = val.toString();
     ServletOutputStream os = resp.getOutputStream();
@@ -263,20 +248,17 @@ public abstract class LogHtmlWindowServlet extends HttpServlet
     os.flush();
   }
 
-  private void error(HttpServletRequest req, HttpServletResponse resp, String string)
-  {
+  private void error(HttpServletRequest req, HttpServletResponse resp, String string) {
     LOG.warn(string);
 
   }
 
   @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
-  {
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     doPost(req, resp);
   }
 
-  public static String getJsContent()
-  {
+  public static String getJsContent() {
     StringBuilder sb = new StringBuilder();
     sb.append(getClassResource("/glogviewer.js"));
     sb.append(getClassResource("/glogform.js"));
@@ -284,13 +266,11 @@ public abstract class LogHtmlWindowServlet extends HttpServlet
     return sb.toString();
   }
 
-  public static String getCssContent()
-  {
+  public static String getCssContent() {
     return getClassResource("/loggingweb.css");
   }
 
-  public static String getClassResource(String name)
-  {
+  public static String getClassResource(String name) {
     try (InputStream is = LogHtmlWindowServlet.class.getResourceAsStream(name)) {
       return IOUtils.toString(is, Charset.defaultCharset());
     } catch (IOException ex) {
@@ -298,8 +278,7 @@ public abstract class LogHtmlWindowServlet extends HttpServlet
     }
   }
 
-  public static String getGLogHtmlForm()
-  {
+  public static String getGLogHtmlForm() {
     return getClassResource("/glogviewerform.html");
   }
 }

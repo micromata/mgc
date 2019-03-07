@@ -20,7 +20,7 @@ import de.micromata.genome.jpa.CriteriaUpdate;
 import de.micromata.genome.jpa.IEmgr;
 
 /**
- * Wrapps a de.micromata.genome.jpa.Emgr.update(CriteriaUpdate<T>).
+ * Wrapps a de.micromata.genome.jpa.Emgr.update(CriteriaUpdate).
  *
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  * @param <E> the element type

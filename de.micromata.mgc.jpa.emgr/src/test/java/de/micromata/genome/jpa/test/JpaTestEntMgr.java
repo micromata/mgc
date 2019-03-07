@@ -31,7 +31,7 @@ public class JpaTestEntMgr extends Emgr<JpaTestEntMgr>
 {
 
   /**
-   * @param entityManager
+   * @param entityManager the entity managger
    */
   public JpaTestEntMgr(EntityManager entityManager, JpaTestEntMgrFactory emgrFactory, EmgrTx<JpaTestEntMgr> emgrTx)
   {

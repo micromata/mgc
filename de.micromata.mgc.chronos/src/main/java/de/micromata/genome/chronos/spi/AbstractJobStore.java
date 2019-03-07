@@ -96,8 +96,6 @@ public abstract class AbstractJobStore implements JobStore
   /**
    * Fügt den einen neuen Job für den Scheduler ein und persistiert ihn.
    * 
-   * @see de.micromata.jchronos.JobStore#submit(de.micromata.jchronos.spi. Scheduler de.micromata.jchronos.JobDefinition, java.lang.Object,
-   *      de.micromata.jchronos.Trigger)
    */
   @Override
   public TriggerJobDO submit(final Scheduler scheduler, String jobName, final JobDefinition jobDefinition,
@@ -215,9 +213,6 @@ public abstract class AbstractJobStore implements JobStore
   /**
    * Setzt die Daten für einem neuen Versuch und speichert den Job ab.
    * 
-   * @see de.micromata.genome.chronos.JobStore#jobRetry(de.micromata.genome.chronos.spi.jdbc.TriggerJobDO,
-   *      de.micromata.genome.chronos.spi.jdbc.JobResultDO, de.micromata.genome.chronos.RetryException,
-   *      de.micromata.genome.chronos.spi.Scheduler)
    */
   @Override
   public void jobRetry(final TriggerJobDO job, final JobResultDO jobResult, final Exception ex,

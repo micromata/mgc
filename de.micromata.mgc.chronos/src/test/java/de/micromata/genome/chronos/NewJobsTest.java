@@ -108,7 +108,7 @@ public class NewJobsTest extends BaseSchedulerTestCase
   /**
    * Zählt die Jobs in der Tabelle.
    * 
-   * @return
+   * @return the count of the jobs
    */
   public static long getJobCount()
   {

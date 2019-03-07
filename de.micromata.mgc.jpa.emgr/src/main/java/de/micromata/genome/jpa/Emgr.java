@@ -98,6 +98,7 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    *
    * @param entityManager the entity manager
    * @param emgrFactory the emgr factory
+   * @param emgrTx the entity manager transcation
    */
   public Emgr(EntityManager entityManager, EmgrFactory<EMGR> emgrFactory, EmgrTx<EMGR> emgrTx)
   {
@@ -134,7 +135,6 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    * Detach an entity.
    *
    * @param entity the entity
-   * @return the t
    */
   @Override
   public void detach(final Object entity)
@@ -150,9 +150,8 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
   /**
    * detaches a list of entities.
    *
-   * @param <E> the element type
+   * @param <R> the element type
    * @param result the result
-   * @return the t
    */
   @Override
   public <R> void detach(List<R> result)
@@ -460,6 +459,7 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    * Select by pk with detached objects.
    *
    * @param <R> the generic type
+   * @param <PK> the type of the pk
    * @param cls the cls
    * @param pk the pk
    * @return the r
@@ -496,6 +496,7 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    * Find entity by name.
    *
    * @param <R> the generic type
+   * @param <PK> the type of the pk
    * @param cls the cls
    * @param pk the pk
    * @return the r. May be null
@@ -703,7 +704,6 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    *
    * @param query the query
    * @param lockTimetimeInMs the lock timetime in ms
-   * @return the t
    */
   @Override
   public void setSelectForUpdate(Query query, int lockTimetimeInMs)
@@ -725,7 +725,6 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
   /**
    * flushes the underlying entitymanager.
    *
-   * @return this
    */
   public void flush()
   {
@@ -736,7 +735,6 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    * Persists the given {@link DbRecord}.
    *
    * @param rec the rec
-   * @return the t
    */
   public void persist(DbRecord<?> rec)
   {
@@ -747,7 +745,6 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    * Inits the for update.
    *
    * @param rec the rec
-   * @return the t
    */
   public void initForUpdate(DbRecord<?> rec)
   {
@@ -769,7 +766,6 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    * alias to remove.
    *
    * @param rec the rec
-   * @return the t
    */
   @Override
   public void deleteAttached(DbRecord<?> rec)
@@ -797,7 +793,6 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    * Removes the.
    *
    * @param rec the rec
-   * @return the t
    */
   public void remove(final DbRecord<?> rec)
   {
@@ -818,8 +813,8 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
   /**
    * Execute the criteria update
    *
-   * @param update
-   * @return
+   * @param update the criteria to perform the update with
+   * @return the updated entity
    */
   private <E> int internalExecuteCriteriaUpdate(CriteriaUpdate<E> update)
   {
@@ -910,6 +905,7 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    * Insert.
    *
    * @param rec the rec
+   * @param <PK> the type of the pk
    * @return the t
    */
 
@@ -928,7 +924,6 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    *
    *
    * @param rec the rec
-   * @return the t
    */
   @Override
   public void updateAttached(final DbRecord<?> rec)
@@ -1012,7 +1007,7 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
   /**
    * Merge.
    *
-   * @param <E> the element type
+   * @param <R> the element type
    * @param rec the rec
    * @return the t
    */
@@ -1038,7 +1033,7 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
   /**
    * Execute an update with a criteriaupdate.
    *
-   * @param <E> the element type
+   * @param <R> the element type
    * @param update the update
    * @return number or rows updated.
    */
@@ -1064,7 +1059,6 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
 
   /**
    * Creates an untyped query.
-   * <p/>
    * This is necessary for JPA-based executeUpdate() statements, as for example in the deletion of shipments (which is
    * done * without the entity manager's delete method).
    *
@@ -1082,7 +1076,6 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    * Inits the for create.
    *
    * @param rec the rec
-   * @return the t
    */
   public void initForCreate(DbRecord<?> rec)
   {

@@ -31,7 +31,8 @@ public interface HibernateSearchFieldInfoProvider
   /**
    * Gets the additionally search fields.
    *
-   * @param entityClass the entity class
+   * @param entm the entity class
+   * @param params the parameters
    * @return the additionally search fields
    */
   Map<String, SearchColumnMetadata> getAdditionallySearchFields(EntityMetadata entm, String params);

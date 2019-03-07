@@ -151,6 +151,7 @@ public class PropertyEntityCopier implements EntityCopier
    * @param pd the pd
    * @param target the target
    * @param source the source
+   * @return the {@link EntityCopyStatus}
    */
   public static EntityCopyStatus copyPropertyRaw(PropertyDescriptor pd, Object target, Object source)
   {
@@ -198,6 +199,7 @@ public class PropertyEntityCopier implements EntityCopier
    * @param entity the entity
    * @param pd the pd
    * @param value the value
+   * @return true when writing the property was a success
    */
   public static boolean writeProperty(Object entity, PropertyDescriptor pd, Object value)
   {

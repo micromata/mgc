@@ -148,7 +148,7 @@ public class CachedInputStream extends ServletInputStream
    * Gets the current cache as string
    * @param characterEncoding the characterEncoding
    * @return current cache as string
-   * @throws IOException
+   * @throws IOException is thrown when the cache conversion to {@link String} is failing
    */
   public String getCacheAsString(String characterEncoding) throws IOException
   {

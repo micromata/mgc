@@ -115,21 +115,21 @@ public abstract class BaseJpaLoggingImpl<M extends BaseLogMasterDO<?>>extends Fa
   /**
    * Entity class of LogMaster.
    *
-   * @return
+   * @return the class of the master
    */
   protected abstract Class<M> getMasterClass();
 
   /**
    * Create a new empty imstance of the Master Entity.
    *
-   * @return
+   * @return the newly created master
    */
   protected abstract M createNewMaster();
 
   /**
    * The entity manager to persist the logging.
    *
-   * @return
+   * @return the factory of the entity manager
    */
   protected abstract EmgrFactory<DefaultEmgr> getEmgrFactory();
 
@@ -330,8 +330,8 @@ public abstract class BaseJpaLoggingImpl<M extends BaseLogMasterDO<?>>extends Fa
    * Replaces all Null-Bytes in the value
    * This is required, because i.e. Postgres fails with exception "invalid byte sequence 0x00"
    *
-   * @param value
-   * @return
+   * @param value the value where to escape the null bytes
+   * @return the escaped string
    */
   private  String escapeNullBytes(String value){
     return Escape.nullBytes(value);

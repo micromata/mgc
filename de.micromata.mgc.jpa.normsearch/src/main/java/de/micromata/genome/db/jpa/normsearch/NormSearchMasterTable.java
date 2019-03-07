@@ -35,7 +35,7 @@ public interface NormSearchMasterTable extends StdRecord<Long>
    * 
    * @param column the column to create normalized search
    * @param value the value to create normalized search
-   * @return
+   * @return the newly created {@link NormSearchDO}
    */
   public NormSearchDO createNormSearchEntry(String column, String value);
 

@@ -26,7 +26,7 @@ import de.micromata.genome.jpa.IEmgr;
  * Executing getResultList on Query.
  *
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
- * @param <R> the generic type
+ * 
  */
 public class EmgrQueryGetResultListFilterEvent extends EmgrFilterEvent<List<?>>
 {

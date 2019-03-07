@@ -25,7 +25,7 @@ public class MailFilter
   private boolean onlyRecent;
 
   /**
-   * If true then only the recent (unseen) messages will get from the mail server. <br/>
+   * If true then only the recent (unseen) messages will get from the mail server.
    * Default is false.
    */
   public boolean isOnlyRecent()
@@ -33,6 +33,10 @@ public class MailFilter
     return onlyRecent;
   }
 
+  /**
+   * Sets if to see only recent mails
+   * @param onlyRecent true for only recent mails
+   */
   public void setOnlyRecent(boolean onlyRecent)
   {
     this.onlyRecent = onlyRecent;

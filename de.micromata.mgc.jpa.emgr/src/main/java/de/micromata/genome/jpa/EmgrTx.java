@@ -229,7 +229,7 @@ public class EmgrTx<E extends IEmgr<?>>
   /**
    * Rollback at the end of the transaction.
    * 
-   * @return
+   * @return the entitiy transaction
    */
   public EmgrTx<E> rollback()
   {
@@ -251,6 +251,7 @@ public class EmgrTx<E extends IEmgr<?>>
   /**
    * Read only.
    *
+   * @param timeout the timeout to set
    * @return the tx info
    */
   public EmgrTx<E> timeOut(long timeout)

@@ -54,6 +54,8 @@ public class TabAttrCopier implements EntityCopier
    *
    * @param dest the dest
    * @param orig the orig
+   *
+   * @return the {@link EntityCopyStatus}
    */
   public static EntityCopyStatus copyAttributesTo(EntityWithAttributes dest, EntityWithAttributes orig)
   {

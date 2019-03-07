@@ -35,14 +35,14 @@ public interface ColumnMetadata extends EmgrDbElement
   /**
    * Java Property name.
    * 
-   * @return
+   * @return the name
    */
   String getName();
 
   /**
    * A short declaration.
    * 
-   * @return
+   * @return the declaration
    */
   String getShortDeclaration();
 
@@ -56,7 +56,7 @@ public interface ColumnMetadata extends EmgrDbElement
   /**
    * Comes form Column anotation
    * 
-   * @return
+   * @return if this unique
    */
   boolean isUnique();
 
@@ -135,14 +135,14 @@ public interface ColumnMetadata extends EmgrDbElement
   /**
    * The setter to column.
    * 
-   * @return
+   * @return the setter
    */
   AttrSetter<Object, Object> getSetter();
 
   /**
    * In relation, reference to target entity. May be null on simple type.
    * 
-   * @return
+   * @return the entity
    */
   EntityMetadata getTargetEntity();
 

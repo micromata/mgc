@@ -36,7 +36,7 @@ import de.micromata.genome.util.types.Converter;
 import de.micromata.genome.util.types.Pair;
 
 /**
- * Argument is a Map<String, String> map.
+ * Argument is a Map String, String map.
  * 
  * TODO this very genome specific
  *

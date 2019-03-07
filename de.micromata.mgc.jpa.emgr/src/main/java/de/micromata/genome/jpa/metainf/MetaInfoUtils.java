@@ -398,7 +398,6 @@ public class MetaInfoUtils
    * @param accessableObject the accessable object
    * @param pdo the pdo
    * @param ret the ret
-   * @return the getter setter
    */
   private static void getGetterSetter(Class<?> entityClass, AccessibleObject accessableObject,
       Optional<PropertyDescriptor> pdo, ColumnMetadataBean ret)

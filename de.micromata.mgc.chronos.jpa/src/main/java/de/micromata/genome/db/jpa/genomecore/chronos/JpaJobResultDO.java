@@ -184,7 +184,7 @@ public class JpaJobResultDO extends StdRecordDO<Long>
   /**
    * TODO RK hmm, nicht im Schema gefunden.
    * 
-   * @return
+   * @return the count of retries
    */
   @Transient
   public int getRetryCount()

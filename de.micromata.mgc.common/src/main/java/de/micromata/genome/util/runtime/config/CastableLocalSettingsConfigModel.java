@@ -31,18 +31,24 @@ public interface CastableLocalSettingsConfigModel extends LocalSettingsConfigMod
   /**
    * Get a sub node.
    * 
-   * @param other
-   * @return
+   * @param other the other class
+   * @return the {@link LocalSettingsConfigModel} which was found
    */
   <T extends LocalSettingsConfigModel> T castTo(Class<T> other);
 
+  /**
+   * Cast to collection
+   * @param other the other
+   * @param <T> the type of List to retrun
+   * @return the casted List
+   */
   <T extends LocalSettingsConfigModel> List<T> castToCollect(Class<T> other);
 
   /**
    * Should a configuration dialog tag created
    * 
-   * @param other
-   * @return
+   * @param other the other
+   * @return the result
    */
   default <T extends LocalSettingsConfigModel> T castToForConfigDialog(Class<T> other)
   {
@@ -52,8 +58,8 @@ public interface CastableLocalSettingsConfigModel extends LocalSettingsConfigMod
   /**
    * Should a configuration dialog tag created
    * 
-   * @param other
-   * @return
+   * @param other the other
+   * @return the list for the dialog
    */
   default <T extends LocalSettingsConfigModel> List<T> castToForConfigDialogCollect(Class<T> other)
   {

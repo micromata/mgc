@@ -44,15 +44,10 @@ import de.micromata.genome.util.runtime.LocalSettings;
 
 /**
  * Zentrale Klasse (Singleton) für die Job-Verteilung.
- * <p>
- * Pollt die Datenbank nach neuen {@link Scheduler} und {@link Job} ab und versucht diese zu Starten.
- * <p/>
+ * Pollt die Datenbank nach neuen {@link Scheduler} und Job ab und versucht diese zu Starten.
  * Diese Implementierung geht davon aus, dass es eine implizite minimale Nodebindtimeout gibt, so dass ein lokaler Cache
  * der zu startenden Jobs verwaltet werden kann und damit die Anzahl der selects reduziert werden kann.
- * </p>
- * <p>
  * Hier werden die Runtime-Instanzen von Schedulern und Jobs verwaltet.
- * </p>
  * TODO minRefreshInMillis, minRefreshInMillis, maxRefreshInMillis not used
  */
 public class DispatcherImpl2 extends DispatcherImpl
@@ -369,8 +364,8 @@ public class DispatcherImpl2 extends DispatcherImpl
    * Ein neu angelegter Scheduler wird unmittelbar persisitiert und unter dem Namen inklusive Prefix abgespeichert.
    * </p>
    * 
-   * @param schedulerDO
-   * @return
+   * @param schedulerDO the scheduler to get or to create
+   * @return the {@link SchedulerDO} which was found or newly created
    * @see #schedulerByPk
    */
   @Override
@@ -425,10 +420,10 @@ public class DispatcherImpl2 extends DispatcherImpl
 
   /**
    * 
-   * @param schedulerName
-   * @param jobDefinition
-   * @param arg
-   * @param trigger
+   * @param schedulerName the new name of the scheduler
+   * @param jobDefinition the definition of the job
+   * @param arg the arguments for the job
+   * @param trigger the cron expression
    * @return Job reference (pk)
    * @throws SchedulerConfigurationException wenn ein nicht registrierter Scheduler angesprochen wird
    * @throws SchedulerException wenn der Job im JobStore nicht angelegt werden kann.

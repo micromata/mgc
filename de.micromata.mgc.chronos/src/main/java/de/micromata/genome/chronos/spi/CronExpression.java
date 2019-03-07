@@ -26,42 +26,40 @@ import java.util.regex.Pattern;
 
 /**
  * The representation of a typical cron-expression. The expression consists of 5 fields:
- * <ul>
- * <li>minutes</li>
- * <li>hours</li>
- * <li>day in month</li>
- * <li>month</li>
- * <li>day of week</li>
- * </ul>
+ * 
+ * minutes
+ * hours
+ * day in month
+ * month
+ * day of week
  * Each field can be in one of the following forms:
- * <ul>
- * <li><em>*</em> - matches all possible values</li>
- * <li><em>n</em> - a number, matches if the dates component is equal to the number</li>
- * <li><em>m-n</em> - a number range, matches if the dates component falls into the range</li>
- * <li><em>*&slash;n</em> - modulo operator, matches if the dates component is divisible by <em>n</em></li>
- * <li><em>m-n/x</em> - a number range, matches if the dates component <em>t</em> falls into the range <em>[m,n]</em> and <em>t-m</em> is
- * divisible by <em>x</em></li>
- * </ul>
+ * * - matches all possible values
+ * n - a number, matches if the dates component is equal to the number
+ * m-n - a number range, matches if the dates component falls into the range
+ * / - modulo operator, matches if the dates component is divisible by n
+ * m-n/x - a number range, matches if the dates component t falls into the range [m,n] and t-m is
+ * divisible by x
+ * 
  * The day of week field uses the following numbers for the weekdays:
- * <ul>
- * <li>1 : Monday: may be abbreviated as MON
- * <li>
- * <li>2: Tuesday (TUE)
- * <li>
- * <lI>7: Sunday (SUN)</li>
- * </ul>
- * <b>Differences to Unix cron</b> The Unix cron expressions handles the day of week different, example
+ * 
+ * 1 : Monday: may be abbreviated as MON
+ * 
+ * 2: Tuesday (TUE)
+ * 
+ * 7: Sunday (SUN)
+ * 
+ * Differences to Unix cron The Unix cron expressions handles the day of week different, example
  *
- * <pre>
+ * 
  *             0 0 1 *  MON
- * </pre>
+ * 
  *
  * On Unix, this expression fires on the first every month, but also on every Monday. This implementation fires only if the first of the
  * month is also an monday. This enables cron expressions, that fire on the first sunday every month:
  *
- * <pre>
+ * 
  *             0 0 1-7 *  SUN
- * </pre>
+ * 
  *
  *
  *

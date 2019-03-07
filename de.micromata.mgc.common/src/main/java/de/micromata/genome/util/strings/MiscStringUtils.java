@@ -29,9 +29,9 @@ public class MiscStringUtils
   /**
    * Shorten a String from the left side
    * 
-   * @param s
-   * @param maxLength
-   * @return
+   * @param s the string
+   * @param maxLength the max length of the string
+   * @return the cutted string
    */
   public static String cutLeft(String s, int maxLength)
   {
@@ -44,10 +44,10 @@ public class MiscStringUtils
 
   /**
    * Shorten a String from the right side
-   * 
-   * @param s
-   * @param maxLength
-   * @return
+   *
+   * @param s the string
+   * @param maxLength the max length of the string
+   * @return the cutted string
    */
   public static String cutRight(String s, int maxLength)
   {

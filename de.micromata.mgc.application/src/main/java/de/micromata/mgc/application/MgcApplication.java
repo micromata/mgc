@@ -40,26 +40,29 @@ public interface MgcApplication<M extends LocalSettingsConfigModel>
   /**
    * get the current configuration model
    * 
-   * @return
+   * @return the model
    */
   M getConfigModel();
 
   /**
    * Loads a new Configuration model from persistence.
    * 
-   * @return
+   * @return the model
    */
   M loadConfigModel();
 
   /**
    * Persist configuration.
+   *
+   * @param ctx the context
+   * @param config the config
    */
   void storeConfig(ValContext ctx, M config);
 
   /**
    * Check the configuration, if it is valid.
    * 
-   * @return
+   * @return true when the conf is valid
    */
   boolean checkConfiguration();
 
@@ -67,7 +70,7 @@ public interface MgcApplication<M extends LocalSettingsConfigModel>
    * If the configuraiton is valid, call initialize the applications configuration, but without starting the
    * application.
    * 
-   * @return
+   * @return true when no error happen
    */
   boolean initWithConfig();
 
@@ -83,8 +86,8 @@ public interface MgcApplication<M extends LocalSettingsConfigModel>
    * 
    * Calls inside startImpl.
    * 
-   * @param args
-   * @return
+   * @param args the arguments
+   * @return the mgc application start stop status
    */
   MgcApplicationStartStopStatus start(String[] args);
 
@@ -93,13 +96,15 @@ public interface MgcApplication<M extends LocalSettingsConfigModel>
    *
    * @param args the args
    * @return the mgc application start stop status
+   *
+   * @throws Exception when an error happened when starting the application
    */
   MgcApplicationStartStopStatus startImpl(String[] args) throws Exception;
 
   /**
    * Public method to stop an application.
-   * 
-   * @return
+   *
+   * @return the mgc application start stop status
    */
   MgcApplicationStartStopStatus stop();
 
@@ -107,6 +112,8 @@ public interface MgcApplication<M extends LocalSettingsConfigModel>
    * Stop the application.
    *
    * @return the mgc application start stop status
+   *
+   * @throws Exception when an error happened when stopping the application
    */
   MgcApplicationStartStopStatus stopImpl() throws Exception;
 

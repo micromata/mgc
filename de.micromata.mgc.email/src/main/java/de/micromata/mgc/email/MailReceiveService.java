@@ -41,8 +41,8 @@ public interface MailReceiveService
 
   /**
    * 
-   * @param config
-   * @param ctx
+   * @param config the mail config
+   * @param ctx the validation context
    * @return the list of boxes.
    */
   List<String> testConnection(MailReceiverLocalSettingsConfigModel config, ValContext ctx);

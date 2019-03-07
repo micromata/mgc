@@ -31,21 +31,22 @@ public @interface EntityCopy {
   /**
    * List of EntityCopier, which should be applied.
    *
-   * @return the class<? extends entity copier>[]
+   * @return the class ? extends entity copier []
+   * @return the Class of the copier
    */
   Class<? extends EntityCopier>[] copier() default { PropertyEntityCopier.class };
 
   /**
    * If set to false, the property will not be copied.
    * 
-   * @return
+   * @return if no copy
    */
   boolean noCopy() default false;
 
   /**
    * Mark n property if should be deep copied.
    * 
-   * @return
+   * @return if to deep copy
    */
   boolean deepCopy() default false;
 }

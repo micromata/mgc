@@ -27,9 +27,9 @@ public interface FutureJob
   /**
    * Ausfuehrung
    * 
-   * @param argument
-   * @return
-   * @throws Exception
+   * @param argument the arguement
+   * @return the result
+   * @throws Exception when an error happened in the job
    */
   public Object call(Object argument) throws Exception;
 

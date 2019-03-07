@@ -83,14 +83,14 @@ public interface Scheduler
 
   /**
    * return the db pk of the scheduler.
-   * 
+   * @return the id of the scheduler
    */
   public long getId();
 
   /**
    * set an persist the service retry time
    * 
-   * @param serviceRetryTimeInSeconds
+   * @param serviceRetryTimeInSeconds the time in seconds before next retry
    */
   public void setServiceRetryTime(int serviceRetryTimeInSeconds);
 
@@ -103,7 +103,7 @@ public interface Scheduler
   /**
    * set the job retry time of this scheduler
    * 
-   * @param jobRetryTimeInSeconds
+   * @param jobRetryTimeInSeconds the time in seconds before the next retry
    */
   public void setJobRetryTime(int jobRetryTimeInSeconds);
 
@@ -152,7 +152,7 @@ public interface Scheduler
   /**
    * set the number of maximum threads used for this scheduler
    * 
-   * @param threadPoolSize
+   * @param threadPoolSize the size of the pool
    */
   public void setThreadPoolSize(int threadPoolSize);
 
@@ -205,7 +205,7 @@ public interface Scheduler
   /**
    * Sets the internal pk for this scheduler
    * 
-   * @param schedId
+   * @param schedId the id of the scheduler to set
    */
   public void setSchedulerId(long schedId);
 

@@ -32,18 +32,18 @@ public interface LocalSettingsLoader
   /**
    * loads a new local settings.
    * 
-   * @return
+   * @return the new {@link LocalSettings}
    */
   LocalSettings loadSettings();
 
   /**
    * Used internally to load nested localsettings
    * 
-   * @param ls
-   * @param localSettingsFile
-   * @param originalLocalSettingsFile
-   * @param warn
-   * @return
+   * @param ls the local settings
+   * @param localSettingsFile the file of the local settings
+   * @param originalLocalSettingsFile the original local settings
+   * @param warn warn when something went wrong
+   * @return true when the settings could be loaded
    */
   boolean loadSettings(LocalSettings ls, File localSettingsFile, Map<String, String> target,
       boolean originalLocalSettingsFile,
@@ -52,41 +52,41 @@ public interface LocalSettingsLoader
   /**
    * check if localsettings file exists.
    * 
-   * @return
+   * @return true when the localsettings exists
    */
   boolean localSettingsExists();
 
   /**
    * 
-   * @return
+   * @return the name of the local settings
    */
   String getLocalSettingsFileName();
 
   /**
    * After loadSettings() filled with warnings
    * 
-   * @return
+   * @return a {@link List} of warnings
    */
   List<String> getWarns();
 
   /**
    * After loadSettings() a list of files loaded.
    * 
-   * @return
+   * @return a {@link List} of loaded files
    */
   List<File> getLoadedFiles();
 
   /**
    * Must return a valid directory used to find local settings files.
    * 
-   * @return
+   * @return the current working directory
    */
   File getWorkingDirectory();
 
   /**
    * Get local settings file.
    * 
-   * @return
+   * @return the file of the localsettings
    */
   File getLocalSettingsFile();
 

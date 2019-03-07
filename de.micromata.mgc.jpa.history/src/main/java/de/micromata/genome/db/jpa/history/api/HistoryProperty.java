@@ -33,7 +33,7 @@ public @interface HistoryProperty {
   /**
    * Converter for the history properties.
    *
-   * @return the class<? extends history property converter>
+   * @return the class ? extends history property converter
    */
   Class<? extends HistoryPropertyConverter>converter() default SimplePropertyConverter.class;
 }

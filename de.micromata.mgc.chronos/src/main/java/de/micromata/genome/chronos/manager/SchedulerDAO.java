@@ -127,8 +127,8 @@ public interface SchedulerDAO
    * Dies ist die Anzahl der Thread des zugehörigen Thread-Pools.
    * </p>
    * 
-   * @param size
-   * @param name
+   * @param size the size of jopbs
+   * @param schedulerName the name of the scheduler
    */
   public void setJobCount(final int size, final String schedulerName);
 
@@ -208,7 +208,6 @@ public interface SchedulerDAO
    *
    * @param jobId the job id
    * @param args the args
-   * @param trigger the trigger
    * @return the long
    */
   public long submitStdAdminJob(String jobId, final Map<String, String> args);
@@ -216,9 +215,9 @@ public interface SchedulerDAO
   /**
    * Submits a job defined by standard Job ID from ContextChronos.
    * 
-   * @param jobId
-   * @param arg
-   * @return
+   * @param jobId the id of the job
+   * @param arg the argument for the job
+   * @return the database pk of the job
    */
   public long submitStdJob(String jobId, final Object arg);
 
@@ -242,6 +241,7 @@ public interface SchedulerDAO
    * @param arg may be null
    * @param trigger must not be null
    * @param hostName if null, uses the current hostname
+   * @param jobName the name of the job
    * @return Job reference (pk)
    * @throws SchedulerConfigurationException wenn ein nicht registrierter Scheduler angesprochen wird
    */
@@ -351,6 +351,7 @@ public interface SchedulerDAO
 
   /**
    * Internal callbackback to intialize with configuration
+   * @param manager the manger for the scheduler
    */
   void init(SchedulerManager manager);
 
@@ -378,14 +379,14 @@ public interface SchedulerDAO
    * 
    * Used only internally.
    * 
-   * @return
+   * @return the {@link Dispatcher} for the scheduler
    */
   Dispatcher getDispatcher();
 
   /**
    * defaults to MGC
    * 
-   * @return
+   * @return the name of the application
    */
   String getShortApplicationName();
 }

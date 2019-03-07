@@ -28,7 +28,7 @@ public interface LogConfigurationWithHistoryDAO
   /**
    * Sets the attributes for /AttrHistoryAjax.action
    * 
-   * @param req
+   * @param req the servlet request
    */
   public void setHistoryAjaxActionAttributes(HttpServletRequest req);
 }

@@ -105,7 +105,7 @@ public interface JpaXmlDumpService
    * 
    * You can initialize the Listener with the JRE ServiceLoader mechanism.
    * 
-   * @return
+   * @return the {@link List} of the {@link JpaXmlBeforePersistListener}
    */
   List<JpaXmlBeforePersistListener> getGlobalBeforeListener();
 }

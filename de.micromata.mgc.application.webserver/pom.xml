@@ -4,14 +4,12 @@
   <parent>
     <artifactId>de.micromata.mgc.rootpom</artifactId>
     <groupId>de.micromata.mgc</groupId>
-    <version>3.0.8</version><!-- MGC -->
+    <version>3.0.9</version><!-- MGC -->
   </parent>
   <artifactId>de.micromata.mgc.application.webserver</artifactId>
   <packaging>jar</packaging>
   <description>Configuration for embedded werservices.</description>
-  <build>
-
-  </build>
+  
   <dependencies>
     <dependency>
       <groupId>de.micromata.mgc</groupId>

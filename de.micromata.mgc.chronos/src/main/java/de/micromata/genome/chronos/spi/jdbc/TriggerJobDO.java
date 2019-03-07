@@ -232,13 +232,9 @@ public class TriggerJobDO extends ChronosStdRecordDO
 
   /**
    * An Hand des übergebenen String werden verschiedene Definitionen kreiert.
-   * <p>
-   * <ul>
-   * <li>'+' {@link DelayTrigger}</li>
-   * <li>'<' Deserialisieren des Triggers mittels {@link JdbcJobStore#deserialize(String, Class)}</li>
-   * <li>Sonst wird ein {@link CronTrigger} angelegt.</li>
-   * </ul>
-   * </p>
+   * '+' {@link DelayTrigger}
+   * '&lt;' Deserialisieren des Triggers mittels {@link TriggerJobUtils#createTriggerDefinition(String)}
+   * Sonst wird ein {@link CronTrigger} angelegt.
    *
    * @param definition the definition
    * @return the trigger
@@ -280,11 +276,8 @@ public class TriggerJobDO extends ChronosStdRecordDO
 
   /**
    * Hier wird das eigentliche Runtime-Objekt erzeugt.
-   * <p>
-   * <code>This</code> wird als {@link TriggerJobDO} gesetzt.
-   * </p>
-   *
-   * @see de.micromata.genome.jchronos.Job#getExecutor()
+   * This wird als {@link TriggerJobDO} gesetzt.
+   * @return the job 
    */
   public FutureJob getExecutor()
   {
@@ -296,7 +289,7 @@ public class TriggerJobDO extends ChronosStdRecordDO
   /**
    * Used to be shown in UI.
    *
-   * @return
+   * @return the arguments of the job
    */
   public String getJobArgumentsForDisplay()
   {

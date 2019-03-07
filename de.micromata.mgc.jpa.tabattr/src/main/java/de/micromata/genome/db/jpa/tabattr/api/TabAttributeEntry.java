@@ -62,7 +62,6 @@ public interface TabAttributeEntry<PK extends Serializable>
    * Default is STRING('V')
    *
    * @return the type
-   * @see de.micromata.genome.db.attr.value.AttrValueType.shortTypeName
    */
   char getType();
 

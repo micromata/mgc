@@ -30,7 +30,7 @@ public interface JpaExtScannerUrlProvider
   /**
    * Where to look for resources and entities.
    * 
-   * @return
+   * @return the urls 
    */
   Collection<URL> getScannUrls();
 }

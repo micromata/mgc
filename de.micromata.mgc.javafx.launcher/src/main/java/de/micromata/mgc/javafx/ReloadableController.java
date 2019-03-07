@@ -18,7 +18,7 @@ package de.micromata.mgc.javafx;
 
 /**
  * Controllers that implements this interface are interested in being reloaded. Reloading is done by
- * {@link ControllerService#reloadStage(Class, boolean)}.
+ * {@link ControllerService}.
  * 
  * Reloading resets the state of the view. If you like to get the same view, provide a model object with method
  * {@link #getModel()}.

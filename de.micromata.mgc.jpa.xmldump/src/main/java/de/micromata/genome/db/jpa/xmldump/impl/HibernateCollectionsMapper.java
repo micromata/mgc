@@ -62,9 +62,6 @@ public class HibernateCollectionsMapper extends XmlFriendlyMapper// MapperWrappe
     super(wrapped);
   }
 
-  /**
-   * @see com.thoughtworks.xstream.alias.ClassMapper#mapNameToXML(java.lang.String)
-   */
   @Override
   public String mapNameToXML(final String javaName)
   {
@@ -92,7 +89,7 @@ public class HibernateCollectionsMapper extends XmlFriendlyMapper// MapperWrappe
   /**
    * Simple replacements between the HB 3 collections and their underlying collections from java.util.
    * 
-   * @param name
+   * @param name the name of the class to replace
    * @return the equivalent JDK class name
    */
   private String replaceClasses(final String name)
@@ -108,7 +105,7 @@ public class HibernateCollectionsMapper extends XmlFriendlyMapper// MapperWrappe
   /**
    * Simple replacements between the HB 3 collections and their underlying collections from java.util.
    * 
-   * @param clazz
+   * @param clazz the class to replace
    * @return the equivalent JDK class
    */
   private Class replaceClasses(final Class clazz)

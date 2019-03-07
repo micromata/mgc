@@ -57,7 +57,7 @@ public class GenomeLogAdapterHelper
   /**
    * List of namespaces to ignore.
    * 
-   * @param stripNamespaces
+   * @param stripNamespaces the stripNamespaces
    */
   public void setStripNamespaces(String stripNamespaces)
   {

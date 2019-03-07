@@ -35,7 +35,7 @@ import de.micromata.mgc.jpa.hibernatesearch.events.SearchEmgrReindexEventFilterE
  * 
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
- * @param <EMGR>
+ * @param <EMGR> the type of the entity manager
  */
 public class SearchEmgr<EMGR extends SearchEmgr<?>>extends Emgr<EMGR> implements ISearchEmgr<EMGR>
 {

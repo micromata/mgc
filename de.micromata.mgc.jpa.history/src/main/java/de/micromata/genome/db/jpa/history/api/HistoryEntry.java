@@ -49,7 +49,7 @@ public interface HistoryEntry<PK extends Serializable>extends DbRecord<PK>
   /**
    * alias to getModifiedBy.
    * 
-   * @return
+   * @return the user which modified the entry
    */
   default String getUserName()
   {

@@ -36,12 +36,11 @@ public class JobEventImpl implements JobLogEvent
   private Scheduler scheduler;
 
   /**
-   * @param job
-   * @param jobDefinition
-   * @param jobResult
-   * @param jobStatus
-   * @param runner
-   * @param scheduler
+   * @param job the job
+   * @param jobDefinition the definition fo the job
+   * @param jobResult the result of the job
+   * @param jobStatus the status of the job    
+   * @param scheduler the scheduler
    */
   public JobEventImpl(final TriggerJobDO job, final JobDefinition jobDefinition, final JobResultDO jobResult, final State jobStatus,
       final Scheduler scheduler)

@@ -171,10 +171,10 @@ public class IndexHeader
 
   /**
    * 
-   * @param start
-   * @param end
-   * @param mem
-   * @param filesize
+   * @param start when to start
+   * @param end when to end
+   * @param mem the buffer in the memory
+   * @param filesize the size of the file
    * @return startoffset, endidx
    */
   public List<Pair<Integer, Integer>> getCandiates(Timestamp start, Timestamp end, MappedByteBuffer mem, int filesize)

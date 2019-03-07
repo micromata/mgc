@@ -64,6 +64,7 @@ public class GJLogHandler extends Handler
 
   /**
    * If set to <code>false</code>, the console logger is not replaced automatically
+   * @param replaceConsole this value is set on the inner field this.replaceConsole
    */
   public void setReplaceConsole(boolean replaceConsole)
   {

@@ -27,9 +27,9 @@ public interface ClassLoaderService
   /**
    * Load class by name.
    * 
-   * @param name
-   * @return
-   * @throws ClassNotFoundException
+   * @param name the name of the class to load
+   * @return the class which was found by the given name
+   * @throws ClassNotFoundException when the class was not found
    */
   Class<?> loadClass(String name) throws ClassNotFoundException;
 }

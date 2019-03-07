@@ -62,7 +62,6 @@ public class LogWriteEntry implements Serializable
 
   /**
    * After inserting an LogWriteEntry this value should be updated.
-   * <p/>
    * 
    * For database this will be probably the primary Key as Long
    */

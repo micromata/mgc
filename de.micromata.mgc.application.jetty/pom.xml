@@ -4,33 +4,11 @@
   <parent>
     <artifactId>de.micromata.mgc.rootpom</artifactId>
     <groupId>de.micromata.mgc</groupId>
-    <version>3.0.8</version><!-- MGC -->
+    <version>3.0.9</version><!-- MGC -->
   </parent>
   <artifactId>de.micromata.mgc.application.jetty</artifactId>
   <packaging>jar</packaging>
 
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>de.micromata.genome</groupId>
-        <artifactId>genome-mvn2-plugin</artifactId>
-        <version>${genome.mvn.plugin.version}</version>
-        <configuration>
-          <archive>
-            <index>true</index>
-            <manifest>
-              <addClasspath>true</addClasspath>
-              <classpathPrefix>lib/</classpathPrefix>
-              <mainClass>de.micromata.genome.jettystarter.Start</mainClass>
-            </manifest>
-            <manifestEntries>
-              <Built-By>Micromata GmbH</Built-By>
-            </manifestEntries>
-          </archive>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
   <dependencies>
     <dependency>
       <groupId>de.micromata.mgc</groupId>

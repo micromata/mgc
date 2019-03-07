@@ -121,7 +121,7 @@ public class CriteriaUpdate<T>
    * 
    * @param column the column
    * @param value the value
-   * @return
+   * @return the created {@link CriteriaUpdate}
    */
   public CriteriaUpdate<T> setIfAbsend(String column, Object value)
   {

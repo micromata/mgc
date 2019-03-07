@@ -167,7 +167,7 @@ public interface Logging
   /**
    * Minimal Logging threshold
    * 
-   * @return
+   * @return the minimum log level
    */
   public LogLevel getConfigMinLogLevel();
 

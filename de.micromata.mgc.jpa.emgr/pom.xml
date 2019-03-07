@@ -4,7 +4,7 @@
   <parent>
     <artifactId>de.micromata.mgc.rootpom</artifactId>
     <groupId>de.micromata.mgc</groupId>
-    <version>3.0.8</version><!-- MGC -->
+    <version>3.0.9</version><!-- MGC -->
   </parent>
   <artifactId>de.micromata.mgc.jpa.emgr</artifactId>
   <packaging>jar</packaging>
@@ -12,46 +12,6 @@
     JPA Wrapper to manage local transaction.
   </description>
 
-
-  <profiles>
-    <profile>
-      <id>genome</id>
-      <pluginRepositories>
-        <pluginRepository>
-          <id>genome-deploy</id>
-          <name>genome-deploy</name>
-          <url>https://repo.micromata.de/nexus/content/repositories/genome/</url>
-        </pluginRepository>
-	  </pluginRepositories>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>de.micromata.genome</groupId>
-            <artifactId>genome-mvn2-plugin</artifactId>
-            <version>${genome.mvn.plugin.version}</version>
-            <configuration>
-              <archive>
-                <manifestEntries>
-                  <Genome-Import-Library>
-                    hibernate-entitymanager-${org.hibernate.hibernate-entitymanager.version}-noxalan;reexport:=true,
-                    javax.transaction-api-1.2;reexport:=true
-                  </Genome-Import-Library>
-                </manifestEntries>
-              </archive>
-            </configuration>
-            <executions>
-              <execution>
-                <phase>package</phase>
-                <goals>
-                  <goal>buildjarmodule</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
   <dependencies>
     <dependency>
       <groupId>de.micromata.mgc</groupId>

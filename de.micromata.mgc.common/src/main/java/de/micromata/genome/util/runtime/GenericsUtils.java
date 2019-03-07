@@ -370,9 +370,9 @@ public class GenericsUtils
   /**
    * See getConcretTypeParameter with position
    * 
-   * @param desiredType
-   * @param concretType
-   * @param genTypeName
+   * @param desiredType the type we desire
+   * @param concretType the correct type
+   * @param genTypeName the name of the generic
    * @return null if none found
    */
   public static Class<?> getConcretTypeParameter(Class<?> desiredType, Class<?> concretType, String genTypeName)
@@ -467,9 +467,9 @@ public class GenericsUtils
   /**
    * Figure out the concrete type of the field based on the concrete class clazz.
    * 
-   * @param clazz
-   * @param field
-   * @return
+   * @param clazz the class
+   * @param field the field
+   * @return the class of the concrete field
    */
   public static Class<?> getConcreteFieldType(Class<?> clazz, Field field)
   {

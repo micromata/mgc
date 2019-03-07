@@ -25,7 +25,7 @@ import de.micromata.genome.jpa.MarkDeletableRecord;
  * 
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
- * @param <E>
+ * @param <T> type which must extends {@link MarkDeletableRecord}
  */
 public class EmgrMarkUndeletedCriteriaUpdateFilterEvent<T extends MarkDeletableRecord<?>>
     extends EmgrMarkDeleteUndeleteCriteriaUpdateFilterEvent<T>
@@ -35,6 +35,7 @@ public class EmgrMarkUndeletedCriteriaUpdateFilterEvent<T extends MarkDeletableR
    *
    * @param emgr the emgr
    * @param update the update
+   * @param entity the entity
    */
   public EmgrMarkUndeletedCriteriaUpdateFilterEvent(IEmgr<?> emgr, T entity, CriteriaUpdate<T> update)
   {

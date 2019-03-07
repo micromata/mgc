@@ -150,7 +150,7 @@ public interface LocalSettingsService
   /**
    * The loader this was loaded with.
    * 
-   * @return
+   * @return the loader for the {@link LocalSettings}
    */
   LocalSettingsLoader getLocalSettingsLoader();
 

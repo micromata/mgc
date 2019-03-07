@@ -91,9 +91,9 @@ public interface NormalizedSearchService
   /**
    * Creates an default normsearch entity instance.
    * 
-   * @param entity
-   * @param normSearchEntity
-   * @return
+   * @param entity the entitiy to create norm search for
+   * @param normSearchEntity the class of the normsearch entity
+   * @return the newly created {@link NormSearchDO}
    */
   public <T extends NormSearchDO> T createDefaultNormSearchEntry(DbRecord<?> entity, Class<T> normSearchEntity);
 }

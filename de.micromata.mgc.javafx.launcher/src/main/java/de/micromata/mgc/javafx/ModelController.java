@@ -37,14 +37,12 @@ public interface ModelController<M>extends Controller
   /**
    * Grab the values from the model object and put them into the form.
    * 
-   * @param modelObject the model object, normally a pojo.
    */
   void fromModel();
 
   /**
    * Push all form data to the model object.
    * 
-   * @param modelObject the model object, normally a pojo.
    */
   void toModel();
 

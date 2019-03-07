@@ -74,6 +74,7 @@ public class LogAttributeTypeWrapper implements LogAttributeType
    * Instantiates a new log attribute type wrapper.
    *
    * @param attributeType the attribute type
+   * @param dumpDataOnly when true the data is only dumped
    */
   public LogAttributeTypeWrapper(LogAttributeType attributeType, boolean dumpDataOnly)
   {
