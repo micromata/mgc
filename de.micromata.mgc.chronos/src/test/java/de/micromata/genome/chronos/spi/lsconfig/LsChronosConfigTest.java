@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import de.micromata.genome.chronos.BaseSchedulerTestCase;
@@ -38,6 +39,12 @@ import de.micromata.genome.chronos.util.SchedulerFactory;
 public class LsChronosConfigTest extends BaseSchedulerTestCase
 {
   private static final Logger log = Logger.getLogger(LsChronosConfigTest.class);
+
+  @Before
+  public void resetScheduler()
+  {
+    ChronosServiceManager.get().getChronosConfigurationService().resetScheduleManager();
+  }
 
   @Test
   public void testLoadFromLs()

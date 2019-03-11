@@ -33,4 +33,11 @@ public interface ChronosConfigurationService
    * @return the schedule manager
    */
   SchedulerManager getScheduleManager();
+
+  /**
+   * Forces to reload schedule Manager.
+   * 
+   * Use only in unittests, because otherwise jobs may be lost.
+   */
+  void resetScheduleManager();
 }

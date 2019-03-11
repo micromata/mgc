@@ -31,6 +31,13 @@ public class DefaultChronosConfigurationServiceImpl implements ChronosConfigurat
   SchedulerManager schedulerManager = null;
 
   @Override
+  public void resetScheduleManager()
+  {
+    schedulerManager = null;
+
+  }
+
+  @Override
   public SchedulerManager getScheduleManager()
   {
     if (schedulerManager != null) {
