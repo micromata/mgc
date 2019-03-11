@@ -17,6 +17,8 @@
 package de.micromata.genome.chronos.spi.lsconfig;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.log4j.Logger;
 import org.junit.Assert;
@@ -26,6 +28,8 @@ import org.junit.Test;
 import de.micromata.genome.chronos.BaseSchedulerTestCase;
 import de.micromata.genome.chronos.ChronosServiceManager;
 import de.micromata.genome.chronos.Scheduler;
+import de.micromata.genome.chronos.manager.DefaultChronosConfigurationServiceImpl;
+import de.micromata.genome.chronos.manager.RAMSchedulerDAOImpl;
 import de.micromata.genome.chronos.manager.SchedulerDAO;
 import de.micromata.genome.chronos.manager.SchedulerManager;
 import de.micromata.genome.chronos.spi.jdbc.SchedulerDO;
@@ -43,6 +47,8 @@ public class LsChronosConfigTest extends BaseSchedulerTestCase
   @Before
   public void resetScheduler()
   {
+    ChronosServiceManager.get().setSchedulerDAO(new RAMSchedulerDAOImpl());
+    ChronosServiceManager.get().setChronosConfigurationService(new DefaultChronosConfigurationServiceImpl());
     ChronosServiceManager.get().getChronosConfigurationService().resetScheduleManager();
   }
 
@@ -54,7 +60,9 @@ public class LsChronosConfigTest extends BaseSchedulerTestCase
     SchedulerManager schedm = cs.getSchedulerManager();
     List<SchedulerFactory> facs = schedm.getScheduleFactories();
     Scheduler sched = cs.getCreateScheduler("utest1", false);
+
     if (sched == null) {
+      log.warn("utest1 not found. SchedulerDAO: " + cs.getClass().getName());
       for (SchedulerDO s : cs.getSchedulers()) {
         log.warn("utest1 not found, Existant Scheduler: " + s.getName());
       }
