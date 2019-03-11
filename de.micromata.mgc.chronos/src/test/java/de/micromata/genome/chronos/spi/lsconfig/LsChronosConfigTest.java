@@ -18,6 +18,7 @@ package de.micromata.genome.chronos.spi.lsconfig;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -26,6 +27,7 @@ import de.micromata.genome.chronos.ChronosServiceManager;
 import de.micromata.genome.chronos.Scheduler;
 import de.micromata.genome.chronos.manager.SchedulerDAO;
 import de.micromata.genome.chronos.manager.SchedulerManager;
+import de.micromata.genome.chronos.spi.jdbc.SchedulerDO;
 import de.micromata.genome.chronos.util.SchedulerFactory;
 
 /**
@@ -35,6 +37,8 @@ import de.micromata.genome.chronos.util.SchedulerFactory;
  */
 public class LsChronosConfigTest extends BaseSchedulerTestCase
 {
+  private static final Logger log = Logger.getLogger(LsChronosConfigTest.class);
+
   @Test
   public void testLoadFromLs()
   {
@@ -43,6 +47,11 @@ public class LsChronosConfigTest extends BaseSchedulerTestCase
     SchedulerManager schedm = cs.getSchedulerManager();
     List<SchedulerFactory> facs = schedm.getScheduleFactories();
     Scheduler sched = cs.getCreateScheduler("utest1", false);
+    if (sched == null) {
+      for (SchedulerDO s : cs.getSchedulers()) {
+        log.warn("utest1 not found, Existant Scheduler: " + s.getName());
+      }
+    }
     Assert.assertNotNull(sched);
     Assert.assertEquals(7, sched.getThreadPoolSize());
   }
