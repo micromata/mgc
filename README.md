@@ -1,3 +1,5 @@
+https://travis-ci.org/micromata/mgc.svg?branch=master
+
 # About
 
 Micromata Genome Commons is a set of Java libraries to build mostly webserver based applications.
