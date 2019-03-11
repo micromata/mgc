@@ -1,4 +1,7 @@
 [![Build Status](https://travis-ci.org/micromata/mgc.svg?branch=master)](https://travis-ci.org/micromata/mgc)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.micromata.mgc/de.micromata.mgc.rootpom/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.micromata.mgc/de.micromata.mgc.rootpom)
+
+
 
 # About
 
