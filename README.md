@@ -6,8 +6,6 @@
 
 Micromata Genome Commons is a set of Java libraries to build mostly webserver based applications.
 
-See [Micromata Labs](https://labs.micromata.de/gwiki/) for a short introduction.
-
 # Build
 Checkout and build with maven using the root pom.
 
