@@ -30,6 +30,7 @@ import de.micromata.genome.chronos.ChronosServiceManager;
 import de.micromata.genome.chronos.Scheduler;
 import de.micromata.genome.chronos.manager.DefaultChronosConfigurationServiceImpl;
 import de.micromata.genome.chronos.manager.RAMSchedulerDAOImpl;
+import de.micromata.genome.chronos.manager.SchedulerBaseDAO;
 import de.micromata.genome.chronos.manager.SchedulerDAO;
 import de.micromata.genome.chronos.manager.SchedulerManager;
 import de.micromata.genome.chronos.spi.jdbc.SchedulerDO;
@@ -47,6 +48,7 @@ public class LsChronosConfigTest extends BaseSchedulerTestCase
   @Before
   public void resetScheduler()
   {
+    SchedulerBaseDAO._resetDispatcher();
     ChronosServiceManager.get().setSchedulerDAO(new RAMSchedulerDAOImpl());
     ChronosServiceManager.get().setChronosConfigurationService(new DefaultChronosConfigurationServiceImpl());
     ChronosServiceManager.get().getChronosConfigurationService().resetScheduleManager();

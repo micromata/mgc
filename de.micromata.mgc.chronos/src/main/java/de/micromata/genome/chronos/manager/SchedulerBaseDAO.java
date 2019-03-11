@@ -558,6 +558,13 @@ public abstract class SchedulerBaseDAO implements SchedulerDAO
       getDispatcher().startup();
     }
   }
+  /**
+   * Use only in test cases
+   */
+  public static void _resetDispatcher()
+  {
+    dispatcher = null;
+  }
 
   @Override
   public String getShortApplicationName()
