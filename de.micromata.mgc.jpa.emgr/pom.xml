@@ -35,8 +35,8 @@
     </dependency>
     <dependency>
       <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-entitymanager</artifactId>
-      <version>${org.hibernate.hibernate-entitymanager.version}</version>
+      <artifactId>hibernate-core</artifactId>
+      <version>${org.hibernate.core.version}</version>
       <exclusions>
         <!--  old version of JAXBContext -->
         <exclusion>
