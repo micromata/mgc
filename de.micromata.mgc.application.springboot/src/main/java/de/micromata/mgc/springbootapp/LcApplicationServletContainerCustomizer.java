@@ -16,23 +16,22 @@
 
 package de.micromata.mgc.springbootapp;
 
-import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletContainer;
-import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
-import org.springframework.boot.context.embedded.jetty.JettyEmbeddedServletContainerFactory;
-import org.springframework.stereotype.Component;
-
 import de.micromata.genome.util.runtime.config.AbstractCompositLocalSettingsConfigModel;
 import de.micromata.genome.util.runtime.config.LocalSettingsConfigModel;
 import de.micromata.mgc.application.MgcApplication;
 import de.micromata.mgc.application.webserver.config.JettyConfigModel;
+import org.springframework.boot.web.embedded.jetty.ConfigurableJettyWebServerFactory;
+import org.springframework.boot.web.server.WebServerFactoryCustomizer;
+import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory;
+import org.springframework.stereotype.Component;
 
 /**
- * 
+ *
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
  */
 @Component
-public class LcApplicationServletContainerCustomizer implements EmbeddedServletContainerCustomizer
+public class LcApplicationServletContainerCustomizer implements WebServerFactoryCustomizer<ConfigurableServletWebServerFactory>
 {
   static final org.apache.log4j.Logger log = org.apache.log4j.Logger
       .getLogger(LcApplicationServletContainerCustomizer.class);
@@ -50,20 +49,19 @@ public class LcApplicationServletContainerCustomizer implements EmbeddedServletC
   }
 
   @Override
-  public void customize(ConfigurableEmbeddedServletContainer container)
-  {
+  public void customize(ConfigurableServletWebServerFactory factory) {
     LocalSettingsConfigModel projectCfg = application.getConfigModel();
 
     JettyConfigModel scm = ((AbstractCompositLocalSettingsConfigModel) projectCfg)
         .castTo(JettyConfigModel.class);
+    factory.setPort(scm.getPortAsInt());
+    factory.setContextPath(scm.getContextPath());
 
-    container.setPort(scm.getPortAsInt());
-    container.setContextPath(scm.getContextPath());
-    container.setSessionTimeout(scm.getSessionTimeoutAsInt());
+    //factory.setSessionTimeout(scm.getSessionTimeoutAsInt());
 
-    if (container instanceof JettyEmbeddedServletContainerFactory) {
+    if (factory instanceof ConfigurableJettyWebServerFactory) {
 
-      ((JettyEmbeddedServletContainerFactory) container)
+      ((ConfigurableJettyWebServerFactory) factory)
           .addServerCustomizers(new JettyServletContainerCustomizer(scm));
     }
   }
