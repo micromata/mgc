@@ -16,19 +16,19 @@
 
 package de.micromata.genome.util.runtime;
 
-import java.io.File;
-import java.io.IOException;
-
-import java.nio.charset.Charset;
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+
 /**
  * Test effects on change current path.
- * 
+ *
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
- * 
+ *
  */
 public class CwdTest
 {
@@ -52,11 +52,11 @@ public class CwdTest
       // das liest trotzdem das pom1 aus!!!
       String pom2 = FileUtils.readFileToString(pafile, Charset.defaultCharset());
       Assert.assertEquals(pom1, pom2);
-      // das fixt das: 
+      // das fixt das:
       File pafile2 = pafile.getAbsoluteFile();
       String pom3 = FileUtils.readFileToString(pafile2, Charset.defaultCharset());
       // jetzt tatsaechlich das parent pom
-      Assert.assertNotEquals(pom1, pom3);
+      Assert.assertNotEquals("Fails for openjdk 11", pom1, pom3);
     } catch (IOException ex) {
       ex.printStackTrace();
       ;
