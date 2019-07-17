@@ -16,20 +16,19 @@
 
 package de.micromata.mgc.jpa.spring.test;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import de.micromata.mgc.common.test.MgcTestCase;
+import de.micromata.mgc.common.test.MgcTestCase5;
 import de.micromata.mgc.jpa.spring.test.entities.MySkillDO;
 import de.micromata.mgc.jpa.spring.test.entities.MyUserDO;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration("/test-applicationContext-main.xml")
-public class SpringHibernateTest extends MgcTestCase
+public class SpringHibernateTest extends MgcTestCase5
 {
   @Autowired
   TestSpringService testSpringService;
@@ -43,9 +42,9 @@ public class SpringHibernateTest extends MgcTestCase
     testSpringService.storeUser(user);
 
     user = testSpringService.loadUser(user.getPk());
-    Assert.assertNotNull(user);
+    Assertions.assertNotNull(user);
     user = testSpringService.loadUserNoTx(user.getPk());
-    Assert.assertNotNull(user);
+    Assertions.assertNotNull(user);
 
     MySkillDO sk = new MySkillDO();
     sk.setName("Coden");

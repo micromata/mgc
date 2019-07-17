@@ -16,21 +16,23 @@
 
 package de.micromata.mgc.jpa.spring.test;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
 import de.micromata.genome.util.types.Holder;
-import de.micromata.mgc.common.test.MgcTestCase;
+import de.micromata.mgc.common.test.MgcTestCase5;
 import de.micromata.mgc.jpa.spring.test.entities.MySkillDO;
 import de.micromata.mgc.jpa.spring.test.entities.MyUserDO;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+import javax.transaction.Transactional;
+
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration("/test-applicationContext-main.xml")
-public class SpringJpaCombinedTest extends MgcTestCase
+@Transactional
+public class SpringJpaCombinedTest extends MgcTestCase5
 {
   @Autowired
   TestSpringService testSpringService;
@@ -54,8 +56,8 @@ public class SpringJpaCombinedTest extends MgcTestCase
       emgr.update(mskill);
       return mskill;
     });
-    Assert.assertNotNull(skill);
-    Assert.assertNotNull(skill.getPk());
+    Assertions.assertNotNull(skill);
+    Assertions.assertNotNull(skill.getPk());
 
   }
 
@@ -99,13 +101,13 @@ public class SpringJpaCombinedTest extends MgcTestCase
           return null;
         });
       });
-      Assert.fail("should catch illegal");
+      Assertions.fail("should catch illegal");
     } catch (IllegalArgumentException ex) {
       // ignore
     }
     SpringJpaEmgrFactory.get().runInTrans((emgr) -> {
       MySkillDO skill = emgr.findByPkDetached(MySkillDO.class, insertedSkillPk.get());
-      Assert.assertNull(skill);
+      Assertions.assertNull(skill);
       return skill;
     });
   }
@@ -135,10 +137,10 @@ public class SpringJpaCombinedTest extends MgcTestCase
 
     SpringJpaEmgrFactory.get().runInTrans((emgr) -> {
       MySkillDO skill = emgr.findByPkDetached(MySkillDO.class, insertedSkillPk.get());
-      Assert.assertNull(skill);
+      Assertions.assertNull(skill);
       return skill;
     });
     MyUserDO nuser = testSpringService.loadUser(newUserPk);
-    Assert.assertNotNull(nuser);
+    Assertions.assertNotNull(nuser);
   }
 }
