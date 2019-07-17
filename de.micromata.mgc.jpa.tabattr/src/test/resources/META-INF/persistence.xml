@@ -3,17 +3,17 @@
   xsi:schemaLocation='http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd'
   version='1.0'>
   <persistence-unit name="de.micromata.genome.jpa.tabattr.testentities" transaction-type="RESOURCE_LOCAL">
-    <provider>org.hibernate.ejb.HibernatePersistence</provider>
+    <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
     <non-jta-data-source>java:comp/env/genome/jdbc/dsWeb</non-jta-data-source>
-    
-    <class>de.micromata.genome.db.jpa.tabattr.testentities.TestMasterAttrDO</class> 
+
+    <class>de.micromata.genome.db.jpa.tabattr.testentities.TestMasterAttrDO</class>
     <class>de.micromata.genome.db.jpa.tabattr.testentities.TestTabAttrDO</class>
     <class>de.micromata.genome.db.jpa.tabattr.testentities.TestTabAttrWithDataDO</class>
     <class>de.micromata.genome.db.jpa.tabattr.testentities.TestTabAttrDataDO</class>
-    
+
     <class>de.micromata.genome.db.jpa.tabattr.testentities.TJpaMasterDO</class>
-    <class>de.micromata.genome.db.jpa.tabattr.testentities.TJpaMasterAttrDO</class>   
+    <class>de.micromata.genome.db.jpa.tabattr.testentities.TJpaMasterAttrDO</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
   </persistence-unit>
 </persistence>

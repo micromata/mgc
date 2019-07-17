@@ -3,12 +3,12 @@
   xsi:schemaLocation='http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd'
   version='1.0'>
   <persistence-unit name="de.micromata.genome.db.jpa.history.test" transaction-type="RESOURCE_LOCAL">
-    <provider>org.hibernate.ejb.HibernatePersistence</provider>
+    <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
     <non-jta-data-source>java:comp/env/genome/jdbc/dsWeb</non-jta-data-source>
     <class>de.micromata.genome.db.jpa.history.test.DummyHistEntityDO</class>
      <class>de.micromata.genome.db.jpa.history.entities.HistoryAttrDataDO</class>
-    <class>de.micromata.genome.db.jpa.history.entities.HistoryAttrDO</class> 
+    <class>de.micromata.genome.db.jpa.history.entities.HistoryAttrDO</class>
     <class>de.micromata.genome.db.jpa.history.entities.HistoryAttrWithDataDO</class>
     <class>de.micromata.genome.db.jpa.history.entities.HistoryMasterDO</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
