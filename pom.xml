@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.micromata.mgc</groupId>
   <artifactId>de.micromata.mgc.rootpom</artifactId>
-  <version>3.1.0-SNAPSHOT</version><!-- MGC -->
+  <version>3.1.0</version><!-- MGC -->
   <packaging>pom</packaging>
 
   <name>${project.groupId}:${project.artifactId}</name>
@@ -66,6 +65,7 @@
     <url>https://github.com/micromata/mgc/tree/master</url>
     <connection>scm:git:git://github.com/micromata/mgc.git</connection>
     <developerConnection>scm:git:ssh://github.com:micromata/mgc.git</developerConnection>
+    <tag>mgc-3.1.0</tag>
   </scm>
 
   <issueManagement>
@@ -91,10 +91,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.build.sourceVersion>1.8</project.build.sourceVersion>
     <project.build.targetVersion>1.8</project.build.targetVersion>
-
-    <mgc.version>${project.version}</mgc.version>
-
-
+    
     <log4j.version>1.2.17</log4j.version>
 
     <!-- Version 5.4.2 doesn't work with Intellij. Tested 03/28/2019. -->

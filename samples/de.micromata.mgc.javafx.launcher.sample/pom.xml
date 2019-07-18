@@ -25,25 +25,25 @@
     <dependency>
       <groupId>de.micromata.mgc</groupId>
       <artifactId>de.micromata.mgc.javafx.launcher</artifactId>
-      <version>${mgc.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <!-- we want to have the jetty sample as application. Replace this with your own application or delete it, if you implement 
       the application in this project. -->
     <dependency>
       <groupId>de.micromata.mgc</groupId>
       <artifactId>de.micromata.mgc.application.jetty</artifactId>
-      <version>${mgc.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <!-- We want mgc loging. Delete this, if you don't want mgc logging -->
     <dependency>
       <groupId>de.micromata.mgc</groupId>
       <artifactId>de.micromata.mgc.jpa.logging</artifactId>
-      <version>${mgc.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>de.micromata.mgc</groupId>
       <artifactId>de.micromata.mgc.email</artifactId>
-      <version>${mgc.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <!-- A small database. Delete this, if you want another or none databases. Databases can also put into the lib directory 
       of the final fat jar. -->

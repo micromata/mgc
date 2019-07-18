@@ -20,7 +20,7 @@
     <dependency>
       <groupId>de.micromata.mgc</groupId>
       <artifactId>de.micromata.mgc.application.jetty</artifactId>
-      <version>${mgc.version}</version>
+      <version>${project.version}</version>
     </dependency>
 
   </dependencies>
