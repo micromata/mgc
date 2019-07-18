@@ -22,7 +22,6 @@ import de.micromata.mgc.jpa.spring.test.entities.MySkillDO;
 import de.micromata.mgc.jpa.spring.test.entities.MyUserDO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -114,6 +113,10 @@ public class SpringJpaCombinedTest extends MgcTestCase5
   }
 
   @Disabled
+  /**
+   * see comments below in the code. THIS will not working, because spring tx and jpa client tx (which will be used in
+   * runInTrans()) are not the same.
+   */
   public void testNestedEx2()
   {
     MyUserDO user = new MyUserDO();
@@ -123,6 +126,12 @@ public class SpringJpaCombinedTest extends MgcTestCase5
     Holder<Long> insertedSkillPk = new Holder<>();
 
     long newUserPk = testSpringService.doWithNewUser("testNestedEx2", (myUser) -> {
+      // this not work, because transaction doWithNewUser is not committed yet.
+      // with postresql you get:
+      //      Caused by: org.postgresql.util.PSQLException: FEHLER: Einfügen oder Aktualisieren in Tabelle »myskilldo« verletzt Fremdschlüssel-Constraint »fk8afdmj4cc7497pin1ph713qau«
+      //      Detail: Schlüssel (user_pk)=(12) ist nicht in Tabelle »myuserdo« vorhanden.
+      //      at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2458)\
+      // with derby simply hang on a lock
       SpringJpaEmgrFactory.get().runInTrans((emgr) -> {
         MySkillDO mskill = new MySkillDO();
         mskill.setName("Coden");

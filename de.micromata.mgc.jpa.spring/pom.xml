@@ -70,6 +70,12 @@
       <version>${hsqldb.version}</version>
       <scope>test</scope>
     </dependency>
+     <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>9.4.1211.jre7</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
 </project>

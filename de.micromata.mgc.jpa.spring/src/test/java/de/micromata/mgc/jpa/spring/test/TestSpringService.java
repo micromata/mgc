@@ -16,18 +16,18 @@
 
 package de.micromata.mgc.jpa.spring.test;
 
+import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import javax.transaction.Transactional.TxType;
 
 import org.hibernate.Session;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import de.micromata.mgc.jpa.spring.test.entities.MySkillDO;
 import de.micromata.mgc.jpa.spring.test.entities.MyUserDO;
 
 public class TestSpringService
 {
-  @Autowired
+  @PersistenceContext
   Session hibernateSession;
 
   @Transactional(value = TxType.REQUIRES_NEW)
@@ -49,7 +49,7 @@ public class TestSpringService
   {
     return hibernateSession.load(MyUserDO.class, pk);
   }
-
+  @Transactional()
   public Long storeSkill(MySkillDO skill)
   {
     hibernateSession.persist(skill);
