@@ -138,7 +138,6 @@
     <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
     <license-maven-plugin.version>3.0</license-maven-plugin.version>
     <maven-install-plugin.version>2.5.2</maven-install-plugin.version>
-    <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
     <maven-clean-plugin.version>3.1.0</maven-clean-plugin.version>
     <maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
     <maven-surefire-plugin-version>3.0.0-M3</maven-surefire-plugin-version>
@@ -184,6 +183,30 @@
   <profiles>
     <profile>
       <id>release</id>
+      <modules>
+        <module>de.micromata.mgc.common</module>
+        <module>de.micromata.mgc.common.test</module>
+        <module>de.micromata.mgc.util.xml</module>
+        <module>de.micromata.mgc.logging</module>
+        <module>de.micromata.mgc.logging.spi.ifiles</module>
+        <module>de.micromata.mgc.jdbc.trace</module>
+        <module>de.micromata.mgc.jpa.emgr</module>
+        <module>de.micromata.mgc.jpa.tabattr</module>
+        <module>de.micromata.mgc.jpa.history</module>
+        <module>de.micromata.mgc.jpa.normsearch</module>
+        <module>de.micromata.mgc.jpa.hibernatesearch</module>
+        <module>de.micromata.mgc.jpa.spring</module>
+        <module>de.micromata.mgc.jpa.xmldump</module>
+        <module>de.micromata.mgc.jpa.logging</module>
+        <module>de.micromata.mgc.email</module>
+        <module>de.micromata.mgc.application</module>
+        <module>de.micromata.mgc.application.webserver</module>
+        <module>de.micromata.mgc.application.jetty</module>
+        <module>de.micromata.mgc.application.springboot</module>
+        <module>de.micromata.mgc.javafx.launcher</module>
+        <module>de.micromata.mgc.chronos</module>
+        <module>de.micromata.mgc.chronos.jpa</module>
+      </modules>
       <build>
         <plugins>
           <plugin>
