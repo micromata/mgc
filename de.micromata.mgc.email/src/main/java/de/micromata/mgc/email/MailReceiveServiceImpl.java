@@ -95,11 +95,14 @@ public class MailReceiveServiceImpl implements MailReceiveService
       return mails;
     }
     // TODO RK check valid
+    List<ReceivedMail> allMails = new ArrayList<>(); 
     try (MailAccount mailAccount = new MailAccount(cfg)) {
       // If mark messages as seen is set then open mbox read-write.
       boolean connected = mailAccount.connect("INBOX", markRecentMailsAsSeen);
       mails = mailAccount.getMails(searchTerm);
+      
       for (ReceivedMail mail : mails) {
+//        allMails.add(mail);
         ReceivedMail entry = new ReceivedMail();
         entry.setDate(mail.getDate());
         String content = mail.getContent();
@@ -141,7 +144,7 @@ public class MailReceiveServiceImpl implements MailReceiveService
         } catch (IOException ex) {
           log.fatal("Exception encountered " + ex, ex);
         }
-        mails.add(entry);
+        allMails.add(entry);
         if (markRecentMailsAsSeen == true) {
           try {
             mail.getMessage().setFlag(Flags.Flag.SEEN, true);
@@ -153,7 +156,7 @@ public class MailReceiveServiceImpl implements MailReceiveService
         // log.info(mail);
       }
 
-      return mails;
+      return allMails;
     }
   }
 
