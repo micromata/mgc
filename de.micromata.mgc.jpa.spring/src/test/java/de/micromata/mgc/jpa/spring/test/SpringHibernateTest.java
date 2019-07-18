@@ -20,6 +20,7 @@ import de.micromata.mgc.common.test.MgcTestCase5;
 import de.micromata.mgc.jpa.spring.test.entities.MySkillDO;
 import de.micromata.mgc.jpa.spring.test.entities.MyUserDO;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,7 @@ public class SpringHibernateTest extends MgcTestCase5
   @Autowired
   TestSpringService testSpringService;
 
-  @Test
+  @Disabled
   public void testUser()
   {
     MyUserDO user = new MyUserDO();
