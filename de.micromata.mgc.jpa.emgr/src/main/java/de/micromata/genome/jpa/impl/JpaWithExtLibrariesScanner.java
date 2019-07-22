@@ -56,7 +56,7 @@ import de.micromata.genome.util.matcher.Matcher;
 
 /**
  * Scanner, which looks into class path, and optionally additionally libraries.
- * 
+ *
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  * @author Florian Blumenstein
  *
@@ -116,9 +116,16 @@ public class JpaWithExtLibrariesScanner implements Scanner
     }
     ArchiveContext context = new ArchiveContextImpl(true, collector);
     String surl = url.toString();
-    if (surl.contains("!") && surl.startsWith("jar:") == false) {
+    if (surl.contains("!")) {
       String customUrlStr = url.toString();
-      customUrlStr = "jar:" + customUrlStr;
+      if (surl.startsWith("jar:") == false) {
+        customUrlStr = "jar:" + customUrlStr;
+      }
+      // Remove the trail after the second '!', otherwise a file not found exception will be thrown.
+      // e. g.: jar:file:/...myjar.jar!/BOOT-INF/lib/org.projectforge.plugins.memo-7.0-SNAPSHOT.jar!/
+      if (customUrlStr.lastIndexOf('!') > customUrlStr.indexOf('!')) {
+        customUrlStr = customUrlStr.substring(0, customUrlStr.lastIndexOf('!'));
+      }
       log.info("Custom URL: " + customUrlStr);
       try {
         URL customUrl = new URL(customUrlStr);
@@ -161,7 +168,7 @@ public class JpaWithExtLibrariesScanner implements Scanner
 
   /**
    * A jar may have also declared more deps in manifest (like surefire).
-   * 
+   *
    * @param url the url
    * @param collector the collector to use
    */
