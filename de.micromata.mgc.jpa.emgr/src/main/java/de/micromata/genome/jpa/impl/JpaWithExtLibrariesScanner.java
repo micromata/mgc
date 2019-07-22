@@ -123,6 +123,8 @@ public class JpaWithExtLibrariesScanner implements Scanner
       }
       // Remove the trail after the second '!', otherwise a file not found exception will be thrown.
       // e. g.: jar:file:/...myjar.jar!/BOOT-INF/lib/org.projectforge.plugins.memo-7.0-SNAPSHOT.jar!/
+      // This workaround is needed by ProjectForge. In former version it works, because another exception
+      // was thrown by Spring while building ArchiveDescriptor ;-)
       if (customUrlStr.lastIndexOf('!') > customUrlStr.indexOf('!')) {
         customUrlStr = customUrlStr.substring(0, customUrlStr.lastIndexOf('!'));
       }
