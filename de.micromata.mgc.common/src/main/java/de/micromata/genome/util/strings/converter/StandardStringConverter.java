@@ -15,13 +15,16 @@
 //
 
 /*
- * 
+ *
  */
 package de.micromata.genome.util.strings.converter;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -114,6 +117,9 @@ public class StandardStringConverter implements StringConverter, Serializable
     if (value instanceof Date) {
       return ConvertedStringTypes.DATE.getShortType();
     }
+    if (value instanceof LocalDate) {
+      return ConvertedStringTypes.LOCALDATE.getShortType();
+    }
     if (value instanceof BigDecimal) {
       return ConvertedStringTypes.BIGDECIMAL.getShortType();
     }
@@ -137,7 +143,7 @@ public class StandardStringConverter implements StringConverter, Serializable
 
   /**
    * Return true, if this type is not a bean, but a simple type.
-   * 
+   *
    * @param o the object. may be null
    * @return true, if is simple type
    */
@@ -179,6 +185,9 @@ public class StandardStringConverter implements StringConverter, Serializable
     }
     if (value instanceof Date) {
       return Pair.make(ConvertedStringTypes.DATE.getShortType(), formatDate((Date) value));
+    }
+    if (value instanceof LocalDate) {
+      return Pair.make(ConvertedStringTypes.LOCALDATE.getShortType(), formatLocalDate((LocalDate) value));
     }
     if (value instanceof BigDecimal) {
       return Pair.make(ConvertedStringTypes.BIGDECIMAL.getShortType(), formatBigDecimal((BigDecimal) value));
@@ -230,6 +239,8 @@ public class StandardStringConverter implements StringConverter, Serializable
         return parseDouble(s);
       case DATE:
         return parseTimestamp(s);
+      case LOCALDATE:
+        return parseLocalDate(s);
       case BYTEARRAY:
         return parseByteArray(s);
       case STRINGARRAY:
@@ -343,6 +354,18 @@ public class StandardStringConverter implements StringConverter, Serializable
   }
 
   /**
+   * Format date.
+   *
+   * @param date the date
+   * @return the string
+   */
+  protected String formatLocalDate(LocalDate date)
+  {
+    return date.format(DateTimeFormatter.ISO_LOCAL_DATE);
+  }
+
+
+  /**
    * Parses the big decimal.
    *
    * @param s the s
@@ -426,7 +449,24 @@ public class StandardStringConverter implements StringConverter, Serializable
         throw new IllegalArgumentException("StringConverter; Unexpected value format for DATE: " + v, ex2);
       }
     }
+  }
 
+  /**
+   * Parses the timestamp.
+   *
+   * @param v the v
+   * @return the date
+   */
+  protected LocalDate parseLocalDate(String v)
+  {
+    if (StringUtils.isBlank(v) == true) {
+      return null;
+    }
+    try {
+      return LocalDate.parse(v, DateTimeFormatter.ISO_LOCAL_DATE);
+    } catch (DateTimeParseException ex) {
+        throw new IllegalArgumentException("StringConverter; Unexpected value format for DATE: " + v, ex);
+    }
   }
 
   /**

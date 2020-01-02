@@ -17,15 +17,17 @@
 package de.micromata.genome.util.strings.converter;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.Month;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 /**
  * Test of the StandardStringConverter.
- * 
+ *
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
- * 
+ *
  */
 public class StandardStringConverterTest
 {
@@ -49,7 +51,7 @@ public class StandardStringConverterTest
     internalTestConvert("42", new Integer(42));
     internalTestConvert("42.5", new Double(42.5));
     internalTestConvert("42.5", new BigDecimal("42.5"));
+    internalTestConvert("2020-01-03", LocalDate.of(2020, Month.JANUARY, 3));
     internalTestConvertArray("a,b", new String[] { "a", "b"});
-
   }
 }

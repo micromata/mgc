@@ -17,6 +17,7 @@
 package de.micromata.genome.util.strings.converter;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -83,6 +84,12 @@ public enum ConvertedStringTypes
   DATE('P', Date.class),
 
   /**
+   * The date.
+   */
+  LOCALDATE('R', LocalDate.class),
+
+
+  /**
    * The bigdecimal.
    */
   BIGDECIMAL('K', BigDecimal.class),
@@ -102,7 +109,7 @@ public enum ConvertedStringTypes
    */
   LONGARRAY('l', new Long[] {}.getClass()),
 
-  // XMLOBJECT('X'), 
+  // XMLOBJECT('X'),
   /**
    * Unmapped or custom, f.e. Bean
    */
@@ -178,9 +185,10 @@ public enum ConvertedStringTypes
       case 'V':
         return STRING;
       case 'P':
-        return DATE;
       case 'Q':
         return DATE;
+      case 'R':
+        return LOCALDATE;
       case 'K':
         return BIGDECIMAL;
       case 'b':
