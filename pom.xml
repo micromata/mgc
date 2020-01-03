@@ -171,13 +171,13 @@
     <module>de.micromata.mgc.jpa.logging</module>
     <module>de.micromata.mgc.email</module>
     <module>de.micromata.mgc.application</module>
-    <module>de.micromata.mgc.application.webserver</module>
-    <module>de.micromata.mgc.application.jetty</module>
-    <module>de.micromata.mgc.application.springboot</module>
-    <module>de.micromata.mgc.javafx.launcher</module>
+    <!--module>de.micromata.mgc.application.webserver</module-->
+    <!--module>de.micromata.mgc.application.jetty</module-->
+    <!--module>de.micromata.mgc.application.springboot</module-->
+    <!--module>de.micromata.mgc.javafx.launcher</module-->
     <module>de.micromata.mgc.chronos</module>
     <module>de.micromata.mgc.chronos.jpa</module>
-    <module>samples</module>
+    <!--module>samples</module-->
   </modules>
 
   <profiles>
@@ -200,10 +200,10 @@
         <module>de.micromata.mgc.jpa.logging</module>
         <module>de.micromata.mgc.email</module>
         <module>de.micromata.mgc.application</module>
-        <module>de.micromata.mgc.application.webserver</module>
-        <module>de.micromata.mgc.application.jetty</module>
-        <module>de.micromata.mgc.application.springboot</module>
-        <module>de.micromata.mgc.javafx.launcher</module>
+        <!--module>de.micromata.mgc.application.webserver</module-->
+        <!--module>de.micromata.mgc.application.jetty</module-->
+        <!--module>de.micromata.mgc.application.springboot</module-->
+        <!--module>de.micromata.mgc.javafx.launcher</module-->
         <module>de.micromata.mgc.chronos</module>
         <module>de.micromata.mgc.chronos.jpa</module>
       </modules>
