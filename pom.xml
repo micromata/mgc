@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.micromata.mgc</groupId>
   <artifactId>de.micromata.mgc.rootpom</artifactId>
-  <version>3.1.2</version><!-- MGC -->
+  <version>3.1.3</version><!-- MGC -->
   <packaging>pom</packaging>
 
   <name>${project.groupId}:${project.artifactId}</name>
@@ -171,10 +171,10 @@
     <module>de.micromata.mgc.jpa.logging</module>
     <module>de.micromata.mgc.email</module>
     <module>de.micromata.mgc.application</module>
-    <!--module>de.micromata.mgc.application.webserver</module-->
-    <!--module>de.micromata.mgc.application.jetty</module-->
-    <!--module>de.micromata.mgc.application.springboot</module-->
-    <!--module>de.micromata.mgc.javafx.launcher</module-->
+    <module>de.micromata.mgc.application.webserver</module>
+    <module>de.micromata.mgc.application.jetty</module>
+    <module>de.micromata.mgc.application.springboot</module>
+    <module>de.micromata.mgc.javafx.launcher</module>
     <module>de.micromata.mgc.chronos</module>
     <module>de.micromata.mgc.chronos.jpa</module>
     <!--module>samples</module-->
@@ -200,10 +200,10 @@
         <module>de.micromata.mgc.jpa.logging</module>
         <module>de.micromata.mgc.email</module>
         <module>de.micromata.mgc.application</module>
-        <!--module>de.micromata.mgc.application.webserver</module-->
-        <!--module>de.micromata.mgc.application.jetty</module-->
-        <!--module>de.micromata.mgc.application.springboot</module-->
-        <!--module>de.micromata.mgc.javafx.launcher</module-->
+        <module>de.micromata.mgc.application.webserver</module>
+        <module>de.micromata.mgc.application.jetty</module>
+        <module>de.micromata.mgc.application.springboot</module>
+        <module>de.micromata.mgc.javafx.launcher</module>
         <module>de.micromata.mgc.chronos</module>
         <module>de.micromata.mgc.chronos.jpa</module>
       </modules>

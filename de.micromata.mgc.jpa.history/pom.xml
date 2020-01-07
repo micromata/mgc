@@ -3,7 +3,7 @@
   <parent>
     <artifactId>de.micromata.mgc.rootpom</artifactId>
     <groupId>de.micromata.mgc</groupId>
-    <version>3.1.2</version><!-- MGC -->
+    <version>3.1.3</version><!-- MGC -->
   </parent>
   <artifactId>de.micromata.mgc.jpa.history</artifactId>
   <packaging>jar</packaging>
