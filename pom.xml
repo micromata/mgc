@@ -177,7 +177,7 @@
     <module>de.micromata.mgc.javafx.launcher</module>
     <module>de.micromata.mgc.chronos</module>
     <module>de.micromata.mgc.chronos.jpa</module>
-    <!--module>samples</module-->
+    <module>samples</module>
   </modules>
 
   <profiles>
