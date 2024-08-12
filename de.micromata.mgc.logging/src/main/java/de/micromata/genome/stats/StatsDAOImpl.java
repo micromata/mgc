@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import de.micromata.genome.logging.GenomeLogCategory;
 import de.micromata.genome.logging.LogCategory;
@@ -183,7 +183,7 @@ public class StatsDAOImpl implements StatsDAO
   /*
    * (non-Javadoc)
    * 
-   * @see de.micromata.genome.stats.StatsDAO#addRequest(javax.servlet.http.HttpServletRequest, long)
+   * @see de.micromata.genome.stats.StatsDAO#addRequest(jakarta.servlet.http.HttpServletRequest, long)
    */
   @Override
   public void addRequest(HttpServletRequest req, long millis)

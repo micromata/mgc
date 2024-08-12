@@ -18,9 +18,9 @@ package de.micromata.mgc.jpa.hibernatesearch;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Root;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.Root;
 
 import org.apache.log4j.Logger;
 import org.junit.Assert;
@@ -105,7 +105,7 @@ public class EmgrSearchCriteriaUpdateTest extends MgcTestCase
     int aff = emf.runInTrans((emgr) -> {
       EntityManager em = emgr.getEntityManager();
       CriteriaBuilder cb = em.getCriteriaBuilder();
-      javax.persistence.criteria.CriteriaUpdate<MyEntityDO> cu = cb.createCriteriaUpdate(MyEntityDO.class);
+      jakarta.persistence.criteria.CriteriaUpdate<MyEntityDO> cu = cb.createCriteriaUpdate(MyEntityDO.class);
       Root<MyEntityDO> root = cu.from(MyEntityDO.class);
       cu.set("name", "ThirdName").where(cb.equal(root.get("name"), "YAnotherName"));
       int affected = em.createQuery(cu).executeUpdate();

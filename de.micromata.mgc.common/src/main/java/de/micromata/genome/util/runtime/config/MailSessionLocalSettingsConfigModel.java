@@ -20,9 +20,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
-import javax.mail.Authenticator;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
+import jakarta.mail.Authenticator;
+import jakarta.mail.PasswordAuthentication;
+import jakarta.mail.Session;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -180,7 +180,7 @@ public class MailSessionLocalSettingsConfigModel extends AbstractLocalSettingsCo
       //      msprops.put("mail.smtp.socketFactory.port", emailPort);
       //      msprops.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
     }
-    javax.mail.Session mailSession;
+    jakarta.mail.Session mailSession;
     msprops.put("mail.smtp.auth", Boolean.toString(isEmailAuthEnabled()));
 
     if (addProperties != null) {

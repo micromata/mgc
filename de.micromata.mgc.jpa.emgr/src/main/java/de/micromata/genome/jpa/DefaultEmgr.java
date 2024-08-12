@@ -16,7 +16,7 @@
 
 package de.micromata.genome.jpa;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 /**
  * Can be used if no extended functions are needed in Emgr.

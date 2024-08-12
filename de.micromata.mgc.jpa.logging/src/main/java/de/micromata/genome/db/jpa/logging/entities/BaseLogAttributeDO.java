@@ -16,9 +16,9 @@
 
 package de.micromata.genome.db.jpa.logging.entities;
 
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Transient;
+import jakarta.persistence.Column;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Transient;
 
 import de.micromata.genome.jpa.StdRecordDO;
 

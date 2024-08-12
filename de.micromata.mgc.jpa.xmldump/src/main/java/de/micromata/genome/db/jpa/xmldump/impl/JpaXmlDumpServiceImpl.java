@@ -38,8 +38,8 @@ import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.persistence.EntityManager;
-import javax.persistence.GeneratedValue;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.GeneratedValue;
 
 import org.apache.log4j.Logger;
 

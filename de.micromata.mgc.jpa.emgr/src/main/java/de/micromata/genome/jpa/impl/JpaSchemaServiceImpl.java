@@ -21,10 +21,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.EntityManager;
-import javax.persistence.OneToMany;
-import javax.persistence.Persistence;
-import javax.persistence.Query;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Persistence;
+import jakarta.persistence.Query;
 
 import org.apache.log4j.Logger;
 
@@ -55,8 +55,8 @@ public class JpaSchemaServiceImpl implements JpaSchemaService
   public void exportCreateSchemaToFile(String fileName)
   {
     Map<String, String> props = new HashMap<>();
-    props.put("javax.persistence.schema-generation.scripts.action", "create");
-    props.put("javax.persistence.schema-generation.scripts.create-target", fileName);
+    props.put("jakarta.persistence.schema-generation.scripts.action", "create");
+    props.put("jakarta.persistence.schema-generation.scripts.create-target", fileName);
     Persistence.generateSchema(emfac.getUnitName(), props);
 
   }
@@ -65,8 +65,8 @@ public class JpaSchemaServiceImpl implements JpaSchemaService
   public void exportDropSchemaToFile(String fileName)
   {
     Map<String, String> props = new HashMap<>();
-    props.put("javax.persistence.schema-generation.scripts.action", "drop");
-    props.put("javax.persistence.schema-generation.scripts.drop-target", fileName);
+    props.put("jakarta.persistence.schema-generation.scripts.action", "drop");
+    props.put("jakarta.persistence.schema-generation.scripts.drop-target", fileName);
     Persistence.generateSchema(emfac.getUnitName(), props);
   }
 

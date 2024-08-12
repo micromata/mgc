@@ -18,8 +18,8 @@ package de.micromata.genome.db.jpa.history.entities;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
+import jakarta.persistence.Column;
+import jakarta.persistence.MappedSuperclass;
 
 import de.micromata.genome.db.jpa.tabattr.entities.JpaTabAttrBaseDO;
 

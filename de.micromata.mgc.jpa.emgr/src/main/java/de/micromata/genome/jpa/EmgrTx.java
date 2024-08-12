@@ -16,10 +16,10 @@
 
 package de.micromata.genome.jpa;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import javax.persistence.RollbackException;
-import javax.persistence.TransactionRequiredException;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.RollbackException;
+import jakarta.persistence.TransactionRequiredException;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
@@ -58,7 +58,7 @@ public class EmgrTx<E extends IEmgr<?>>
    * The timeout.
    * 
    * TODO RK if (emHolder != null && emHolder.hasTimeout()) { int timeoutValue = (int) emHolder.getTimeToLiveInMillis();
-   * try { query.setHint("javax.persistence.query.timeout", timeoutValue); } catch (IllegalArgumentException ex) { // oh
+   * try { query.setHint("jakarta.persistence.query.timeout", timeoutValue); } catch (IllegalArgumentException ex) { // oh
    * well, at least we tried... }
    */
   long timeout = -1;

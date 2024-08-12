@@ -16,7 +16,7 @@
 
 package de.micromata.genome.db.jpa.history.test;
 
-import javax.persistence.Entity;
+import jakarta.persistence.Entity;
 
 import de.micromata.genome.db.jpa.history.entities.HistoryMasterDO;
 

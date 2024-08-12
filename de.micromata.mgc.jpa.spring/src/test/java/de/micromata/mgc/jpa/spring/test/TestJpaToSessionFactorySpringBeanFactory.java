@@ -16,7 +16,7 @@
 
 package de.micromata.mgc.jpa.spring.test;
 
-import javax.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityManagerFactory;
 
 import de.micromata.mgc.jpa.spring.factories.JpaToSessionFactorySpringBeanFactory;
 

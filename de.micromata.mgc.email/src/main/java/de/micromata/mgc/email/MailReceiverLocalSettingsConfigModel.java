@@ -77,7 +77,7 @@ public class MailReceiverLocalSettingsConfigModel extends AbstractLocalSettingsC
   @ALocalSettingsPath(key = "auth.plain.disable", defaultValue = "false")
   private String authPlainDisable;
 
-  @ALocalSettingsPath(defaultValue = "false", comment = "javax.mail debugging enabled. ")
+  @ALocalSettingsPath(defaultValue = "false", comment = "jakarta.mail debugging enabled. ")
   private String debug;
 
   @Override

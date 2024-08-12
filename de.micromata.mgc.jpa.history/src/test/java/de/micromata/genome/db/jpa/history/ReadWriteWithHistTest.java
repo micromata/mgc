@@ -18,7 +18,7 @@ package de.micromata.genome.db.jpa.history;
 
 import java.util.List;
 
-import javax.persistence.PersistenceException;
+import jakarta.persistence.PersistenceException;
 
 import org.apache.log4j.Logger;
 import org.junit.Assert;

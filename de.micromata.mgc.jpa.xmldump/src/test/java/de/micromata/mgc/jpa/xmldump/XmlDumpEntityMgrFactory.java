@@ -16,7 +16,7 @@
 
 package de.micromata.mgc.jpa.xmldump;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import org.junit.Ignore;
 

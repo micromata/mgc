@@ -16,7 +16,7 @@
 
 package de.micromata.genome.db.jpa.logging;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import de.micromata.genome.jpa.DefaultEmgr;
 import de.micromata.genome.jpa.EmgrFactory;

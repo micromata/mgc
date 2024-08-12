@@ -16,8 +16,8 @@
 
 package de.micromata.genome.jpa.test;
 
-import javax.persistence.LockTimeoutException;
-import javax.persistence.TypedQuery;
+import jakarta.persistence.LockTimeoutException;
+import jakarta.persistence.TypedQuery;
 
 import org.junit.Assert;
 import org.junit.Test;

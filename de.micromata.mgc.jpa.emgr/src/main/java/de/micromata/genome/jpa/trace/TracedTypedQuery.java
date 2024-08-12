@@ -22,11 +22,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.persistence.FlushModeType;
-import javax.persistence.LockModeType;
-import javax.persistence.Parameter;
-import javax.persistence.TemporalType;
-import javax.persistence.TypedQuery;
+import jakarta.persistence.FlushModeType;
+import jakarta.persistence.LockModeType;
+import jakarta.persistence.Parameter;
+import jakarta.persistence.TemporalType;
+import jakarta.persistence.TypedQuery;
 
 import de.micromata.genome.util.runtime.CallableX;
 
@@ -61,7 +61,7 @@ public class TracedTypedQuery<X>extends BaseTraced implements TypedQuery<X>
   /*
    * (non-Javadoc)
    * 
-   * @see javax.persistence.TypedQuery#getResultList()
+   * @see jakarta.persistence.TypedQuery#getResultList()
    */
   @Override
   public List<X> getResultList()
@@ -80,7 +80,7 @@ public class TracedTypedQuery<X>extends BaseTraced implements TypedQuery<X>
   /*
    * (non-Javadoc)
    * 
-   * @see javax.persistence.TypedQuery#getSingleResult()
+   * @see jakarta.persistence.TypedQuery#getSingleResult()
    */
   @Override
   public X getSingleResult()
@@ -99,7 +99,7 @@ public class TracedTypedQuery<X>extends BaseTraced implements TypedQuery<X>
   /*
    * (non-Javadoc)
    * 
-   * @see javax.persistence.TypedQuery#setMaxResults(int)
+   * @see jakarta.persistence.TypedQuery#setMaxResults(int)
    */
   @Override
   public TypedQuery<X> setMaxResults(int maxResult)
@@ -110,7 +110,7 @@ public class TracedTypedQuery<X>extends BaseTraced implements TypedQuery<X>
   /*
    * (non-Javadoc)
    * 
-   * @see javax.persistence.Query#executeUpdate()
+   * @see jakarta.persistence.Query#executeUpdate()
    */
   @Override
   public int executeUpdate()
@@ -129,7 +129,7 @@ public class TracedTypedQuery<X>extends BaseTraced implements TypedQuery<X>
   /*
    * (non-Javadoc)
    * 
-   * @see javax.persistence.TypedQuery#setFirstResult(int)
+   * @see jakarta.persistence.TypedQuery#setFirstResult(int)
    */
   @Override
   public TypedQuery<X> setFirstResult(int startPosition)
@@ -140,7 +140,7 @@ public class TracedTypedQuery<X>extends BaseTraced implements TypedQuery<X>
   /*
    * (non-Javadoc)
    * 
-   * @see javax.persistence.TypedQuery#setHint(java.lang.String, java.lang.Object)
+   * @see jakarta.persistence.TypedQuery#setHint(java.lang.String, java.lang.Object)
    */
   @Override
   public TypedQuery<X> setHint(String hintName, Object value)
@@ -151,7 +151,7 @@ public class TracedTypedQuery<X>extends BaseTraced implements TypedQuery<X>
   /*
    * (non-Javadoc)
    * 
-   * @see javax.persistence.Query#getMaxResults()
+   * @see jakarta.persistence.Query#getMaxResults()
    */
   @Override
   public int getMaxResults()
@@ -162,7 +162,7 @@ public class TracedTypedQuery<X>extends BaseTraced implements TypedQuery<X>
   /*
    * (non-Javadoc)
    * 
-   * @see javax.persistence.TypedQuery#setParameter(javax.persistence.Parameter, java.lang.Object)
+   * @see jakarta.persistence.TypedQuery#setParameter(jakarta.persistence.Parameter, java.lang.Object)
    */
   @Override
   public <T> TypedQuery<X> setParameter(Parameter<T> param, T value)
@@ -173,7 +173,7 @@ public class TracedTypedQuery<X>extends BaseTraced implements TypedQuery<X>
   /*
    * (non-Javadoc)
    * 
-   * @see javax.persistence.Query#getFirstResult()
+   * @see jakarta.persistence.Query#getFirstResult()
    */
   @Override
   public int getFirstResult()
@@ -184,8 +184,8 @@ public class TracedTypedQuery<X>extends BaseTraced implements TypedQuery<X>
   /*
    * (non-Javadoc)
    * 
-   * @see javax.persistence.TypedQuery#setParameter(javax.persistence.Parameter, java.util.Calendar,
-   * javax.persistence.TemporalType)
+   * @see jakarta.persistence.TypedQuery#setParameter(jakarta.persistence.Parameter, java.util.Calendar,
+   * jakarta.persistence.TemporalType)
    */
   @Override
   public TypedQuery<X> setParameter(Parameter<Calendar> param, Calendar value, TemporalType temporalType)
@@ -196,8 +196,8 @@ public class TracedTypedQuery<X>extends BaseTraced implements TypedQuery<X>
   /*
    * (non-Javadoc)
    * 
-   * @see javax.persistence.TypedQuery#setParameter(javax.persistence.Parameter, java.util.Date,
-   * javax.persistence.TemporalType)
+   * @see jakarta.persistence.TypedQuery#setParameter(jakarta.persistence.Parameter, java.util.Date,
+   * jakarta.persistence.TemporalType)
    */
   @Override
   public TypedQuery<X> setParameter(Parameter<Date> param, Date value, TemporalType temporalType)
@@ -208,7 +208,7 @@ public class TracedTypedQuery<X>extends BaseTraced implements TypedQuery<X>
   /*
    * (non-Javadoc)
    * 
-   * @see javax.persistence.Query#getHints()
+   * @see jakarta.persistence.Query#getHints()
    */
   @Override
   public Map<String, Object> getHints()
@@ -219,7 +219,7 @@ public class TracedTypedQuery<X>extends BaseTraced implements TypedQuery<X>
   /*
    * (non-Javadoc)
    * 
-   * @see javax.persistence.TypedQuery#setParameter(java.lang.String, java.lang.Object)
+   * @see jakarta.persistence.TypedQuery#setParameter(java.lang.String, java.lang.Object)
    */
   @Override
   public TypedQuery<X> setParameter(String name, Object value)
@@ -230,8 +230,8 @@ public class TracedTypedQuery<X>extends BaseTraced implements TypedQuery<X>
   /*
    * (non-Javadoc)
    * 
-   * @see javax.persistence.TypedQuery#setParameter(java.lang.String, java.util.Calendar,
-   * javax.persistence.TemporalType)
+   * @see jakarta.persistence.TypedQuery#setParameter(java.lang.String, java.util.Calendar,
+   * jakarta.persistence.TemporalType)
    */
   @Override
   public TypedQuery<X> setParameter(String name, Calendar value, TemporalType temporalType)
@@ -242,7 +242,7 @@ public class TracedTypedQuery<X>extends BaseTraced implements TypedQuery<X>
   /*
    * (non-Javadoc)
    * 
-   * @see javax.persistence.TypedQuery#setParameter(java.lang.String, java.util.Date, javax.persistence.TemporalType)
+   * @see jakarta.persistence.TypedQuery#setParameter(java.lang.String, java.util.Date, jakarta.persistence.TemporalType)
    */
   @Override
   public TypedQuery<X> setParameter(String name, Date value, TemporalType temporalType)
@@ -253,7 +253,7 @@ public class TracedTypedQuery<X>extends BaseTraced implements TypedQuery<X>
   /*
    * (non-Javadoc)
    * 
-   * @see javax.persistence.TypedQuery#setParameter(int, java.lang.Object)
+   * @see jakarta.persistence.TypedQuery#setParameter(int, java.lang.Object)
    */
   @Override
   public TypedQuery<X> setParameter(int position, Object value)
@@ -264,7 +264,7 @@ public class TracedTypedQuery<X>extends BaseTraced implements TypedQuery<X>
   /*
    * (non-Javadoc)
    * 
-   * @see javax.persistence.TypedQuery#setParameter(int, java.util.Calendar, javax.persistence.TemporalType)
+   * @see jakarta.persistence.TypedQuery#setParameter(int, java.util.Calendar, jakarta.persistence.TemporalType)
    */
   @Override
   public TypedQuery<X> setParameter(int position, Calendar value, TemporalType temporalType)
@@ -275,7 +275,7 @@ public class TracedTypedQuery<X>extends BaseTraced implements TypedQuery<X>
   /*
    * (non-Javadoc)
    * 
-   * @see javax.persistence.TypedQuery#setParameter(int, java.util.Date, javax.persistence.TemporalType)
+   * @see jakarta.persistence.TypedQuery#setParameter(int, java.util.Date, jakarta.persistence.TemporalType)
    */
   @Override
   public TypedQuery<X> setParameter(int position, Date value, TemporalType temporalType)
@@ -286,7 +286,7 @@ public class TracedTypedQuery<X>extends BaseTraced implements TypedQuery<X>
   /*
    * (non-Javadoc)
    * 
-   * @see javax.persistence.TypedQuery#setFlushMode(javax.persistence.FlushModeType)
+   * @see jakarta.persistence.TypedQuery#setFlushMode(jakarta.persistence.FlushModeType)
    */
   @Override
   public TypedQuery<X> setFlushMode(FlushModeType flushMode)
@@ -297,7 +297,7 @@ public class TracedTypedQuery<X>extends BaseTraced implements TypedQuery<X>
   /*
    * (non-Javadoc)
    * 
-   * @see javax.persistence.TypedQuery#setLockMode(javax.persistence.LockModeType)
+   * @see jakarta.persistence.TypedQuery#setLockMode(jakarta.persistence.LockModeType)
    */
   @Override
   public TypedQuery<X> setLockMode(LockModeType lockMode)
@@ -308,7 +308,7 @@ public class TracedTypedQuery<X>extends BaseTraced implements TypedQuery<X>
   /*
    * (non-Javadoc)
    * 
-   * @see javax.persistence.Query#getParameters()
+   * @see jakarta.persistence.Query#getParameters()
    */
   @Override
   public Set<Parameter<?>> getParameters()
@@ -319,7 +319,7 @@ public class TracedTypedQuery<X>extends BaseTraced implements TypedQuery<X>
   /*
    * (non-Javadoc)
    * 
-   * @see javax.persistence.Query#getParameter(java.lang.String)
+   * @see jakarta.persistence.Query#getParameter(java.lang.String)
    */
   @Override
   public Parameter<?> getParameter(String name)
@@ -330,7 +330,7 @@ public class TracedTypedQuery<X>extends BaseTraced implements TypedQuery<X>
   /*
    * (non-Javadoc)
    * 
-   * @see javax.persistence.Query#getParameter(java.lang.String, java.lang.Class)
+   * @see jakarta.persistence.Query#getParameter(java.lang.String, java.lang.Class)
    */
   @Override
   public <T> Parameter<T> getParameter(String name, Class<T> type)
@@ -341,7 +341,7 @@ public class TracedTypedQuery<X>extends BaseTraced implements TypedQuery<X>
   /*
    * (non-Javadoc)
    * 
-   * @see javax.persistence.Query#getParameter(int)
+   * @see jakarta.persistence.Query#getParameter(int)
    */
   @Override
   public Parameter<?> getParameter(int position)
@@ -352,7 +352,7 @@ public class TracedTypedQuery<X>extends BaseTraced implements TypedQuery<X>
   /*
    * (non-Javadoc)
    * 
-   * @see javax.persistence.Query#getParameter(int, java.lang.Class)
+   * @see jakarta.persistence.Query#getParameter(int, java.lang.Class)
    */
   @Override
   public <T> Parameter<T> getParameter(int position, Class<T> type)
@@ -363,7 +363,7 @@ public class TracedTypedQuery<X>extends BaseTraced implements TypedQuery<X>
   /*
    * (non-Javadoc)
    * 
-   * @see javax.persistence.Query#isBound(javax.persistence.Parameter)
+   * @see jakarta.persistence.Query#isBound(jakarta.persistence.Parameter)
    */
   @Override
   public boolean isBound(Parameter<?> param)
@@ -374,7 +374,7 @@ public class TracedTypedQuery<X>extends BaseTraced implements TypedQuery<X>
   /*
    * (non-Javadoc)
    * 
-   * @see javax.persistence.Query#getParameterValue(javax.persistence.Parameter)
+   * @see jakarta.persistence.Query#getParameterValue(jakarta.persistence.Parameter)
    */
   @Override
   public <T> T getParameterValue(Parameter<T> param)
@@ -385,7 +385,7 @@ public class TracedTypedQuery<X>extends BaseTraced implements TypedQuery<X>
   /*
    * (non-Javadoc)
    * 
-   * @see javax.persistence.Query#getParameterValue(java.lang.String)
+   * @see jakarta.persistence.Query#getParameterValue(java.lang.String)
    */
   @Override
   public Object getParameterValue(String name)
@@ -396,7 +396,7 @@ public class TracedTypedQuery<X>extends BaseTraced implements TypedQuery<X>
   /*
    * (non-Javadoc)
    * 
-   * @see javax.persistence.Query#getParameterValue(int)
+   * @see jakarta.persistence.Query#getParameterValue(int)
    */
   @Override
   public Object getParameterValue(int position)
@@ -407,7 +407,7 @@ public class TracedTypedQuery<X>extends BaseTraced implements TypedQuery<X>
   /*
    * (non-Javadoc)
    * 
-   * @see javax.persistence.Query#getFlushMode()
+   * @see jakarta.persistence.Query#getFlushMode()
    */
   @Override
   public FlushModeType getFlushMode()
@@ -418,7 +418,7 @@ public class TracedTypedQuery<X>extends BaseTraced implements TypedQuery<X>
   /*
    * (non-Javadoc)
    * 
-   * @see javax.persistence.Query#getLockMode()
+   * @see jakarta.persistence.Query#getLockMode()
    */
   @Override
   public LockModeType getLockMode()
@@ -429,7 +429,7 @@ public class TracedTypedQuery<X>extends BaseTraced implements TypedQuery<X>
   /*
    * (non-Javadoc)
    * 
-   * @see javax.persistence.Query#unwrap(java.lang.Class)
+   * @see jakarta.persistence.Query#unwrap(java.lang.Class)
    */
   @Override
   public <T> T unwrap(Class<T> cls)

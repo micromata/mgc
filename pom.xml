@@ -117,7 +117,7 @@
 
     <jetty.version>9.3.23.v20180228</jetty.version>
 
-    <org.hibernate-search-orm.version>5.11.12.Final</org.hibernate-search-orm.version>
+    <org.hibernate-search-orm.version-jakarta>6.2.4.Final</org.hibernate-search-orm.version-jakarta>
     <org.hibernate.core.version>6.5.2.Final</org.hibernate.core.version>
 
     <spring.version>6.1.11</spring.version>

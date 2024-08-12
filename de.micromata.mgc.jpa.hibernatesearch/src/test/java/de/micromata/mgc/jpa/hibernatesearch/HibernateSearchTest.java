@@ -52,7 +52,7 @@ public class HibernateSearchTest extends HibernateSearchTestBase
           .onFields("name")
           .matching("KOMMER")
           .createQuery();
-      javax.persistence.Query jpaQuery = fullTextEntityManager.createFullTextQuery(luceneQuery, MyEntityDO.class);
+      jakarta.persistence.Query jpaQuery = fullTextEntityManager.createFullTextQuery(luceneQuery, MyEntityDO.class);
       List<MyEntityDO> result = jpaQuery.getResultList();
       return result;
     });
@@ -65,7 +65,7 @@ public class HibernateSearchTest extends HibernateSearchTestBase
       org.apache.lucene.search.Query luceneQuery = qb
           .all()
           .createQuery();
-      javax.persistence.Query jpaQuery = fullTextEntityManager.createFullTextQuery(luceneQuery, MyEntityDO.class);
+      jakarta.persistence.Query jpaQuery = fullTextEntityManager.createFullTextQuery(luceneQuery, MyEntityDO.class);
       List<MyEntityDO> result = jpaQuery.getResultList();
       return result;
     });
@@ -83,7 +83,7 @@ public class HibernateSearchTest extends HibernateSearchTestBase
       org.apache.lucene.search.Query luceneQuery = qb
           .all()
           .createQuery();
-      javax.persistence.Query jpaQuery = fullTextEntityManager.createFullTextQuery(luceneQuery, MyEntityDO.class);
+      jakarta.persistence.Query jpaQuery = fullTextEntityManager.createFullTextQuery(luceneQuery, MyEntityDO.class);
       List<MyEntityDO> result = jpaQuery.getResultList();
       return result;
     });

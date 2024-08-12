@@ -18,8 +18,8 @@ package de.micromata.mgc.email;
 
 import java.util.List;
 
-import javax.mail.Provider;
-import javax.mail.search.SearchTerm;
+import jakarta.mail.Provider;
+import jakarta.mail.search.SearchTerm;
 
 import de.micromata.genome.util.validation.ValContext;
 

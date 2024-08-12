@@ -16,7 +16,7 @@
 
 package de.micromata.genome.jpa.test;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import org.junit.Ignore;
 import org.junit.Test;

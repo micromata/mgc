@@ -16,7 +16,7 @@
 
 package de.micromata.genome.logging;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * The Interface LogConfigurationWithHistoryDAO.

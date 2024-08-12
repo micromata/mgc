@@ -18,7 +18,7 @@ package de.micromata.genome.jpa;
 
 import java.io.Serializable;
 
-import javax.persistence.Transient;
+import jakarta.persistence.Transient;
 
 import org.apache.log4j.Logger;
 

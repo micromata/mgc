@@ -18,7 +18,7 @@ package de.micromata.genome.jpa.hibernate.dialect;
 
 import org.hibernate.dialect.Database;
 import org.hibernate.dialect.Dialect;
-import org.hibernate.dialect.Oracle10gDialect;
+import org.hibernate.engine.jdbc.dialect.internal.StandardDialectResolver;
 import org.hibernate.engine.jdbc.dialect.spi.DialectResolutionInfo;
 import org.hibernate.engine.jdbc.dialect.spi.DialectResolver;
 
@@ -49,16 +49,7 @@ public class GenomeDialectResolver implements DialectResolver
   @Override
   public Dialect resolveDialect(DialectResolutionInfo info)
   {
-    Dialect dialect = null;
-    for ( Database database : Database.values() ) {
-      dialect = database.resolveDialect( info );
-      if ( dialect != null ) {
-        break;
-      }
-    }
-    if (dialect.getClass() == Oracle10gDialect.class) {
-      return new Oracle10gDialectNoFollowOnLocking();
-    }
-    return dialect;
+    DialectResolver dialectResolver = new StandardDialectResolver();
+    return dialectResolver.resolveDialect(info);
   }
 }

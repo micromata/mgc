@@ -16,7 +16,7 @@
 
 package de.micromata.genome.db.jpa.history.test;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import de.micromata.genome.db.jpa.history.api.HistoryServiceManager;
 import de.micromata.genome.jpa.DefaultEmgr;

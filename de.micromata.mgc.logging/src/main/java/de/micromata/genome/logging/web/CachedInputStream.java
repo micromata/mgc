@@ -18,8 +18,8 @@ package de.micromata.genome.logging.web;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.Validate;
 
-import javax.servlet.ReadListener;
-import javax.servlet.ServletInputStream;
+import jakarta.servlet.ReadListener;
+import jakarta.servlet.ServletInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 

@@ -16,7 +16,7 @@
 
 package de.micromata.genome.jpa;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 /**
  * The Class EntityManagerWrapper.

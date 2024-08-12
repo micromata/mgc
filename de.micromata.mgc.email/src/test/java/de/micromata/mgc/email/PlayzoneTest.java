@@ -18,9 +18,9 @@ package de.micromata.mgc.email;
 
 import java.util.List;
 
-import javax.mail.Flags;
-import javax.mail.Provider;
-import javax.mail.search.FlagTerm;
+import jakarta.mail.Flags;
+import jakarta.mail.Provider;
+import jakarta.mail.search.FlagTerm;
 
 import org.junit.Test;
 

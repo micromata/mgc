@@ -16,7 +16,7 @@
 
 package de.micromata.mgc.jpa.hibernatesearch;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import org.hibernate.search.jpa.FullTextEntityManager;
 

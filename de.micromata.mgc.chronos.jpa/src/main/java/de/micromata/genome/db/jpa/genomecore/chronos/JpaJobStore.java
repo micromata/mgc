@@ -38,7 +38,7 @@ import de.micromata.genome.util.matcher.CommonMatchers;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
-import javax.persistence.TypedQuery;
+import jakarta.persistence.TypedQuery;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Date;

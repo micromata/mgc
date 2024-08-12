@@ -20,7 +20,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.mail.Message;
+import jakarta.mail.Message;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 

@@ -16,7 +16,7 @@
 
 package de.micromata.genome.stats;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import de.micromata.genome.logging.LogCategory;
 import de.micromata.genome.logging.LogWriteEntry;

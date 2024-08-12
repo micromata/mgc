@@ -16,29 +16,34 @@
 
 package de.micromata.genome.db.jpa.xmldump.impl;
 
+import com.thoughtworks.xstream.mapper.XmlFriendlyMapper;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+/*
 import org.hibernate.collection.internal.PersistentList;
 import org.hibernate.collection.internal.PersistentMap;
 import org.hibernate.collection.internal.PersistentSet;
 import org.hibernate.collection.internal.PersistentSortedMap;
 import org.hibernate.collection.internal.PersistentSortedSet;
+ */
 
 import com.thoughtworks.xstream.mapper.Mapper;
 import com.thoughtworks.xstream.mapper.XmlFriendlyMapper;
+import org.hibernate.collection.spi.*;
 
 /**
  * Replaces Hibernate 3 specific collections with java.util implementations.
- * 
+ *
  * <strong>NOTE</strong> This mapper takes care only of the writing to the XML (deflating) not the other way around
  * (inflating) because there is no need.
- * 
+ *
  * @author Costin Leau
- * 
+ *
  */
 
 public class HibernateCollectionsMapper extends XmlFriendlyMapper// MapperWrapper
@@ -88,7 +93,7 @@ public class HibernateCollectionsMapper extends XmlFriendlyMapper// MapperWrappe
 
   /**
    * Simple replacements between the HB 3 collections and their underlying collections from java.util.
-   * 
+   *
    * @param name the name of the class to replace
    * @return the equivalent JDK class name
    */
@@ -104,7 +109,7 @@ public class HibernateCollectionsMapper extends XmlFriendlyMapper// MapperWrappe
 
   /**
    * Simple replacements between the HB 3 collections and their underlying collections from java.util.
-   * 
+   *
    * @param clazz the class to replace
    * @return the equivalent JDK class
    */

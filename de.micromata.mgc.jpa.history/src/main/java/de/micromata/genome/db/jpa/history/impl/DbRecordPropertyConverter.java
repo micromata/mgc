@@ -30,7 +30,7 @@ import de.micromata.genome.jpa.metainf.ColumnMetadata;
 
 /**
  * Wrapps an entity reference.
- * 
+ *
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
  *
  */
@@ -49,7 +49,7 @@ public class DbRecordPropertyConverter implements HistoryPropertyConverter
       // to avoid lazy initialization problems, only evaluate the proxy.
       if (dbrec instanceof HibernateProxy) {
         HibernateProxy hibernateProxy = (HibernateProxy) dbrec;
-        pk = hibernateProxy.getHibernateLazyInitializer().getIdentifier();
+        pk = (Serializable) hibernateProxy.getHibernateLazyInitializer().getIdentifier();
       } else {
         pk = dbrec.getPk();
       }

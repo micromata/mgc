@@ -18,7 +18,7 @@ package de.micromata.genome.jpa.test;
 
 import java.util.List;
 
-import javax.persistence.TypedQuery;
+import jakarta.persistence.TypedQuery;
 
 import org.junit.Assert;
 import org.junit.Test;

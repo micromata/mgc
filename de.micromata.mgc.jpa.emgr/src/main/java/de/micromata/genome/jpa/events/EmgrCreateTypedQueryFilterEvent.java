@@ -18,7 +18,7 @@ package de.micromata.genome.jpa.events;
 
 import java.util.Map;
 
-import javax.persistence.TypedQuery;
+import jakarta.persistence.TypedQuery;
 
 import de.micromata.genome.jpa.IEmgr;
 

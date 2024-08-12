@@ -22,8 +22,10 @@ import java.util.HashSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+/*
 import org.hibernate.collection.internal.PersistentSet;
 import org.hibernate.collection.internal.PersistentSortedSet;
+*/
 import org.hibernate.collection.spi.PersistentCollection;
 
 import com.thoughtworks.xstream.converters.Converter;
@@ -32,14 +34,16 @@ import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import org.hibernate.collection.spi.PersistentSet;
+import org.hibernate.collection.spi.PersistentSortedSet;
 
 /**
  * XStream converter that strips HB collections specific information and retrieves the underlying collection which is
  * then parsed by the delegated converter. This converter only takes care of the values inside the collections while the
  * mapper takes care of the collections naming.
- * 
+ *
  * @author Costin Leau
- * 
+ *
  */
 public class HibernateCollectionConverter implements Converter
 {

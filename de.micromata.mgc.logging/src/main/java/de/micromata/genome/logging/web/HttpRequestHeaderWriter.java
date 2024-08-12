@@ -18,7 +18,7 @@ package de.micromata.genome.logging.web;
 
 import org.apache.commons.lang3.Validate;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
 
 public class HttpRequestHeaderWriter

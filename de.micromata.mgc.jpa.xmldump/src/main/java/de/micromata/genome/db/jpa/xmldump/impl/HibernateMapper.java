@@ -16,6 +16,11 @@
 
 package de.micromata.genome.db.jpa.xmldump.impl;
 
+import com.thoughtworks.xstream.mapper.Mapper;
+import com.thoughtworks.xstream.mapper.MapperWrapper;
+import org.hibernate.collection.spi.*;
+import org.hibernate.proxy.HibernateProxy;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -23,12 +28,14 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+/*
 import org.hibernate.collection.internal.PersistentBag;
 import org.hibernate.collection.internal.PersistentList;
 import org.hibernate.collection.internal.PersistentMap;
 import org.hibernate.collection.internal.PersistentSet;
 import org.hibernate.collection.internal.PersistentSortedMap;
 import org.hibernate.collection.internal.PersistentSortedSet;
+*/
 import org.hibernate.proxy.HibernateProxy;
 
 import com.thoughtworks.xstream.mapper.Mapper;
@@ -36,12 +43,12 @@ import com.thoughtworks.xstream.mapper.MapperWrapper;
 
 /**
  * Replaces Hibernate 3 specific collections with java.util implementations.
- * 
+ *
  * <strong>NOTE</strong> This mapper takes care only of the writing to the XML (deflating) not the other way around
  * (inflating) because there is no need.
- * 
+ *
  * @author Costin Leau
- * 
+ *
  */
 
 public class HibernateMapper extends MapperWrapper

@@ -16,12 +16,12 @@
 
 package de.micromata.mgc.jpa.xmldump.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 import de.micromata.genome.db.jpa.xmldump.api.JpaXmlPersist;
 import de.micromata.genome.jpa.StdRecordDO;

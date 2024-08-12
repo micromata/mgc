@@ -16,7 +16,7 @@
 
 package de.micromata.genome.util.runtime.jndi;
 
-import javax.mail.Session;
+import jakarta.mail.Session;
 import javax.naming.Binding;
 import javax.naming.Context;
 import javax.naming.InitialContext;

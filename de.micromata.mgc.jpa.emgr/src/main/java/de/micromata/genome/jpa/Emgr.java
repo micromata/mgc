@@ -50,16 +50,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityNotFoundException;
-import javax.persistence.LockModeType;
-import javax.persistence.NoResultException;
-import javax.persistence.OptimisticLockException;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.LockModeType;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.OptimisticLockException;
+import jakarta.persistence.Query;
+import jakarta.persistence.TypedQuery;
 import org.apache.commons.lang3.Validate;
 import org.apache.log4j.Logger;
-import org.hibernate.jpa.AvailableSettings;
+import org.hibernate.cfg.AvailableSettings;
 
 /**
  * Main class to interact with JPA.
@@ -78,7 +78,7 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
    */
   private static final Logger log = Logger.getLogger(Emgr.class);
 
-  public static final String HINT_QUERY_TIMEOUT = "javax.persistence.query.timeout";
+  public static final String HINT_QUERY_TIMEOUT = "jakarta.persistence.query.timeout";
 
   /**
    * Underlying jpa.
@@ -708,7 +708,7 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
   @Override
   public void setSelectForUpdate(Query query, int lockTimetimeInMs)
   {
-    query.setHint(AvailableSettings.LOCK_TIMEOUT, lockTimetimeInMs);
+    query.setHint(AvailableSettings.JPA_LOCK_TIMEOUT, lockTimetimeInMs);
     setQueryTimeout(query, lockTimetimeInMs);
     query.setLockMode(LockModeType.PESSIMISTIC_WRITE);
   }
@@ -716,8 +716,8 @@ public class Emgr<EMGR extends Emgr<?>> implements IEmgr<EMGR>
   @Override
   public void setQueryTimeout(Query query, int timeOutInMs)
   {
-    // "javax.persistence.query.timeout"
-    // javax.persistence.lock.timeout
+    // "jakarta.persistence.query.timeout"
+    // jakarta.persistence.lock.timeout
 
     query.setHint(HINT_QUERY_TIMEOUT, timeOutInMs);
   }

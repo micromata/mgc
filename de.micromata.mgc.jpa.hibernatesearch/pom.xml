@@ -22,12 +22,17 @@
       <artifactId>de.micromata.mgc.jpa.history</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.hibernate.search</groupId>
+      <artifactId>hibernate-search-v5migrationhelper-orm</artifactId>
+      <version>6.2.4.Final</version>
+    </dependency>
 
 
     <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-search-orm</artifactId>
-      <version>${org.hibernate-search-orm.version}</version>
+      <groupId>org.hibernate.search</groupId>
+      <artifactId>hibernate-search-mapper-orm-jakarta</artifactId>
+      <version>${org.hibernate-search-orm.version-jakarta}</version>
       <exclusions>
         <exclusion>
           <groupId>org.hibernate</groupId>

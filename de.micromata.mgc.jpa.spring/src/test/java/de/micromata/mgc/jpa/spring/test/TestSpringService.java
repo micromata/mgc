@@ -16,7 +16,7 @@
 
 package de.micromata.mgc.jpa.spring.test;
 
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import javax.transaction.Transactional.TxType;
 

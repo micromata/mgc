@@ -16,7 +16,7 @@
 
 package de.micromata.genome.jpa.test;
 
-import javax.persistence.NoResultException;
+import jakarta.persistence.NoResultException;
 
 import org.junit.Test;
 

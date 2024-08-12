@@ -18,7 +18,7 @@ package de.micromata.genome.jpa.events.impl;
 
 import java.util.List;
 
-import javax.persistence.Query;
+import jakarta.persistence.Query;
 
 import de.micromata.genome.jpa.IEmgr;
 import de.micromata.genome.jpa.WrappedQuery;

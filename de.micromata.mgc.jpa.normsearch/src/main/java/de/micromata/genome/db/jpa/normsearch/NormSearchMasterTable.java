@@ -16,7 +16,7 @@
 
 package de.micromata.genome.db.jpa.normsearch;
 
-import javax.persistence.Transient;
+import jakarta.persistence.Transient;
 
 import de.micromata.genome.db.jpa.normsearch.entities.NormSearchDO;
 import de.micromata.genome.jpa.StdRecord;

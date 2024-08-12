@@ -16,7 +16,7 @@
 
 package de.micromata.genome.db.jpa.normsearch.testentities;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import org.junit.Ignore;
 

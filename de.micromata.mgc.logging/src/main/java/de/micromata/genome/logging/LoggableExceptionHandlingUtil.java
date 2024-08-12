@@ -18,7 +18,7 @@ package de.micromata.genome.logging;
 
 import java.lang.reflect.InvocationTargetException;
 
-import javax.servlet.ServletException;
+import jakarta.servlet.ServletException;
 
 import org.apache.commons.lang3.ArrayUtils;
 

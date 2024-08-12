@@ -19,9 +19,9 @@ package de.micromata.genome.db.jpa.tabattr.entities;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.OrderColumn;
+import jakarta.persistence.Column;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.OrderColumn;
 
 import de.micromata.genome.db.jpa.tabattr.api.TimeableAttrRow;
 

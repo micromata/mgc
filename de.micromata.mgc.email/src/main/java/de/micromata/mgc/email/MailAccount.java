@@ -26,18 +26,18 @@ import java.util.List;
 import java.util.Properties;
 import java.util.function.Supplier;
 
-import javax.mail.Address;
-import javax.mail.FetchProfile;
-import javax.mail.Flags;
-import javax.mail.Folder;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.Part;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Store;
-import javax.mail.search.SearchTerm;
+import jakarta.mail.Address;
+import jakarta.mail.FetchProfile;
+import jakarta.mail.Flags;
+import jakarta.mail.Folder;
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.mail.Multipart;
+import jakarta.mail.Part;
+import jakarta.mail.PasswordAuthentication;
+import jakarta.mail.Session;
+import jakarta.mail.Store;
+import jakarta.mail.search.SearchTerm;
 
 import de.micromata.genome.util.runtime.net.EasySSLSocketFactory;
 
@@ -176,7 +176,7 @@ public class MailAccount implements AutoCloseable
         }
       });
       return table;
-    } catch (javax.mail.MessagingException ex) {
+    } catch (jakarta.mail.MessagingException ex) {
       log.info(ex.getMessage(), ex);
       throw new RuntimeException(ex);
     } catch (IOException ex) {
@@ -215,7 +215,7 @@ public class MailAccount implements AutoCloseable
 
     }
     session = Session.getInstance(props,
-        new javax.mail.Authenticator()
+        new jakarta.mail.Authenticator()
         {
           @Override
           protected PasswordAuthentication getPasswordAuthentication()
@@ -259,7 +259,7 @@ public class MailAccount implements AutoCloseable
       store = null;
       try {
         store = session.getStore(config.getProtocol());
-      } catch (javax.mail.NoSuchProviderException ex) {
+      } catch (jakarta.mail.NoSuchProviderException ex) {
         log.error(ex.getMessage(), ex);
         // serverData.setErrorMessageKey("mail.error.noSuchProviderException");
         return false;
@@ -292,7 +292,7 @@ public class MailAccount implements AutoCloseable
       } else {
         folder.open(Folder.READ_ONLY);
       }
-    } catch (javax.mail.MessagingException ex) {
+    } catch (jakarta.mail.MessagingException ex) {
       // serverData.setErrorMessageKey("mail.error.messagingException");
       // serverData.setOriginalErrorMessage(ex.getMessage());
       log.info(ex.getMessage(), ex);
@@ -334,7 +334,7 @@ public class MailAccount implements AutoCloseable
     return success;
   }
 
-  protected void setEnvelope(ReceivedMail mail, Message message) throws javax.mail.MessagingException
+  protected void setEnvelope(ReceivedMail mail, Message message) throws jakarta.mail.MessagingException
   {
     mail.setMessage(message);
     Address[] addr;

@@ -16,7 +16,7 @@
 
 package de.micromata.genome.db.jpa.tabattr.testentities;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import org.junit.Ignore;
 

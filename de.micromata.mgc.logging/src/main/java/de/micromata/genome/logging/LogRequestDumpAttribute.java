@@ -19,7 +19,7 @@ package de.micromata.genome.logging;
 import java.util.Enumeration;
 
 import java.util.Objects;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 

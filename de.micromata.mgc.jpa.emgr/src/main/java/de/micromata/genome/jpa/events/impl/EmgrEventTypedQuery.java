@@ -19,9 +19,9 @@ package de.micromata.genome.jpa.events.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.NoResultException;
-import javax.persistence.NonUniqueResultException;
-import javax.persistence.TypedQuery;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.NonUniqueResultException;
+import jakarta.persistence.TypedQuery;
 
 import de.micromata.genome.jpa.IEmgr;
 import de.micromata.genome.jpa.WrappedTypedQuery;

@@ -18,7 +18,7 @@ package de.micromata.genome.jpa.test;
 
 import java.util.List;
 
-import javax.persistence.TransactionRequiredException;
+import jakarta.persistence.TransactionRequiredException;
 
 import org.junit.Assert;
 import org.junit.Test;

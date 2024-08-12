@@ -18,8 +18,8 @@ package de.micromata.genome.db.jpa.normsearch.entities;
 
 import de.micromata.genome.jpa.StdRecordDO;
 
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
+import jakarta.persistence.Column;
+import jakarta.persistence.MappedSuperclass;
 
 /**
  * Base table for normalized search.

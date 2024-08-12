@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import javax.mail.Session;
+import jakarta.mail.Session;
 import javax.naming.CompositeName;
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -196,7 +196,7 @@ public class LocalSettingsEnv
       //      key = dsn + ".smtp.port";
       //      msprops.put("mail.smtp.port", localSettings.getProperty(key, "25"));
       //
-      //      javax.mail.Session mailSession;
+      //      jakarta.mail.Session mailSession;
       //      if (StringUtils.isNotBlank(msprops.getProperty("mail.smtp.password")) == true) {
       //        mailSession = Session.getInstance(msprops, new Authenticator()
       //        {
@@ -435,7 +435,7 @@ public class LocalSettingsEnv
   // msprops.put("mail.smtp.host", localSettings.getProperty("mail.smtp.host", "mail.micromata.de"));
   // msprops.put("mail.smtp.port", localSettings.getProperty("mail.smtp.port", "25"));
   //
-  // javax.mail.Session mailSession = javax.mail.Session.getInstance(msprops);
+  // jakarta.mail.Session mailSession = jakarta.mail.Session.getInstance(msprops);
   // bind("java:/comp/env/genome/mail/mailSession", mailSession);
   // bind("java:/comp/env/mail/Session", mailSession);
   // }

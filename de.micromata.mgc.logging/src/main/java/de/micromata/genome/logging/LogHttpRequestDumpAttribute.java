@@ -20,7 +20,7 @@ package de.micromata.genome.logging;
 import de.micromata.genome.logging.web.HttpRequestHeaderWriter;
 import de.micromata.genome.logging.web.MultipleReadRequestWrapper;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;

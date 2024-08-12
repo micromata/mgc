@@ -28,11 +28,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.function.Supplier;
 
-import javax.mail.Flags;
-import javax.mail.MessagingException;
-import javax.mail.Provider;
-import javax.mail.Session;
-import javax.mail.search.SearchTerm;
+import jakarta.mail.Flags;
+import jakarta.mail.MessagingException;
+import jakarta.mail.Provider;
+import jakarta.mail.Session;
+import jakarta.mail.search.SearchTerm;
 
 import de.micromata.genome.util.runtime.LocalSettings;
 import de.micromata.genome.util.validation.ValContext;

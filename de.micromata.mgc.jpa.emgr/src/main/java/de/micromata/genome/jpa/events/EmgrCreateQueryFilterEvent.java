@@ -16,7 +16,7 @@
 
 package de.micromata.genome.jpa.events;
 
-import javax.persistence.Query;
+import jakarta.persistence.Query;
 
 import de.micromata.genome.jpa.IEmgr;
 

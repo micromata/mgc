@@ -19,7 +19,7 @@ package de.micromata.mgc.jpa.hibernatesearch.impl;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import org.hibernate.search.jpa.FullTextEntityManager;
 
@@ -113,7 +113,7 @@ public class SearchEmgr<EMGR extends SearchEmgr<?>>extends Emgr<EMGR> implements
   public <T> List<T> searchAttached(org.apache.lucene.search.Query luceneQuery, Class<T> type)
   {
     FullTextEntityManager ftem = getFullTextEntityManager();
-    javax.persistence.Query jpaQuery = new EmgrEventQuery(this,
+    jakarta.persistence.Query jpaQuery = new EmgrEventQuery(this,
         ftem.createFullTextQuery(luceneQuery, type));
     List<T> lret = jpaQuery.getResultList();
     return lret;
