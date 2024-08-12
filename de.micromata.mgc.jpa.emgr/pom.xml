@@ -28,9 +28,9 @@
       <version>${log4j.version}</version>
     </dependency>
     <dependency>
-      <groupId>javax.transaction</groupId>
-      <artifactId>javax.transaction-api</artifactId>
-      <version>${javax.transaction-api.version}</version>
+      <groupId>jakarta.transaction</groupId>
+      <artifactId>jakarta.transaction-api</artifactId>
+      <version>${jakarta.transaction-api.version}</version>
     </dependency>
     <dependency>
       <groupId>org.hibernate</groupId>
